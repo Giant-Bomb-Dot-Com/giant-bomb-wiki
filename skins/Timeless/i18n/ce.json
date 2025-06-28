@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Умар",
+			"Исмаил Садуев"
+		]
+	},
+	"timeless-desc": "Timeless кечйаран тема кхоьллина Брэндон Харрисан Winter прототайпан а, тайп-тайпана Викимедиан Фондан хатӀан а тӀаьхьа.",
+	"timeless-anonymous": "Аноним",
+	"timeless-loggedinas": "Чуваьлла '''$1''' санна",
+	"timeless-notloggedin": "Хьо чу ца ваьлла",
+	"timeless-userpage": "{{GENDER:$1|Декъашхочун}} агӀо",
+	"timeless-talkpage": "{{GENDER:$1|Декъашхочун}} дийцар",
+	"timeless-pagelog": "АгӀонан журналаш",
+	"timeless-more": "Кхин а",
+	"timeless-sitetools": "Вики-гӀирсаш",
+	"timeless-pageactions": "ГӀирсаш агӀонашна",
+	"timeless-userpagetools": "Декъашхочун агӀонан гӀирсаш",
+	"timeless-action-addsection": "Керла тема",
+	"timeless-view-view": "Йеша",
+	"timeless-pagemisc": "Кхин а",
+	"timeless-namespaces": "ЦӀерийн меттигаш",
+	"timeless-pagetools": "АгӀонгахь дийриш",
+	"timeless-languages": "Меттанаш",
+	"timeless-projects": "Кхин проекташ",
+	"timeless.js": "/* Кху чуйиллина йолу JavaScript код чуйоккхура йу, Timeless кечйаран тема лелош йолучу декъашхошна*/",
+	"timeless-view-history": "Истори",
+	"timeless-action-undelete": "МеттахӀоттайé $1 {{PLURAL:$1|нисйинарг|нисйинарш}}"
+}

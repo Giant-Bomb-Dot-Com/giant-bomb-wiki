@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"EWDAja",
+			"Es Krim 5 Juta Rasa"
+		]
+	},
+	"discussiontools-defaultsummary-reply": "Balos",
+	"discussiontools-newtopic-missing-title": "Payu cawihko judul untuk topik rombakan {{GENDER:|mu}}.",
+	"discussiontools-newtopic-placeholder-title": "Subjek",
+	"discussiontools-replylink": "{{GENDER:|balos}}",
+	"discussiontools-replywidget-advanced": "Lanjutan",
+	"discussiontools-replywidget-cancel": "Urung",
+	"discussiontools-replywidget-mode-source": "Sumbor",
+	"discussiontools-replywidget-mode-visual": "Visual",
+	"discussiontools-replywidget-newtopic": "{{GENDER:|Tambah}} topik",
+	"discussiontools-replywidget-placeholder-newtopic": "Jabaran",
+	"discussiontools-replywidget-placeholder-reply": "{{GENDER:|Balos}} guk {{BIDI:$1}}",
+	"discussiontools-replywidget-preview": "Pratayang",
+	"discussiontools-replywidget-reply": "{{GENDER:|Balos}}",
+	"discussiontools-replywidget-summary": "Ringkasan",
+	"discussiontools-replywidget-watchthis": "Tambahko halaman hasa guk [[Special:Watchlist|daftar awasan]] mu",
+	"discussiontools-topicheader-authorcount": "$1 {{PLURAL:$1|jolma}} dilom rombakan",
+	"discussiontools-topicheader-commentcount": "$1 {{PLURAL:$1|komentar}}",
+	"discussiontools-topicheader-latestcomment": "Komentar ompay: $1",
+	"discussiontools-topicsubscription-button-subscribe": "langganan",
+	"discussiontools-topicsubscription-button-subscribe-label": "Langganan",
+	"discussiontools-topicsubscription-button-unsubscribe": "buhodak bulangganan",
+	"discussiontools-topicsubscription-button-unsubscribe-label": "Buhodak Bulangganan",
+	"discussiontools-topicsubscription-notify-subscribed-body": "{{GENDER:|Niku}} bakal narima panginjukpandayan tentang komentar ompay di topik sija.",
+	"discussiontools-topicsubscription-notify-subscribed-title": "{{GENDER:|Niku}} kok radu bulangganan!",
+	"discussiontools-topicsubscription-notify-unsubscribed-body": "{{GENDER:|Niku}} mak lagi narima panginjukpandayan tentang komentar ompay di topik sija.",
+	"discussiontools-topicsubscription-notify-unsubscribed-title": "{{GENDER:|Niku}} kok buhodak bulangganan."
+}

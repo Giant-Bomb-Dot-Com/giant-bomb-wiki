@@ -1,0 +1,8 @@
+[
+	{
+		"path": "/",
+		"redirect": {
+			"path": "/specs/v0/discovery"
+		}
+	}
+]

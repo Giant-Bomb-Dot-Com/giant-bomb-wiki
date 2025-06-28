@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aig mest ei varasta",
+			"Thadh"
+		]
+	},
+	"vector-languages": "Keelet",
+	"vector-no-language-button-label": "Lisätä keelet",
+	"vector-action-protect": "Hoitaa",
+	"vector-view-history": "Tarkastaa istoriaa",
+	"vector-view-view": "Lukkia",
+	"vector-more-actions": "Enemp",
+	"vector-feature-limited-width-name": "Levehys",
+	"vector-feature-limited-width-0-label": "Levviä",
+	"vector-feature-limited-width-1-label": "Tavalliin",
+	"vector-feature-custom-font-size-0-label": "Peeni",
+	"vector-feature-custom-font-size-1-label": "Tavalliin",
+	"vector-feature-custom-font-size-2-label": "Suur",
+	"skin-theme-name": "Karva",
+	"skin-theme-day-label": "Kimmiä",
+	"skin-theme-night-label": "Pimmiä"
+}

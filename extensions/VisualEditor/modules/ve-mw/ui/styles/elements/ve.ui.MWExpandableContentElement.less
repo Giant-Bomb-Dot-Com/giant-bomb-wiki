@@ -1,0 +1,33 @@
+@import 'mediawiki.skin.variables.less';
+
+.ve-ui-expandableContent {
+	&-collapsible {
+		overflow: hidden;
+		position: relative;
+		margin: 0.4em 0 0.5em 0;
+		transition: height 200ms;
+	}
+
+	&-container {
+		display: flex;
+		align-items: center;
+		position: absolute;
+		bottom: 0;
+		pointer-events: none; /* Allows clicking "through" the fade effect */
+	}
+
+	&-toggle {
+		background-color: @background-color-base;
+		pointer-events: auto;
+	}
+
+	&-fade {
+		background: linear-gradient( to right, transparent 0, @background-color-base 90% );
+		width: 50px;
+		height: 100%;
+	}
+
+	&-collapsible > :last-child {
+		margin-bottom: 0;
+	}
+}

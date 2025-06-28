@@ -1,0 +1,124 @@
+@import 'mediawiki.skin.variables.less';
+@import '../mmv.variables.less';
+@import 'mediawiki.mixins.less';
+@import '../mmv.mixins.less';
+
+// Common to all buttons
+// We override the codex background and borders to be their forced darkmode variant
+// We use transparency on the background and on the icon color
+// Increase of specificity by class name repeat to avoid rare white boxes, T374373
+.cdx-button.mw-mmv-button.mw-mmv-button {
+	background-color: @buttons-background-color-faded;
+	position: fixed;
+	z-index: 1003;
+	// Cancel out default outline
+	border-width: 0;
+	outline: 0;
+	transition-property: background-color, opacity, border-width, border-color, box-shadow, transform;
+
+	&.mw-mmv-dialog-open, /* A button that has opened a dialog */
+	&:active,
+	&:hover {
+		background-color: @buttons-background-color;
+	}
+
+	&:focus {
+		background-color: @buttons-background-color;
+		border-width: 1px;
+	}
+
+	.mw-mmv-icon {
+		// Default transparency of the icon
+		opacity: 0.8;
+	}
+
+	&.mw-mmv-dialog-open,
+	&:active,
+	&:focus,
+	&:hover {
+		.mw-mmv-icon {
+			transition: opacity 0.1s ease-in;
+			opacity: 1;
+		}
+	}
+
+	// when the cursor is hidden, the buttons are hidden as well
+	.user-inactive & {
+		opacity: 0;
+		transform: scale( 0 );
+	}
+}
+
+// Positioning of buttons
+.mw-mmv-download-button,
+.mw-mmv-reuse-button,
+.mw-mmv-close,
+.mw-mmv-fullscreen {
+	right: @buttons-offset-edge;
+	left: auto;
+	min-width: @buttons-size;
+	min-height: @buttons-size;
+}
+
+// Per button positioning and providing icons
+.mw-mmv-close {
+	top: @buttons-offset-edge;
+
+	.mw-mmv-icon {
+		.cdx-mixin-css-icon( @cdx-icon-close, @param-fill-color: @color-inverted-fixed );
+	}
+}
+
+.mw-mmv-fullscreen {
+	top: ( @buttons-offset-edge + ( @buttons-offset-each ) );
+
+	.mw-mmv-icon {
+		.cdx-mixin-css-icon( @cdx-icon-full-screen, @param-fill-color: @color-inverted-fixed );
+
+		.jq-fullscreened & {
+			.cdx-mixin-css-icon( @cdx-icon-exit-fullscreen, @param-fill-color: @color-inverted-fixed );
+		}
+	}
+}
+
+.mw-mmv-next-image {
+	right: @size-icon-medium;
+
+	.mw-mmv-icon {
+		mask-size: @buttons-icon-size-large;
+		.cdx-mixin-css-icon( @cdx-icon-next, @param-fill-color: @color-inverted-fixed, @param-size-icon: @size-icon-medium );
+	}
+}
+
+.mw-mmv-prev-image {
+	left: @size-icon-medium;
+
+	.mw-mmv-icon {
+		mask-size: @buttons-icon-size-large;
+		.cdx-mixin-css-icon( @cdx-icon-previous, @param-fill-color: @color-inverted-fixed, @param-size-icon: @size-icon-medium );
+	}
+}
+
+.mw-mmv-reuse-button {
+	bottom: @buttons-offset-edge + @metadatabar-above-fold-height;
+
+	.jq-fullscreened & {
+		bottom: @buttons-offset-edge + @progress-bar-height;
+	}
+
+	.mw-mmv-icon {
+		.cdx-mixin-css-icon( @cdx-icon-share, @param-fill-color: @color-inverted-fixed );
+	}
+}
+
+.mw-mmv-download-button {
+	bottom: @buttons-offset-edge + @metadatabar-above-fold-height + @buttons-offset-each;
+
+	.jq-fullscreened & {
+		bottom: @buttons-offset-edge + @progress-bar-height + @buttons-offset-each;
+	}
+
+	.mw-mmv-icon {
+		.cdx-mixin-css-icon( @cdx-icon-download, @param-fill-color: @color-inverted-fixed );
+	}
+}

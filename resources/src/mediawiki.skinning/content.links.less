@@ -1,0 +1,61 @@
+@import 'mediawiki.skin.variables.less';
+
+/* stylelint-disable selector-class-pattern */
+
+a.new {
+	color: @color-link-new;
+
+	&:visited {
+		color: @color-link-new--visited;
+	}
+}
+
+/* self links */
+a.mw-selflink {
+	color: inherit;
+	font-weight: bold;
+	text-decoration: inherit;
+
+	&:hover {
+		cursor: inherit;
+		text-decoration: inherit;
+	}
+
+	&:active,
+	&:visited {
+		color: inherit;
+	}
+}
+
+/* Interwiki & External links */
+.mw-parser-output {
+	a.extiw,
+	a.external {
+		color: @color-link-external;
+
+		&:visited {
+			color: @color-link-external--visited;
+		}
+
+		&:active {
+			color: @color-link-external--active;
+		}
+	}
+}
+
+/* Underline preference */
+
+.mw-underline-always a {
+	text-decoration: underline;
+}
+
+.mw-underline-never a {
+	text-decoration: none;
+}
+
+/* Plainlinks - this can be used to switch
+ * off special external link styling */
+.plainlinks a.external {
+	background: none !important; /* stylelint-disable-line declaration-no-important */
+	padding: 0 !important; /* stylelint-disable-line declaration-no-important */
+}

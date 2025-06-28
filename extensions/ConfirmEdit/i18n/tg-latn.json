@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liangent",
+			"Matma Rex"
+		]
+	},
+	"captchahelp-title": "Rohnamoi Captcha",
+	"captchahelp-cookies-needed": "Baroi kor kardani on, şumo bojad kukihoi mururgaratonro fa'ol kuned.",
+	"captcha-addurl-whitelist": "#<!-- in satrro hamon guna, ki hast raho kuned --> <pre>\n# Qoida ba in şakl ast:\n#  * Hama ciz az \"#\" to oxiri satr jak tavzeh ba nazar girifta meşavad\n#  * Har satre, ki xolī naboşad jak qit'a dar nazar girifta meşavad, ki faqat bo nomi mizboni internetī sançida meşavad\n#</pre> <!-- in satrro hamon guna, ki hast raho kuned-->"
+}

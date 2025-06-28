@@ -1,0 +1,42 @@
+[
+	{
+		"resourceModule": "mediawiki.page.ready",
+		"maxSize": "3.2 kB"
+	},
+	{
+		"resourceModule": "skins.vector.styles.legacy",
+		"maxSize": "8.9 kB"
+	},
+	{
+		"resourceModule": "skins.vector.search.codex.styles",
+		"maxSize": "6.2 kB"
+	},
+	{
+		"resourceModule": "skins.vector.search.codex.scripts",
+		"maxSize": "15 kB"
+	},
+	{
+		"resourceModule": "skins.vector.styles",
+		"maxSize": "13.5 kB"
+	},
+	{
+		"resourceModule": "skins.vector.js",
+		"maxSize": "17.5 kB"
+	},
+	{
+		"resourceModule": "skins.vector.legacy.js",
+		"maxSize": "2.5 kB"
+	},
+	{
+		"resourceModule": "skins.vector.search",
+		"maxSize": "3.3 kB"
+	},
+	{
+		"resourceModule": "skins.vector.icons",
+		"maxSize": "1.3 kB"
+	},
+	{
+		"resourceModule": "skins.vector.icons.js",
+		"maxSize": "0.7 kB"
+	}
+]

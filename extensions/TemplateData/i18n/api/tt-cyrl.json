@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Don Alessandro",
+			"Ильнар"
+		]
+	},
+	"apihelp-templatedata-example-1": "[[Template:Stub]] һәм [[Template:Example]] өчен мәгълүматларны кире кую",
+	"apihelp-templatedata-param-lang": "Бу телнең барлык тәрҗемә ителгән мәгънәләрен кире кайтара. Барлык мөмкин булган тәрҗемәләр куелачак."
+}

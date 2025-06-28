@@ -1,0 +1,30 @@
+@import 'mediawiki.skin.variables.less';
+@import '../echo.variables.less';
+
+.mw-echo-ui-subGroupListWidget {
+	&:not( :first-child ) {
+		padding-top: @bundle-group-padding;
+	}
+
+	&-header {
+		&-row {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+
+			&-title {
+				flex-grow: 1;
+				align-self: end;
+			}
+		}
+	}
+}
+
+/* stylelint-disable no-descending-specificity */
+.mw-echo-ui-subGroupListWidget,
+.mw-echo-ui-bundleNotificationItemWidget-group {
+	.mw-echo-ui-sortedListWidget-group:not( :empty ) {
+		border: @border-width-base @border-style-base @border-color-subtle;
+	}
+}
+/* stylelint-enable no-descending-specificity */

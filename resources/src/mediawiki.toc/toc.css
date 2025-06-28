@@ -1,0 +1,6 @@
+.toctoggle {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	font-size: 94%;
+}

@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joanmp17"
+		]
+	},
+	"thanks-thank": "{{GENDER:$1|{{GENDER:$2|ኣመስግን|ኣመስግኒ}}}}",
+	"thanks-button-thank": "{{GENDER:$1|{{GENDER:$2|ኣመስግን|ኣመስግኒ}}}}"
+}

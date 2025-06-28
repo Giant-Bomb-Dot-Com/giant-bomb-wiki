@@ -1,0 +1,69 @@
+@import (inline) 'i18n-counter-styles.css';
+
+/* Localised ordered list numbering for some languages */
+:lang( azb ),
+:lang( bcc ),
+:lang( bgn ),
+:lang( bqi ),
+:lang( fa ),
+:lang( glk ),
+:lang( kk-arab ),
+:lang( lrc ),
+:lang( luz ),
+:lang( mzn ) {
+	ol& li {
+		list-style-type: persian;
+	}
+}
+
+:lang( ckb ),
+:lang( sdh ) {
+	ol& li {
+		list-style-type: arabic-indic;
+	}
+}
+
+:lang( hi ),
+:lang( mai ),
+:lang( mr ),
+:lang( ne ) {
+	ol& li {
+		list-style-type: devanagari;
+	}
+}
+
+:lang( as ),
+:lang( bn ) {
+	ol& li {
+		list-style-type: bengali;
+	}
+}
+
+:lang( mni ) {
+	ol& li {
+		list-style-type: meetei;
+	}
+}
+
+:lang( or ) {
+	ol& li {
+		list-style-type: oriya;
+	}
+}
+
+:lang( sat ) {
+	ol& li {
+		list-style-type: santali;
+	}
+}
+
+:lang( blk ),
+:lang( kjp ),
+:lang( ksw ),
+:lang( mnw ),
+:lang( my ),
+:lang( shn ) {
+	ol& li {
+		list-style-type: myanmar_with_period;
+	}
+}

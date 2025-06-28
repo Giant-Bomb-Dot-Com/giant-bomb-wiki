@@ -1,0 +1,217 @@
+/*!
+ * File description page
+ */
+@import 'mediawiki.skin.variables.less';
+
+/* stylelint-disable selector-class-pattern */
+
+.mw-filepage-resolutioninfo {
+	// Add small top margin according to the smaller font size.
+	margin-top: @spacing-25;
+	font-size: smaller;
+}
+
+/*
+ * Multipage navigation
+ */
+.mw-filepage-multipage {
+	display: flex;
+	flex-direction: column;
+}
+
+.mw-filepage-multipage-navigation {
+	align-items: center;
+	display: flex;
+
+	& > * {
+		margin: 0.5em 0;
+	}
+}
+
+.client-js .mw-filepage-multipage-navigation [ type='submit' ] {
+	display: none;
+}
+
+@media ( max-width: @max-width-breakpoint-mobile ) {
+	.mw-filepage-multipage-navigation {
+		flex-wrap: wrap;
+		justify-content: space-between;
+
+		/* We need high specificity here */
+		&.mw-filepage-multipage-navigation figure,
+		&.mw-filepage-multipage-navigation .thumb {
+			display: none;
+		}
+
+		& > * {
+			flex: 1 1 auto;
+		}
+
+		& > form {
+			text-align: center;
+		}
+
+		& > :last-child {
+			text-align: end;
+		}
+	}
+}
+
+@media ( min-width: @min-width-breakpoint-tablet ) {
+	.mw-filepage-multipage {
+		flex-direction: row;
+	}
+
+	.mw-filepage-multipage-navigation {
+		align-items: flex-start;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin-left: 1em;
+
+		& > a {
+			display: none;
+		}
+	}
+}
+
+/*
+ * File histories
+ */
+#filehistory {
+	clear: both;
+}
+
+.filehistory {
+	th,
+	td {
+		vertical-align: top;
+	}
+
+	th {
+		text-align: left;
+	}
+
+	.mw-imagepage-filesize {
+		white-space: nowrap;
+	}
+
+	.filehistory-selected {
+		font-weight: bold;
+	}
+}
+
+/*
+ * Add a checkered background image on hover for file
+ * description pages. (T28470)
+ */
+.filehistory a img,
+#file img:hover {
+	background: url( images/checker.svg ) repeat;
+}
+
+/*
+ * filetoc
+ */
+#filetoc {
+	background-color: @background-color-neutral-subtle;
+	text-align: center;
+	border: @border-base;
+	padding: 5px;
+	font-size: 95%;
+	margin: 0 0 0.5em 0;
+
+	li {
+		display: inline;
+		list-style-type: none;
+		padding-right: 2em;
+	}
+}
+
+/*
+ * Shared images hint
+ */
+#shared-image-dup,
+#shared-image-conflict {
+	font-style: italic;
+}
+
+/*
+ * Classes for Exif data display table.
+ */
+.mw_metadata {
+	font-size: @font-size-x-small;
+	margin-bottom: @spacing-100;
+	border: 0;
+	border-collapse: collapse;
+	width: 400px;
+
+	caption {
+		font-weight: @font-weight-bold;
+	}
+
+	td,
+	th {
+		border: @border-base;
+		padding-left: @spacing-35;
+		padding-right: @spacing-35;
+
+		html.skin-theme-clientpref-night & {
+			@media screen {
+				background-color: @background-color-transparent;
+			}
+		}
+
+		/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+		@media screen and ( prefers-color-scheme: dark ) {
+			html.skin-theme-clientpref-os & {
+				background-color: @background-color-transparent;
+			}
+		}
+	}
+
+	th {
+		background-color: @background-color-neutral-subtle;
+		font-weight: @font-weight-normal;
+		text-align: right;
+	}
+
+	td {
+		padding-top: @spacing-25;
+		padding-bottom: @spacing-25;
+	}
+
+	// Unordered list for cells like image description or copyright.
+	.metadata-langlist {
+		list-style: none;
+		margin: 0;
+		padding-left: 0;
+	}
+}
+
+.client-js .mw_metadata.collapsed .mw-metadata-collapsible {
+	display: none;
+}
+
+@supports ( aspect-ratio: 16 / 9 ) {
+	#file img {
+		max-width: 100%;
+		height: auto;
+	}
+}
+
+@media screen {
+	html.skin-theme-clientpref-night {
+		#file img {
+			background-color: #c8ccd1;
+		}
+	}
+}
+
+@media screen and ( prefers-color-scheme: dark ) {
+	html.skin-theme-clientpref-os {
+		#file img {
+			background-color: #c8ccd1;
+		}
+	}
+}

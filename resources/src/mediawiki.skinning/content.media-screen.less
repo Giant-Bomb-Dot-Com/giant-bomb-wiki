@@ -1,0 +1,149 @@
+/* stylelint-disable selector-class-pattern */
+@import 'mediawiki.mixins.less';
+@import 'mediawiki.skin.variables.less';
+@import 'content.variables.less';
+
+@margin-horizontal-image: 3px;
+@border-width-image: 1px;
+
+figure[ typeof~='mw:File/Thumb' ],
+figure[ typeof~='mw:File/Frame' ] {
+	border: @border-subtle;
+	border-bottom: 0;  // No border to figcaption
+	background-color: @background-color-interactive-subtle;
+
+	> :not( figcaption ) .mw-file-element {
+		border: @border-subtle;
+	}
+
+	> figcaption {
+		border: @border-subtle;
+		border-top: 0;
+		background-color: @background-color-interactive-subtle;
+
+		/* In mw-core the font-size is duplicated, 94% in thumbinner
+		 * and again 94% in thumbcaption. 88.4% for font size of the
+		 * caption results in the same behavior. */
+		font-size: 88.4%;  // @font-size-thumbinner-screen * @font-size-thumbcaption-screen
+	}
+}
+
+.mw-image-border .mw-file-element {
+	border: @border-width-base @border-style-base #eaecf0;
+}
+
+figure[ typeof~='mw:File/Thumb' ] {
+	> figcaption::before {
+		content: '';
+		width: 15px;
+		height: 11px;
+		margin: 0;
+		.margin-inline( @margin-horizontal-image, 0 );
+
+		// Default where page content language is not set
+		// Allow to flip
+		float: right;
+
+		// Defaults for page content language
+
+		.mw-content-ltr & {
+			/* @noflip */
+			float: right;
+		}
+
+		.mw-content-rtl & {
+			/* @noflip */
+			float: left;
+		}
+
+		body.skin--responsive & {
+			/** Disable magnifying glass at lower resolutions */
+			@media all and ( max-width: @max-width-breakpoint-mobile ) {
+				content: none;
+			}
+		}
+	}
+
+	> .mw-file-description,
+	> .mw-file-magnify {
+		display: block;
+		position: relative;
+
+		&::after {
+			content: '';
+			width: 15px;
+			height: 11px;
+			position: absolute;
+			bottom: -11px;
+
+			// Default where page content language is not set
+			// Allow to flip
+			right: 6px;
+			background-image: @background-image-magnify-ltr;
+
+			// Defaults for page content language
+
+			.mw-content-ltr & {
+				/* @noflip */
+				right: 6px;
+				/* @noflip */
+				left: auto;
+				/* @noflip */
+				background-image: @background-image-magnify-ltr;
+			}
+
+			.mw-content-rtl & {
+				/* @noflip */
+				right: auto;
+				/* @noflip */
+				left: 6px;
+				/* @noflip */
+				background-image: @background-image-magnify-rtl;
+			}
+
+			/** Disable magnifying glass at lower resolutions to maximize space for caption. */
+			@media all and ( max-width: @max-width-breakpoint-mobile ) {
+				/* stylelint-disable-next-line declaration-no-important */
+				background-image: none !important;
+			}
+		}
+	}
+}
+
+/**
+ * RESPONSIVE IMAGES FOR RESPONSIVE SKINS (T113101 and T367463)
+ * Note we restrict to img's to avoid conflicts with VisualEditor shields.
+ * Note this currently doesn't apply to frameless images (tracked in T367831) and
+ * does not currently apply to responsive images in MobileFrontend.
+ */
+body.skin--responsive .mw-parser-output {
+	// Only block images should be responsive to prevent 0 sizing in tables
+	// Inline images do not use figure. We do not target audio and video or other content
+	// We target .mw-file-element, as there can be img inside captions...
+	figure img.mw-file-element {
+		// Note height auto is required and only applied to images.
+		height: auto;
+		// make sure that images in articles don't cause a horizontal scrollbar
+		// on small screens.
+		max-width: @size-full;
+	}
+
+	// Note: If the image is a thumbnail, max-width also needs to take into account margin and border.
+	figure[ typeof~='mw:File/Thumb' ] img.mw-file-element,
+	figure[ typeof~='mw:File/Frame' ] img.mw-file-element {
+		max-width: calc( @size-full - ( 2 * @margin-horizontal-image ) - ( 2 * @border-width-image ) );
+	}
+
+	/**
+	 * When the noresize class is used e.g. on a panorama or image map
+	 * with clickable regions (T22030), do not subject the image to a max-width rule.
+	 *
+	 * [[File:example.jpg|thumb|class=noresize]] and imagemap extension put the class on figure itself (T368034)
+	 */
+	.noresize figure,
+	figure.noresize {
+		img.mw-file-element {
+			max-width: none;
+		}
+	}
+}

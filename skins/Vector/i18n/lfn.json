@@ -1,0 +1,40 @@
+{
+	"@metadata": {
+		"authors": [
+			"Cgboeree",
+			"Chabi",
+			"Elefentiste",
+			"Katxis"
+		]
+	},
+	"vector-languages": "Linguas",
+	"vector-language-button-label": "{{PLURAL:$1|$1 lingua|$1 linguas}}",
+	"vector-no-language-button-label": "Ajunta linguas",
+	"vector-action-addsection": "Ajunta un tema",
+	"vector-action-delete": "Sutrae",
+	"vector-action-move": "Move",
+	"vector-action-protect": "Proteje",
+	"vector-view-create": "Crea",
+	"vector-view-edit": "Edita",
+	"vector-view-history": "Mostra istoria",
+	"vector-view-view": "Leje",
+	"vector-more-actions": "Plu",
+	"vector-appearance-label": "Aspeta",
+	"vector-feature-limited-width-name": "Largia",
+	"vector-feature-limited-width-0-label": "Larga",
+	"vector-feature-limited-width-1-label": "Normal",
+	"vector-feature-custom-font-size-name": "Testo",
+	"vector-feature-custom-font-size-0-label": "Peti",
+	"vector-feature-custom-font-size-1-label": "Normal",
+	"vector-feature-custom-font-size-2-label": "Grande",
+	"skin-theme-name": "Color",
+	"skin-theme-day-label": "Pal",
+	"skin-theme-night-label": "Oscur",
+	"skin-theme-os-label": "Automata",
+	"vector-toc-beginning": "Comensa",
+	"vector-main-menu-label": "Menu xef",
+	"vector-feature-custom-font-size-exclusion-notice": "Esta paje usa sempre tipo peti",
+	"vector-page-tools-label": "Utiles",
+	"vector-page-tools-general-label": "Jeneral",
+	"vector-unpin-element-label": "asconde"
+}

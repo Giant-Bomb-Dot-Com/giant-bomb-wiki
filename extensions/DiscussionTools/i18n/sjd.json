@@ -1,0 +1,36 @@
+{
+	"@metadata": {
+		"authors": [
+			"Merrahtar",
+			"Woytecr"
+		]
+	},
+	"discussiontools-autotopicsubpopup-preferences": "Воа̄йхэ оа̄ссмужэтҍ",
+	"discussiontools-defaultsummary-reply": "Вуэсстлэгк",
+	"discussiontools-emptystate-button": "Оа̄лкхэ са̄ррнмуж",
+	"discussiontools-limitreport-timeusage-value": "$1 {{PLURAL:$1|секунда|секунда|секундэдтӭ}}",
+	"discussiontools-newtopicssubscription-button-subscribe-label": "Кырьйхуввэ",
+	"discussiontools-notification-removed-topic-view": "Кӣһче лыст",
+	"discussiontools-notification-removed-topic-disable": "Эль воа̄ллтлэ мугка тӣдҍхэмужэтҍ",
+	"discussiontools-pageframe-latestcomment": "Маӈьмусс коамментаррьй: $1 оаннҍесьт $2 те̄масьт $3",
+	"discussiontools-pagetitle-reply": "Вуэсстлэмушш лыстэсьт $1",
+	"discussiontools-replybutton": "{{GENDER:|Вуэсстлэ}}",
+	"discussiontools-replylink": "{{GENDER:|вуэсстлэ}}",
+	"discussiontools-replywidget-cancel": "Е̄ссктэ",
+	"discussiontools-replywidget-mode-source": "Ко̄дт",
+	"discussiontools-replywidget-mode-visual": "Визуальнэ",
+	"discussiontools-replywidget-placeholder-reply": "{{GENDER:|Вуэсстлэ}} оаннҍе {{BIDI:$1}}",
+	"discussiontools-replywidget-preferences": "Оа̄ссмуж",
+	"discussiontools-replywidget-preview": "Э̄ввткӣһчмушш",
+	"discussiontools-replywidget-reply": "{{GENDER:|Вуэсстлэ}}",
+	"discussiontools-replywidget-return-to-reply": "Ма̄һце вуэсстлэгка",
+	"discussiontools-topicheader-authorcount": "Са̄ррнмужэсьт {{PLURAL:$1|лӣ $1 олма|0=элля ни э̄ххт олма|1=лӣ 1 олма|2=ле̄в 2 о̄ллмэ|3=ле̄в 3 о̄ллмэ|4=ле̄в 4 о̄ллмэ|5=ле̄в 5 о̄ллмэ}}.",
+	"discussiontools-topicheader-commentcount": "$1 {{PLURAL:$1|соа̄гк|соа̄г|соа̄гкэ}}",
+	"discussiontools-topicheader-latestcomment": "Маӈьмусс коамментаррьй: $1",
+	"discussiontools-topicsubscription-action-subscribe-button": "Кырьйхуввэ",
+	"discussiontools-topicsubscription-action-subscribe-prompt": "Кырьйхуввэ тэнн те̄ма э̄л?",
+	"discussiontools-topicsubscription-button-subscribe": "кырьйхуввэ",
+	"discussiontools-topicsubscription-button-subscribe-label": "Кырьйхуввэ",
+	"tag-discussiontools-newtopic": "[{{int:discussiontools-replywidget-newtopic-link}} О̄дт те̄ма]",
+	"tag-discussiontools-reply": "[{{int:discussiontools-replywidget-reply-link}} Вуэсстлэгк]"
+}

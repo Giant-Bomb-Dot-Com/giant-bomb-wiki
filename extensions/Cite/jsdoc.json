@@ -1,0 +1,40 @@
+{
+	"opts": {
+		"destination": "docs/js",
+		"pedantic": false,
+		"recurse": true,
+		"template": "node_modules/jsdoc-wmf-theme"
+	},
+	"plugins": [
+		"node_modules/jsdoc-wmf-theme/plugins/default"
+	],
+	"source": {
+		"include": [ "modules", "package.json", "README.md" ]
+	},
+	"templates": {
+		"cleverLinks": true,
+		"default": {
+			"useLongnameInNav": true
+		},
+		"wmf": {
+			"repository": "https://gerrit.wikimedia.org/g/mediawiki/extensions/Cite/",
+			"prefixMap": {
+				"ve.": "https://doc.wikimedia.org/visualeditor-standalone/master/{type}.html",
+				"ve.dm.MW": "https://doc.wikimedia.org/VisualEditor/master/js/{type}.html",
+				"ve.ce.MW": "https://doc.wikimedia.org/VisualEditor/master/js/{type}.html",
+				"ve.ui.MW": "https://doc.wikimedia.org/VisualEditor/master/js/{type}.html",
+				"mw.": "https://doc.wikimedia.org/mediawiki-core/master/js/{type}.html",
+				"ve.dm.MWDocumentReferences": true,
+				"ve.dm.MWGroupReferences": true,
+				"ve.dm.MWReference": true,
+				"ve.ce.MWReference": true,
+				"ve.ui.MWReference": true
+			},
+			"linkMap": {
+				"ext.popups.Preview": "https://doc.wikimedia.org/Popups/master/js/js/Popups/module-preview.html",
+				"ext.popups.PreviewModel": "https://doc.wikimedia.org/Popups/master/js/js/Popups/module-preview_model.html",
+				"Gateway": "https://doc.wikimedia.org/Popups/master/js/js/Popups/module-gateway.html"
+			}
+		}
+	}
+}

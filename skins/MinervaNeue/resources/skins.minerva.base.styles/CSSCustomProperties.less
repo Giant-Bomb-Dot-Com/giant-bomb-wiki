@@ -1,0 +1,116 @@
+/**
+ * Minerva CSS Custom properties
+ * ----------------------------
+ * Please be aware that these properties are accessible via *any* client-side code.
+ * These variables should mirror Codex design token names and values:
+ * https://doc.wikimedia.org/codex/latest/design-tokens
+ * Only include properties that are required for client-side modification.
+ *
+ * @private - Currently, these variables are only intended for use by Minerva,
+ *            however, they are designed to mimic the naming convention in Codex tokens
+ *            in order to facilitate an eventual migration to a centralized source.
+ * @experimental
+ * @since February 2024 (MediaWiki 1.43)
+ */
+
+@import 'mediawiki.skin.variables.less';
+@import 'mediawiki.skin.codex-design-tokens/theme-wikimedia-ui-mixin-dark.less';
+@import 'mediawiki.skin.codex-design-tokens/theme-wikimedia-ui-reset.less';
+
+/**
+* Placeholder Night mode color palette.
+* NOTE: These values are temporarily hard coded.
+*/
+.mixin-night-mode-palette() {
+	.cdx-mode-dark();
+}
+
+/**
+* == Night-mode helpers ==
+* The following classes are provided to help third-parties deal with night mode when using the
+* CSS color variables is not feasible.
+*
+* .skin-invert - This class implements an inverted night-mode effect on applied elements using
+*     a CSS filter instead of CSS custom properties. For this effect to work, the light mode palette
+*     has to be applied to avoid inverting night-mode colors.
+*
+* .notheme - This class prevents night mode from being applied to a specific element. It needs the
+*     the light mode color palette, and includes an opinionated color: @color-base; rule
+*     since the main assumption underlying the light theme is black text.
+*/
+
+/**
+ * Light mode
+ *
+ * Applies the light mode color palette by default
+ * or with the .skin-invert, or .notheme classes
+ */
+:root,
+.skin-invert,
+.notheme {
+	.cdx-mode-reset();
+}
+
+.skin-invert,
+.notheme {
+	color-scheme: light;
+	color: @color-base;
+}
+
+/**
+* == Forced night mode ==
+* Applies the night mode color palette per the users explicit preference,
+* regardless of system settings.
+*/
+@media screen {
+	html.skin-theme-clientpref-night {
+		color-scheme: dark;
+		.mixin-night-mode-palette();
+
+		.skin-invert,
+		.skin-invert-image img,
+		/* Special treatment of inverted OOUI icons, see T365764 */
+		.oo-ui-iconElement-icon:not( .oo-ui-image-progressive ):not( .oo-ui-image-destructive ):not( .oo-ui-checkboxInputWidget-checkIcon ):not( .oo-ui-image-invert ):not( .mw-no-invert ),
+		.oo-ui-indicatorElement-indicator {
+			filter: invert( 1 ) hue-rotate( 180deg );
+		}
+
+		/* Do not apply invert to elements that are inside a notheme or a skin-invert class to avoid inversion in light theme or
+		double inversion in an already inverted element */
+		.skin-invert,
+		.notheme {
+			.oo-ui-iconElement-icon:not( .oo-ui-image-progressive ):not( .oo-ui-image-destructive ):not( .oo-ui-checkboxInputWidget-checkIcon ):not( .oo-ui-image-invert ):not( .mw-no-invert ),
+			.oo-ui-indicatorElement-indicator {
+				filter: none !important;
+			}
+		}
+	}
+}
+
+/**
+* == Auto night mode ==
+* Applies the night mode color palette only in response to system settings.
+*/
+@media screen and ( prefers-color-scheme: dark ) {
+	html.skin-theme-clientpref-os {
+		color-scheme: light dark;
+		.mixin-night-mode-palette();
+
+		.skin-invert,
+		.skin-invert-image img,
+		.oo-ui-iconElement-icon:not( .oo-ui-image-progressive ):not( .oo-ui-image-destructive ):not( .oo-ui-checkboxInputWidget-checkIcon ),
+		.oo-ui-indicatorElement-indicator {
+			filter: invert( 1 ) hue-rotate( 180deg );
+		}
+
+		/* Do not apply invert to elements that are inside a notheme or a skin-invert class to avoid inversion in light theme or
+		double inversion in an already inverted element */
+		.skin-invert,
+		.notheme {
+			.oo-ui-iconElement-icon:not( .oo-ui-image-progressive ):not( .oo-ui-image-destructive ):not( .oo-ui-checkboxInputWidget-checkIcon ),
+			.oo-ui-indicatorElement-indicator {
+				filter: none !important;
+			}
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Abdul Kadir",
+			"Thakurji"
+		]
+	},
+	"thanks-thank-tooltip": "{{GENDER:$1|Bhejo}}, ek dhanbaad ke notification ii {{GENDER:$2|sadasya}} ke lage"
+}

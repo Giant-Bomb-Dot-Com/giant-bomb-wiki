@@ -1,0 +1,26 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hedda",
+			"Leo"
+		]
+	},
+	"editcheck-dialog-action-no": "Hayır",
+	"editcheck-dialog-action-yes": "Evet",
+	"editcheck-dialog-addref-description": "Bir kaynak ekleyerek okuyucuların bu bilgilerin nereden geldiğini anlamalarına yardımcı olun.",
+	"editcheck-dialog-addref-reject-question": "Neden kaynak eklemiyorsunuz?",
+	"editcheck-dialog-addref-reject-description": "Diğer editörler, kaynağı reddetme kararınız hakkında daha fazla bilgi edinmeyi isteyecektir.",
+	"editcheck-dialog-addref-reject-uncertain": "Hangi kaynağı ekleyeceğimden emin değilim",
+	"editcheck-dialog-addref-reject-other": "Diğer",
+	"editcheck-dialog-addref-success-notify": "Kaynak eklediğiniz için teşekkür ederiz!",
+	"editcheck-dialog-addref-title": "Kaynak ekle",
+	"editcheck-dialog-title": "Yayınlanmadan önce",
+	"tag-editcheck-reference-decline-common-knowledge": "Düzenleme Kontrolü (kaynakça) reddedildi (genel bilgi)",
+	"tag-editcheck-reference-decline-common-knowledge-description": "DüzenlemeKontrolü kaynağı genel bilgi olduğu için reddedildi",
+	"tag-editcheck-reference-decline-irrelevant": "Düzenleme Kontrolü (kaynakça) reddedildi (ilgisiz)",
+	"tag-editcheck-reference-decline-irrelevant-description": "DüzenlemeKontrolü kaynağı ilgisiz olduğu için reddedildi",
+	"tag-editcheck-reference-decline-other": "Düzenleme Kontrolü (kaynakça) reddedildi (diğer)",
+	"tag-editcheck-reference-decline-other-description": "DüzenlemeKontrolü kaynağı belirtilmeyen bir sebepten dolayı reddedildi",
+	"tag-editcheck-reference-decline-uncertain": "Düzenleme Kontrolü (kaynakça) reddedildi (belirsiz)",
+	"tag-editcheck-reference-decline-uncertain-description": "DüzenlemeKontrolü kaynağı belirsiz olduğu için reddedildi"
+}

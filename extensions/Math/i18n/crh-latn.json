@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Don Alessandro",
+			"Macofe"
+		]
+	},
+	"math_failure": "Ayırıştırılıp olamadı",
+	"math_syntax_error": "sintaksis hatası",
+	"math_unknown_error": "bilinmegen hata",
+	"math_unknown_function": "bilinmegen “$1” funktsiyası",
+	"mw-math-mathml": "SVG (MathML brauzer ilâvesi vastasınen faalleştirilip ola)",
+	"mw-math-source": "Deñiştirmeden LaTeX olaraq taşla (metin temelli brauzerler içün)",
+	"prefs-math": "Riyaziy (matematik) işaretler"
+}

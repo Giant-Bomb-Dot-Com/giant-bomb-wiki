@@ -1,0 +1,42 @@
+/*!
+ * VisualEditor WikimediaUI theme customizations.
+ *
+ * @copyright See AUTHORS.txt
+ */
+
+@import '../../lib/codex-design-tokens/theme-wikimedia-ui.less';
+
+/* ve.ui.TargetWidget */
+
+.ve-ui-targetWidget {
+	border: @border-base;
+	border-radius: @border-radius-base;
+	transition: border-color @transition-duration-medium, box-shadow @transition-duration-medium;
+
+	> :last-child {
+		border-bottom: 0;
+	}
+
+	&-focused {
+		border-color: @border-color-progressive;
+		box-shadow: @box-shadow-inset-small @box-shadow-color-progressive--focus;
+	}
+
+	&:not( .oo-ui-pendingElement-pending ) {
+		background: @background-color-base;
+	}
+
+	&-readOnly:not( .oo-ui-pendingElement-pending ) {
+		background: @background-color-neutral-subtle;
+	}
+
+	.ve-ui-targetToolbar:not( .ve-ui-toolbar-empty ) {
+		margin: 1px;
+	}
+
+	&:not( .ve-ui-targetWidget-focused ) .ve-ui-targetToolbar:not( .ve-ui-toolbar-empty ) > .oo-ui-toolbar-bar {
+		/* Expand toolbar into focus inset when not focused. */
+		margin: 0 -1px;
+		padding: 0 1px;
+	}
+}

@@ -1,0 +1,27 @@
+@import 'mediawiki.skin.variables.less';
+
+.mw-rcfilters-ui-rcTopSectionWidget {
+	&-topLinks {
+		&-table {
+			flex-grow: 1;
+		}
+
+		&-top {
+			display: block;
+			width: 100%;
+		}
+	}
+
+	.mw-rcfilters-ui-row {
+		justify-content: space-between;
+		gap: 1em;
+	}
+}
+
+@media screen and ( max-width: @max-width-breakpoint-mobile ) {
+	.mw-rcfilters-ui-rcTopSectionWidget {
+		& > .mw-rcfilters-ui-table > .mw-rcfilters-ui-row {
+			flex-wrap: wrap;
+		}
+	}
+}

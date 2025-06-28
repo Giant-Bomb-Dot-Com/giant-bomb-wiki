@@ -1,0 +1,27 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ата"
+		]
+	},
+	"editcheck-dialog-action-no": "Ні",
+	"editcheck-dialog-action-yes": "Так",
+	"editcheck-dialog-addref-description": "Допоможіть читачам зрозуміти, звідки ця інформація, додавши вказівку на джерело.",
+	"editcheck-dialog-addref-reject-question": "Чому ви не додаєте вказівку на джерело?",
+	"editcheck-dialog-addref-reject-description": "Інші редактори хотіли б дізнатися більше про ваше рішення відхилити додавання джерела.",
+	"editcheck-dialog-addref-reject-irrelevant": "Я не думаю, що вказівки на джерело мають відношення до змін, які я вношу",
+	"editcheck-dialog-addref-reject-common-knowledge": "Інформація, яку я додаю, широко відома",
+	"editcheck-dialog-addref-reject-uncertain": "Я не знаю, яку вказівку на джерело додати",
+	"editcheck-dialog-addref-reject-other": "Інше",
+	"editcheck-dialog-addref-success-notify": "Дякуємо, що вказали джерело!",
+	"editcheck-dialog-addref-title": "Додати джерело",
+	"editcheck-dialog-title": "Перед публікацією",
+	"tag-editcheck-reference-decline-common-knowledge": "Підказку додати посилання відхилено через загальновідомість",
+	"tag-editcheck-reference-decline-common-knowledge-description": "Підказку додати примітку на джерело відхилено через загальновідомість",
+	"tag-editcheck-reference-decline-irrelevant": "Підказку додати примітку на джерело відхилено («не стосується»)",
+	"tag-editcheck-reference-decline-irrelevant-description": "Підказку додати примітку з джерелом відхилено як неважливу",
+	"tag-editcheck-reference-decline-other": "Підказку додати примітку на джерело відхилено (інше)",
+	"tag-editcheck-reference-decline-other-description": "Підказку додати примітку з джерелом відхилено з невказаної причини",
+	"tag-editcheck-reference-decline-uncertain": "Підказку додати примітку на джерело відхилено («не знаю, яке»)",
+	"tag-editcheck-reference-decline-uncertain-description": "Підказку додати примітку з джерелом відхилено через непевність"
+}

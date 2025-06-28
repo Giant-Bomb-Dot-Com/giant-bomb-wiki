@@ -1,0 +1,95 @@
+/* User login and signup forms */
+@import 'mediawiki.skin.variables.less';
+@import 'mediawiki.mixins.less';
+
+@defaultFormWidth: 290px;
+
+.mw-htmlform {
+	box-sizing: border-box;
+
+	@media ( min-width: @min-width-breakpoint-tablet ) {
+		width: @defaultFormWidth;
+	}
+}
+
+#mw-createaccount-join,
+.mw-htmlform-submit {
+	width: 100%;
+	justify-content: center;
+}
+
+.mw-htmlform .mw-secure {
+	padding: 0 0 0 11px;
+	display: flex;
+	align-items: center;
+
+	&--icon {
+		padding-left: 4px;
+		.cdx-mixin-css-icon( @cdx-icon-lock, @color-subtle, @size-icon-x-small );
+	}
+}
+
+#languagelinks {
+	font-size: 0.8em;
+}
+
+/* shuffled CAPTCHA */
+#mw-input-captchaWord {
+	margin-top: 0.5em;
+}
+
+/* FIXME: These should be namespaced to mw-ext-confirmedit-fancycaptcha-, and really shouldn't be in core at all */
+/* stylelint-disable-next-line selector-class-pattern */
+.fancycaptcha-captcha-container {
+	background-color: @background-color-neutral-subtle;
+	margin-bottom: 15px;
+	border: @border-subtle;
+	border-radius: @border-radius-base;
+	padding: 8px;
+	text-align: center;
+}
+
+.mw-createacct-captcha-assisted {
+	display: block;
+	margin-top: 0.5em;
+}
+
+/* Put a border around the fancycaptcha-image-container. */
+/* stylelint-disable-next-line selector-class-pattern */
+.fancycaptcha-captcha-and-reload {
+	border: @border-subtle;
+	border-radius: @border-radius-base @border-radius-base 0 0;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: @background-color-base;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.fancycaptcha-captcha-container .mw-ui-input {
+	margin-top: @position-offset-border-width-base;
+	border-color: @border-color-subtle;
+	border-radius: 0 0 @border-radius-base @border-radius-base;
+}
+
+/* Make the fancycaptcha-image-container full-width within its parent. */
+/* stylelint-disable-next-line selector-class-pattern */
+.fancycaptcha-image-container {
+	width: 100%;
+}
+
+.mw-createaccount-temp-warning {
+	margin-bottom: @spacing-50;
+
+	.mw-userLogin-icon {
+		&--user-temporary {
+			.cdx-mixin-css-icon(@cdx-icon-user-temporary);
+		}
+	}
+}
+
+.mw-login-flush-right {
+	float: right;
+	text-align: right;
+	padding-right: 0;
+	margin-right: 0;
+}

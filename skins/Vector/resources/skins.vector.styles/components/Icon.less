@@ -1,0 +1,17 @@
+@import 'mediawiki.skin.variables.less';
+
+@transparentPNG: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);
+
+.vector-icon {
+	// By default use a transparent PNG. This is important for icons loaded via JavaScript, as without this
+	// the icon will appear as a black square until loaded.
+	-webkit-mask-image: @transparentPNG;
+	mask-image: @transparentPNG;
+	.cdx-mixin-css-icon( 'none' );
+}
+
+/* If the class contains the string -progressive convert to a progressive icon.
+This impacts language button and talk add topic. */
+.vector-icon[ class*='-progressive' ] {
+	background-color: @color-progressive;
+}

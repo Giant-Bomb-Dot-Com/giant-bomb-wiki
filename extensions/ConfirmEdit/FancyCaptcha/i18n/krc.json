@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ernác",
+			"Iltever",
+			"Къарачайлы"
+		]
+	},
+	"fancycaptcha-captcha": "Къоркъуусузлукъну тинтиу",
+	"fancycaptcha-accountcreate": "Хыйсабланы (аккаунтланы) автомат халда регистрация этиуден къоруулар ючюн, текстлик терезеде суратланнган символланы джазыгъыз ([[Special:Captcha/help|толуракъ]]):",
+	"fancycaptcha-imgcaptcha-ph": "Суратда кёрюннген текстни джаз",
+	"fancycaptcha-reload-text": "Джангырт"
+}

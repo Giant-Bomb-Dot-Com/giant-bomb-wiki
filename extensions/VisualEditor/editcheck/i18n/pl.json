@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Msz2001",
+			"Rail",
+			"Tufor2",
+			"Woytecr"
+		]
+	},
+	"editcheck-dialog-action-no": "Nie",
+	"editcheck-dialog-action-yes": "Tak",
+	"editcheck-dialog-addref-description": "Pomóż czytelnikom, dodając przypis, mówiący skąd pochodzą te informacje.",
+	"editcheck-dialog-addref-reject-question": "Dlaczego nie dodajesz przypisu?",
+	"editcheck-dialog-addref-reject-description": "Inni edytorzy docenią informację o tym, dlaczego decydujesz się nie dodawać przypisu.",
+	"editcheck-dialog-addref-reject-irrelevant": "Nie sądzę, aby przypisy były istotne dla zmian, jakie dodaję",
+	"editcheck-dialog-addref-reject-common-knowledge": "Dodane informacje są powszechnie znane",
+	"editcheck-dialog-addref-reject-uncertain": "Nie wiem jaki przypis dodać",
+	"editcheck-dialog-addref-reject-other": "Inny powód",
+	"editcheck-dialog-addref-success-notify": "Dziękujemy za dodanie przypisu!",
+	"editcheck-dialog-addref-title": "Dodaj przypis",
+	"editcheck-dialog-title": "Przed publikacją",
+	"tag-editcheck-reference-decline-common-knowledge": "Automatyczny pomocnik (przypisy): odrzucono (wiedza powszechna)",
+	"tag-editcheck-reference-decline-common-knowledge-description": "Automatyczny pomocnik: użytkownik odrzucił sugestię dodania przypisu, ponieważ uznał informację za wiedzę powszechną",
+	"tag-editcheck-reference-decline-irrelevant": "Automatyczny pomocnik (przypisy): odrzucono (nieistotne)",
+	"tag-editcheck-reference-decline-irrelevant-description": "Automatyczny pomocnik: użytkownik odrzucił sugestię dodania przypisu, ponieważ uznał go za nieistotny w tym miejscu",
+	"tag-editcheck-reference-decline-other": "Automatyczny pomocnik (przypisy): odrzucono (inne)",
+	"tag-editcheck-reference-decline-other-description": "Automatyczny pomocnik: użytkownik odrzucił sugestię dodania przypisu z innego powodu",
+	"tag-editcheck-reference-decline-uncertain": "Automatyczny pomocnik (przypisy): odrzucono (niepewność)",
+	"tag-editcheck-reference-decline-uncertain-description": "Automatyczny pomocnik: użytkownik odrzucił sugestię dodania przypisu, ponieważ nie był pewien, jaki przypis dodać"
+}

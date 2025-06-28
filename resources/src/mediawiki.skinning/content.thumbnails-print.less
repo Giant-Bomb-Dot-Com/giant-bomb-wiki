@@ -1,0 +1,37 @@
+@import 'mediawiki.skin.variables.less';
+@import 'content.variables.less';
+
+/* stylelint-disable selector-class-pattern */
+table,
+div {
+	&.floatright,
+	&.floatleft {
+		border: 0;
+	}
+}
+
+div.thumb {
+	/* Pagination */
+	page-break-inside: avoid;
+
+	a {
+		border-bottom: 0;
+	}
+}
+
+div.thumbinner {
+	background-color: @background-color-base-print;
+	color: @color-thumbinner-print;
+	min-width: 100px;
+	border: @border-base-print;
+	border-radius: @border-radius-base;
+	font-size: @font-size-thumbinner-print;
+}
+
+.thumbborder {
+	border: @border-thumbborder-print;
+}
+
+.magnify {
+	display: none;
+}

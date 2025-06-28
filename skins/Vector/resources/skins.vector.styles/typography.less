@@ -1,0 +1,188 @@
+/*
+ * Vector's common typography rules,
+ * including whitespace with `margin` & `padding` and list bullets
+ * as part of typographic styles. Iconography wouldn't belong here.
+ *
+ */
+
+html {
+	font-size: @font-size-root;
+}
+
+html,
+body {
+	font-family: @font-family-sans;
+}
+
+ul {
+	// Overrides default sublist styling due to lists being used in some talk pages (i.e. russian wiki)
+	// https://phabricator.wikimedia.org/T364865#9802562
+	list-style-type: disc;
+}
+
+pre,
+.mw-code {
+	line-height: @line-height-code;
+}
+
+.mw-jump-link:not( :focus ) {
+	.mixin-screen-reader-text;
+	.user-select( none );
+}
+
+/* Use unscoped selector to allow edit sections outside of .mw-body-content and .vector-body (T160269) */
+.mw-editsection,
+.mw-editsection-like {
+	font-family: @font-family-sans;
+}
+
+/* Main content area, including siteNotice, indicators, categories, firstHeading and `.vector-body`. */
+.mw-body {
+	// h1's can exist outside of `.mw-body-content` so some heading styles
+	// therefore need to be defined in `.mw-body` as well.
+	h1,
+	.mw-heading1,
+	&-content h1,
+	&-content .mw-heading1,
+	&-content h2,
+	&-content .mw-heading2 {
+		font-family: @font-family-serif;
+		line-height: @line-height-xx-small;
+
+		// Fallback heading font for scripts which render poorly in `@font-family-serif`.
+		// See T73240
+		&:lang( ja ), /* See T65817 */
+		&:lang( he ), /* See T65843 and T65844 */
+		&:lang( ko ) { /* See T65827 */
+			font-family: @font-family-sans--fallback;
+		}
+
+		&:lang( ckb ) { /* See T306317 */
+			font-family: 'Scheherazade', @font-family-serif;
+		}
+
+		/* Burmese (Myanmar) language headlines would be cropped with set `line-height` */
+		/* See T193270 */
+		&:lang( my ) {
+			line-height: normal;
+		}
+	}
+
+	h1,
+	.mw-heading1,
+	&-content h1,
+	&-content .mw-heading1 {
+		font-size: @font-size-heading-1;
+	}
+
+	.mw-heading2,
+	h2 {
+		font-size: @font-size-heading-2;
+	}
+
+	.mw-heading3,
+	h3,
+	.mw-heading4,
+	h4,
+	.mw-heading5,
+	h5,
+	.mw-heading6,
+	h6 {
+		// Additional bottom padding isnt necessary because only the h2 has an underline
+		padding-bottom: 0;
+		line-height: @line-height-base;
+	}
+
+	.mw-heading2,
+	h2,
+	.mw-heading3,
+	h3,
+	.mw-heading4,
+	h4,
+	.mw-heading5,
+	h5,
+	.mw-heading6,
+	h6 {
+		// Headings should have extra spacing from its siblings, which is a
+		// <p> element most of the time. In this case, spacing from the heading
+		// the <p> is sufficient. However, we to account for cases
+		// where the previous sibling element doesnt have any spacing
+		margin: 0.25em 0 0.25em 0;
+	}
+
+	.mw-heading3,
+	h3 {
+		font-size: @font-size-heading-3;
+	}
+
+	.mw-heading3,
+	h3,
+	.mw-heading4,
+	h4 {
+		font-weight: bold;
+	}
+
+	.mw-heading4,
+	h4,
+	.mw-heading5,
+	h5,
+	.mw-heading6,
+	h6 {
+		font-size: @font-size-reset; // Reset.
+	}
+
+	// On Talk:Test?dtenable=0 h2 is inside mw-heading which results in larger than
+	// expected font size since @font-size-heading-2 is defined in ems (T357929).
+	// TODO: Consider switching font-sizes to rems instead of ems to remove these styles.
+	.mw-heading1 h1,
+	.mw-heading2 h2,
+	.mw-heading3 h3,
+	.mw-heading4 h4,
+	.mw-heading5 h5,
+	.mw-heading6 h6 {
+		margin-top: 0;
+		font-size: inherit;
+	}
+
+	p {
+		margin: 0.5em 0 1em 0;
+	}
+
+	p + ul,
+	p + ol,
+	p + table,
+	p + dl,
+	p + blockquote {
+		// Inline elements should have 0.5em total top spacing
+		// Use negative margin to account for 1em bottom margin on paragraphs
+		// This will not work for floated elements
+		margin-top: -0.5em;
+	}
+
+	blockquote {
+		border-left: @border-start-blockquote;
+		padding: @padding-blockquote;
+
+		// Ensure not to inherit whitespace mashing margins on child elements.
+		> :first-child {
+			margin-top: 0;
+		}
+
+		> :last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+// T335625 - Move siteSub into common.less to prevent it from being feature-flagged
+// and overriding on-wiki modifications.
+#siteSub {
+	font-size: @font-size-small; // T311421
+	// By default the sitesub (i.e. tagline) is hidden as it was hidden in Vector legacy but site styles can reveal.
+	display: none;
+}
+
+.vector-body {
+	font-size: var( --font-size-medium );
+	line-height: var( --line-height-medium );
+}

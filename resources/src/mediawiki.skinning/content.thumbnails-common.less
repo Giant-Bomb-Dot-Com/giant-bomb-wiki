@@ -1,0 +1,108 @@
+/**
+ * These styles are common to both print and screen media.
+ * Use the -print or without postfix files to apply styles more selectively.
+ */
+
+/* stylelint-disable selector-class-pattern */
+
+@import 'mediawiki.skin.variables.less';
+@import 'content.variables.less';
+@import 'mediawiki.mixins.less';
+
+/* @noflip */
+div.tright,
+div.floatright,
+table.floatright {
+	clear: right;
+	float: right;
+
+	body.skin--responsive & {
+		@media all and ( max-width: @max-width-breakpoint-mobile ) {
+			clear: both;
+			float: none;
+		}
+	}
+}
+
+/* @noflip */
+div.tleft,
+div.floatleft,
+table.floatleft {
+	float: left;
+	clear: left;
+
+	@media all and ( max-width: @max-width-breakpoint-mobile ) {
+		body.skin--responsive & {
+			clear: both;
+			float: none;
+		}
+	}
+}
+
+div,
+table {
+	&.floatright {
+		/* @noflip */
+		margin: @margin-floatright;
+	}
+
+	&.floatleft {
+		/* @noflip */
+		margin: @margin-floatleft;
+	}
+}
+
+div.thumb {
+	width: auto;
+	background-color: transparent;
+	margin-bottom: @margin-bottom-thumb;
+}
+
+/* @noflip */
+div.tleft {
+	margin: @margin-tleft;
+}
+
+/* @noflip */
+div.tright {
+	margin: @margin-tright;
+}
+
+.thumbcaption {
+	text-align: start;
+	line-height: @line-height-thumbcaption;
+	padding: 3px;
+
+	&:empty {
+		padding: 0;
+	}
+}
+
+div.thumbinner {
+	padding: 3px;
+	text-align: center;
+	/* new block formatting context,
+	 * to clear background from floating content */
+	overflow: hidden;
+}
+
+// When rendering two images side by side, ensure they always appear side by side as intended
+// Avoid image child overflowing the container (T200518)/
+// T38030 and T148505
+
+@media all and ( max-width: @max-width-breakpoint-mobile ) {
+	body.skin--responsive & {
+		.mw-parser-output {
+			.thumb .thumbinner {
+				.flex-display();
+				place-content: flex-start center;
+				flex-flow: column wrap;
+
+				> .thumbcaption {
+					.flex( 1, 0, 100% );
+					display: block;
+				}
+			}
+		}
+	}
+}

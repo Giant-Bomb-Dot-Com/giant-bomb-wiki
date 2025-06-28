@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joachim Mos",
+			"Pppery"
+		]
+	},
+	"config-page-name": "Naam",
+	"config-ns-generic": "Projekt",
+	"config-admin-name": "Dien Naam:",
+	"config-admin-password": "Passwoord:",
+	"config-help": "Hülp",
+	"mainpagetext": "'''De MediaWiki-Software is mit Spood installeert worrn.'''",
+	"mainpagedocfooter": "Kiek de [https://www.mediawiki.org/wiki/Special:MyLanguage/Localisation#Translation_resources Dokumentatschoon för dat Anpassen vun de Brukerböversiet]\nun dat [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents Brukerhandbook] för Hülp to de Bruuk un Konfiguratschoon."
+}

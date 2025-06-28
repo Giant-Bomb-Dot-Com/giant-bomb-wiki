@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"ColumbaBush",
+			"ܐܢܐ"
+		]
+	},
+	"vector-languages": "ܠܫܢ̈ܐ",
+	"vector-no-language-button-label": "ܐܘܣܦ ܠܫܢ̈ܐ",
+	"vector-action-addsection": "ܐܘܣܦ ܡܠܘܐܐ",
+	"vector-action-move": "ܫܢܝ",
+	"vector-action-protect": "ܢܛܘܪ",
+	"vector-view-create": "ܒܪܝ",
+	"vector-view-history": "ܚܙܝ ܬܫܥܝܬܐ",
+	"vector-more-actions": "ܝܬܝܪ",
+	"vector-appearance-label": "ܚܙܘܐ",
+	"vector-feature-limited-width-name": "ܦܬܘܐ",
+	"vector-feature-limited-width-0-label": "ܪܘܝܚܐ",
+	"vector-feature-custom-font-size-0-label": "ܙܥܘܪܐ",
+	"vector-feature-custom-font-size-2-label": "ܪܒܐ",
+	"skin-theme-name": "ܨܘܒܥܐ",
+	"skin-theme-day-label": "ܒܗܘܪܐ",
+	"skin-theme-night-label": "ܚܘܫܟܢܐ",
+	"vector-searchsuggest-containing": "ܒܨܝ ܠܦܬܘܬ̈ܐ ܕܐܝܬ ܒܗܘܢ <strong class=\"cdx-typeahead-search__search-footer__query\">$1</strong>",
+	"vector-toc-label": "ܚܒܝܫ̈ܬܐ",
+	"vector-toc-beginning": "ܫܘܪܝܐ",
+	"vector-page-tools-label": "ܡܐܢ̈ܐ",
+	"vector-page-tools-general-label": "ܟܠܢܝܐ",
+	"vector-page-tools-actions-label": "ܥܒܕ̈ܐ",
+	"vector-unpin-element-label": "ܛܫܝ"
+}

@@ -1,0 +1,63 @@
+<?php
+
+namespace MediaWiki\Extension\DiscussionTools\Hooks;
+
+use MediaWiki\Config\Config;
+use MediaWiki\Config\ConfigFactory;
+use MediaWiki\Extension\BetaFeatures\Hooks\GetBetaFeaturePreferencesHook;
+use MediaWiki\MainConfigNames;
+use MediaWiki\User\User;
+
+/**
+ * Hooks from BetaFeatures extension,
+ * which is optional to use with this extension.
+ */
+class BetaPreferenceHooks implements GetBetaFeaturePreferencesHook {
+
+	private Config $coreConfig;
+	private Config $config;
+
+	public function __construct(
+		Config $coreConfig,
+		ConfigFactory $configFactory
+	) {
+		$this->coreConfig = $coreConfig;
+		$this->config = $configFactory->makeConfig( 'discussiontools' );
+	}
+
+	/**
+	 * Handler for the GetBetaFeaturePreferences hook, to add and hide user beta preferences as configured
+	 */
+	public function onGetBetaFeaturePreferences( User $user, array &$preferences ) {
+		if ( $this->config->get( 'DiscussionToolsBeta' ) ) {
+			// If all configurable features are marked as 'available', the
+			// beta fetaure enables nothing, so don't show it.
+			$allAvailable = true;
+			foreach ( HookUtils::CONFIGS as $feature ) {
+				if ( $this->config->get( 'DiscussionTools_' . $feature ) !== 'available' ) {
+					$allAvailable = false;
+					break;
+				}
+			}
+			if ( $allAvailable ) {
+				return;
+			}
+			$iconpath = $this->coreConfig->get( MainConfigNames::ExtensionAssetsPath ) . '/DiscussionTools/images';
+			$preferences['discussiontools-betaenable'] = [
+				'version' => '1.0',
+				'label-message' => 'discussiontools-preference-label',
+				'desc-message' => 'discussiontools-preference-description',
+				'screenshot' => [
+					'ltr' => "$iconpath/betafeatures-icon-DiscussionTools-ltr.svg",
+					'rtl' => "$iconpath/betafeatures-icon-DiscussionTools-rtl.svg",
+				],
+				'info-message' => 'discussiontools-preference-info-link',
+				'discussion-message' => 'discussiontools-preference-discussion-link',
+				'requirements' => [
+					'javascript' => true
+				]
+			];
+		}
+	}
+
+}

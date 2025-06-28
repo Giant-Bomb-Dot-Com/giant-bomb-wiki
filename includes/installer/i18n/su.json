@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kandar",
+			"Pppery",
+			"Uchup19"
+		]
+	},
+	"config-desc": "Panginstal MediaWiki",
+	"config-title": "Instalasi MediaWiki $1",
+	"config-information": "Émbaran",
+	"config-localsettings-upgrade": "Hiji berkas <code>LocalSettings.php</code> kapanggih.\nPikeun apgréd ngamutahirkeun ieu instalasi, mangga asupkeun sandi <code>$wgUpgradeKey</code> kana kotak di handap.\nAnjeun bisa manggihan sandina di <code>LocalSettings.php</code>.",
+	"config-localsettings-cli-upgrade": "Hiji berkas <code>LocalSettings.php</code> geus kabaca.\nPikeun apgréd ieu instalasi, mangga jalankeun <code>update.php</code>",
+	"config-localsettings-key": "Sandi apgréd:",
+	"config-localsettings-badkey": "Sandi anu diasupkeun salah.",
+	"config-restart": "Nya, hirupkeun ulang",
+	"config-profile-fishbowl": "Husus éditor kadaptar",
+	"mainpagetext": "<strong>MediaWiki geus réngsé diinstal.</strong>",
+	"mainpagedocfooter": "Mangga tingal ''[https://www.mediawiki.org/wiki/Special:MyLanguage/Localisation#Translation_resources documentation on customizing the interface]'' jeung [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents Tungtunan Pamaké] pikeun pitulung maké jeung konfigurasi."
+}

@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hackesan"
+		]
+	},
+	"thanks-thank": "{{GENDER:$1|{{GENDER:$22|obulu}}}}"
+}

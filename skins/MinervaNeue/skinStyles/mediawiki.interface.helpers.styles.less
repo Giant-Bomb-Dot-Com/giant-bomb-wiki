@@ -1,0 +1,78 @@
+@import '../minerva.less/minerva.mixins.less';
+@import '../minerva.less/minerva.variables.less';
+@import 'mediawiki.mixins.less';
+
+/**
+ * Helper classes for special pages with changeslist elements.
+ */
+
+.mw-changeslist-links {
+	& > span::before {
+		content: '@{msg-parentheses-start}';
+	}
+
+	& > span:not( :first-child )::before {
+		content: '@{msg-pipe-separator}';
+	}
+
+	& > span:last-child::after {
+		content: '@{msg-parentheses-end}';
+	}
+}
+
+// Disable parentheses and content in pager tools.
+.mw-pager-tools {
+	margin-left: 8px;
+
+	&.mw-changeslist-links {
+		> span::after,
+		> span::before {
+			content: none;
+		}
+	}
+}
+
+.mw-pager-tools,
+.mw-history-undo {
+	font-size: initial;
+
+	a {
+		float: right;
+		background-color: @background-color-interactive-subtle;
+		color: @color-base;
+		text-decoration: none;
+		font-size: @font-size-minerva-smallest;
+
+		&::after {
+			.clearfix();
+		}
+	}
+}
+
+/**
+ * "pill" style tags meant to emulate the OOUI ".oo-ui-tagItemWidget" style.
+ */
+.mw-tag-markers {
+	margin: 0 0 0.5em 0;
+	clear: both;
+}
+
+.mw-uctop {
+	padding: 0.5em 0;
+	line-height: 1.4em;
+}
+
+.mw-tag-marker {
+	// due to the extra space afforded by padding,
+	// we can make the font-size a bit smaller to save space.
+	font-size: @font-size-tag-line;
+	display: inline-block;
+	box-sizing: border-box;
+	height: 1.6em;
+	border: @border-base;
+	border-radius: @border-radius-pill;
+	line-height: 1.6em;
+	padding: 0 0.6em;
+	vertical-align: middle;
+	white-space: nowrap;
+}

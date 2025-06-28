@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liangent"
+		]
+	},
+	"math_failure": "Şikast dar taçzeh",
+	"math_syntax_error": "xatoi nahvī",
+	"math_unknown_error": "xatoi noşinos",
+	"prefs-math": "Rijozijot"
+}

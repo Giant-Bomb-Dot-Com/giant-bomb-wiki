@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ernác",
+			"Iltever"
+		]
+	},
+	"multimediaviewer-optin-pref": "<span class=\"plainlinks\">[https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:Media_Viewer/About Медиа-къараучуну]</span> джандыр",
+	"multimediaviewer-enable-dialog-header": "Медиа-къараучу джандырылсынмы?",
+	"multimediaviewer-enable-submit-button": "Медиа-къараучуну джандыр"
+}

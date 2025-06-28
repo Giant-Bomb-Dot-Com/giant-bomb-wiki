@@ -1,0 +1,68 @@
+@import '../../minerva.less/minerva.variables.less';
+
+.minerva-icon.minerva-icon--bellOutline {
+	.cdx-mixin-css-icon( @cdx-icon-bell-outline, @color-subtle);
+}
+
+//
+// Technical debt relating to Minerva mobile having a single
+// Echo icon rather than 2.
+//
+
+//
+// Difference 1) Never show count for seen notifications
+.mw-mf .mw-echo-notification-badge-nojs::after {
+	content: none;
+}
+
+//
+// Difference 2) Replace bell icon with a red circle
+//
+.mw-mf .mw-echo-unseen-notifications {
+	margin: auto;
+	background: @background-color-interactive;
+	color: @color-subtle;
+	cursor: pointer;
+
+	/* FIXME: Mimics the Codex icon mixin. This should be replaced when T376497 is resolved. */
+	.minerva-icon--circle {
+		border-radius: @border-radius-circle;
+		border: @border-width-thick @border-style-base #54595d;
+		margin: auto;
+		height: @icon-size-medium;
+		width: @icon-size-medium;
+		background: @background-color-destructive;
+		border-color: @border-color-destructive;
+		-webkit-mask-image: none;
+		mask-image: none;
+
+		&::before {
+			content: none;
+		}
+	}
+
+	&::after {
+		color: @color-inverted;
+		content: attr( data-counter-text );
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 13px;
+		letter-spacing: -0.5px;
+		padding: 0;
+		border: 0;
+		// T342907
+		background-color: transparent !important;
+	}
+
+	&:hover {
+		text-decoration: none;
+	}
+}

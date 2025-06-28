@@ -1,0 +1,40 @@
+/*!
+ * VisualEditor MediaWiki DesktopArticleTarget noscript styles
+ *
+ * @copyright See AUTHORS.txt
+ * @license The MIT License (MIT); see LICENSE.txt
+ */
+/**
+ * Hide VE edit tab and section edit things for noscript users.
+ * For script users they're always visible unless and until ve-not-available is added.
+ */
+
+@import 'mediawiki.skin.variables.less';
+/* stylelint-disable selector-max-id */
+
+.client-nojs,
+.ve-not-available {
+	#ca-ve-edit,
+	.mw-editsection-divider,
+	.mw-editsection-visualeditor {
+		display: none;
+	}
+}
+
+/* stylelint-enable selector-max-id */
+
+/* For script users, expand brackets by default, unless and until ve-not-available is added */
+
+.client-js {
+	.mw-editsection-bracket {
+		&:first-of-type {
+			margin-right: 0.25em;
+			margin-inline: 0 0.25em;
+		}
+
+		&:not( :first-of-type ) {
+			margin-left: 0.25em;
+			margin-inline: 0.25em 0;
+		}
+	}
+}

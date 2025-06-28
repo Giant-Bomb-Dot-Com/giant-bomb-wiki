@@ -1,0 +1,39 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ideophagous",
+			"Reda Benkhadra"
+		]
+	},
+	"discussiontools-autotopicsubpopup-dismiss": "وخا، صافي!",
+	"discussiontools-defaultsummary-reply": "جاوب",
+	"discussiontools-emptystate-button": "بدا مداكرة",
+	"discussiontools-emptystate-desc-user": "لخدايميا يقدّو يصاوبو محتوى ف {{SITENAME}} ب [[{{MediaWiki:discussiontools-emptystate-link-userpage}}|صفحات النقاش]] على أحسن وجه. بداو مداكرة جديدة على ود تّواصل ؤ تّعاون {{GENDER:{{PAGENAME}}|معا}} [[:{{SUBJECTPAGENAME}}|{{PAGENAME}}]]. داكشي لي كيتّكتب هنا غادي يكون موتاح علنياً ل أي واحد.",
+	"discussiontools-emptystate-desc-user-anon": "لخدايميا يقدّو يصاوبو محتوى ف {{SITENAME}} ب [[{{MediaWiki:discussiontools-emptystate-link-userpage}}|صفحات النقاش]] على أحسن وجه. بداو مداكرة جديدة على مناقشة تّعديلات لي تدارو من هاد لأيپي. داكشي لي كيتّكتب هنا غادي يكون موتاح علنياً ل أي واحد. بزاف د لأيپيات كيتبدلو بشكل دوري، ؤ يقدرو يكونو مخدّمين من طاراف شحال من واحد.",
+	"discussiontools-emptystate-title": "بدا لمداكرة على {{SUBJECTPAGENAME}}",
+	"discussiontools-emptystate-title-user": "بدا لمداكرة {{GENDER:{{PAGENAME}}|معا}} {{PAGENAME}}",
+	"discussiontools-newtopic-missing-title": "عافاك، {{GENDER:|دير|ديري}} عنوان ل التعليق ديالك. يلا عاودتي كليكيتي على «{{int:discussiontools-replywidget-newtopic}}»، غادي يتّنشر التعليق بلا عنوان.",
+	"discussiontools-pageframe-latestcomment": "التعليق اللخراني: $1 ديال $2 ف لموضوع $3",
+	"discussiontools-pagetitle-newtopic": "بدو د موضوع جديد على $1",
+	"discussiontools-replylink": "{{GENDER:|جاوب|جاوبي}}",
+	"discussiontools-replywidget-advanced": "ختيارات قافزين",
+	"discussiontools-replywidget-cancel": "لغي",
+	"discussiontools-replywidget-mode-source": "لمصدر",
+	"discussiontools-replywidget-mode-visual": "شوفان",
+	"discussiontools-replywidget-placeholder-reply": "{{GENDER:|جاوب|جاوبي}} على {{BIDI:$1}}",
+	"discussiontools-replywidget-preview": "پريڤيو",
+	"discussiontools-replywidget-reply": "{{GENDER:|جاوب|جاوبي}}",
+	"discussiontools-replywidget-summary": "ملخص",
+	"discussiontools-replywidget-watchthis": "زيد هاد الصفحة ل [[Special:Watchlist|الليستة د لحضيان]]",
+	"discussiontools-topicheader-authorcount": "{{PLURAL:$1|كتاتبي واحد|$1 واحد}} ف لمداكرة",
+	"discussiontools-topicheader-commentcount": "$1 {{PLURAL:$1|تعليق|تعليقات}}",
+	"discussiontools-topicheader-latestcomment": "التعليق اللخر: $1",
+	"discussiontools-topicsubscription-button-subscribe": "{{GENDER:|تأبونا|تأبوناي}}",
+	"discussiontools-topicsubscription-button-subscribe-label": "{{GENDER:|تأبونا|تأبوناي}}",
+	"discussiontools-topicsubscription-button-unsubscribe": "{{GENDER:|تديزابونا|تديزابوناي}}",
+	"discussiontools-topicsubscription-button-unsubscribe-label": "{{GENDER:|تديزابونا|تديزابوناي}}",
+	"discussiontools-topicsubscription-notify-subscribed-body": "{{GENDER:|راك غادي تتوصل|راكي غادي تتوصلي}} ب إشعارات فاش يكونو تعليقات جداد ف هاد لموضوع.",
+	"discussiontools-topicsubscription-notify-subscribed-title": "{{GENDER:|راك|راكي}} تأبونيتي!",
+	"discussiontools-topicsubscription-notify-unsubscribed-body": "{{GENDER:|راك مابقيتيش غادي تتوصل|راكي مابقيتيش غادي تتوصلي}} ب إشعارات على تعليقات جداد ف هاد لموضوع.",
+	"discussiontools-topicsubscription-notify-unsubscribed-title": "{{GENDER:|راك مابقيتيش مأبوني|راكي مابقيتيش مأبونية}}!"
+}

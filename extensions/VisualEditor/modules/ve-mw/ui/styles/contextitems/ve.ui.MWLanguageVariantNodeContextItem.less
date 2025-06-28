@@ -1,0 +1,33 @@
+/*!
+ * VisualEditor MediaWiki UserInterface language variant context item styles.
+ *
+ * @copyright See AUTHORS.txt
+ * @license The MIT License (MIT); see LICENSE.txt
+ */
+@import 'mediawiki.skin.variables.less';
+
+.ve-ui-mwLanguageVariantNodeContextItem-rule-table {
+	width: 100%;
+	border: 0;
+	border-collapse: collapse;
+
+	th {
+		white-space: nowrap;
+		border-bottom: 1px solid @border-color-subtle;
+		text-align: left;
+	}
+
+	th,
+	td {
+		padding: 0.75em 1em;
+		border-bottom: 1px solid @background-color-base;
+	}
+
+	tr:nth-child( odd ) td {
+		background: @background-color-neutral;
+	}
+
+	tr:nth-child( even ) td {
+		background: @background-color-neutral-subtle;
+	}
+}

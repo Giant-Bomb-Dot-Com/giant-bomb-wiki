@@ -1,0 +1,218 @@
+{
+	"name": "mediawiki/core",
+	"description": "Free software wiki application developed by the Wikimedia Foundation and others",
+	"type": "mediawiki-core",
+	"keywords": [
+		"mediawiki",
+		"wiki"
+	],
+	"homepage": "https://www.mediawiki.org/",
+	"authors": [
+		{
+			"name": "MediaWiki Community",
+			"homepage": "https://www.mediawiki.org/wiki/Special:Version/Credits"
+		}
+	],
+	"license": "GPL-2.0-or-later",
+	"support": {
+		"issues": "https://phabricator.wikimedia.org/",
+		"irc": "irc://irc.libera.chat/mediawiki",
+		"wiki": "https://www.mediawiki.org/"
+	},
+	"prefer-stable": true,
+	"require": {
+		"composer/semver": "3.4.3",
+		"cssjanus/cssjanus": "2.3.0",
+		"ext-calendar": "*",
+		"ext-ctype": "*",
+		"ext-dom": "*",
+		"ext-fileinfo": "*",
+		"ext-iconv": "*",
+		"ext-intl": "*",
+		"ext-json": "*",
+		"ext-libxml": "*",
+		"ext-mbstring": "*",
+		"ext-openssl": "*",
+		"ext-xml": "*",
+		"ext-xmlreader": "*",
+		"guzzlehttp/guzzle": "7.9.2",
+		"justinrainbow/json-schema": "5.3.0",
+		"liuggio/statsd-php-client": "1.0.18",
+		"mck89/peast": "1.16.3",
+		"monolog/monolog": "2.9.3",
+		"oojs/oojs-ui": "0.51.2",
+		"pear/mail": "2.0.0",
+		"pear/mail_mime": "1.10.12",
+		"pear/net_smtp": "1.12.1",
+		"php": ">=8.1.0",
+		"psr/container": "1.1.2",
+		"psr/http-message": "1.1",
+		"psr/log": "1.1.4",
+		"ralouphie/getallheaders": "3.0.3",
+		"symfony/polyfill-php80": "1.31.0",
+		"symfony/polyfill-php81": "1.31.0",
+		"symfony/polyfill-php82": "1.31.0",
+		"symfony/polyfill-php83": "1.31.0",
+		"symfony/yaml": "5.4.45",
+		"wikimedia/assert": "0.5.1",
+		"wikimedia/at-ease": "3.0.0",
+		"wikimedia/base-convert": "2.0.2",
+		"wikimedia/bcp-47-code": "2.0.0",
+		"wikimedia/cdb": "3.0.0",
+		"wikimedia/cldr-plural-rule-parser": "2.0.0",
+		"wikimedia/common-passwords": "0.5.0",
+		"wikimedia/composer-merge-plugin": "2.1.0",
+		"wikimedia/html-formatter": "4.1.0",
+		"wikimedia/ip-utils": "5.0.0",
+		"wikimedia/json-codec": "3.0.3",
+		"wikimedia/less.php": "5.1.2",
+		"wikimedia/minify": "2.9.0",
+		"wikimedia/normalized-exception": "2.0.0",
+		"wikimedia/object-factory": "5.0.1",
+		"wikimedia/parsoid": "0.20.2",
+		"wikimedia/php-session-serializer": "3.0.0",
+		"wikimedia/purtle": "2.0.0",
+		"wikimedia/relpath": "4.0.1",
+		"wikimedia/remex-html": "4.1.1",
+		"wikimedia/request-timeout": "2.0.0",
+		"wikimedia/running-stat": "2.1.0",
+		"wikimedia/scoped-callback": "5.0.0",
+		"wikimedia/services": "4.0.0",
+		"wikimedia/shellbox": "4.1.1",
+		"wikimedia/utfnormal": "4.0.0",
+		"wikimedia/timestamp": "4.1.1",
+		"wikimedia/wait-condition-loop": "2.0.2",
+		"wikimedia/wrappedstring": "4.0.1",
+		"wikimedia/xmp-reader": "0.9.4",
+		"zordius/lightncandy": "1.2.6"
+	},
+	"require-dev": {
+		"composer/spdx-licenses": "1.5.8",
+		"doctrine/dbal": "3.8.4",
+		"doctrine/sql-formatter": "1.1.3",
+		"ext-simplexml": "*",
+		"giorgiosironi/eris": "^0.14.0",
+		"hamcrest/hamcrest-php": "^2.0",
+		"johnkary/phpunit-speedtrap": "^4.0",
+		"mediawiki/mediawiki-codesniffer": "45.0.0",
+		"mediawiki/mediawiki-phan-config": "0.14.0",
+		"mediawiki/minus-x": "1.1.3",
+		"nikic/php-parser": "^4.10.2",
+		"php-parallel-lint/php-console-highlighter": "1.0.0",
+		"php-parallel-lint/php-parallel-lint": "1.4.0",
+		"phpunit/phpunit": "9.6.19",
+		"psy/psysh": "^0.12.3",
+		"seld/jsonlint": "1.10.2",
+		"wikimedia/alea": "1.0.0",
+		"wikimedia/langconv": "^0.4.2",
+		"wikimedia/testing-access-wrapper": "^3.0.0",
+		"wmde/hamcrest-html-matchers": "^1.0.0"
+	},
+	"replace": {
+		"symfony/polyfill-ctype": "1.99",
+		"symfony/polyfill-intl-grapheme": "1.17.1",
+		"symfony/polyfill-intl-normalizer": "1.17.1",
+		"symfony/polyfill-mbstring": "1.99"
+	},
+	"suggest": {
+		"ext-apcu": "Faster web responses overall.",
+		"ext-bcmath": "Increased performance of some operations. Required especially on 32 bit machines. This or ext-gmp are needed for scrambling Temporary Accounts.",
+		"ext-curl": "Faster HTTP services, e.g. when using InstantCommons, Swift, or Etcd.",
+		"ext-exif": "Enable processing of EXIF information in file uploads.",
+		"ext-gd": "Enable thumbnails for file uploads.",
+		"ext-gmp": "Increased performance of some operations. Required especially on 32 bit machines. This or ext-bcmath are needed for scrambling Temporary Accounts.",
+		"ext-igbinary": "Enables use of igbinary for serialisation.",
+		"ext-imagick": "Enables use of imagemagick for image manipulation.",
+		"ext-memcached": "Enables use of Memcached for caching purposes.",
+		"ext-mysqli": "Enable the MySQL and MariaDB database type for MediaWiki.",
+		"ext-pdo": "Enable the SQLite database type for MediaWiki.",
+		"ext-pgsql": "Enable the PostgreSQL database type for MediaWiki.",
+		"ext-posix": "Enable CLI concurrent processing, e.g. for runJobs.php.",
+		"ext-pcntl": "Enable CLI concurrent processing, e.g. for runJobs.php and rebuildLocalisationCache.php.",
+		"ext-readline": "Enable CLI history and autocomplete, e.g. for eval.php and other REPLs.",
+		"ext-redis": "Enables use of Redis for caching purposes.",
+		"ext-sockets": "Enable CLI concurrent processing, e.g. for rebuildLocalisationCache.php.",
+		"ext-wikidiff2": "Faster text difference engine.",
+		"ext-zlib": "Enable use of GZIP compression, e.g. for SqlBagOStuff (ParserCache), $wgCompressRevisions, or $wgUseFileCache."
+	},
+	"autoload": {
+		"psr-4": {
+			"MediaWiki\\Composer\\": "includes/composer"
+		}
+	},
+	"autoload-dev": {
+		"files": [
+			"vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php",
+			"vendor/wmde/hamcrest-html-matchers/src/functions.php"
+		]
+	},
+	"scripts": {
+		"mw-install:sqlite": "@php maintenance/run.php install --server=http://localhost:4000 --dbtype sqlite --with-developmentsettings --dbpath cache/ --scriptpath= --pass adminpassword MediaWiki Admin",
+		"serve": [
+			"Composer\\Config::disableProcessTimeout",
+			"@putenv MW_LOG_DIR=logs",
+			"@putenv MW_LOG_STDERR=1",
+			"@putenv PHP_CLI_SERVER_WORKERS=8",
+			"@php -S 127.0.0.1:4000"
+		],
+		"lint": "parallel-lint --exclude node_modules --exclude vendor",
+		"phan": "phan -d . --long-progress-bar",
+		"phpcs": "phpcs -p -s --cache",
+		"fix": [
+			"minus-x fix .",
+			"phpcbf"
+		],
+		"pre-install-cmd": "MediaWiki\\Composer\\VersionChecker::onEvent",
+		"pre-update-cmd": "MediaWiki\\Composer\\VersionChecker::onEvent",
+		"post-install-cmd": "MediaWiki\\Composer\\ComposerVendorHtaccessCreator::onEvent",
+		"post-update-cmd": "MediaWiki\\Composer\\ComposerVendorHtaccessCreator::onEvent",
+		"releasenotes": "@phpunit --group ReleaseNotes",
+		"test": [
+			"@lint .",
+			"@phpcs .",
+			"minus-x check ."
+		],
+		"test-some": [
+			"@lint",
+			"@phpcs"
+		],
+		"phpunit": "phpunit",
+		"phpunit:unit": "@phpunit --colors=always --testsuite=core:unit,extensions:unit,skins:unit",
+		"phpunit:integration": "@phpunit --colors=always --testsuite=core:integration,extensions:integration,skins:integration",
+		"phpunit:coverage": "@phpunit --testsuite=core:unit --exclude-group Dump,Broken",
+		"phpunit:coverage-edit": "MediaWiki\\Composer\\ComposerPhpunitXmlCoverageEdit::onEvent",
+		"phpunit:entrypoint": "@phpunit",
+		"phpunit:prepare-parallel:extensions": [
+			"MediaWiki\\Composer\\PhpUnitSplitter\\PhpUnitXmlManager::listTestsNotice",
+			"@phpunit --list-tests-xml=tests-list-extensions.xml --testsuite=extensions",
+			"MediaWiki\\Composer\\PhpUnitSplitter\\PhpUnitXmlManager::splitTestsListExtensions"
+		],
+		"phpunit:prepare-parallel:default": [
+			"MediaWiki\\Composer\\PhpUnitSplitter\\PhpUnitXmlManager::listTestsNotice",
+			"@phpunit --list-tests-xml=tests-list-default.xml",
+			"MediaWiki\\Composer\\PhpUnitSplitter\\PhpUnitXmlManager::splitTestsListDefault"
+		],
+		"phpunit:prepare-parallel:split-file": "MediaWiki\\Composer\\PhpUnitSplitter\\PhpUnitXmlManager::splitTestsCustom",
+		"phpunit:parallel:custom-groups": "MediaWiki\\Composer\\ComposerLaunchParallel::launchTestsCustomGroups",
+		"phpunit:parallel:database": "MediaWiki\\Composer\\ComposerLaunchParallel::launchTestsDatabase",
+		"phpunit:parallel:databaseless": "MediaWiki\\Composer\\ComposerLaunchParallel::launchTestsDatabaseless",
+		"maintenance": "@php maintenance/run.php"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"prepend-autoloader": false,
+		"allow-plugins": {
+			"wikimedia/composer-merge-plugin": true,
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"extra": {
+		"merge-plugin": {
+			"include": [
+				"composer.local.json"
+			],
+			"merge-dev": false
+		}
+	}
+}

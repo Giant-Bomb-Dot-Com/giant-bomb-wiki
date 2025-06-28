@@ -1,0 +1,21 @@
+/*!
+ * Styles for Special:NewPages
+ */
+
+@import 'mediawiki.skin.variables.less';
+
+/* stylelint-disable selector-class-pattern */
+
+.mw-htmlform-ooui .mw-htmlform-submit-buttons + div {
+	margin-top: @spacing-75;
+}
+
+.not-patrolled {
+	background-color: @background-color-warning-subtle;
+}
+
+body.mw-special-Newpages {
+	.mw-index-pager-list-header {
+		display: none;
+	}
+}

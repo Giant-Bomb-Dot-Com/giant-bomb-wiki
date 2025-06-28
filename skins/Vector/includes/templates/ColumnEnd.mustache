@@ -1,0 +1,20 @@
+<div class="vector-column-end">
+	<div class="vector-sticky-pinned-container">
+		<nav class="vector-page-tools-landmark" aria-label="{{msg-vector-page-tools-nav-label}}">
+			{{#data-page-tools}}
+			{{>PinnableContainer/Pinned/Open}}
+				{{! Use `#vector-page-tools-pinned-container .vector-page-tools` to target styles at this element}}
+				{{#is-pinned}}{{>PageTools}}{{/is-pinned}}
+			{{>PinnableContainer/Close}}
+			{{/data-page-tools}}
+		</nav>
+		<nav class="vector-appearance-landmark" aria-label="{{msg-vector-appearance-label}}">
+			{{#data-appearance}}
+			{{>PinnableContainer/Pinned/Open}}
+				{{! Use `#vector-appearance-pinned-container .vector-appearance` to target styles at this element}}
+				{{#is-pinned}}{{>Appearance}}{{/is-pinned}}
+			{{>PinnableContainer/Close}}
+			{{/data-appearance}}
+		</nav>
+	</div>
+</div>

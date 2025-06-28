@@ -1,0 +1,57 @@
+@import 'mediawiki.skin.variables.less';
+
+.mw-rcfilters-ui-watchlistTopSectionWidget {
+	&-editWatchlistButton,
+	.mw-rcfilters-ui-markSeenButtonWidget {
+		.oo-ui-buttonElement-button {
+			// T356467
+			white-space: normal;
+		}
+	}
+
+	&-watchlistDetails {
+		flex-grow: 1;
+	}
+
+	&-savedLinksTable {
+		margin-top: 1em;
+	}
+
+	&-separator {
+		margin-top: 1em;
+		border-top: 2px @border-style-base @border-color-muted;
+	}
+
+	.mw-rcfilters-ui-row {
+		justify-content: space-between;
+		gap: 1em;
+	}
+
+	// On small screens, remove the table properties from the
+	// top section. T225127#5518870
+	@media screen and ( max-width: @max-width-breakpoint-tablet ) {
+		.mw-rcfilters-ui-row {
+			flex-direction: column;
+		}
+	}
+
+	// styles that should only kick in for tablet mode:
+	@media screen and ( min-width: @min-width-breakpoint-tablet ) {
+		// T358424
+		&-savedLinksTable {
+			.mw-rcfilters-ui-row {
+				flex-wrap: wrap;
+				gap: 1em;
+			}
+		}
+
+		// T235535
+		&-editWatchlistButton {
+			// Match the width that we are setting up for the loading
+			// of the .watchlistDetails in mw.rcfilters.less
+			min-width: 19em;
+			text-align: right;
+			align-self: end;
+		}
+	}
+}

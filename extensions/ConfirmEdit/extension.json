@@ -1,0 +1,195 @@
+{
+	"@doc": "Please read README.md",
+	"name": "ConfirmEdit",
+	"version": "1.6.0",
+	"author": [
+		"Brion Vibber",
+		"Florian Schmidt",
+		"Sam Reed",
+		"..."
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:ConfirmEdit",
+	"descriptionmsg": "captcha-desc",
+	"license-name": "GPL-2.0-or-later",
+	"type": "antispam",
+	"requires": {
+		"MediaWiki": ">= 1.43"
+	},
+	"GroupPermissions": {
+		"*": {
+			"skipcaptcha": false
+		},
+		"user": {
+			"skipcaptcha": false
+		},
+		"autoconfirmed": {
+			"skipcaptcha": false
+		},
+		"bot": {
+			"skipcaptcha": true
+		},
+		"sysop": {
+			"skipcaptcha": true
+		}
+	},
+	"AvailableRights": [
+		"skipcaptcha"
+	],
+	"GrantPermissions": {
+		"basic": {
+			"skipcaptcha": true
+		}
+	},
+	"ExtensionFunctions": [
+		"MediaWiki\\Extension\\ConfirmEdit\\Hooks::confirmEditSetup"
+	],
+	"SpecialPages": {
+		"Captcha": "MediaWiki\\Extension\\ConfirmEdit\\Specials\\SpecialCaptcha"
+	},
+	"MessagesDirs": {
+		"ConfirmEdit": [
+			"i18n",
+			"i18n/api"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"ConfirmEditAlias": "ConfirmEdit.alias.php"
+	},
+	"AutoloadClasses": {
+		"CaptchaCacheStore": "includes/Store/CaptchaCacheStore.php",
+		"ConfirmEditHooks": "includes/Hooks.php",
+		"MediaWiki\\Extension\\ConfirmEdit\\Hooks": "includes/Hooks.php",
+		"MediaWiki\\Extension\\ConfirmEdit\\Store\\CaptchaCacheStore": "includes/Store/CaptchaCacheStore.php"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\ConfirmEdit\\": "includes/",
+		"MediaWiki\\Extension\\ConfirmEdit\\SimpleCaptcha\\": "SimpleCaptcha/"
+	},
+	"ResourceModules": {
+		"ext.confirmEdit.editPreview.ipwhitelist.styles": {
+			"styles": "ext.confirmEdit.editPreview.ipwhitelist.styles.css"
+		},
+		"ext.confirmEdit.visualEditor": {
+			"scripts": "ve-confirmedit/ve.init.mw.CaptchaSaveErrorHandler.js",
+			"dependencies": "ext.confirmEdit.CaptchaInputWidget"
+		},
+		"ext.confirmEdit.simpleCaptcha": {
+			"styles": "../SimpleCaptcha/resources/ext.confirmEdit.simpleCaptcha.css"
+		}
+	},
+	"attributes": {
+		"VisualEditor": {
+			"PluginModules": [
+				"ext.confirmEdit.visualEditor"
+			]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "ConfirmEdit/resources"
+	},
+	"HookHandlers": {
+		"ConfirmEditHooks": {
+			"class": "MediaWiki\\Extension\\ConfirmEdit\\Hooks",
+			"services": [
+				"MainWANObjectCache"
+			]
+		},
+		"AbuseFilterHooks": {
+			"class": "MediaWiki\\Extension\\ConfirmEdit\\AbuseFilterHooks",
+			"services": [
+				"MainConfig"
+			]
+		}
+	},
+	"Hooks": {
+		"EditPageBeforeEditButtons": "ConfirmEditHooks",
+		"EmailUserForm": "ConfirmEditHooks",
+		"EmailUser": "ConfirmEditHooks",
+		"PageSaveComplete": "ConfirmEditHooks",
+		"TitleReadWhitelist": "ConfirmEditHooks",
+		"AlternateEditPreview": "ConfirmEditHooks",
+		"ResourceLoaderRegisterModules": "ConfirmEditHooks",
+		"EditPage::showEditForm:fields": "ConfirmEditHooks",
+		"EditFilterMergedContent": "ConfirmEditHooks",
+		"APIGetAllowedParams": "ConfirmEditHooks",
+		"AuthChangeFormFields": "ConfirmEditHooks",
+		"AbuseFilterCustomActions": "AbuseFilterHooks"
+	},
+	"AuthManagerAutoConfig": {
+		"preauth": {
+			"CaptchaPreAuthenticationProvider": {
+				"class": "MediaWiki\\Extension\\ConfirmEdit\\Auth\\CaptchaPreAuthenticationProvider",
+				"sort": 10
+			}
+		}
+	},
+	"config": {
+		"CaptchaWhitelistIP": {
+			"value": false
+		},
+		"Captcha": {
+			"description": "Captcha class to be used; when enabling sub extensions (ie FancyCaptcha) this will be set for you",
+			"value": null
+		},
+		"CaptchaTriggers": {
+			"description": "Actions which can trigger a captcha",
+			"value": {
+				"edit": false,
+				"create": false,
+				"sendemail": false,
+				"addurl": true,
+				"createaccount": true,
+				"badlogin": true,
+				"badloginperuser": true
+			},
+			"merge_strategy": "array_plus"
+		},
+		"CaptchaTriggersOnNamespace": {
+			"description": "Allows forcing/turning off Captcha in specific namespaces.",
+			"value": {},
+			"merge_strategy": "array_plus_2d"
+		},
+		"CaptchaStorageClass": {
+			"description": "PHP class used for storing Captcha related session data.",
+			"value": "MediaWiki\\Extension\\ConfirmEdit\\Store\\CaptchaSessionStore"
+		},
+		"CaptchaSessionExpiration": {
+			"description": "Number of seconds a captcha session should last in the data cache before expiring when managing through CaptchaCacheStore class.",
+			"value": 1800
+		},
+		"CaptchaBadLoginExpiration": {
+			"description": "Number of seconds after a bad login (from a specific IP address) that a captcha will be shown to that client on the login form to slow down password-guessing bots. A longer expiration time of $wgCaptchaBadLoginExpiration * 300 will also be applied against a login attempt count of $wgCaptchaBadLoginAttempts * 30.",
+			"value": 300
+		},
+		"CaptchaBadLoginPerUserExpiration": {
+			"description": "Number of seconds after a bad login (for a specific user account) that a captcha will be shown to that client on the login form to slow down password-guessing bots. A longer expiration time of $wgCaptchaBadLoginExpiration * 300 will be applied against a login attempt count of $wgCaptchaBadLoginAttempts * 30.",
+			"value": 600
+		},
+		"AllowConfirmedEmail": {
+			"description": "Allow users who have confirmed their email addresses to post URL links without being shown a captcha.",
+			"value": false
+		},
+		"CaptchaBadLoginAttempts": {
+			"description": "Number of bad login attempts (from a specific IP address) before triggering the captcha. 0 means the captcha is presented on the first login. A captcha will also be triggered if the number of failed logins exceeds $wgCaptchaBadLoginAttempts * 30 in a period of $wgCaptchaBadLoginExpiration * 300.",
+			"value": 3
+		},
+		"CaptchaBadLoginPerUserAttempts": {
+			"description": "Number of bad login attempts (for a specific user account) before triggering the captcha. 0 means the captcha is presented on the first login. A captcha will also be triggered if the number of failed logins exceeds $wgCaptchaBadLoginPerUserAttempts * 30 in a period of $wgCaptchaBadLoginPerUserExpiration * 300.",
+			"value": 20
+		},
+		"CaptchaWhitelist": {
+			"description": "Urls that won't trigger a captcha.",
+			"value": false
+		},
+		"CaptchaRegexes": {
+			"description": "Additional regexes to check for. Use full regexes; can match things other than URLs such as junk edits. If the new version matches one and the old version doesn't, show the captcha screen.",
+			"value": []
+		},
+		"ConfirmEditEnabledAbuseFilterCustomActions": {
+			"description": "Feature flag to toggle list of available custom actions to enable in AbuseFilter. See AbuseFilterHooks::onAbuseFilterCustomActions.",
+			"value": []
+		}
+	},
+	"manifest_version": 2
+}

@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Babanwalia",
+			"Cabal",
+			"Satdeep gill"
+		]
+	},
+	"math-visualeditor-mwlatexinspector-display-block": "ਪਾਬੰਦੀ ਲਾਓ",
+	"math_failure": "ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਨ ਲਈ ਨਾਕਾਮ",
+	"math_syntax_error": "ਵਾਕ-ਵਿਉਂਤ 'ਚ ਗਲਤੀ",
+	"math_unknown_error": "ਅਣਜਾਣ ਗ਼ਲਤੀ",
+	"math_unknown_function": "ਅਣਜਾਣ ਕਾਰਜ਼ \"$1\"",
+	"prefs-math": "ਗਣਿਤ"
+}

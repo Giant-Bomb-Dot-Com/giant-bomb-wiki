@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ezagren"
+		]
+	},
+	"multimediaviewer-optin-pref": "Nyalaakan <span class=\"plainlinks\">[https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:Media_Viewer/About Panampai Média]</span>",
+	"multimediaviewer-permission-link": "tampaiakan katantuan",
+	"multimediaviewer-view-expanded": "Buka di Panampai Média",
+	"multimediaviewer-enable-dialog-header": "Nyalaakan Panampai Média?",
+	"multimediaviewer-enable-text-header": "Nyalaakan fitur panampai média ini gasan samunyaan barakas sacara baku.",
+	"multimediaviewer-enable-submit-button": "Nyalaakan Panampai Média"
+}

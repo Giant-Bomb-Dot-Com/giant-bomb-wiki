@@ -1,0 +1,56 @@
+/*!
+ * VisualEditor UserInterface Table Context styles.
+ *
+ * @copyright See AUTHORS.txt
+ */
+
+@contextThickness: 1em;
+@contextSpacing: 0.2em;
+
+.ve-ui-tableLineContext {
+	/* Ensure it is placed above the table context */
+	z-index: 3;
+
+	> .oo-ui-iconWidget.oo-ui-iconElement.oo-ui-iconElement-icon {
+		position: absolute;
+		display: block;
+		background-color: #d3e5fd;
+		box-sizing: border-box;
+		cursor: pointer;
+		margin: 0;
+	}
+
+	&-col > .oo-ui-iconWidget.oo-ui-iconElement.oo-ui-iconElement-icon {
+		width: 100%;
+		height: @contextThickness;
+		min-height: auto;
+		top: -( @contextThickness + @contextSpacing );
+		border-bottom: 0;
+	}
+
+	&-row > .oo-ui-iconWidget.oo-ui-iconElement.oo-ui-iconElement-icon {
+		width: @contextThickness;
+		min-width: auto;
+		left: -( @contextThickness + @contextSpacing );
+		border-right: 0;
+	}
+
+	&-table > .oo-ui-iconWidget.oo-ui-iconElement.oo-ui-iconElement-icon {
+		height: @contextThickness;
+		width: @contextThickness;
+		min-width: auto;
+		min-height: auto;
+		top: -( @contextThickness + @contextSpacing );
+		left: -( @contextThickness + @contextSpacing );
+		border-bottom: 0;
+		border-right: 0;
+	}
+
+	.ve-ce-tableNodeOverlay-deactivated & > .oo-ui-iconWidget.oo-ui-iconElement.oo-ui-iconElement-icon {
+		background-color: #ddd;
+	}
+
+	&-menu {
+		z-index: 2;
+	}
+}

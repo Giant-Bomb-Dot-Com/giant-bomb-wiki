@@ -1,0 +1,29 @@
+/**
+ * ###IMPORTANT:##
+ * If editing this file, please also edit the respective file in the MinervaNeue skin.
+ * ####
+ *
+ * This file is a LESS @import match for "mediawiki.skin.variables.less"
+ * when Vector 2022 is the active skin.
+ * Please note, that legacy Vector is handled by
+ * "mediwiki.less.legacy/mediawiki.skin.variables.less".
+ *
+ * Please also note, that both current Wikimedia Design Style Guide based skins,
+ * Vector 2022 and Minerva Neue are using the same variable values respectively in their
+ * repositories.
+ */
+
+@import 'mediawiki.skin.defaults.less';
+
+/**
+ * Codex design tokens. This imports Less variables, some of which refer to CSS variables.
+ * The CSS variable values are imported in CSSCustomProperties.less.
+ */
+@import 'mediawiki.skin.codex-design-tokens/theme-wikimedia-ui.less';
+
+// Overrides for Codex variables:
+
+// Body content uses the user setting in browser / the system default sans-serif font:
+// Arial on Windows, Roboto on Android.
+// FIXME: Use Codex's OS specific default sans-serif fonts.
+@font-family-sans: @font-family-sans--fallback; // Codex: 'Helvetica Neue', 'Helvetica', 'Liberation Sans', 'Arial', sans-serif;

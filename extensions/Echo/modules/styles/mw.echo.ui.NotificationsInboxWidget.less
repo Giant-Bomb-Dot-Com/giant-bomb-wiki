@@ -1,0 +1,94 @@
+@import 'mediawiki.skin.variables.less';
+@import '../echo.variables.less';
+
+/* Flexbox gap not supported in all browsers */
+/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+.mw-echo-ui-notificationsInboxWidget {
+	width: 100%;
+	max-width: @specialpage-width;
+	position: relative;
+
+	/* Flexbox gap not supported in all browsers */
+	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+	&-row {
+		display: flex;
+		align-items: start;
+		flex-wrap: wrap;
+		gap: 1em;
+	}
+
+	&-toolbarWrapper {
+		min-height: 3.5em;
+		position: -webkit-sticky;
+		position: sticky;
+		padding-bottom: 1em;
+		padding-top: 0.5em;
+		margin-top: -0.5em;
+		top: 0;
+		z-index: 2;
+		background-color: @background-color-base;
+		box-shadow: 0 2px 0 0 rgba( 0, 0, 0, 0.1 );
+	}
+
+	&-cell {
+		&-placeholder {
+			flex-grow: 1;
+		}
+	}
+
+	&-sidebar {
+		flex-basis: @specialpage-sidebar-width;
+		flex-grow: 1;
+		max-width: @specialpage-sidebar-max-width;
+	}
+
+	&-main {
+		flex-basis: @specialpage-main-width;
+		flex-grow: 2;
+
+		&-toolbar {
+			&-top {
+				.mw-echo-ui-notificationsInboxWidget-row {
+					display: flex;
+					align-items: center;
+					flex-wrap: wrap;
+				}
+			}
+		}
+	}
+
+	@media all and ( max-width: ( @specialpage-hd-width - 1 ) ) {
+		// Override for the top toolbar so we get
+		// filters and pagination under one another
+		&-main {
+			min-width: 0;
+
+			&-toolbar {
+				&-top {
+					.mw-echo-ui-notificationsInboxWidget-row {
+						text-align: center;
+						justify-content: center;
+					}
+				}
+
+				&-settings {
+					.oo-ui-popupWidget-popup {
+						text-align: left;
+					}
+				}
+			}
+		}
+
+		&-cell-placeholder {
+			width: 100%;
+		}
+
+		&-sidebar {
+			display: none;
+		}
+
+		&-toolbarWrapper {
+			min-height: 7em;
+		}
+	}
+}

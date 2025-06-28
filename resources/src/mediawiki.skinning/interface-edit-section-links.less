@@ -1,0 +1,23 @@
+@import 'mediawiki.mixins.less';
+@import 'mediawiki.skin.variables.less';
+
+.mw-editsection {
+	.user-select( none );
+}
+
+/* Display editsection links smaller and next to headings */
+.mw-editsection,
+.mw-editsection-like {
+	font-size: small;
+	font-weight: normal;
+	.margin-inline( 1em, 0 );
+	vertical-align: baseline;
+	/* Avoid affecting the height of the heading */
+	line-height: 0;
+	unicode-bidi: isolate;
+}
+
+.mw-editsection-bracket,
+.mw-editsection-divider {
+	color: @color-subtle;
+}

@@ -1,0 +1,40 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ant176",
+			"Darklanlan",
+			"Fryed-peach",
+			"Miya",
+			"Otokoume",
+			"Penn Station",
+			"Shirayuki",
+			"Sujiniku",
+			"Takot",
+			"Vigorous action",
+			"Whym",
+			"おはぐろ蜻蛉",
+			"아라",
+			"Chqaz"
+		]
+	},
+	"tag-editcheck-newcontent-description": "編集チェックは新しいコンテンツがページに追加されたことを示します",
+	"tag-editcheck-newreference-description": "ページに出典が追加されました",
+	"tag-editcheck-references-description": "編集チェックは出典が必要である可能性があることを示します",
+	"tag-visualeditor": "[[{{MediaWiki:visualeditor-descriptionpagelink}}|ビジュアルエディター]]",
+	"tag-visualeditor-description": "[[{{MediaWiki:visualeditor-descriptionpagelink}}|ビジュアルエディター]]を使用した編集",
+	"tag-visualeditor-needcheck": "[[{{MediaWiki:visualeditor-descriptionpagelink}}|ビジュアルエディター: 要確認]]",
+	"tag-visualeditor-needcheck-description": "[[{{MediaWiki:visualeditor-descriptionpagelink}}|ビジュアルエディター]]を使用した編集のうち、意図しない変更点を含むおそれがあるとシステムが判断したもの",
+	"tag-visualeditor-wikitext": "2017年版ソースエディター",
+	"tag-visualeditor-wikitext-description": "2017年版ウィキテキストエディターを使用した編集",
+	"tag-visualeditor-switched": "[[{{MediaWiki:visualeditor-descriptionpagelink}}|ビジュアルエディター: 中途切替]]",
+	"tag-visualeditor-switched-description": "ビジュアルエディターで編集を開始したあと、ウィキテキストエディターに変更したもの",
+	"visualeditor-feedback-link": "Project:ビジュアルエディター/フィードバック",
+	"visualeditor-feedback-tool": "このソフトウェアについてフィードバックを送信",
+	"visualeditor-help-label": "利用者ガイドを読む",
+	"visualeditor-welcomedialog-action": "編集の開始",
+	"visualeditor-welcomedialog-content": "どなたでも編集できます。一つ一つの改善が役に立ちます。",
+	"visualeditor-welcomedialog-content-thanks": "読者がより多くのことを発見する手助けをしてくださりありがとうございます！",
+	"visualeditor-welcomedialog-switch": "ソースの編集に切り替える",
+	"visualeditor-welcomedialog-switch-ve": "ビジュアルエディターに切り替える",
+	"visualeditor-welcomedialog-title": "{{GENDER:$1|ようこそ}}$2へ"
+}

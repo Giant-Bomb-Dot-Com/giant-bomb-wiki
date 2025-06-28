@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ghaly",
+			"Meno25"
+		]
+	},
+	"tooltip-pt-notifications-alert": "{{GENDER:|تنبيهاتك}}"
+}
