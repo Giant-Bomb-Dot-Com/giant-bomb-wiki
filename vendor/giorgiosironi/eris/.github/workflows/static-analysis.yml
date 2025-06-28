@@ -1,0 +1,29 @@
+name: Static analysis
+
+on: [pull_request]
+
+jobs:
+  job:
+    strategy:
+      matrix:
+        include:
+          - description: Validate composer.json
+            script: composer validate
+          - description: Code style
+            script: vendor/bin/php-cs-fixer fix --verbose --diff --dry-run
+          - description: PHPStan
+            script: vendor/bin/phpstan
+          - description: Psalm
+            script: vendor/bin/psalm.phar
+    name: ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+      - name: Install dependencies
+        uses: "ramsey/composer-install@v1"
+      - run: ${{ matrix.script }}

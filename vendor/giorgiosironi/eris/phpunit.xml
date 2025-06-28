@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+        colors="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.0/phpunit.xsd"
+>
+    <testsuites>
+        <testsuite name="Full">
+            <directory>./test</directory>
+        </testsuite>
+        <testsuite name="Examples">
+            <directory>./examples</directory>
+        </testsuite>
+        <testsuite name="EndToEnd">
+            <file>./test/ExampleEnd2EndTest.php</file>
+            <file>./test/PHPUnitDeprecationHelper.php</file>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="display_startup_errors" value="1" />
+        <ini name="error_reporting" value="E_ALL" />
+    </php>
+</phpunit>

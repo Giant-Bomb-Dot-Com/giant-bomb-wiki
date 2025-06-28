@@ -1,0 +1,11 @@
+{
+	"parserOptions": {
+		"sourceType": "commonjs"
+	},
+	"settings": {
+		"polyfills": [
+			"URL",
+			"URLSearchParams"
+		]
+	}
+}

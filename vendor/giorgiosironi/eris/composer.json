@@ -1,0 +1,75 @@
+{
+    "name": "giorgiosironi/eris",
+    "description": "PHP library for property-based testing. Integrates with PHPUnit.",
+    "authors": [
+        {
+            "name": "Giorgio Sironi",
+            "email": "info@giorgiosironi.com"
+        },
+        {
+            "name": "Mirko Bonadei",
+            "email": "mirko.bonadei@gmail.com"
+        },
+        {
+            "name": "Gabriele Lana",
+            "email": "gabriele.lana@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8 || ^9",
+        "sebastian/comparator": ">=2.1.3",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "ilario-pierbattista/reverse-regex": "^0.4.0",
+        "phpstan/phpstan": "^1.10",
+        "psalm/phar": "^5.4",
+        "rector/rector": "^0.18"
+    },
+    "suggest":
+    {
+        "phpunit/phpunit": "Standard way to run generated test cases",
+        "icomefromthenet/reverse-regex": "v0.0.6.3 for the regex() Generator",
+        "ilario-pierbattista/reverse-regex": "0.3.1 for the regex() Generator (alternative to icomefromthenet/reverse-regex) "
+    },
+    "autoload": {
+        "psr-4": {
+            "Eris\\" : "src/"
+        },
+        "files": [
+            "src/Generator/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Eris\\": "test/"
+        }
+    },
+    "scripts": {
+        "cs": [
+            "composer validate --no-check-lock",
+            "composer update",
+            "vendor/bin/php-cs-fixer fix --verbose --diff"
+        ],
+        "test": [
+            "composer validate --no-check-lock",
+            "composer update",
+            "vendor/bin/phpunit test"
+        ],
+        "static": [
+            "vendor/bin/phpstan",
+            "vendor/bin/psalm.phar"
+        ],
+        "phpstan-baseline": [
+            "vendor/bin/phpstan analyse -c phpstan.neon --generate-baseline"
+        ],
+        "psalm-baseline": [
+            "vendor/bin/psalm.phar --set-baseline=psalm-baseline.xml"
+        ],
+        "rector": [
+            "vendor/bin/rector"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+	"root": true,
+	"extends": [
+		"wikimedia/client-es6",
+		"wikimedia/jquery",
+		"wikimedia/mediawiki"
+	],
+	"globals": {
+		"require": "readonly",
+		"module": "readonly"
+	},
+	"rules": {
+		"es-x/no-promise-prototype-finally": "off",
+		"max-len": "off",
+		"no-jquery/no-global-selector": "off",
+		"jsdoc/no-undefined-types": [ 1, {
+			"definedTypes": [
+				"Hooks"
+			]
+		} ]
+	}
+}

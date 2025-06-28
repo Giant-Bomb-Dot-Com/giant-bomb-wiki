@@ -22,7 +22,7 @@ services:
       MW_LANG: 'en'
       MW_USER: '${MEDIAWIKI_USER:-Admin}'
       MW_PASS: '${MEDIAWIKI_PASSWORD:-dockerpass}'
-      MW_SITENAME: 'Giant Bomb Wiki'
+      MW_SITENAME: 'MediaWiki'
       MW_LOG_DIR: /var/www/html/w/cache
       XDEBUG_CONFIG: '${XDEBUG_CONFIG}'
       XDEBUG_ENABLE: '${XDEBUG_ENABLE:-true}'

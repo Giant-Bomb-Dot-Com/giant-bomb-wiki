@@ -1,0 +1,37 @@
+{
+	"name": "wikimedia-langconv",
+	"version": "0.4.1+git",
+	"description": "Finite-State Transducer implementation of MediaWiki LanguageConverter",
+	"devDependencies": {
+		"babybird": "^0.0.1",
+		"chai": "^4.2.0",
+		"domino": "^2.1.0",
+		"eslint-config-wikimedia": "0.20.0",
+		"jsdoc": "^3.6.7",
+		"jsdoc-wmf-theme": "0.0.3",
+		"mocha": "^7.1.2",
+		"pn": "^1.1.0",
+		"prfun": "^2.1.5"
+	},
+	"main": "lib/index.js",
+	"scripts": {
+		"eslint": "eslint lib",
+		"eslint-fix": "eslint --fix lib",
+		"mocha": "mocha --opts tests/mocha/mocha.opts tests/mocha",
+		"rebuild-foma": "LANGCONV_TEST_FOMA=1 npm run mocha",
+		"test": "npm run eslint && npm run mocha",
+		"doc": "jsdoc -c jsdoc.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://gerrit.wikimedia.org/r/mediawiki/libs/LangConv.git"
+	},
+	"keywords": [
+		"mediawiki",
+		"wikimedia",
+		"language converter"
+	],
+	"author": "C. Scott Ananian",
+	"license": "GPL-2.0+",
+	"homepage": "https://www.mediawiki.org/wiki/LangConv"
+}

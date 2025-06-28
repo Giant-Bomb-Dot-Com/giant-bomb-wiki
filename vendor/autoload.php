@@ -22,4 +22,4 @@ if (PHP_VERSION_ID < 50600) {
 
 require_once __DIR__ . '/composer/autoload_real.php';
 
-return ComposerAutoloaderInit_mediawiki_vendor::getLoader();
+return ComposerAutoloaderInit01682facacf754612e0ff729fc8671c0::getLoader();

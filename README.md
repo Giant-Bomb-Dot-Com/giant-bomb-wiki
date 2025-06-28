@@ -2,7 +2,28 @@
 
 We should add stuff here.
 
-For now, you can run the project by populating the .env file and then running `docker compose up -d` then go to http://localhost:8080/w/ in your browser.
+# Running the project
+
+1. Populate the .env file
+
+[Follow the instructions in DEVELOPERS.md](DEVELOPERS.md#3-prepare-env-file) to setup your .env file.
+
+2. Start the container
+```
+docker compose up -d
+```
+
+3. Install dependencies
+```
+docker compose exec mediawiki composer update
+```
+
+4. Configure your local settings by running the install script
+```
+docker compose exec mediawiki /bin/bash /docker/install.sh
+```
+
+You can now go to http://localhost:8080 and see the wiki!
 
 ## TODO's
 
