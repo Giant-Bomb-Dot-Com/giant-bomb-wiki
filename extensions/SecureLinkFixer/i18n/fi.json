@@ -1,8 +1,0 @@
-{
-	"@metadata": {
-		"authors": [
-			"Samoasambia"
-		]
-	},
-	"securelinkfixer-desc": "Kirjoittaa uudelleen verkko-osoitteet HTTPS:ksi, jos verkkotunnus vaatii aina HTTPS:ää"
-}

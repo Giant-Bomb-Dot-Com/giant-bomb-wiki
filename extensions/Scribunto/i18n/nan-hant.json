@@ -1,8 +1,0 @@
-{
-	"@metadata": {
-		"authors": [
-			"Winston Sung"
-		]
-	},
-	"scribunto-lua-error": "Lua錯誤:$2"
-}

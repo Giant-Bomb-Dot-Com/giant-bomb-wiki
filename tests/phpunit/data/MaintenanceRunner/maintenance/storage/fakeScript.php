@@ -1,3 +1,0 @@
-<?php
-
-$maintClass = \DumpRev::class;

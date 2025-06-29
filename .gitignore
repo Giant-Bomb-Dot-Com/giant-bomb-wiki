@@ -1,28 +1,13 @@
 .env*
 LocalSettings.php
-docker-compose.override.yml
+config/LocalSettings.php
 
+vendor/
+node_modules/
+images/
 cache/
 logs/
-images/
-tmp/
-*.sqlite
-
-/vendor/composer/installed.json
-/.phpunit.result.cache
-coverage/
-
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 .idea/
 .vscode/
-*.swp
-*.swo
-*.swn
-*.bak
-
-.DS_Store
-Thumbs.db
+.DS_Store 
