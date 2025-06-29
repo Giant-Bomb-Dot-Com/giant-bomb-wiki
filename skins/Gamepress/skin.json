@@ -1,0 +1,116 @@
+{
+	"name": "Gamepress",
+	"namemsg": "skinname-gamepress",
+	"version": "1.4.0",
+	"author": [
+		"Aleksandra Łączek",
+		"Jack Phoenix",
+		"[https://en.uncyclopedia.co/wiki/User:Bizzeebeever Bizzeebeever]",
+		"Samantha Nguyen"
+	],
+	"url": "https://www.mediawiki.org/wiki/Skin:Gamepress",
+	"license-name": "GPL-2.0-or-later",
+	"descriptionmsg": "gamepress-desc",
+	"type": "skin",
+	"requires": {
+		"MediaWiki": ">= 1.39.0"
+	},
+	"ValidSkinNames": {
+		"gamepress": {
+			"class": "SkinTemplate",
+			"args": [
+				{
+					"name": "gamepress",
+					"bodyOnly": true,
+					"template": "GamepressTemplate",
+					"responsive": true,
+					"styles": [
+						"skins.gamepress.styles"
+					],
+					"scripts": [
+						"skins.gamepress.site"
+					]
+				}
+			]
+		}
+	},
+	"MessagesDirs": {
+		"SkinGamepress": [
+			"i18n"
+		]
+	},
+	"ThemeModules": {
+		"gamepress": [ "blue", "green", "orange" ]
+	},
+	"AutoloadClasses": {
+		"GamepressTemplate": "includes/GamepressTemplate.php",
+		"GamepressSkinNavigationService": "includes/GamepressSkinNavigationService.php"
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteSkinPath": "Gamepress"
+	},
+	"ResourceModules": {
+		"skins.gamepress.styles": {
+			"class": "MediaWiki\\ResourceLoader\\SkinModule",
+			"features": {
+				"content-media": true,
+				"content-links": true,
+				"content-links-external": true,
+				"content-tables": true,
+				"elements": true,
+				"i18n-ordered-lists": true,
+				"i18n-all-lists-margins": true,
+				"i18n-headings": true,
+				"interface": true,
+				"interface-message-box": true,
+				"interface-category": true,
+				"logo": true
+			},
+			"styles": {
+				"resources/css/reset.css": {
+					"media": "screen"
+				},
+				"resources/css/style.css": {
+					"media": "screen"
+				},
+				"resources/css/dark.css": {
+					"media": "screen"
+				},
+				"resources/css/mobile.css": {
+					"media": "screen and (max-width: 750px)"
+				},
+				"resources/css/print.css": {
+					"media": "print"
+				}
+			}
+		},
+		"skins.gamepress.site": {
+			"scripts": [
+				"resources/js/gamepress.js"
+			]
+		},
+		"themeloader.skins.gamepress.blue": {
+			"styles": {
+				"resources/images/blue/style.css": {
+					"media": "screen"
+				}
+			}
+		},
+		"themeloader.skins.gamepress.green": {
+			"styles": {
+				"resources/images/green/style.css": {
+					"media": "screen"
+				}
+			}
+		},
+		"themeloader.skins.gamepress.orange": {
+			"styles": {
+				"resources/images/orange/style.css": {
+					"media": "screen"
+				}
+			}
+		}
+	},
+	"manifest_version": 1
+}

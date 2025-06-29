@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226",
+			"Raymond",
+			"Umherirrender"
+		]
+	},
+	"gamepress-prefs-talkpage": "{{optional}}\nLink to the skin's talk page on MediaWiki.org; it is shown before the preview link in skin preferences on Special:Preferences. Inspired by [https://phabricator.wikimedia.org/T307113 T307113].",
+	"skinname-gamepress": "{{name}}",
+	"gamepress-desc": "{{desc|what=skin|name=Gamepress|url=https://www.mediawiki.org/wiki/Skin:Gamepress}}",
+	"gamepress-back-to-top": "Text for a link in the footer of each page\n{{Identical|Back to top}}",
+	"gamepress-jump-to-navigation": "Accessibility link for jumping to the navigation links. Visually hidden by default.\n\nSee also\n* {{msg-mw|Navigation}}",
+	"gamepress-jump-to-search": "Accessibility link for jumping to the site search. Visually hidden by default.\n\nSee also\n* {{msg-mw|Search}}",
+	"gamepress-navigation": "{{ignored}}",
+	"gamepress-prefooter-1": "{{ignored}}",
+	"gamepress-prefooter-2": "{{ignored}}",
+	"gamepress-prefooter-3": "{{ignored}}"
+}

@@ -1,53 +1,41 @@
-# Please see DEVELOPERS.md for help
-#
-# Contributions to this file are welcome but please note that this file is
-# minimal by design, with the idea to make it easily extensible via
-# docker-compose.override.yml. For help with doing that, please see
-# DEVELOPERS.md
+version: "3.9"
 services:
-  mediawiki:
-    image: docker-registry.wikimedia.org/dev/bookworm-php83-fpm:1.0.0
-    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
-    volumes:
-      - ./:/var/www/html/w:cached
-    env_file:
-      - '.env'
+  db:
+    image: mariadb:11
     environment:
-      COMPOSER_CACHE_DIR: '/var/www/html/w/cache/composer'
-      MW_SERVER: 'http://localhost:${MW_DOCKER_PORT:-8080}'
-      MW_DOCKER_PORT: "${MW_DOCKER_PORT:-8080}"
-      MW_SCRIPT_PATH: '/w'
-      MW_DBPATH: '/var/www/html/w/cache/sqlite'
-      MW_DBTYPE: 'sqlite'
-      MW_LANG: 'en'
-      MW_USER: '${MEDIAWIKI_USER:-Admin}'
-      MW_PASS: '${MEDIAWIKI_PASSWORD:-dockerpass}'
-      MW_SITENAME: 'Giant Bomb Wiki'
-      MW_LOG_DIR: /var/www/html/w/cache
-      XDEBUG_CONFIG: '${XDEBUG_CONFIG}'
-      XDEBUG_ENABLE: '${XDEBUG_ENABLE:-true}'
-      XHPROF_ENABLE: '${XHPROF_ENABLE:-true}'
+      MARIADB_DATABASE: mediawiki
+      MARIADB_USER: wiki
+      MARIADB_PASSWORD: example
+      MARIADB_ROOT_PASSWORD: rootpass
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uwiki", "-pexample"]
+      interval: 5s
+      retries: 5
 
-  mediawiki-web:
-    image: docker-registry.wikimedia.org/dev/bookworm-apache2:1.0.1
-    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+  wiki:
+    image: mediawiki:1.43.1
+    depends_on:
+      - db
     ports:
-      - "${MW_DOCKER_PORT:-8080}:8080"
-    volumes:
-      - ./:/var/www/html/w:cached
-    env_file:
-      - '.env'
+      - "8080:80"
     environment:
-      MW_LOG_DIR: /var/www/html/w/cache
-      MW_DOCKER_PORT: "${MW_DOCKER_PORT:-8080}"
+      MW_SITE_SERVER: http://localhost:8080
+      MW_SCRIPT_PATH: ""
+      MW_SITE_NAME: "Giant Bomb Wiki"
+      MW_DB_HOST: db
+      MW_DB_NAME: mediawiki
+      MW_DB_USER: wiki
+      MW_DB_PASSWORD: example
+    volumes:
+      - ./extensions:/var/www/html/extensions:cached
+      - ./skins:/var/www/html/skins:cached
+      - ./config:/config
+      - wiki-data:/var/www/html/images
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/entrypoint.sh"]
 
-  mediawiki-jobrunner:
-    image: docker-registry.wikimedia.org/dev/bookworm-php83-jobrunner:1.0.0
-    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
-    volumes:
-      - ./:/var/www/html/w:cached
-    env_file:
-      - '.env'
-    environment:
-      MW_LOG_DIR: /var/www/html/w/cache
-      MW_INSTALL_PATH: /var/www/html/w
+volumes:
+  db-data:
+  wiki-data: {} 

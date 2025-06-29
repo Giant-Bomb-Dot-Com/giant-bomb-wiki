@@ -1,0 +1,4 @@
+/* Prevent annoying overflow on mobile devices with low-resolution screens */
+aside#sidebar {
+	margin-left: 20px;
+}
