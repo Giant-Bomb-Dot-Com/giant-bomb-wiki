@@ -6,4 +6,5 @@ if [ -f /config/LocalSettings.php ]; then
   cp /config/LocalSettings.php /var/www/html/LocalSettings.php
 fi
 
+php maintenance/run.php update
 exec apache2-foreground
