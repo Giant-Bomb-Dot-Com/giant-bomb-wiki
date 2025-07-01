@@ -12,12 +12,11 @@ We should add stuff here.
 - Make your admin account, and save the password!
 - You will get to a screen that will save a LocalSettings.php file to your Downloads folder. Move that into the /config folder.
 - Before doing anything else, run `docker compose restart`.
-- You should now be able to access the wiki at http://localhost:8080/ and you should see the Gamepress skin enabled.
+- You should now be able to access the wiki at http://localhost:8080/ and you should see the Giant Bomb skin enabled.
+- See **"Skins"** for adding the Giant Bomb skin to your `LocalSettings.php` if needed.
 
 ## Skins
-
-- TODO: Learn about these!
-- You can disable/enable skins by editing the LocalSettings.php file. See https://www.mediawiki.org/wiki/Manual:LocalSettings.php
+- You can disable/enable skins by editing the `LocalSettings.php` file. See https://www.mediawiki.org/wiki/Manual:LocalSettings.php
 - To start working on the new Giant Bomb Skin add the following to your `LocalSettings.php` file:
   - `wfLoadSkin( 'GiantBomb' );`
   - `$wgDefaultSkin = "giantbomb";`
