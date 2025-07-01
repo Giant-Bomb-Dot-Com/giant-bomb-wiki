@@ -1,7 +1,0 @@
-{
-	"root": true,
-	"extends": [
-		"wikimedia/client-es5",
-		"wikimedia/mediawiki"
-	]
-}
