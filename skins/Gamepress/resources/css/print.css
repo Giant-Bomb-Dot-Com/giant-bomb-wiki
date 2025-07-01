@@ -1,9 +1,0 @@
-/* Hide the "Jump to" accessibility links, not very useful on printed pages! */
-.mw-jump-link {
-	display: none;
-}
-
-/* As of MW 1.39+ this isn't defined anywhere in core anymore... */
-.noprint {
-	display: none;
-}
