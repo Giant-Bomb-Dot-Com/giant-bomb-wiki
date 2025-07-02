@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   db:
     image: mariadb:11
@@ -15,7 +14,7 @@ services:
       retries: 5
 
   wiki:
-    image: mediawiki:1.43.1
+    build: .
     depends_on:
       - db
     ports:
@@ -30,6 +29,7 @@ services:
       MW_DB_PASSWORD: example
     volumes:
       - ./extensions:/var/www/html/extensions:cached
+      - /var/www/html/extensions/SemanticMediaWiki
       - ./skins:/var/www/html/skins:cached
       - ./config:/config
       - wiki-data:/var/www/html/images
@@ -38,4 +38,4 @@ services:
 
 volumes:
   db-data:
-  wiki-data: {} 
+  wiki-data: {}
