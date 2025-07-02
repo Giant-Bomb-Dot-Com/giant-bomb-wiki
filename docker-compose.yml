@@ -28,7 +28,8 @@ services:
       MW_DB_USER: wiki
       MW_DB_PASSWORD: example
     volumes:
-      #- ./extensions:/var/www/html/extensions:cached
+      - ./extensions:/var/www/html/extensions:cached
+      - /var/www/html/extensions/SemanticMediaWiki
       - ./skins:/var/www/html/skins:cached
       - ./config:/config
       - wiki-data:/var/www/html/images
