@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   db:
     image: mariadb:11
@@ -29,7 +28,7 @@ services:
       MW_DB_USER: wiki
       MW_DB_PASSWORD: example
     volumes:
-      - ./extensions:/var/www/html/extensions:cached
+      #- ./extensions:/var/www/html/extensions:cached
       - ./skins:/var/www/html/skins:cached
       - ./config:/config
       - wiki-data:/var/www/html/images

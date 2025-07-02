@@ -1,13 +1,22 @@
-FROM mediawiki:1.43.0
+FROM mediawiki:1.43 as build-wiki
+
 WORKDIR /var/www/html
 USER root
-RUN     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    &&  php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'.PHP_EOL; } else { echo 'Installer corrupt'.PHP_EOL; unlink('composer-setup.php'); exit(1); }" \
-    && php composer-setup.php \
-    && php -r "unlink('composer-setup.php');" \
-    && mv composer.phar /usr/bin/composer
 
-RUN composer require --update-no-dev mediawiki/semantic-media-wiki ~5.0
+RUN --mount=target=/var/www/html/extensions,type=cache
 
+RUN set -x; \
+    apt-get update \
+ && apt-get upgrade -y \
+ && apt-get install libzip-dev -y
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+RUN cd /var/www/html \
+ && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
+ && docker-php-ext-configure zip \
+ && docker-php-ext-install zip \
+ && composer update --no-dev
+ 
 COPY entrypoint.sh /entrypoint.sh
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh",/entrypoint.sh"]
