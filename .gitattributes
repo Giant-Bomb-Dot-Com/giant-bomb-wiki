@@ -1,2 +1,2 @@
 # Ensure shell scripts have Unix line endings
-*.sh text eol=lf 
+*.sh text eol=lf

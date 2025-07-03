@@ -1,0 +1,46 @@
+# http://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.php]
+# Technically don't need this, but added it to be explicit.
+indent_size = 4
+
+# Note: The [*.{ext1,ext2}] syntax doesn't seem to work across all editors.
+[*.json]
+indent_size = 2
+
+[*.yml]
+indent_size = 2
+
+[*.js]
+indent_size = 2
+
+[*.vue]
+indent_size = 2
+
+[*.css]
+indent_size = 2
+
+[*.less]
+indent_size = 2
+
+[*.scss]
+indent_size = 2
+
+[*.sass]
+indent_size = 2
+
+[*.sh]
+indent_size = 2
+
+[*.md]
+indent_size = 2
+trim_trailing_whitespace = false

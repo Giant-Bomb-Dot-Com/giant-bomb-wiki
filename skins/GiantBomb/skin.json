@@ -1,52 +1,41 @@
 {
-    "name": "GiantBomb",
-    "author": "Giant Bomb Wiki Street Team",
-    "url": "https://www.giantbomb.com/",
-    "description": "A custom MediaWiki skin for the Giant Bomb Wiki.",
-    "license-name": "MIT",
-    "type": "skin",
-    "ValidSkinNames": {
-      "giantbomb": {
-        "class": "SkinGiantBomb",
-        "args": [
-          {
-            "name": "giantbomb",
-            "template": "GiantBombTemplate",
-            "styles": [
-              "skins.giantbomb"
-            ]
-          }
-        ]
-      }
-    },
-    "AutoloadClasses": {
-      "SkinGiantBomb": "includes/SkinGiantBomb.php",
-      "GiantBombTemplate": "includes/GiantBombTemplate.php"
-    },
-    "ResourceModules": {
-        "skins.giantbomb.vueexamplecomponent": {
-            "scripts": [
-                "resources/components/VueExampleComponent.js"
-            ]
-        },
-        "skins.giantbomb.styles": {
-            "styles": [
-                "resources/css/styles.css"
-            ]
-        },
-        "skins.giantbomb": {
-            "packageFiles": [
-                "resources/components/index.js"
-            ],
-            "dependencies": [
-                "skins.giantbomb.vueexamplecomponent",
-                "vue"
-            ]
+  "name": "GiantBomb",
+  "author": "Giant Bomb Wiki Street Team",
+  "url": "https://www.giantbomb.com/",
+  "description": "A custom MediaWiki skin for the Giant Bomb Wiki.",
+  "license-name": "MIT",
+  "type": "skin",
+  "ValidSkinNames": {
+    "giantbomb": {
+      "class": "SkinGiantBomb",
+      "args": [
+        {
+          "name": "giantbomb",
+          "template": "GiantBombTemplate",
+          "styles": ["skins.giantbomb"]
         }
+      ]
+    }
+  },
+  "AutoloadClasses": {
+    "SkinGiantBomb": "includes/SkinGiantBomb.php",
+    "GiantBombTemplate": "includes/GiantBombTemplate.php"
+  },
+  "ResourceModules": {
+    "skins.giantbomb.vueexamplecomponent": {
+      "scripts": ["resources/components/VueExampleComponent.js"]
     },
-    "ResourceFileModulePaths": {
-      "localBasePath": "",
-      "remoteSkinPath": "GiantBomb"
+    "skins.giantbomb.styles": {
+      "styles": ["resources/css/styles.css"]
     },
-    "manifest_version": 2
-  } 
+    "skins.giantbomb": {
+      "packageFiles": ["resources/components/index.js"],
+      "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
+    }
+  },
+  "ResourceFileModulePaths": {
+    "localBasePath": "",
+    "remoteSkinPath": "GiantBomb"
+  },
+  "manifest_version": 2
+}
