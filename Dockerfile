@@ -17,6 +17,6 @@ RUN cd /var/www/html \
  && docker-php-ext-configure zip \
  && docker-php-ext-install zip \
  && composer update --no-dev
- 
+
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh",/entrypoint.sh"]
