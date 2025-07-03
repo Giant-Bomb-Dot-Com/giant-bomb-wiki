@@ -9,4 +9,7 @@ cache/
 logs/
 
 .idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .DS_Store
