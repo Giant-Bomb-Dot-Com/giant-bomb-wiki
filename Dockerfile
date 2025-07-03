@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.3
+FROM mediawiki:1.43.1
 
 WORKDIR /var/www/html
 USER root

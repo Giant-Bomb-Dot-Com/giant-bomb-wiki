@@ -7,31 +7,32 @@ We should add stuff here.
 - Have docker desktop installed and running
 - Run `docker compose up -d` in the root of this repo.
 - Go to http://localhost:8080/ in your browser. The installer will run automatically on first start.
-- The values you need for the database connection are in the docker-compose.yml file - "db" is your host, etc.
-- Make sure to check to install "Semantic MediaWiki"
-- Make your admin account, and save the password!
-- You will get to a screen that will save a LocalSettings.php file to your Downloads folder. Move that into the /config folder.
+  * Select options and hit continue until you reach the "MediaWiki 1.43.3 installation" page.  
+  * The values you need for the database connection are in the docker-compose.yml file - "db" is your host, etc.
+  * Hit continue on a few more pages until you need to name wiki.
+  * Name the wiki and enter the username and password for the Administrator account
+  * At the bottom of this page make sure to select "Ask me more questions." and hit continue
+   - Choose "Authorized editors only"
+   - "Creative Commons Attribution-NonCommercial-ShareAlike"
+   - uncheck "Enable outbound email"
+   - Select "Use this skin as default" on the skin
+   - Select "Semantic MediaWiki" under Extensions
+   - Click continue at bottom of page
+   - Click continue again
+   - One more time
+- Now you will get a LocalSettings.php file to your Downloads folder. Move that into the /config folder.
 - Before doing anything else, run `docker compose restart`.
-- You should now be able to access the wiki at http://localhost:8080/ and you should see the Giant Bomb skin enabled.
-- See **"Skins"** for adding the Giant Bomb skin to your `LocalSettings.php` if needed.
+- On this first full startup it will take a bit longer as it has to patch the DB, you can see this if you look at the container log. (Approx 10 seconds)
+- You should now be able to access the wiki at http://localhost:8080/ and you should see the Gamepress skin enabled.
 
 ## Skins
-- You can disable/enable skins by editing the `LocalSettings.php` file. See https://www.mediawiki.org/wiki/Manual:LocalSettings.php
-- To start working on the new Giant Bomb Skin add the following to your `LocalSettings.php` file:
-  - `wfLoadSkin( 'GiantBomb' );`
-  - `$wgDefaultSkin = "giantbomb";`
 
-### Building Vue Components
-- Create new Vue Components in `/skins/GiantBomb/resources/components` as `.js` files
-  - See `/skins/GiantBomb/resources/components/VueExampleComponent.js` as an example
-- New Vue Components need to be added to `skin.json` as a seperate Resource Module
-  - See `skin.giantbomb.vueexamplecomponent` for example
-- Components must then be loaded via the components object in `/skins/GiantBomb/resources/components/index.js`
-- In any `.php` template use the attribute `data-vue-component=` on any DOM element
-  - See `/skins/GiantBomb/includes/GiantBombTemplate.php` as an example
-- Vue Component will be added to DOM as a child of that element
-- Props are fully functional, see `VueExampleComponent.js` for example
+- TODO: Learn about these!
+- You can disable/enable skins by editing the LocalSettings.php file. See https://www.mediawiki.org/wiki/Manual:LocalSettings.php
 
+## SemanticMediaWiki
+
+- TODO: Add examples of usage
 
 ## TODO's
 
