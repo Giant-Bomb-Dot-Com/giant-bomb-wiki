@@ -28,9 +28,24 @@ services:
       MW_DB_USER: wiki
       MW_DB_PASSWORD: example
     volumes:
+      #Extensions
       - ./extensions:/var/www/html/extensions:cached
+      #These lines cause these extensions not to be mounted to volume
       - /var/www/html/extensions/SemanticMediaWiki
+      - /var/www/html/extensions/SemanticExtraSpecialProperties
+      - /var/www/html/extensions/SemanticResultFormats
+      - /var/www/html/extensions/SemanticScribunto
+      - /var/www/html/extensions/CodeEditor
+      - /var/www/html/extensions/WikiEditor
+      - /var/www/html/extensions/Scribunto
+      - /var/www/html/extensions/TemplateData
+      - /var/www/html/extensions/TemplateStyles
+      - /var/www/html/extensions/TemplateStylesExtender
+      #Skins
       - ./skins:/var/www/html/skins:cached
+      #These lines cause these skins not to be mounted to volume
+      - /var/www/html/skins/Vector
+
       - ./config:/config
       - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
