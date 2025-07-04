@@ -1,51 +1,30 @@
 services:
   db:
     image: mariadb:11
-    environment:
-      MARIADB_DATABASE: mediawiki
-      MARIADB_USER: wiki
-      MARIADB_PASSWORD: example
-      MARIADB_ROOT_PASSWORD: rootpass
+    env_file:
+      - .env
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-uwiki", "-pexample"]
+      test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_DATABASE -e 'SHOW DATABASES;'"
       interval: 5s
       retries: 5
 
   wiki:
     build: .
+    env_file:
+      - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8080:80"
-    environment:
-      MW_SITE_SERVER: http://localhost:8080
-      MW_SCRIPT_PATH: ""
-      MW_SITE_NAME: "Giant Bomb Wiki"
-      MW_DB_HOST: db
-      MW_DB_NAME: mediawiki
-      MW_DB_USER: wiki
-      MW_DB_PASSWORD: example
-    volumes:
-      #Extensions
-      - ./extensions:/var/www/html/extensions:cached
-      #These lines cause these extensions not to be mounted to volume
-      - /var/www/html/extensions/SemanticMediaWiki
-      - /var/www/html/extensions/SemanticExtraSpecialProperties
-      - /var/www/html/extensions/SemanticResultFormats
-      - /var/www/html/extensions/SemanticScribunto
-      - /var/www/html/extensions/CodeEditor
-      - /var/www/html/extensions/WikiEditor
-      - /var/www/html/extensions/Scribunto
-      - /var/www/html/extensions/TemplateData
-      - /var/www/html/extensions/TemplateStyles
-      - /var/www/html/extensions/TemplateStylesExtender
+    volumes:      
       #Skins
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
-
+      
       - ./config:/config
       - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
