@@ -1,0 +1,15 @@
+name: ci
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: (cd ./skins/GiantBomb && npm ci)
+      - run: npx prettier --check .
