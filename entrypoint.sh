@@ -21,8 +21,13 @@ if [ ! -f /var/www/html/LocalSettings.php ]; then
  
  cd /var/www/html/ && php maintenance/update.php
  
- #must start apache to finish patch
- cp /config/LocalSettings.php /var/www/html/LocalSettings.php
+ #must start apache to finish patch 
+ #replace secretkey
+wgSecretKey=`tr -dc a-z0-9 </dev/urandom | head -c 64; echo`
+sed -i -e 's/$wgSecretKey = "";/$wgSecretKey = "'$wgSecretKey'";/g' /config/LocalSettings.php
+
+cp /config/LocalSettings.php /var/www/html/LocalSettings.php
+
  /usr/sbin/apache2ctl start
  
  echo "Starting wiki to patch system and db..."

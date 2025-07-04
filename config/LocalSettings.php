@@ -103,7 +103,7 @@ $wgLocaltimezone = "UTC";
 ## be publicly accessible from the web.
 #$wgCacheDirectory = "$IP/cache";
 
-$wgSecretKey = "1022a77db014bb71dcc0fcf98969f3e71f36cc31e257eb6e3a9a52f0c6e116d5";
+$wgSecretKey = "";
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
