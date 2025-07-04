@@ -19,12 +19,12 @@ services:
         condition: service_healthy
     ports:
       - "8080:80"
-    volumes:      
+    volumes:
       #Skins
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
-      
+
       - ./config:/config
       - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
