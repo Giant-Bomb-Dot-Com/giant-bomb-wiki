@@ -1,8 +1,9 @@
 name: ci
 
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+    branches: [main]
 
 jobs:
   prettier:
@@ -11,5 +12,4 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: (cd ./skins/GiantBomb && npm ci)
       - run: npx prettier --check .
