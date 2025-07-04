@@ -7,11 +7,11 @@ We should add stuff here.
 - Have docker desktop installed and running
 - Run `docker compose up -d` in the root of this repo.
 - Go to http://localhost:8080/ in your browser. The installer will run automatically on first start.
-  * Select options and hit continue until you reach the "MediaWiki 1.43.1 installation" page.  
-  * The values you need for the database connection are in the docker-compose.yml file - "db" is your host, etc.
-  * Hit continue on a few more pages until you need to name wiki.
-  * Name the wiki and enter the username and password for the Administrator account
-  * At the bottom of this page make sure to select "Ask me more questions." and hit continue
+  - Select options and hit continue until you reach the "MediaWiki 1.43.1 installation" page.
+  - The values you need for the database connection are in the docker-compose.yml file - "db" is your host, etc.
+  - Hit continue on a few more pages until you need to name wiki.
+  - Name the wiki and enter the username and password for the Administrator account
+  - At the bottom of this page make sure to select "Ask me more questions." and hit continue
     - Choose "Authorized editors only"
     - "Creative Commons Attribution-NonCommercial-ShareAlike"
     - uncheck "Enable outbound email"
@@ -26,15 +26,15 @@ We should add stuff here.
 - On this first full startup it will take a bit longer as it has to patch the DB, you can see this if you look at the container log. (Approx 10 seconds)
 - You should now be able to access the wiki at http://localhost:8080/.
 - You can visit http://localhost:8080/index.php/Special:Version to see the loaded features.
-  * Skins
+  - Skins
     - GiantBomb
     - Vector
-  * Extensions
+  - Extensions
     - Seemantic Extra Special Properties
     - Semantic MediaWiki
     - Semantic Result Formats
     - Semantic Scribunto
-    - CodeEditor    
+    - CodeEditor
     - WikiEditor
     - Scribunto
     - TemplateData
@@ -52,6 +52,7 @@ We should add stuff here.
 ### Building Vue Components
 
 #### Javascript Resource Module
+
 - Vue components can be defined as a `.js` file using the Vue [Single File Component](https://vuejs.org/api/sfc-spec.html) syntax.
 - Create new Vue Component in `/skins/GiantBomb/resources/components` as a `.js` file.
   - See `/skins/GiantBomb/resources/components/VueExampleComponent.js` as an example.
@@ -59,6 +60,7 @@ We should add stuff here.
   - See `skin.giantbomb.vueexamplecomponent` for example.
 
 #### Vue Single File Component
+
 - Vue components can be defined as a `.vue` file using the Vue [Single File Component](https://vuejs.org/api/sfc-spec.html) syntax.
   - Supports styling component via the `<style>` tag.
 - Create new Vue Component in `/skins/GiantBomb/resources/components` as a `.vue` file.
@@ -67,6 +69,7 @@ We should add stuff here.
   - See `skin.giantbomb` for example.
 
 ### Binding Vue Components
+
 - To allow Vue Component to be bound to the DOM within a `.php` template, components must then be loaded via the components object in `/skins/GiantBomb/resources/components/index.js`.
 - In any `.php` template use the attribute `data-vue-component=` on any DOM element.
   - See `/skins/GiantBomb/includes/GiantBombTemplate.php` as an example.
@@ -74,12 +77,15 @@ We should add stuff here.
 - Props are fully functional by prefixing with `data-my-prop=` pattern, where `my-prop` is the name of your prop in kebab case, see `VueExampleComponent.js` for example.
 
 #### Binding Vue Components within other Vue components.
+
 - As long as the component has been included as per [Building Vue Components](#building-vue-components), it can be added to another Vue component via the `require` syntax.
   - See `/skins/GiantBomb/resources/components/VueSingleFileComponentExample.vue` as an example.
 
 ## SemanticMediaWiki
+
 - Add more notes
-- Can add SMW attributes test by going to: http://localhost:8080/index.php?title=The_Legend_of_Zelda:_Twilight_Princess and creating page with the following:
+- Can add SMW attributes test by going to: http://localhost:8080/index.php?title=The_Legend_of_Zelda:\_Twilight_Princess and creating page with the following:
+
   ```
   {{#set:
   Has Name=Pitfall
@@ -91,14 +97,15 @@ We should add stuff here.
   ```
 
   then go to: http://localhost:8080/index.php/Games and create with the following:
+
   ```
   {{#ask:
   [[Has Platform::Xbox]]
   |mainlabel=Game
-  |?Has Release=Release Date 
+  |?Has Release=Release Date
   }}
   ```
-  
+
 ## TODO's
 
 - ~~We should probably remove a lot of the stuff in this repo that could be generated/downloaded from MediaWiki via cli. Probably.~~

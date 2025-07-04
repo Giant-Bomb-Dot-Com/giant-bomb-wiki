@@ -1,25 +1,21 @@
 <template>
-  <div>
-    This is another Vue Component {{ someNumber }}
-  </div>
+  <div>This is another Vue Component {{ someNumber }}</div>
 </template>
 
 <script>
-
-const {toRefs} = require('vue');
+const { toRefs } = require("vue");
 
 module.exports = {
-  name: 'App',
+  name: "App",
   props: {
-    someNumber: Number
+    someNumber: Number,
   },
   setup(props) {
-    const { someNumber } = toRefs(props)
+    const { someNumber } = toRefs(props);
 
     return {
-      someNumber
-    }
-  }
-}
-
+      someNumber,
+    };
+  },
+};
 </script>

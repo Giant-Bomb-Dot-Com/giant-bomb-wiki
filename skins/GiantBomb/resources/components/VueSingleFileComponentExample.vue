@@ -6,23 +6,21 @@
 </template>
 
 <script>
-
-const {toRefs} = require('vue');
-const AnotherVueComponent = require('./AnotherVueComponent.vue')
+const { toRefs } = require("vue");
+const AnotherVueComponent = require("./AnotherVueComponent.vue");
 
 module.exports = {
-  name: 'App',
-  components: {AnotherVueComponent},
+  name: "App",
+  components: { AnotherVueComponent },
   props: {
-    title: String
+    title: String,
   },
   setup(props) {
-    const {title} = toRefs(props)
+    const { title } = toRefs(props);
 
     return {
-      title
-    }
-  }
-}
-
+      title,
+    };
+  },
+};
 </script>
