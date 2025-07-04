@@ -29,7 +29,11 @@
       "styles": ["resources/css/styles.css"]
     },
     "skins.giantbomb": {
-      "packageFiles": ["resources/components/index.js"],
+      "packageFiles": [
+        "resources/components/index.js",
+        "resources/components/VueSingleFileComponentExample.vue",
+        "resources/components/AnotherVueComponent.vue"
+      ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }
   },

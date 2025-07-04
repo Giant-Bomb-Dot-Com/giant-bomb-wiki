@@ -1,11 +1,14 @@
-const Vue = require('vue');
+const Vue = require("vue");
 
-// Add new Vue Componenets to components object
+// Add new Vue Components to components object
 // key: Vue Component Name
-// value: Require ResourceModule
-// ex: VueButton: require('skins.giantbomb.vuebutton')
+// value: Require ResourceModule or .Vue component
+// ex (ResourceModule): VueButton: require('skins.giantbomb.vuebutton')
+// ex (.Vue Component): VueButton: require('./VueButton.vue')
+// note: Only required for components being mounted to a php template via the 'data-vue-component' attribute.
 const components = {
-  VueExampleComponent: require('skins.giantbomb.vueexamplecomponent')
+  VueExampleComponent: require("skins.giantbomb.vueexamplecomponent"),
+  VueSingleFileComponentExample: require("./VueSingleFileComponentExample.vue"),
 };
 
 Object.entries(components).forEach(([name, component]) => {
@@ -13,7 +16,7 @@ Object.entries(components).forEach(([name, component]) => {
   mounts.forEach((el) => {
     const props = {};
     for (const attr of el.attributes) {
-      if (attr.name.startsWith('data-') && attr.name !== 'data-vue-component') {
+      if (attr.name.startsWith("data-") && attr.name !== "data-vue-component") {
         const propName = attr.name.slice(5);
         props[propName] = attr.value;
       }
