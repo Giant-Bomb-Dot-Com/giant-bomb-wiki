@@ -1,4 +1,13 @@
 body {
-  background-color: #262626;
+  background-color: #141414;
   color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.highlight {
+  color: #d9792d;
+}
+
+.red-gradient {
+  background: linear-gradient(90deg, #ae1818 0%, #9b1616 100%);
 }
