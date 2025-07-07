@@ -26,7 +26,7 @@
       "scripts": ["resources/components/VueExampleComponent.js"]
     },
     "skins.giantbomb.styles": {
-      "styles": ["resources/css/styles.css"]
+      "styles": ["resources/css/styles.css", "resources/css/landingPage.css"]
     },
     "skins.giantbomb": {
       "packageFiles": [

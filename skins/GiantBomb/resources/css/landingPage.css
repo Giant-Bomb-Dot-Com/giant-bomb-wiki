@@ -1,0 +1,67 @@
+#landing-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  hr {
+    margin: 3rem;
+    width: 80vw;
+  }
+}
+
+#tig-container {
+  width: 90vw;
+  h1 {
+    font-size: 2rem;
+  }
+  #tig-games-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 150px;
+    gap: 2rem;
+    width: 100%;
+    #game-card-1 {
+      grid-column-start: 1;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 3;
+      p {
+        max-width: 100%;
+      }
+    }
+    #game-card-2 {
+      grid-column-start: 1;
+      grid-row-start: 3;
+      grid-row-end: 5;
+    }
+  }
+}
+
+.game-card-base {
+  display: flex;
+  align-items: flex-end;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  .info-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #141414aa;
+  }
+  .game-title-and-date {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  h2,
+  h4 {
+    margin: 0;
+    margin-left: 1rem;
+    margin-right: 3rem;
+  }
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+  }
+}
