@@ -11,6 +11,8 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+RUN chown -R root:root /var/www/html && chmod -R 777 /var/www/html
+
 RUN cd /var/www/html \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
@@ -28,4 +30,5 @@ RUN cd /var/www/html \
  
 # START CONTAINER
 COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/bin/sh",/entrypoint.sh"]
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
