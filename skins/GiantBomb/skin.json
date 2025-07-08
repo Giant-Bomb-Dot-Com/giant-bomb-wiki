@@ -28,6 +28,11 @@
     "skins.giantbomb.styles": {
       "styles": ["resources/css/styles.css", "resources/css/landingPage.css"]
     },
+    "skins.giantbomb.js": {
+      "scripts": ["resources/js/wikiButtonGroup.js"],
+      "dependencies": ["mediawiki.util", "mediawiki.api"],
+      "position": "bottom"
+    },
     "skins.giantbomb": {
       "packageFiles": [
         "resources/components/index.js",

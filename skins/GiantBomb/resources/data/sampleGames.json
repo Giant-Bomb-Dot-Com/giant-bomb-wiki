@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Tekken 2",
+    "date": "🇯🇵 August 3, 1995",
+    "desc": "The sequel to Namco's original 3D fighting game adds new characters and unique attacks.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/16/164924/3375794-6525538345-sIUqS.png",
+    "platforms": ["ARC", "PS1", "+5 more"],
+    "index": 0
+  },
+  {
+    "title": "Street Fighter II: The World Warrior",
+    "date": "🇯🇵 February 6, 1991",
+    "desc": "The one-on-one arcade fighting game that kicked off the 'fighting game revolution' of the 1990s. Play as one of eight martial artists and travel the world to knock your opponents out of the tournament!",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/8/87790/2768048-box_sf2ww.jpg",
+    "platforms": ["ARC", "C64", "+9 more"],
+    "index": 1
+  },
+  {
+    "title": "Virtua Fighter 2",
+    "date": "🇱🇷 November 1994",
+    "desc": "The second game in Sega-AM2's signature 3D fighting game series builds upon its predecessor with significantly improved graphics, new gameplay mechanics, and two new fighters.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/8/87790/2989514-box_vf2.png",
+    "platforms": ["ARC", "SAT", "+9 more"],
+    "index": 2
+  },
+  {
+    "title": "Marvel Super Heroes",
+    "date": "🇱🇷 October 24, 1995 ",
+    "desc": "Marvel's most prolific heroes and villains duke it out for control of the Infinity Gems in Capcom's second fighting game in the Marvel universe.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/8/87790/2914048-box_msh.png",
+    "platforms": ["ARC", "PS1", "SAT"],
+    "index": 3
+  },
+  {
+    "title": "Mortal Kombat II",
+    "date": "🇱🇷 June 25, 1993",
+    "desc": "The second installment of one of the most violent fighting game franchises of all time, providing a smoother fighting system while adding new fighters, Fatalities, babalities, friendships, and much more.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/8/87790/1338358-mk2_vert.png",
+    "platforms": ["ARC", "32X", "+9 more"],
+    "index": 4
+  },
+  {
+    "title": "The Last Blade",
+    "date": "🇯🇵 December 5, 1997",
+    "desc": "SNK's spiritual successor to their Samurai Shodown series, taking place during mid-19th century Japan.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/5/59593/2216541-us.jpg",
+    "platforms": ["ARC", "NEO", "+11 more"],
+    "index": 5
+  },
+  {
+    "title": "Rise of the Robots",
+    "date": "🇬🇧 1994",
+    "desc": "An infamous sci-fi fighting game known for its expensive marketing campaign (failing to live up to such lofty expectations). Set in the far future 2043, players control a cyborg that must neutralize an army of robots infected with a powerful computer virus.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/0/1270/637434-470px_riseoftherobots.jpg",
+    "platforms": ["CDI", "SNES", "+7 more"],
+    "index": 6
+  },
+  {
+    "title": "Pit Fighter",
+    "date": "🇱🇷 August 1990",
+    "desc": "An early '90s fighting game that made use of beat-'em-up mechanics while being the first fighting game to use digitized real-life actors as a replacement for hand-drawn sprites, influencing games like Mortal Kombat.",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/1/14206/1033815-pf2.jpg",
+    "platforms": ["ARC", "AMI", "+10 more"],
+    "index": 7
+  },
+  {
+    "title": "Killer Instinct",
+    "date": "🇱🇷 October 1, 1994",
+    "desc": "Rare's signature fighting game, featuring heavy use of pre-rendered 3D graphics, a unique match format, a special multi-sequence combo system, and C-C-C-COMBO BREAKER",
+    "img": "https://www.giantbomb.com/a/uploads/square_small/8/87790/2575462-box_ki.png",
+    "platforms": ["ARC", "SNES", "+3 more"],
+    "index": 8
+  }
+]

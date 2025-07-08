@@ -1,24 +1,42 @@
 <?php
-$tigGames = [];
-for ($i = 1; $i <= 6; $i++) {
-    $tigGames[] = [
-        'title' => "Tekken 2",
-        'date' => "🇯🇵 August 3, 1995",
-        'desc' => "The sequel to Namco's original 3D fighting game adds new characters and a variety of new moves and unique attacks.",
-        'img' => "https://www.giantbomb.com/a/uploads/square_small/16/164924/3375794-6525538345-sIUqS.png",
-        'platforms' => ["ARC", "PS1", "+5 more"],
+use MediaWiki\Html\TemplateParser;
+
+$gamesJson = __DIR__ . '/../../resources/data/sampleGames.json';
+$buttonsJson = __DIR__ . '/../../resources/data/categoryButtons.json';
+
+// Get contents of JSON file
+$gamesContent = file_get_contents($gamesJson);
+$buttonsContent = file_get_contents($buttonsJson);
+
+// Decode JSON into PHP array
+$games = json_decode($gamesContent, true);
+$buttons = json_decode($buttonsContent, true);
+
+$hotGames = array_slice($games, 0, 3);
+$tigGames = array_slice($games, 0, 6);
+$randomGames = [...$games, ...$games];
+
+$buttonData = [];
+
+// Populate buttonData from buttons array
+foreach ($buttons as $button) {
+    $buttonData[] = [
+        'title' => $button,
+        'label' => $button
     ];
 }
-?>
 
-<div id="landing-page-container">
-    <section id="tig-container">
-        <h1>Today in gaming history</h1>
-        <div id="tig-games-container">
-            <?php foreach ($tigGames as $index => $gameData): ?>
-                <?php include __DIR__ . '/../partials/game-card.php'; ?>
-            <?php endforeach; ?>
-        </div>
-    </section>
-    <hr class="highlight" />
-</div>
+// Set Mustache data
+$data = [
+    'buttons' => $buttonData,
+    'hotGames' => $hotGames,
+    'tigGames' => $tigGames,
+    'games' => $randomGames,
+];
+
+// Path to Mustache templates
+$templateDir = realpath(__DIR__ . '/../templates/landingPage');
+
+// Render Mustache template
+$templateParser = new TemplateParser($templateDir);
+echo $templateParser->processTemplate('landing-page', $data);
