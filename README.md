@@ -5,6 +5,7 @@ We should add stuff here.
 ## Running the wiki for the first time
 
 - Have docker desktop installed and running
+- NOTE: If you are updating a previous install for the first time since getting the .env file, you will need to remove your volumes so everything is built using the new credentials.
 - Run `docker compose up -d` in the root of this repo.
 - It will take a few minutes to fully install and start the repo. You can watch the wiki container log once the containers have started to watch progress, or just wait a few minutes.
 - You should now be able to access the wiki at http://localhost:8080/.
