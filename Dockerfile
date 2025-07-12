@@ -11,6 +11,8 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+RUN chown -R www-data:www-data /var/www/html
+
 RUN cd /var/www/html \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
@@ -25,7 +27,7 @@ RUN cd /var/www/html \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
  && composer update --no-dev
- 
+
 # START CONTAINER
 COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/bin/sh",/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
