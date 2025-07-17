@@ -26,6 +26,7 @@ services:
       - /var/www/html/skins/Vector
 
       - ./config:/config
+      - ./data:/data/
       - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
     entrypoint: ["/entrypoint.sh"]
