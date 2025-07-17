@@ -43,10 +43,12 @@ if [ ! -f /var/.installed ]; then
   cd /var/www/html/ && php maintenance/run.php update 
  fi
 
- if [ -f /data/wiki_init.xml ]; then
+ if [ -f /data/wiki_init.zip ]; then
    echo "Importing initial templates and pages."
+   cd /data && unzip wiki_init.zip
    cd /var/www/html/maintenance
    php ./importDump.php < /data/wiki_init.xml
+   rm /data/wiki_init.xml
  fi
 
  /usr/sbin/apache2ctl stop
