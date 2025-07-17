@@ -97,4 +97,3 @@ We should add stuff here.
 ### Skins
 1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
 2. We can use translatewiki.net and i18n to allow / help with multi-language support.
-
