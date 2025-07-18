@@ -32,7 +32,7 @@ class PullDataFromGBApi extends Maintenance
         $content = new $classname($this->getDB(DB_PRIMARY, [], 'gb_api_dump'));
 
         try {
-            $api = new GiantBombAPI($this->getOption('apikey', ($_ENV["GB_API_KEY"]) ? $_ENV["GB_API_KEY"] : '');
+            $api = new GiantBombAPI($this->getOption('apikey', ($_ENV["GB_API_KEY"]) ? $_ENV["GB_API_KEY"] : ''));
 
             // single item pull
             if ($id = $this->getOption('id', 0)) {
