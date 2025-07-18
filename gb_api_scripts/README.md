@@ -14,5 +14,5 @@
 		- theme (dumped)
 - To dump the table data
 	- Navigate to the `gb_api_db_init` folder
-	- Run `docker ps` and the grab the container name for the db - most likely it's `giant-bomb-wiki-db-1`
-	- Run `docker exec giant-bomb-wiki-db-1 mariadb-dump -u root -p<password> gb_api_dump <table(s)...> <num>_<type>.sql`
+	- Run `docker ps` and grab the container name for the db - most likely it's `giant-bomb-wiki-db-1`
+	- Run `docker exec giant-bomb-wiki-db-1 mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... <num>_<type>.sql`

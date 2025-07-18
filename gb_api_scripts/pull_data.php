@@ -41,7 +41,7 @@ class PullDataFromGBApi extends Maintenance
                 $response = $api->request($endpoint);
                 $resultSet = [$response['results']];
             }
-            // pull everything from the endpoint; will wait an hour if request limit is reached
+            // pull everything from the endpoint; will wait an hour if request limit is reached or end early if nowait is set
             else {
                 $endpoint = $content->getResourceMultiple();
                 $max = ($this->getOption('max', -1) > 0) ? $this->getOption('max') : -1;
