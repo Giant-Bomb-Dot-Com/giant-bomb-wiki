@@ -16,6 +16,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
+-- 
+-- Switch to gb_api_dump database
+--
+USE gb_api_dump;
+
 --
 -- Table structure for table `wiki_platform`
 --
