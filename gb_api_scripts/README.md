@@ -13,6 +13,7 @@
 		- genre (dumped)
 		- location
 		- platform (dumped)
+		- person
 		- rating_board (dumped)
 		- region (dumped)
 		- theme (dumped)
