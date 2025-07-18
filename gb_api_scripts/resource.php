@@ -65,16 +65,18 @@ abstract class Resource
         // so we return its id if it exists
         if ($diffCount <= 1) {
             $qb = $this->dbw->newSelectQueryBuilder();
-            $qb->select('id')
+            $qb->select($uniquePrimaryKeys)
                ->from($tableName)
                ->where($data)
                ->caller(__METHOD__);
 
-            $result = $qb->fetchField();
+            $result = $qb->fetchRow();
 
             if ($result !== false) {
-                echo "Duplicate found in " . $tableName . " table with ID " . $result . "\r\n";
-                return $result;
+                $set = json_decode(json_encode($result), true);
+
+                echo "Duplicate found in " . $tableName . " table with data: " . implode(', ', $set) . "\r\n";
+                return 0;
             }
             else {
                 $this->dbw->insert(
@@ -111,6 +113,15 @@ abstract class Resource
         }
 
         return $insertId;
+    }
+
+    public function addRelations(array $map, int $mainFieldId, array $relations)
+    {
+        foreach ($relations as $entry) {
+            $this->insertOrUpdate($map["table"], 
+                                 [$map["mainField"] => $mainFieldId, $map["relationFIeld"] => $entry["id"]], 
+                                 [$map["mainField"], $map["relationFIeld"]]);
+        }
     }
 
     /**

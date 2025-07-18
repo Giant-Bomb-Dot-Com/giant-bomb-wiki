@@ -39,16 +39,16 @@ class PullDataFromGBApi extends Maintenance
             if ($id = $this->getOption('id', 0)) {
                 $endpoint = sprintf('%s/%d-%d', $content->getResourceSingular(), $content->getTypeId(), $id);
                 $response = $api->request($endpoint);
-                $response = [$response];
+                $resultSet = [$response['results']];
             }
             // pull everything from the endpoint; will wait an hour if request limit is reached
             else {
                 $endpoint = $content->getResourceMultiple();
                 $max = ($this->getOption('max', -1) > 0) ? $this->getOption('max') : -1;
-                $response = $api->paginate($endpoint, ['offset' => (int)$this->getOption('offset', 0)], $max);
+                $resultSet = $api->paginate($endpoint, ['offset' => (int)$this->getOption('offset', 0)], $max);
             }
 
-            $data = $content->save($response);
+            $data = $content->save($resultSet);
         }
         catch (Exception $e) {
             echo $e->getMessage();
