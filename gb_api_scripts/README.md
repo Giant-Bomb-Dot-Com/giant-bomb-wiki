@@ -16,6 +16,7 @@
 		- rating_board (dumped)
 		- region (dumped)
 		- theme (dumped)
+		- thing (dumped - missing relations - alias for object)
 - To dump the table data
 	- Navigate to the `gb_api_db_init` folder
 	- Run `docker ps` and grab the container name for the db - most likely it is `giant-bomb-wiki-db-1`
