@@ -1,7 +1,7 @@
 # pull_data.php
 
 - Add your api key to the .env file. The api key can be found at https://www.giantbomb.com/api when you're logged into the site
-- Run `docker ps` and grab the container name for the wiki - most likely its `giant-bomb-wiki-wiki-1`
+- Run `docker ps` and grab the container name for the wiki - most likely it's `giant-bomb-wiki-wiki-1`
 - Run `docker exec giant-bomb-wiki-wiki-1 php /var/www/html/maintenance/run.php gb_api_scripts/pull_data.php <singular endpoint>`
 	- available endpoints: 
 		- accessory (dumped)
@@ -11,3 +11,8 @@
 		- location
 		- platform (dumped)
 		- region (dumped)
+		- theme (dumped)
+- To dump the table data
+	- Navigate to the `gb_api_db_init` folder
+	- Run `docker ps` and the grab the container name for the db - most likely it's `giant-bomb-wiki-db-1`
+	- Run `docker exec giant-bomb-wiki-db-1 mariadb-dump -u root -p<password> gb_api_dump <table(s)...> <num>_<type>.sql`

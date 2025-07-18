@@ -11,6 +11,7 @@ class GiantBombAPI
     private string $apiKey;
     private string $baseUrl = 'https://www.giantbomb.com/api/';
     private int $defaultLimit = 100; // Max limit per request for Giant Bomb API
+    private bool $nowait = false; // Flag to stop run once request limit has been reached
 
     /**
      * @var int $currentPage A static variable to keep track of the current page number during pagination.
@@ -38,13 +39,13 @@ class GiantBombAPI
      * @param string $apiKey Your Giant Bomb API key.
      * @throws InvalidArgumentException If the API key is empty.
      */
-    public function __construct(string $apiKey)
+    public function __construct(string $apiKey, bool $nowait)
     {
         if (empty($apiKey)) {
             throw new InvalidArgumentException("Giant Bomb API Key cannot be empty.  Go to https://www.giantbomb.com/api and copy it into your .env file.");
         }
         $this->apiKey = $apiKey;
-
+        $this->nowait = $nowait;
 
         // Initialize lastResetTime if it's the very first time the class is loaded
         if (self::$lastResetTime === 0) {
@@ -76,13 +77,20 @@ class GiantBombAPI
             $timeToWait = self::RATE_LIMIT_INTERVAL_SECONDS - ($currentTime - self::$lastResetTime);
 
             if ($timeToWait > 0) {
-                echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint . "). Waiting for " . $timeToWait . " seconds...\n";
-                sleep($timeToWait); 
-                
-                // its a new hour
-                self::$requestCount = 0;        
-                self::$lastResetTime = time();  
-                echo "Resuming requests.\n";
+                if ($this->nowait) {
+                    echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint ."). Nowait flag set to true. Exiting...\n";
+                    // return empty array to trigger end of loop
+                    return [];
+                }
+                else {
+                    echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint . "). Waiting for " . $timeToWait . " seconds...\n";
+                    sleep($timeToWait); 
+                    
+                    // its a new hour
+                    self::$requestCount = 0;        
+                    self::$lastResetTime = time();  
+                    echo "Resuming requests.\n";
+                }
             }
         }
 

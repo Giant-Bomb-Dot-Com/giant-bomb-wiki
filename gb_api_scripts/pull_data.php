@@ -14,6 +14,7 @@ class PullDataFromGBApi extends Maintenance
         $this->addOption('id', 'To target pull by the wiki id (optional)', false, true, 'i');
         $this->addOption('offset', 'To start pulling from an offset value (optional)', false, true, 'o');
         $this->addOption('max', 'The max number of results to pull', false, true, 'm');
+        $this->addOption('nowait', 'Stops run when request limit is reached instead of waiting an hour.', false, false, 'n');
     }
 
     public function execute()
@@ -32,7 +33,7 @@ class PullDataFromGBApi extends Maintenance
         $content = new $classname($this->getDB(DB_PRIMARY, [], 'gb_api_dump'));
 
         try {
-            $api = new GiantBombAPI($this->getOption('apikey', ($_ENV["GB_API_KEY"]) ? $_ENV["GB_API_KEY"] : ''));
+            $api = new GiantBombAPI($this->getOption('apikey', ($_ENV["GB_API_KEY"]) ? $_ENV["GB_API_KEY"] : ''), (bool)$this->getOption('nowait', 0));
 
             // single item pull
             if ($id = $this->getOption('id', 0)) {
