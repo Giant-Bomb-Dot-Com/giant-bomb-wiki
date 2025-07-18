@@ -158,6 +158,8 @@ class GiantBombAPI
 
             $response = $this->request($endpoint, $params);
 
+            echo "Pulled " . $offset . " to " . ($offset + $response['number_of_page_results']) . "\r\n";
+
             if (!isset($response['results']) || !is_array($response['results'])) {
                 // no more results
                 break;
