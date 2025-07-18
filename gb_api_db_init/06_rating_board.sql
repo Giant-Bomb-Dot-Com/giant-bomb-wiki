@@ -16,37 +16,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
+-- 
+-- Switch to gb_api_dump database
 --
--- Table structure for table `wiki_game_release_rating_board`
---
-
-DROP TABLE IF EXISTS `wiki_game_release_rating_board`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wiki_game_release_rating_board` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date_created` datetime NOT NULL,
-  `date_updated` datetime DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `description_new` longtext NOT NULL,
-  `description` longtext NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `aliases` varchar(4096) DEFAULT NULL,
-  `deck` varchar(512) DEFAULT NULL,
-  `slug` varchar(50) NOT NULL,
-  `is_important` tinyint(1) NOT NULL,
-  `region_id` int(11) DEFAULT NULL,
-  `background_image_id` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_9A29F4243DA5256D` (`image_id`),
-  KEY `IDX_9A29F42498260155` (`region_id`),
-  KEY `IDX_9A29F424E6DA28AA` (`background_image_id`),
-  CONSTRAINT `FK_9A29F4243DA5256D` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
-  CONSTRAINT `FK_9A29F42498260155` FOREIGN KEY (`region_id`) REFERENCES `wiki_game_release_region` (`id`),
-  CONSTRAINT `FK_9A29F424E6DA28AA` FOREIGN KEY (`background_image_id`) REFERENCES `image` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+USE gb_api_dump;
 
 --
 -- Dumping data for table `wiki_game_release_rating_board`

@@ -14,8 +14,6 @@ class Rating_board extends Resource
      * 
      * id = id
      * image_id = image->original_url
-     * game_id = game->id
-     * platform_id = platform->id
      * date_created = date_added
      * date_updated = date_last_updated
      * name = name

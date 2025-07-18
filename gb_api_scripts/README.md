@@ -8,6 +8,7 @@
 		- character
 		- concept
 		- dlc
+		- game_rating (dumped)
 		- genre (dumped)
 		- location
 		- platform (dumped)
