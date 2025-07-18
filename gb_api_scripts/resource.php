@@ -50,9 +50,9 @@ abstract class Resource
     /**
      * Inserts a new entry or updates it if it exists
      * 
-     * @param string $tableName
-     * @param array  $data
-     * @param array  $uniquePrimaryKeys
+     * @param string $tableName The name of the table to be used in the query.
+     * @param array  $data Associative array where key is the table column.
+     * @param array  $uniquePrimaryKeys The primary key(s) of the table. Can be Id or composite keys.
      * @return int
      * @throws UnexpectedValueException
      */
@@ -116,7 +116,7 @@ abstract class Resource
     /**
      * Loops through the results and saves each one
      * 
-     * @param array $data
+     * @param array $data The response from the api call.
      * @return void
      */
     public function save(array $data): void

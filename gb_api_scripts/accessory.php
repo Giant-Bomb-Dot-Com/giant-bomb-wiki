@@ -20,8 +20,8 @@ class Accessory extends Resource
      * deck = deck
      * description = description
      * 
-     * @param array $data
-     * @return int
+     * @param array $data The api response array.
+     * @return int 
      */
     public function process(array $data): int
     {

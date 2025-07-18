@@ -21,6 +21,7 @@ class PullDataFromGBApi extends Maintenance
         $apikey = $this->getArg(0);
         $resource = $this->getArg(1);
 
+        // dynamically include the resource class based on the resource argument
         $filePath = sprintf('%s/%s.php', __DIR__, $resource);
         if (file_exists($filePath)) {
             include $filePath; 
@@ -34,11 +35,13 @@ class PullDataFromGBApi extends Maintenance
         try {
             $api = new GiantBombAPI($apikey);
 
+            // single item pull
             if ($id = $this->getOption('id', 0)) {
                 $endpoint = sprintf('%s/%d-%d', $content->getResourceSingular(), $content->getTypeId(), $id);
                 $response = $api->request($endpoint);
                 $response = [$response];
             }
+            // pull everything from the endpoint; will wait an hour if request limit is reached
             else {
                 $endpoint = $content->getResourceMultiple();
                 $max = ($this->getOption('max', -1) > 0) ? $this->getOption('max') : -1;
