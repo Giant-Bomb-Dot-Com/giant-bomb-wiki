@@ -22,36 +22,6 @@
 USE gb_api_dump;
 
 --
--- Table structure for table `wiki_accessory`
---
-
-DROP TABLE IF EXISTS `wiki_accessory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wiki_accessory` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image_id` int(11) DEFAULT NULL,
-  `date_created` datetime NOT NULL,
-  `date_updated` datetime DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `aliases` varchar(4096) DEFAULT NULL,
-  `deck` varchar(512) DEFAULT NULL,
-  `slug` varchar(50) NOT NULL,
-  `description_new` longtext NOT NULL,
-  `description` longtext NOT NULL,
-  `is_important` tinyint(1) NOT NULL,
-  `background_image_id` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `IDX_AA813C383DA5256D` (`image_id`),
-  KEY `name_idx` (`name`(191),`id`),
-  KEY `IDX_AA813C38E6DA28AA` (`background_image_id`),
-  CONSTRAINT `FK_AA813C383DA5256D` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
-  CONSTRAINT `FK_AA813C38E6DA28AA` FOREIGN KEY (`background_image_id`) REFERENCES `image` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `wiki_accessory`
 --
 

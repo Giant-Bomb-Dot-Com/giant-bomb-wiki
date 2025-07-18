@@ -22,35 +22,6 @@
 USE gb_api_dump;
 
 --
--- Table structure for table `wiki_game_theme`
---
-
-DROP TABLE IF EXISTS `wiki_game_theme`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wiki_game_theme` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date_created` datetime NOT NULL,
-  `date_updated` datetime DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `deck` varchar(512) DEFAULT NULL,
-  `aliases` varchar(4096) DEFAULT NULL,
-  `slug` varchar(50) NOT NULL,
-  `background_image_id` int(11) DEFAULT NULL,
-  `description_new` longtext NOT NULL,
-  `description` longtext NOT NULL,
-  `is_important` tinyint(1) NOT NULL,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_994E4A4F3DA5256D` (`image_id`),
-  KEY `IDX_994E4A4FE6DA28AA` (`background_image_id`),
-  CONSTRAINT `FK_994E4A4F3DA5256D` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
-  CONSTRAINT `FK_994E4A4FE6DA28AA` FOREIGN KEY (`background_image_id`) REFERENCES `image` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `wiki_game_theme`
 --
 
