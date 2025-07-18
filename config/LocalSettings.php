@@ -15,9 +15,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-
-
-
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
@@ -62,6 +59,15 @@ $wgDBserver = "db";
 $wgDBname = "gb_wiki";
 $wgDBuser = "wiki_admin";
 $wgDBpassword = "BYPASS.takes.prove.solved.slaying.locket";
+
+## Database settings for gb_api_dump
+$wgExternalDataSources['gb_api_dump'] = [ 
+    'server' => 'db',
+    'type' => 'mysql',
+    'name' => 'gb_api_dump',
+    'user' => 'wki_admin',
+    'password' => 'BYPASS.takes.prove.solved.slaying.locket'
+];
 
 # MySQL specific settings
 $wgDBprefix = "";
