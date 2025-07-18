@@ -65,7 +65,7 @@ abstract class Resource
         // so we return its id if it exists
         if ($diffCount <= 1) {
             $qb = $this->dbw->newSelectQueryBuilder();
-            $qb->select($uniquePrimaryKeys)
+            $qb->select('*')
                ->from($tableName)
                ->where($data)
                ->caller(__METHOD__);
@@ -74,9 +74,9 @@ abstract class Resource
 
             if ($result !== false) {
                 $set = json_decode(json_encode($result), true);
-
                 echo "Duplicate found in " . $tableName . " table with data: " . implode(', ', $set) . "\r\n";
-                return 0;
+
+                return (isset($set['id'])) ? $set['id'] : 0;
             }
             else {
                 $this->dbw->insert(
