@@ -48,7 +48,7 @@ class Person extends Resource
         ], ['assoc_type_id', 'assoc_id', 'image']);
 
         // save the wiki type relationships in their respective relationship table
-        //  these are only available when hitting the character endpoint
+        //  these are only available when hitting the singular endpoint
         if (!empty($data['characters'])) {
             $this->addRelations(self::RELATION_TABLE_MAP['characters'], $data['id'], $data['characters']);
         }

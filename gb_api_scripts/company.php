@@ -2,19 +2,20 @@
 
 require_once(__DIR__.'/resource.php');
 
-class Franchise extends Resource
+class Company extends Resource
 {
-    const TYPE_ID = 3025;
-    const RESOURCE_SINGULAR = "franchise";
-    const RESOURCE_MULTIPLE = "franchises";
-    const TABLE_NAME = "wiki_franchise";
+    const TYPE_ID = 3010;
+    const RESOURCE_SINGULAR = "company";
+    const RESOURCE_MULTIPLE = "companies";
+    const TABLE_NAME = "wiki_company";
     const RELATION_TABLE_MAP = [
-        "characters" =>  ["table" => "wiki_assoc_character_franchise", "mainField" => "franchise_id", "relationField" => "character_id"],
-        "concepts" => ["table" => "wiki_assoc_concept_franchise", "mainField" => "franchise_id", "relationField" => "concept_id"],
-        "games" =>  ["table" => "wiki_assoc_game_franchise", "mainField" => "franchise_id", "relationField" => "game_id"],
-        "locations" =>  ["table" => "wiki_assoc_franchise_location", "mainField" => "franchise_id", "relationField" => "location_id"],
-        "objects" =>  ["table" => "wiki_assoc_franchise_thing", "mainField" => "franchise_id", "relationField" => "thing_id"],
-        "people" =>  ["table" => "wiki_assoc_franchise_person", "mainField" => "franchise_id", "relationField" => "person_id"],
+        "characters" =>  ["table" => "wiki_assoc_character_company", "mainField" => "company_id", "relationField" => "character_id"],
+        "concepts" => ["table" => "wiki_assoc_company_concept", "mainField" => "company_id", "relationField" => "concept_id"],
+        "developed_games" =>  ["table" => "wiki_assoc_game_developer", "mainField" => "company_id", "relationField" => "game_id"],
+        "locations" =>  ["table" => "wiki_assoc_company_location", "mainField" => "company_id", "relationField" => "location_id"],
+        "objects" =>  ["table" => "wiki_assoc_company_thing", "mainField" => "company_id", "relationField" => "thing_id"],
+        "people" =>  ["table" => "wiki_assoc_company_person", "mainField" => "company_id", "relationField" => "person_id"],
+        "published_games" =>  ["table" => "wiki_assoc_game_publisher", "mainField" => "company_id", "relationField" => "game_id"],
     ];
 
     /**
@@ -27,7 +28,15 @@ class Franchise extends Resource
      * name = name
      * deck = deck
      * description = description
+     * abbreviation = abbreviation
      * aliases = aliases
+     * founded_date = date_founded
+     * address = location_address
+     * city = location_city
+     * country = location_country
+     * state = location_state
+     * phone = phone
+     * website = website
      * 
      * @param array $data The api response array.
      * @return int 
@@ -50,7 +59,7 @@ class Franchise extends Resource
             $this->addRelations(self::RELATION_TABLE_MAP['concepts'], $data['id'], $data['concepts']);
         }
         if (!empty($data['games'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['games'], $data['id'], $data['games']);
+            $this->addRelations(self::RELATION_TABLE_MAP['developed_games'], $data['id'], $data['developed_games']);
         }
         if (!empty($data['locations'])) {
             $this->addRelations(self::RELATION_TABLE_MAP['locations'], $data['id'], $data['locations']);
@@ -61,6 +70,9 @@ class Franchise extends Resource
         if (!empty($data['people'])) {
             $this->addRelations(self::RELATION_TABLE_MAP['people'], $data['id'], $data['people']);
         }
+        if (!empty($data['games'])) {
+            $this->addRelations(self::RELATION_TABLE_MAP['published_games'], $data['id'], $data['developed_games']);
+        }
 
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
@@ -70,7 +82,15 @@ class Franchise extends Resource
             'name' => $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
+            'abbreviation' => $data['abbreviation'],
             'aliases' => $data['aliases'],
+            'founded_date' => $data['date_founded'],
+            'address' => $data['location_address'],
+            'city' => $data['location_city'],
+            'country' => $data['location_country'],
+            'state' => $data['location_state'],
+            'phone' => $data['phone'],
+            'website' => $data['website'],
         ], ['id']);
     }
 }
