@@ -41,9 +41,10 @@ class GiantBombAPI
     public function __construct(string $apiKey)
     {
         if (empty($apiKey)) {
-            throw new InvalidArgumentException("Giant Bomb API Key cannot be empty.");
+            throw new InvalidArgumentException("Giant Bomb API Key cannot be empty.  Go to https://www.giantbomb.com/api and copy it into your .env file.");
         }
         $this->apiKey = $apiKey;
+
 
         // Initialize lastResetTime if it's the very first time the class is loaded
         if (self::$lastResetTime === 0) {

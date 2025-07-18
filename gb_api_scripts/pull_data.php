@@ -9,8 +9,8 @@ class PullDataFromGBApi extends Maintenance
     {
         parent::__construct();
         $this->addDescription("Pulls from an endpoint on the GB api");
-        $this->addArg('apikey', 'Api key used to make requests to the GB api (required)');
         $this->addArg('resource', 'Wiki endpoint to make request against. ex: accessory (required)');
+        $this->addOption('apikey', 'Api key used to make requests to the GB api');
         $this->addOption('id', 'To target pull by the wiki id (optional)', false, true, 'i');
         $this->addOption('offset', 'To start pulling from an offset value (optional)', false, true, 'o');
         $this->addOption('max', 'The max number of results to pull', false, true, 'm');
@@ -18,8 +18,7 @@ class PullDataFromGBApi extends Maintenance
 
     public function execute()
     {
-        $apikey = $this->getArg(0);
-        $resource = $this->getArg(1);
+        $resource = $this->getArg(0);
 
         // dynamically include the resource class based on the resource argument
         $filePath = sprintf('%s/%s.php', __DIR__, $resource);
@@ -33,7 +32,7 @@ class PullDataFromGBApi extends Maintenance
         $content = new $classname($this->getDB(DB_PRIMARY, [], 'gb_api_dump'));
 
         try {
-            $api = new GiantBombAPI($apikey);
+            $api = new GiantBombAPI($this->getOption('apikey', ($_ENV["GB_API_KEY"]) ? $_ENV["GB_API_KEY"] : '');
 
             // single item pull
             if ($id = $this->getOption('id', 0)) {

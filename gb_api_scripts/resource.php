@@ -115,7 +115,14 @@ abstract class Resource
         return $insertId;
     }
 
-    public function addRelations(array $map, int $mainFieldId, array $relations)
+    /**
+     * Fills in the connector tables
+     * 
+     * @param array $map A mapping table defining the field names and table name
+     * @param int $mainFieldId The id of the main field
+     * @param array $relations An array that includes the id of the relation field
+     */
+    public function addRelations(array $map, int $mainFieldId, array $relations): void
     {
         foreach ($relations as $entry) {
             $this->insertOrUpdate($map["table"], 
