@@ -10,7 +10,7 @@ class Dlc extends Resource
     const TABLE_NAME = "wiki_game_dlc";
 
     /**
-     * Matching character table fields to api response fields
+     * Matching table fields to api response fields
      * 
      * id = id
      * image_id = image->original_url
