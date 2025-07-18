@@ -13,12 +13,12 @@ USE gb_api_dump;
 SET FOREIGN_KEY_CHECKS = 0;
 
 --
--- Table structure for table `images`
+-- Table structure for table `image`
 --
-DROP TABLE IF EXISTS image;
+DROP TABLE IF EXISTS `image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE image (
+CREATE TABLE `image` (
     `id` int NOT NULL AUTO_INCREMENT,
     `assoc_type_id` INT DEFAULT NULL,
     `assoc_id` INT DEFAULT NULL,
