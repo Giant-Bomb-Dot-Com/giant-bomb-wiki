@@ -8,3 +8,4 @@
 		- character
 		- dlc
 		- genre (dumped)
+		- location
