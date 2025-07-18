@@ -9,3 +9,4 @@
 		- dlc
 		- genre (dumped)
 		- location
+		- platform (dumped)

@@ -2,26 +2,30 @@
 
 require_once(__DIR__.'/resource.php');
 
-class Dlc extends Resource
+class Platform extends Resource
 {
-    const TYPE_ID = 3020;
-    const RESOURCE_SINGULAR = "dlc";
-    const RESOURCE_MULTIPLE = "dlcs";
-    const TABLE_NAME = "wiki_game_dlc";
+    const TYPE_ID = 3045;
+    const RESOURCE_SINGULAR = "platform";
+    const RESOURCE_MULTIPLE = "platforms";
+    const TABLE_NAME = "wiki_platform";
 
     /**
      * Matching table fields to api response fields
      * 
      * id = id
      * image_id = image->original_url
-     * game_id = game->id
-     * platform_id = platform->id
      * date_created = date_added
      * date_updated = date_last_updated
-     * name = name
      * deck = deck
      * description = description
+     * name = name
+     * short_name = abbreviation
+     * aliases = aliases
      * release_date = release_date
+     * install_base = install_base
+     * online_support = online_support
+     * original_price = original_price
+     * manufacturer_id = company->id
      * 
      * @param array $data The api response array.
      * @return int 
@@ -38,14 +42,18 @@ class Dlc extends Resource
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
             'image_id' => $imageId,
-            'game_id' => (is_null($data['game'])) ? null : $data['game']['id'],
-            'platform_id' => (is_null($data['platform'])) ? null : $data['platform']['id'],
-            'release_date' => $data['release_date'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
-            'name' => $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
+            'name' => $data['name'],
+            'short_name' => $data['abbreviation'],
+            'aliases' => $data['aliases'],
+            'release_date' => $data['release_date'],
+            'install_base' => $data['install_base'],
+            'online_support' => $data['online_support'],
+            'original_price' => $data['original_price'],
+            'manufacturer_id' => (is_null($data['company'])) ? null : $data['company']['id'],
         ], ['id']);
     }
 }
