@@ -41,7 +41,6 @@ class Character extends Resource
      */
     public function process(array $data): int
     {
-        var_dump($data);
         // save the image relation first to get its id
         $imageId = $this->insertOrUpdate("image", [
             'assoc_type_id' => self::TYPE_ID,

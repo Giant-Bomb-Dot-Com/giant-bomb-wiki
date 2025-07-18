@@ -126,8 +126,8 @@ abstract class Resource
     {
         foreach ($relations as $entry) {
             $this->insertOrUpdate($map["table"], 
-                                 [$map["mainField"] => $mainFieldId, $map["relationFIeld"] => $entry["id"]], 
-                                 [$map["mainField"], $map["relationFIeld"]]);
+                                 [$map["mainField"] => $mainFieldId, $map["relationField"] => $entry["id"]], 
+                                 [$map["mainField"], $map["relationField"]]);
         }
     }
 
