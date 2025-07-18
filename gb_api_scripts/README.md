@@ -10,3 +10,4 @@
 		- genre (dumped)
 		- location
 		- platform (dumped)
+		- region (dumped)
