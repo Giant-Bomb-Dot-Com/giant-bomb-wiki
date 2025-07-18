@@ -6,6 +6,7 @@
 	- available endpoints: 
 		- accessory (dumped)
 		- character
+		- concept
 		- dlc
 		- genre (dumped)
 		- location
