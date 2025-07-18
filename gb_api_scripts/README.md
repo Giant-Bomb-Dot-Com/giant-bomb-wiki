@@ -11,6 +11,7 @@
 		- genre (dumped)
 		- location
 		- platform (dumped)
+		- rating_board (dumped)
 		- region (dumped)
 		- theme (dumped)
 - To dump the table data
