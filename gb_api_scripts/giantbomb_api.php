@@ -121,7 +121,7 @@ class GiantBombAPI
         }
 
         if (isset($decodedResponse['error']) && $decodedResponse['error'] !== 'OK') {
-            throw new Exception("Giant Bomb API Error: " . $decodedResponse['error'] . " (Status Code: " . $decodedResponse['status_code'] . ")");
+            throw new Exception("Giant Bomb API Error: " . $decodedResponse['error'] . " (Status Code: " . $decodedResponse['status_code'] . ") URL: " . $url);
         }
 
         return $decodedResponse;

@@ -49,6 +49,7 @@ class Character extends Resource
         ], ['assoc_type_id', 'assoc_id', 'image']);
 
         // save the wiki type relationships in their respective relationship table
+        //  these are only available when hitting the character endpoint
         if (!empty($data['concepts'])) {
             $this->addRelations(self::RELATION_TABLE_MAP['concepts'], $data['id'], $data['concepts']);
         }
