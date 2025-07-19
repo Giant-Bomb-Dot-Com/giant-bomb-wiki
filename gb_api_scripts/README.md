@@ -6,7 +6,7 @@
   - available endpoints:
     - accessory (dumped)
     - character
-    - company
+    - company (dumped - missing relations: requires looping through one at a time)
     - concept (dumped - missing relations: requires looping through one at a time)
     - dlc (dumped)
     - franchise (dumped - missing relations: requires looping through one at a time)
