@@ -7,9 +7,9 @@
     - accessory (dumped)
     - character
     - company
-    - concept
+    - concept (dumped - missing relations: requires looping through one at a time)
     - dlc
-    - franchise (dumped - missing relations)
+    - franchise (dumped - missing relations: requires looping through one at a time)
     - game
     - game_rating (dumped)
     - genre (dumped)
@@ -20,7 +20,7 @@
     - region (dumped)
     - release
     - theme (dumped)
-    - thing (dumped - missing relations - alias for object)
+    - thing (alias for object: dumped - missing relations: requires looping through one at a time)
 - To dump the table data
   - Navigate to the `gb_api_db_init` folder
   - Run `docker ps` and grab the container name for the db - most likely it is `giant-bomb-wiki-db-1`
