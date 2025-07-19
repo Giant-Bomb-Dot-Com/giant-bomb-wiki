@@ -8,7 +8,7 @@
     - character
     - company
     - concept (dumped - missing relations: requires looping through one at a time)
-    - dlc
+    - dlc (dumped)
     - franchise (dumped - missing relations: requires looping through one at a time)
     - game
     - game_rating (dumped)
