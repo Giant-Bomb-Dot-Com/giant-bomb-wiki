@@ -48,7 +48,7 @@ class PullDataFromGBApi extends Maintenance
                 $resultSet = $api->paginate($endpoint, ['offset' => (int)$this->getOption('offset', 0)], $max);
             }
 
-            $data = $content->save($resultSet);
+            $content->save($resultSet);
         }
         catch (Exception $e) {
             echo $e->getMessage();

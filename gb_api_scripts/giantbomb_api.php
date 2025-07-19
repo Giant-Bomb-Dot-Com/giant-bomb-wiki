@@ -156,7 +156,13 @@ class GiantBombAPI
         do {
             $params['offset'] = $offset;
 
-            $response = $this->request($endpoint, $params);
+            try {
+                $response = $this->request($endpoint, $params);
+            }
+            catch (Exception $e) {
+                // exit with what we have instead of dying
+                break;
+            }
             sleep(1);
 
             echo "Pulled " . $offset . " to " . ($offset + $response['number_of_page_results']) . "\r\n";
