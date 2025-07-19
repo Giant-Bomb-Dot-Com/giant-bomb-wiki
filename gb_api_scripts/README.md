@@ -13,7 +13,7 @@
     - game
     - game_rating (dumped)
     - genre (dumped)
-    - location
+    - location (dumped)
     - platform (dumped)
     - person
     - rating_board (dumped)
