@@ -46,7 +46,6 @@ class Game extends Resource
      * Fields returned in the game api rolled up from other tables and has no relationship table itself
      * 
      * original_game_rating
-     * original_release_date
      * first_appeareance_characters
      * first_appeareance_concepts
      * first_appeareance_locations
@@ -77,12 +76,13 @@ class Game extends Resource
 
         $releaseDate = null;
         $releaseDateType = self::RELEASE_DATE_TYPE_NO_RELEASE;
-        if (!empty($data['expected_release_year'])) {
-            if (!empty($data['expected_release_day']) && !empty($data['expected_release_month'])) {
-                $releaseDate = sprintf('%s-%s-%s 00:00:00', $data['expected_release_month'], $data['expected_release_day'], $data['expected_release_year']);
-                $releaseDateType = self::RELEASE_DATE_TYPE_FULL_DATE;
-            }
-            else if (!empty($data['expected_release_quarter'])) {
+
+        if (!empty($data['original_release_date'])) {
+            $releaseDate = $data['original_release_date'];
+            $releaseDateType = self::RELEASE_DATE_TYPE_FULL_DATE;
+        }
+        else if (!empty($data['expected_release_year'])) {
+            if (!empty($data['expected_release_quarter'])) {
                 $releaseDate = sprintf('%s-01-%s 00:00:00', $data['expected_release_quarter'], $data['expected_release_year']);
                 $releaseDateType = self::RELEASE_DATE_TYPE_QTR_YEAR;
             }
