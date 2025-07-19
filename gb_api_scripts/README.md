@@ -1,0 +1,28 @@
+# pull_data.php
+
+- Add your api key to the .env file. The api key can be found at https://www.giantbomb.com/api when you're logged into the site
+- Run `docker ps` and grab the container name for the wiki - most likely it is `giant-bomb-wiki-wiki-1`
+- Run `docker exec giant-bomb-wiki-wiki-1 php /var/www/html/maintenance/run.php gb_api_scripts/pull_data.php <singular endpoint>`
+  - available endpoints:
+    - accessory (dumped)
+    - character
+    - company (dumped - missing relations: requires looping through one at a time)
+    - concept (dumped - missing relations: requires looping through one at a time)
+    - dlc (dumped)
+    - franchise (dumped - missing relations: requires looping through one at a time)
+    - game
+    - game_rating (dumped)
+    - genre (dumped)
+    - location (dumped)
+    - platform (dumped)
+    - person
+    - rating_board (dumped)
+    - region (dumped)
+    - release
+    - theme (dumped)
+    - thing (alias for object: dumped - missing relations: requires looping through one at a time)
+- To dump the table data
+  - Navigate to the `gb_api_db_init` folder
+  - Run `docker ps` and grab the container name for the db - most likely it is `giant-bomb-wiki-db-1`
+  - Run `docker exec giant-bomb-wiki-db-1 mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... <num>_<type>.sql`
+  - Edit the resulting sql script and delete the drop/create table block. Add the line `USE gb_api_dump;`.

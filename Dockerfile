@@ -11,6 +11,8 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+COPY ./gb_api_scripts /var/www/html/maintenance/gb_api_scripts/
+
 RUN chown -R www-data:www-data /var/www/html
 
 RUN cd /var/www/html \
@@ -27,6 +29,7 @@ RUN cd /var/www/html \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
  && composer update --no-dev
+
 
 # START CONTAINER
 COPY entrypoint.sh /entrypoint.sh
