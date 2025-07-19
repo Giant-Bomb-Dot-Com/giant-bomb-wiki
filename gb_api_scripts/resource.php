@@ -101,11 +101,16 @@ abstract class Resource
         $insertId = (int)$this->dbw->insertId();
 
         if ($insertId === 0) {
-            echo "Updated " . $tableName . " table with ID " . $data['id'] . "\r\n";
+            if (isset($data['id'])) {
+                echo "Updated " . $tableName . " table with ID " . $data['id'] . "\r\n";
+            }
+            else {
+                echo "Updated " . $tableName . " table with composite data: " . http_build_query($data, '', ' ') . "\r\n";
+            }
         }
         else {
             if ($diffCount == 0) {
-                echo "Added to " . $tableName . " table with composite data: " . implode(', ', $data) . "\r\n";
+                echo "Added to " . $tableName . " table with composite data: " . http_build_query($data, '', ' ') . "\r\n";
             }
             else {
                 echo "Added to " . $tableName . " table with ID " . $insertId . "\r\n";

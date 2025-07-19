@@ -44,26 +44,11 @@ class Concept extends Resource
 
         // save the wiki type relationships in their respective relationship table
         //  these are only available when hitting the singular endpoint
-        if (!empty($data['characters'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['characters'], $data['id'], $data['characters']);
-        }
-        if (!empty($data['concepts'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['concepts'], $data['id'], $data['concepts']);
-        }
-        if (!empty($data['franchises'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['franchises'], $data['id'], $data['franchises']);
-        }
-        if (!empty($data['games'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['games'], $data['id'], $data['games']);
-        }
-        if (!empty($data['locations'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['locations'], $data['id'], $data['locations']);
-        }
-        if (!empty($data['objects'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['objects'], $data['id'], $data['objects']);
-        }
-        if (!empty($data['people'])) {
-            $this->addRelations(self::RELATION_TABLE_MAP['people'], $data['id'], $data['people']);
+        $keys = array_keys(self::RELATION_TABLE_MAP);
+        foreach ($keys as $relation) {
+            if (!empty($data[$relation])) {
+                $this->addRelations(self::RELATION_TABLE_MAP[$relation], $data['id'], $data[$relation]);
+            }
         }
 
         return $this->insertOrUpdate(self::TABLE_NAME, [
