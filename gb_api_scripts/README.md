@@ -10,6 +10,7 @@
     - concept
     - dlc
     - franchise (dumped - missing relations)
+    - game
     - game_rating (dumped)
     - genre (dumped)
     - location
@@ -17,6 +18,7 @@
     - person
     - rating_board (dumped)
     - region (dumped)
+    - release
     - theme (dumped)
     - thing (dumped - missing relations - alias for object)
 - To dump the table data
