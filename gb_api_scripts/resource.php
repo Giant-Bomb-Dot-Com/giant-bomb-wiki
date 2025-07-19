@@ -74,7 +74,7 @@ abstract class Resource
 
             if ($result !== false) {
                 $set = json_decode(json_encode($result), true);
-                echo "Duplicate found in " . $tableName . " table with data: " . implode(', ', $set) . "\r\n";
+                echo "Duplicate found in " . $tableName . " table with data: " . http_build_query($set, '', ' ') . "\r\n";
 
                 return (isset($set['id'])) ? $set['id'] : 0;
             }

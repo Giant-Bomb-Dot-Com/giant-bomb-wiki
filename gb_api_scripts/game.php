@@ -40,7 +40,7 @@ class Game extends Resource
      * name = name
      * deck = deck
      * description = description
-     * release_date = combo of expected_release_day + expected_release_month + expected_release_quarter + expected_release_year
+     * release_date = original_release_date OR combo of expected_release_day + expected_release_month + expected_release_quarter + expected_release_year
      * release_date_type = depends on what values are filled from expected_* 
      * aliases = aliases
      * 
