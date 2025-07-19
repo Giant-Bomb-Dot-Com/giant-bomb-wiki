@@ -81,6 +81,24 @@ We should add stuff here.
 
 ## TODO's
 
-- ~~We should probably remove a lot of the stuff in this repo that could be generated/downloaded from MediaWiki via cli. Probably.~~
-- Get started on proof of concept approaches to theming the wiki
-- Get started building out some of the complex relationships between categories like we have on the current wiki
+### Core
+
+1. Update to use firebase for auth. ( https://github.com/Giant-Bomb-Dot-Com/giant-bomb-wiki/issues/15 )
+2. Add maintenance scripting / cron jobs to handle things like cache updates, popup text scraping, image refresh, link / semantic link refreshing.
+
+### Research
+
+1. Need to see if the templates and mustache in the skins can be used instead of the php templates for mediawiki, while keeping all of the interconnecting page functionality mediawiki has. While it looks like we can for sure replace the templates, we need everything to still function in the wiki core / syntax, so we don't have a bespoke system we have to maintain.
+2. Need to map out the schema from current GB to categories / pages / templates in mediawiki.
+3. See what is needed for full i18n support for multi-language
+
+### Templates
+
+1. The initial php template for infobox needs to be updated to match the GB games template in both data and actions.
+2. Templates will need to be made for every major page / category. i.e. Games, Publishers, People, etc.
+3. The templates will need to make sure they are tied into the semantic mediawiki tags so they can be called on later by other pages. The starcitizen.tools vehicle template works as a good analog for what the GB games template should be. Note: The top level vehicle template uses / requires 69 other templates / modules to function. The GB game page will be similar. https://starcitizen.tools/index.php?title=100i&action=edit
+
+### Skins
+
+1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
+2. We can use translatewiki.net and i18n to allow / help with multi-language support.
