@@ -28,6 +28,7 @@ class Game extends Resource
     const RELEASE_DATE_TYPE_FULL_DATE = 1;
     const RELEASE_DATE_TYPE_MONTH_YEAR = 2;
     const RELEASE_DATE_TYPE_QTR_YEAR = 3;
+    const RELEASE_DATE_TYPE_ONLY_YEAR = 4;
 
     /**
      * Matching table fields to api response fields
@@ -89,6 +90,10 @@ class Game extends Resource
             else if (!empty($data['expected_release_month'])) {
                 $releaseDate = sprintf('%s-01-%s 00:00:00', $data['expected_release_month'], $data['expected_release_year']);
                 $releaseDateType = self::RELEASE_DATE_TYPE_MONTH_YEAR;
+            }
+            else {
+                $releaseDate = sprintf('01-01-%s 00:00:00', $data['expected_release_year']);
+                $releaseDataType = self::RELEASE_DATE_TYPE_ONLY_YEAR;
             }
         }
 
