@@ -121,6 +121,34 @@ abstract class Resource
     }
 
     /**
+     * Get ids from the content
+     * 
+     * @param int $offset
+     * @param int $limit
+     * @return array
+     */
+    public function getIds(int $offset, int $limit)
+    {
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb = $qb->field('id')
+            ->from(static::TABLE_NAME)
+            ->offset($offset)
+            ->limit($limit);
+
+        return $qb->fetchFieldValues();
+    }
+
+    /**
+     * Determines if a wiki type has relations by the defined constant RELATION_TABLE_MAP
+     * 
+     * @return bool
+     */
+    public function hasRelations(): bool
+    {
+        return defined('static::RELATION_TABLE_MAP');
+    }
+
+    /**
      * Fills in the connector tables
      * 
      * @param array $map A mapping table defining the field names and table name
