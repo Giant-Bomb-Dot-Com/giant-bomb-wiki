@@ -46,7 +46,7 @@ class Platform extends Resource
             'date_updated' => $data['date_last_updated'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
-            'name' => $data['name'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'short_name' => $data['abbreviation'],
             'aliases' => $data['aliases'],
             'release_date' => $data['release_date'],

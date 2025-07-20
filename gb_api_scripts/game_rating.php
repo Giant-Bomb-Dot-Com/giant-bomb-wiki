@@ -25,7 +25,7 @@ class Game_rating extends Resource
     {
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
-            'name' => $data['name'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'ratingBoard_id' => $data['rating_board']['id'],
         ], ['id']);
     }

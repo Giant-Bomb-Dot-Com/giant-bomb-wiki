@@ -66,7 +66,7 @@ class Character extends Resource
             'birthday' => $data['birthday'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
-            'name' => $data['name'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
         ], ['id']);

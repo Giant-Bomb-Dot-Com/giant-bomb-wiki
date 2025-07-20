@@ -39,7 +39,7 @@ class Genre extends Resource
             'date_updated' => $data['date_last_updated'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
-            'name' => $data['name'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
         ], ['id']);
     }
 }
