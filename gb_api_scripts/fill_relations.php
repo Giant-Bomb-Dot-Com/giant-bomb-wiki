@@ -52,7 +52,7 @@ class FillRelationsFromGBApi extends Maintenance
         }
 
         try {
-            $defaultApiKeyInEnv =  getenv('GB_API_KEY') === false ? '' : getenv("GB_API_KEY");
+            $defaultApiKeyInEnv = (getenv('GB_API_KEY') === false) ? '' : getenv("GB_API_KEY");
 
             $api = new GiantBombAPI($this->getOption('apikey', $defaultApiKeyInEnv), true);
 
