@@ -10,7 +10,7 @@
     - concept (dumped - missing relations: requires looping through one at a time)
     - dlc (dumped)
     - franchise (dumped - missing relations: requires looping through one at a time)
-    - game
+    - game (dumped - missing relations: requires looping through one at a time)
     - game_rating (dumped)
     - genre (dumped)
     - location (dumped)
@@ -18,7 +18,7 @@
     - person
     - rating_board (dumped)
     - region (dumped)
-    - release
+    - release (dumped - missing relations: requires looping through one at a time)
     - theme (dumped)
     - thing (alias for object: dumped - missing relations: requires looping through one at a time)
 - To dump the table data
