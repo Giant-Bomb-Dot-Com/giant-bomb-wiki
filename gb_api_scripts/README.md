@@ -5,7 +5,7 @@
 - Run `docker exec giant-bomb-wiki-wiki-1 php /var/www/html/maintenance/run.php gb_api_scripts/pull_data.php <singular endpoint>`
   - available endpoints:
     - accessory (dumped)
-    - character
+    - character (dumped - missing relations: requires looping through one at a time)
     - company (dumped - missing relations: requires looping through one at a time)
     - concept (dumped - missing relations: requires looping through one at a time)
     - dlc (dumped)
