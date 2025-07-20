@@ -64,9 +64,9 @@ $wgDBpassword = getenv("MARIADB_PASSWORD");
 $wgExternalDataSources['gb_api_dump'] = [ 
     'server' => 'db',
     'type' => 'mysql',
-    'name' => 'gb_api_dump',
-    'user' => 'wki_admin',
-    'password' => 'BYPASS.takes.prove.solved.slaying.locket'
+    'name' => getenv("MARIADB_API_DUMP_DATABASE"),
+    'user' => getenv("MARIADB_USER"),
+    'password' => getenv("MARIADB_PASSWORD")
 ];
 
 # MySQL specific settings

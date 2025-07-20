@@ -11,7 +11,7 @@ class Thing extends Resource
     const RELATION_TABLE_MAP = [
         "characters" =>  ["table" => "wiki_assoc_character_thing", "mainField" => "thing_id", "relationField" => "character_id"],
         "concepts" => ["table" => "wiki_assoc_concept_thing", "mainField" => "thing_id", "relationField" => "concept_id"],
-        "franchises" =>  ["table" => "wiki_assoc_franchise_thing", "mainField" => "thing_id", "relationField" => "game_id"],
+        "franchises" =>  ["table" => "wiki_assoc_franchise_thing", "mainField" => "thing_id", "relationField" => "franchise_id"],
         "games" =>  ["table" => "wiki_assoc_game_thing", "mainField" => "thing_id", "relationField" => "game_id"],
         "locations" =>  ["table" => "wiki_assoc_location_thing", "mainField" => "thing_id", "relationField" => "location_id"],
         "people" =>  ["table" => "wiki_assoc_person_thing", "mainField" => "thing_id", "relationField" => "person_id"],
