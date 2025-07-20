@@ -5,7 +5,8 @@ services:
       - .env
     volumes:
       - db-data:/var/lib/mysql
-      - ./gb_api_db_init:/docker-entrypoint-initdb.d
+      # Uncomment this line to load data into the maintenance api dumb db
+      # - ./gb_api_db_init:/docker-entrypoint-initdb.d
     healthcheck:
       test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_DATABASE -e 'SHOW DATABASES;'"
       interval: 5s
