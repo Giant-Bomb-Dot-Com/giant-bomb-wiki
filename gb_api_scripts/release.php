@@ -53,7 +53,7 @@ class Release extends Resource
      * @param array $data The api response array.
      * @return int 
      */
-    public function process(array $data): int
+    public function process(array $data, array &$crawl): int
     {
         // save the image relation first to get its id
         $imageId = $this->insertOrUpdate("image", [
@@ -101,7 +101,7 @@ class Release extends Resource
                     }
                 }
 
-                $this->addRelations(self::RELATION_TABLE_MAP[$relation], $data['id'], $data[$relation]);
+                $this->addRelations(self::RELATION_TABLE_MAP[$relation], $data['id'], $data[$relation], $crawl);
             }
         }
 

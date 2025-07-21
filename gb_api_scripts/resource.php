@@ -2,7 +2,7 @@
 
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\InsertQueryBuilder;
-use Wikimedia\Rdbms\SelectQueryBuilder;;
+use Wikimedia\Rdbms\SelectQueryBuilder;
 
 /**
  * Resource Class
@@ -12,15 +12,17 @@ use Wikimedia\Rdbms\SelectQueryBuilder;;
 abstract class Resource 
 {
     private IDatabase $dbw;
+    private bool $crawlRelations;
 
     /**
      * Constructor
      *
      * @param IDatabase $dbw Primay db for writes
      */
-    public function __construct(IDatabase $dbw) 
+    public function __construct(IDatabase $dbw, bool $crawlRelations = false) 
     {
         $this->dbw = $dbw;
+        $this->crawlRelations = $crawlRelations;
     }
 
     /**
@@ -45,6 +47,14 @@ abstract class Resource
     public function getResourceMultiple()
     {
         return static::RESOURCE_MULTIPLE;
+    }
+
+    /**
+     * Resets crawlRelations back to its default value of false
+     */
+    public function resetCrawlRelations()
+    {
+        $this->crawlRelations = false;
     }
 
     /**
@@ -155,12 +165,20 @@ abstract class Resource
      * @param int $mainFieldId The id of the main field
      * @param array $relations An array that includes the id of the relation field
      */
-    public function addRelations(array $map, int $mainFieldId, array $relations): void
+    public function addRelations(array $map, int $mainFieldId, array $relations, array &$crawl): void
     {
         foreach ($relations as $entry) {
             $this->insertOrUpdate($map["table"], 
                                  [$map["mainField"] => $mainFieldId, $map["relationField"] => $entry["id"]], 
                                  [$map["mainField"], $map["relationField"]]);
+
+            if ($this->crawlRelations && isset($entry['api_detail_url'])) {
+                preg_match('/(\w+\/(\d{4})\-(\d+))/', $entry['api_detail_url'], $match);
+                $crawl[$match[1]] = [
+                    'related_type_id' => (int)$match[2],
+                    'related_id' => (int)$match[3]
+                ];
+            }
         }
     }
 
@@ -168,17 +186,19 @@ abstract class Resource
      * Loops through the results and saves each one
      * 
      * @param array $data The response from the api call.
-     * @return void
+     * @return array
      */
-    public function save(array $data): void
+    public function save(array $data): array
     {
+
         try {
             $this->dbw->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__); 
 
             // TODO: batch save?
 
+            $relations = [];
             foreach ($data as $row) {
-                $this->process($row);
+                $this->process($row, $relations);
             }
 
             echo "Total proccessed: " . count($data) . "\r\n";
@@ -188,6 +208,8 @@ abstract class Resource
         } finally {
             $this->dbw->query("SET FOREIGN_KEY_CHECKS = 1;", __METHOD__); 
         }
+
+        return $relations;
     }
 
     /**
@@ -196,7 +218,7 @@ abstract class Resource
      * @param array $data
      * @return int
      */
-    abstract public function process(array $data): int;
+    abstract public function process(array $data, array &$relations): int;
 }
 
 ?>

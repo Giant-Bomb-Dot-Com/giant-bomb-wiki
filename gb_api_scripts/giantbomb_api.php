@@ -59,43 +59,46 @@ class GiantBombAPI
      *
      * @param string $endpoint The API endpoint (e.g., 'games', 'platforms').
      * @param array $params Optional query parameters (e.g., ['query' => 'zelda', 'field_list' => 'name,deck']).
+     * @param bool $trackRateLimit By default it will track for 200 requests per hour with the assumption of one resource being requested
      * @return array|object Decoded JSON response as a PHP array or object.
      * @throws Exception If the cURL request fails, JSON decoding fails, or API returns an error.
      */
-    public function request(string $endpoint, array $params = [])
+    public function request(string $endpoint, array $params = [], bool $trackRateLimit = true)
     {
-        $currentTime = time();
+        if ($trackRateLimit) {
+            $currentTime = time();
 
-        // Check if a new hour window has begun since the last reset
-        if ($currentTime - self::$lastResetTime >= self::RATE_LIMIT_INTERVAL_SECONDS) {
-            self::$requestCount = 0;                // Reset count for the new hour
-            self::$lastResetTime = $currentTime;    // Reset timestamp for the new hour
-        }
+            // Check if a new hour window has begun since the last reset
+            if ($currentTime - self::$lastResetTime >= self::RATE_LIMIT_INTERVAL_SECONDS) {
+                self::$requestCount = 0;                // Reset count for the new hour
+                self::$lastResetTime = $currentTime;    // Reset timestamp for the new hour
+            }
 
-        // Check if we exceeded the rate limit for the current hour (don't need to check for resource because its one resource per run)
-        if (self::$requestCount >= self::RATE_LIMIT_PER_HOUR) {
-            $timeToWait = self::RATE_LIMIT_INTERVAL_SECONDS - ($currentTime - self::$lastResetTime);
+            // Check if we exceeded the rate limit for the current hour (don't need to check for resource because its one resource per run)
+            if (self::$requestCount >= self::RATE_LIMIT_PER_HOUR) {
+                $timeToWait = self::RATE_LIMIT_INTERVAL_SECONDS - ($currentTime - self::$lastResetTime);
 
-            if ($timeToWait > 0) {
-                if ($this->nowait) {
-                    echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint ."). Nowait flag set to true. Exiting...\n";
-                    // return empty array to trigger end of loop
-                    return [];
-                }
-                else {
-                    echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint . "). Waiting for " . $timeToWait . " seconds...\n";
-                    sleep($timeToWait); 
-                    
-                    // its a new hour
-                    self::$requestCount = 0;        
-                    self::$lastResetTime = time();  
-                    echo "Resuming requests.\n";
+                if ($timeToWait > 0) {
+                    if ($this->nowait) {
+                        echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint ."). Nowait flag set to true. Exiting...\n";
+                        // return empty array to trigger end of loop
+                        return [];
+                    }
+                    else {
+                        echo "Rate limit reached (" . self::RATE_LIMIT_PER_HOUR . " requests/hour for " . $endpoint . "). Waiting for " . $timeToWait . " seconds...\n";
+                        sleep($timeToWait); 
+                        
+                        // its a new hour
+                        self::$requestCount = 0;        
+                        self::$lastResetTime = time();  
+                        echo "Resuming requests.\n";
+                    }
                 }
             }
-        }
 
-        // Increment the request counter for the current request
-        self::$requestCount++;
+            // Increment the request counter for the current request
+            self::$requestCount++;
+        }
 
         $params['api_key'] = $this->apiKey;
         $params['format'] = 'json';

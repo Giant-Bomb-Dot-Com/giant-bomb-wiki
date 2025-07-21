@@ -31,9 +31,10 @@ class Thing extends Resource
      * aliases = aliases
      * 
      * @param array $data The api response array.
+     * @param array &$crawl Contains the relationships to further crawl through.
      * @return int 
      */
-    public function process(array $data): int
+    public function process(array $data, array &$crawl): int
     {
         // save the image relation first to get its id
         $imageId = $this->insertOrUpdate("image", [
@@ -47,7 +48,7 @@ class Thing extends Resource
         $keys = array_keys(self::RELATION_TABLE_MAP);
         foreach ($keys as $relation) {
             if (!empty($data[$relation])) {
-                $this->addRelations(self::RELATION_TABLE_MAP[$relation], $data['id'], $data[$relation]);
+                $this->addRelations(self::RELATION_TABLE_MAP[$relation], $data['id'], $data[$relation], $crawl);
             }
         }
 

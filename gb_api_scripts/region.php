@@ -24,7 +24,7 @@ class Region extends Resource
      * @param array $data The api response array.
      * @return int 
      */
-    public function process(array $data): int
+    public function process(array $data, array &$crawl): int
     {
         // save the image relation first to get its id
         $imageId = $this->insertOrUpdate("image", [
