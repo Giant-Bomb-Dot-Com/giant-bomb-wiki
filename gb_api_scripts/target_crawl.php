@@ -92,9 +92,6 @@ class TargetCrawlOfGBApi extends Maintenance
                         require_once(__DIR__.'/'.$resource.'.php');
                         $classname = ucfirst($resource);
                         $this->map[$relationSet['related_type_id']]['content'] = new $classname($this->getDB(DB_PRIMARY, [], $db), false);
-                        if (!$this->map[$relationSet['related_type_id']]['content']->hasRelations()) {
-                            continue; // we already have all the entities so we can skip these that don't have relations
-                        }
                     }
 
                     $this->map[$relationSet['related_type_id']]['content']->save($resultSet);
