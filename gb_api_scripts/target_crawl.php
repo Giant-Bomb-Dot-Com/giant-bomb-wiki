@@ -63,6 +63,9 @@ class TargetCrawlOfGBApi extends Maintenance
             exit(1);
         }
 
+        $exceededRateLimit = [];
+        $processingApiUrl = '';
+
         try {
             $defaultApiKeyInEnv = (getenv('GB_API_KEY') === false) ? '' : getenv("GB_API_KEY");
 
@@ -79,10 +82,10 @@ class TargetCrawlOfGBApi extends Maintenance
             $content->resetCrawlRelations();
             $this->map[$content->getTypeId()]['content'] = $content;
 
-            $exceededRateLimit = [];
-
+            
             // loops through and fills in the relation's relationships - this as far deep as we go
             foreach ($relations as $apiUrl => $relationSet) {
+                $processingApiUrl = $apiUrl;
                 if ($this->map[$relationSet['related_type_id']]['count'] < self::MAX_LIMIT) {
                     $response = $api->request($apiUrl, [], false); // we'll track rate limit in this scope
                     $resultSet = [$response['results']];
@@ -107,6 +110,7 @@ class TargetCrawlOfGBApi extends Maintenance
             }
         }
         catch (Exception $e) {
+            echo "API URL ERROR: " . $processingApiUrl;
             echo $e->getMessage();
         }
     }
