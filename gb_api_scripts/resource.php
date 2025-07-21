@@ -173,12 +173,14 @@ abstract class Resource
                                  [$map["mainField"], $map["relationField"]]);
 
             if ($this->crawlRelations && isset($entry['api_detail_url'])) {
-                preg_match('/(\w+\/(\d{4})\-(\d+))/', $entry['api_detail_url'], $match);
+                preg_match('/(\w+)\/(\d{4})\-(\d+)/', $entry['api_detail_url'], $match);
+
                 $resource = $match[1];
                 if ($resource == 'publisher') {
                     $resource = 'company';
                 }
-                $crawl[$match[1]] = [
+
+                $crawl[sprintf('%s/%s-%s', $resource, $match[2], $match[3])] = [
                     'related_type_id' => (int)$match[2],
                     'related_id' => (int)$match[3]
                 ];

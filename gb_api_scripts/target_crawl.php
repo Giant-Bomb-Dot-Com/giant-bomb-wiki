@@ -88,6 +88,7 @@ class TargetCrawlOfGBApi extends Maintenance
                 $processingApiUrl = $apiUrl;
                 if ($this->map[$relationSet['related_type_id']]['count'] < self::MAX_LIMIT) {
                     $response = $api->request($apiUrl, [], false); // we'll track rate limit in this scope
+                    sleep(rand(1,3));
                     $resultSet = [$response['results']];
 
                     if (is_null($this->map[$relationSet['related_type_id']]['content'])) {
