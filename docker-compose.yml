@@ -1,16 +1,17 @@
 services:
   db:
     image: mariadb:11
+    command: --skip-name-resolve=0
     env_file:
       - .env
     volumes:
       - db-data:/var/lib/mysql
 
       # Loads database schema into maintenane api dump db
-      - ./gb_api_db_init/00_wiki_schema.sql:/docker-entrypoint-initdb.d/00_wiki_schema.sql:ro
+      # - ./gb_api_db_init/00_wiki_schema.sql:/docker-entrypoint-initdb.d/00_wiki_schema.sql:ro
 
       # Uncomment this line to load data into the maintenance api dump db
-      # - ./gb_api_db_init:/docker-entrypoint-initdb.d
+      - ./gb_api_db_init:/docker-entrypoint-initdb.d
     healthcheck:
       test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_DATABASE -e 'SHOW DATABASES;'"
       interval: 5s
@@ -30,6 +31,8 @@ services:
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
+
+      - ./gb_api_scripts:/var/www/html/maintenance/gb_api_scripts
 
       - ./config:/config
       - ./data:/data/
