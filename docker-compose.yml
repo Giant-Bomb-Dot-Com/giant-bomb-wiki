@@ -8,10 +8,10 @@ services:
       - db-data:/var/lib/mysql
 
       # Loads database schema into maintenane api dump db
-      # - ./gb_api_db_init/00_wiki_schema.sql:/docker-entrypoint-initdb.d/00_wiki_schema.sql:ro
+      - ./gb_api_db_init/00_wiki_schema.sql:/docker-entrypoint-initdb.d/00_wiki_schema.sql:ro
 
       # Uncomment this line to load data into the maintenance api dump db
-      - ./gb_api_db_init:/docker-entrypoint-initdb.d
+      # - ./gb_api_db_init:/docker-entrypoint-initdb.d
     healthcheck:
       test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_DATABASE -e 'SHOW DATABASES;'"
       interval: 5s

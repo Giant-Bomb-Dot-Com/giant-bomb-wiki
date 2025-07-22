@@ -33,7 +33,8 @@ class TargetCrawlOfGBApi extends Maintenance
         $this->addDescription("Crawls the GB Api for an entity and its relations");
         $this->addArg('resource', 'Wiki type that has relations to crawl: character, company, concept, franchise, game, person, release, thing (required)');
         $this->addArg('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.');
-        $this->addOption('apikey', 'Api key used to make requests to the GB api');
+        $this->addOption('apikey', 'Api key used to make requests to the GB api', false, true, 'a');
+        $this->addOption('file', 'Skip main entity and leftover relations from previous run stored in a file.', false, true, 'f');
     }
 
     /**
@@ -59,7 +60,7 @@ class TargetCrawlOfGBApi extends Maintenance
         $content = new $classname($this->getDB(DB_PRIMARY, [], $db), true);
 
         if (!$content->hasRelations()) {
-            echo sprintf("ERROR: %s does not have relations.");
+            echo sprintf("ERROR: %s does not have relations. Use pull_data for filling in main details of the entity.", $resource);
             exit(1);
         }
 
@@ -69,27 +70,38 @@ class TargetCrawlOfGBApi extends Maintenance
         try {
             $defaultApiKeyInEnv = (getenv('GB_API_KEY') === false) ? '' : getenv("GB_API_KEY");
 
-            $api = new GiantBombAPI($this->getOption('apikey', $defaultApiKeyInEnv), true);
+            if ($this->getOption('file', false)) {
+                $json = file_get_contents($this->getOption('file'));
+                if ($json === false) {
+                    echo printf("ERROR: file does not exist.");
+                    exit(1);
+                }
+                $relations = json_decode($json);
+                if (empty($relations)) {
+                    echo printf("ERRORL: file is empty");
+                    exit(1);
+                }
+            }
+            else {
+                $api = new GiantBombAPI($this->getOption('apikey', $defaultApiKeyInEnv), true);
 
-            // get the main entity
-            $endpoint = sprintf('%s/%d-%d', $content->getResourceSingular(), $content->getTypeId(), $id);
-            $response = $api->request($endpoint);
-            $resultSet = [$response['results']];
+                // get the main entity
+                $endpoint = sprintf('%s/%d-%d', $content->getResourceSingular(), $content->getTypeId(), $id);
+                $response = $api->request($endpoint);
+                $resultSet = [$response['results']];
 
-            // returns the main entity relations
-            $relations = $content->save($resultSet);
-            $this->map[$content->getTypeId()]['count']++;
-            $content->resetCrawlRelations();
-            $this->map[$content->getTypeId()]['content'] = $content;
+                // returns the main entity relations
+                $relations = $content->save($resultSet);
+                $this->map[$content->getTypeId()]['count']++;
+                $content->resetCrawlRelations();
+                $this->map[$content->getTypeId()]['content'] = $content;
+            }
 
             
             // loops through and fills in the relation's relationships - this as far deep as we go
             foreach ($relations as $apiUrl => $relationSet) {
                 $processingApiUrl = $apiUrl;
                 if ($this->map[$relationSet['related_type_id']]['count'] < self::MAX_LIMIT) {
-                    $response = $api->request($apiUrl, [], false); // we'll track rate limit in this scope
-                    sleep(rand(1,3));
-                    $resultSet = [$response['results']];
 
                     if (is_null($this->map[$relationSet['related_type_id']]['content'])) {
                         $resource = $this->map[$relationSet['related_type_id']]['className'];
@@ -98,16 +110,27 @@ class TargetCrawlOfGBApi extends Maintenance
                         $this->map[$relationSet['related_type_id']]['content'] = new $classname($this->getDB(DB_PRIMARY, [], $db), false);
                     }
 
+                    if (!$this->map[$relationSet['related_type_id']]['content']->hasRelations()) {
+                        continue;
+                    }
+
+                    $response = $api->request($apiUrl, [], false); // we'll track rate limit in this scope
+                    sleep(rand(2,3));
+                    $resultSet = [$response['results']];
+
                     $this->map[$relationSet['related_type_id']]['content']->save($resultSet);
                     $this->map[$relationSet['related_type_id']]['count']++;
                 }
                 else {
-                    $exceededRateLimit[] = $apiUrl;
+                    $exceededRateLimit[$apiUrl] = $relationSet;
                 }
             }
 
             if (!empty($exceededRateLimit)) {
-                var_dump($exceededRateLimit);
+                $json = json_encode($exceededRateLimit);
+                $filename = 'overflow_'.$content->getTypeId().'-'.$id.'.json';
+                file_put_contents($filename, $json);
+                echo sprintf('Saved overflow into %s. Run the script again with --filen=%s once your request limit resets to continue.', $filename, $filename);
             }
         }
         catch (Exception $e) {

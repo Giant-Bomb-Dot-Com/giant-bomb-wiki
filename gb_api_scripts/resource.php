@@ -175,9 +175,11 @@ abstract class Resource
             if ($this->crawlRelations && isset($entry['api_detail_url'])) {
                 preg_match('/(\w+)\/(\d{4})\-(\d+)/', $entry['api_detail_url'], $match);
 
-                $resource = $match[1];
-                if ($resource == 'publisher') {
-                    $resource = 'company';
+                switch ($match[1]) {
+                    case 'publisher': $resource = 'company'; break;
+                    case 'enemy': $resource = 'character'; break;
+                    case 'friend': $resource ='character'; break;
+                    default: $resource = $match[1];
                 }
 
                 $crawl[sprintf('%s/%s-%s', $resource, $match[2], $match[3])] = [

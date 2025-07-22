@@ -48,6 +48,7 @@ Retrieves the wiki entity relationships.
 
 Crawls through a targeted entity to fill in its relationships and the relationship's relationships. Degree of depth is 1.
 
+- Check https://www.giantbomb.com/api to make sure the Current API Usage is clean.
 - Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <singular endpoint> <id>`
 - Options:
   - apikey: To use an apikey other than the one defined in your `.env` file.
@@ -55,7 +56,6 @@ Crawls through a targeted entity to fill in its relationships and the relationsh
 # To dump the table data
 
 - Navigate to the `gb_api_db_init` folder
-- Run `docker exec <container name> mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... --no-create-info > <num>_<type>.sql`
-  - The --no-create-info removes the query to drop/create the table.
+- Run `docker exec <container name> mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... > <num>_<type>.sql`
 - Edit the resulting sql script add the line `USE gb_api_dump;`.
 - Gzip the file if you are pushing it up.
