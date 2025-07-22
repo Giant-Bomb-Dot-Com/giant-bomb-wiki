@@ -34,7 +34,7 @@ class TargetCrawlOfGBApi extends Maintenance
         $this->addArg('resource', 'Wiki type that has relations to crawl: character, company, concept, franchise, game, person, release, thing (required)');
         $this->addArg('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.');
         $this->addOption('apikey', 'Api key used to make requests to the GB api', false, true, 'a');
-        $this->addOption('file', 'Skip main entity and leftover relations from previous run stored in a file.', false, true, 'f');
+        $this->addOption('file', 'Skip main entity and process leftover relations from previous run stored in a file.', false, true, 'f');
     }
 
     /**
