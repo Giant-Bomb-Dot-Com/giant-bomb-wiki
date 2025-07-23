@@ -67,7 +67,7 @@ class HtmlToMediaWikiConverter
         // replace the h4s with ====
         $description = preg_replace('/<h4>(.*?)<\/h4>/', "\n====$1====\n", $description);
 
-        // replace the h5s with ====
+        // replace the h5s with =====
         $description = preg_replace('/<h5>(.*?)<\/h5>/', "\n=====$1=====\n", $description);
 
         // replace the i|em with ''
@@ -79,7 +79,7 @@ class HtmlToMediaWikiConverter
         // replace the empty <p> tags
         $description = preg_replace('/<p>\s?<\/p>/', "", $description);
 
-        // replace <p> with <br> tags
+        // replace <p> with \n
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
         libxml_use_internal_errors(true);
