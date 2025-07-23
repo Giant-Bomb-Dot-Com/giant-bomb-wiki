@@ -7,14 +7,14 @@
 
 Retrieves the wiki entity details.
 
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/pull_data.php <singular endpoint>`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/pull_data.php <resource>`
   - options:
     - apikey: To use an apikey other than the one defined in your `.env` file.
     - id: Targets a specified entity.
     - max: The maximum amount of requests to make. Default is 200. Can not exceed 200.
     - offset: Tells the API the number of entities to skip before pulling.
     - nowait: When set the script will not wait for the 1 hour API request timeout and exit the program.
-  - available endpoints:
+  - available resources:
     - accessory (dumped)
     - character (dumped - missing relations: requires looping through one at a time)
     - company (dumped - missing relations: requires looping through one at a time)
@@ -37,7 +37,7 @@ Retrieves the wiki entity details.
 
 Retrieves the wiki entity relationships.
 
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <singular endpoint>`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <resource>`
 - Options:
   - apikey: To use an apikey other than the one defined in your `.env` file.
   - id: Targets a specified entity.
@@ -49,9 +49,19 @@ Retrieves the wiki entity relationships.
 Crawls through a targeted entity to fill in its relationships and the relationship's relationships. Degree of depth is 1.
 
 - Check https://www.giantbomb.com/api to make sure the Current API Usage is clean.
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <singular endpoint> <id>`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <resource> <id>`
 - Options:
   - apikey: To use an apikey other than the one defined in your `.env` file.
+
+# convert_description.php
+
+Pulls down descriptions from the db, converts it to MediaWiki format and updates the description_new field
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/convert_description.php <resource>`
+- Options:
+  - id: Targets a specified entity.
+  - apikey: To use an apikey other than the one defined in your `.env` file.
+
+docker exec -it giant-bomb-wiki-db-1 mariadb -u root -psurvived.charly.UGLIER.reefs.wreck.tagged gb_api_dump -e "SELECT description_new FROM wiki_game WHERE id = 36765;"
 
 # To dump the table data
 
