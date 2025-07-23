@@ -403,10 +403,6 @@ class HtmlToMediaWikiConverter
         $result = '';
         if ($parentNode) {
             foreach ($parentNode->childNodes as $child) {
-                if ($child->tagName === 'br') {
-                    $innerHTML .= "\n"; // mediawiki parser interprets <br> as text, replace it with newline
-                    continue;
-                }
                 if (!empty($skipElements)) {
                     if ($child->nodeType === XML_ELEMENT_NODE && in_array($child->tagName, $skipElements)) {
                         continue;
