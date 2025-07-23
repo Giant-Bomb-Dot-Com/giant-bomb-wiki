@@ -56,6 +56,7 @@ Crawls through a targeted entity to fill in its relationships and the relationsh
 # convert_description.php
 
 Pulls down descriptions from the db, converts it to MediaWiki format and updates the description_new field
+
 - Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/convert_description.php <resource>`
 - Options:
   - id: Targets a specified entity.
