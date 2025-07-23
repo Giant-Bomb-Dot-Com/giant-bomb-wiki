@@ -27,6 +27,7 @@ class PullDataFromGBApi extends Maintenance
             include $filePath; 
         } else {
             echo "Error: External script not found at {$filePath}";
+            exit(1);
         }
 
         $classname = ucfirst($resource);

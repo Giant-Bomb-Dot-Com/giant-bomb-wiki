@@ -23,6 +23,7 @@ CREATE TABLE `image` (
     `assoc_type_id` INT DEFAULT NULL,
     `assoc_id` INT DEFAULT NULL,
     `image` varchar(255) NOT NULL,
+    `caption` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `assoc_type_id_assoc_id_image_idx` (`assoc_type_id`,`assoc_id`,`image`)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

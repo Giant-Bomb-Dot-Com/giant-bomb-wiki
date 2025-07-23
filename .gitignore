@@ -3,6 +3,7 @@ node_modules/
 images/
 cache/
 logs/
+gb_api_scripts/images/
 
 .idea/
 .vscode/*

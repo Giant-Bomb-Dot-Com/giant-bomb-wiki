@@ -50,6 +50,14 @@ abstract class Resource
     }
 
     /**
+     * no comment
+     */
+    public function getDb()
+    {
+        return $this->dbw;
+    }
+
+    /**
      * Resets crawlRelations back to its default value of false
      */
     public function resetCrawlRelations()
@@ -140,12 +148,64 @@ abstract class Resource
     public function getIds(int $offset, int $limit)
     {
         $qb = $this->dbw->newSelectQueryBuilder();
-        $qb = $qb->field('id')
+        $qb->field('id')
             ->from(static::TABLE_NAME)
             ->offset($offset)
-            ->limit($limit);
+            ->limit($limit)
+            ->caller(__METHOD__);
 
         return $qb->fetchFieldValues();
+    }
+
+    /**
+     * Get rows that have not been converted yet
+     * 
+     * @param int|false $id
+     * @return array
+     */
+    public function getTextToConvert($id = false)
+    {
+        $clause = ($id) ? 'id = '.$id : 'description != "" AND description_new = ""';
+
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb->select(['id', 'name', 'description'])
+             ->from(static::TABLE_NAME)
+             ->where($clause)
+             ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
+     * Get name
+     * 
+     * @return int|false
+     */
+    public function getName(int $id)
+    {
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb->field('name')
+           ->from(static::TABLE_NAME)
+           ->where('id = '.$id);
+
+        return $qb->fetchField();
+    }
+
+    /**
+     * Stores the media wiki description in the description_new field
+     * 
+     * @param int $id
+     * @param string $mwDescription
+     */
+    public function updateMediaWikiDescription(int $id, string $mwDescription)
+    {
+        $ub = $this->dbw->newUpdateQueryBuilder();
+        $ub->update(static::TABLE_NAME)
+             ->set(['description_new' => $mwDescription])
+             ->where(['id' => $id])
+             ->caller(__METHOD__);
+
+        return $ub->execute();
     }
 
     /**
@@ -198,7 +258,6 @@ abstract class Resource
      */
     public function save(array $data): array
     {
-
         try {
             $this->dbw->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__); 
 
