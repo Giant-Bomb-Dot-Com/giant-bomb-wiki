@@ -38,17 +38,10 @@ class ConvertToMWDescriptions extends Maintenance
 
         $rows = $content->getTextToConvert($this->getOption('id', false));
         foreach ($rows as $row) {
-            var_dump($row->description);
             $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
-
-            var_dump($convertedDescription);
-
-            //$content->updateMediaWikiDescription($row->id, $convertedDescription);
-
-            // echo sprintf('Converted description for %s::%s', $row->id, $row->name);
-            exit();
+            $content->updateMediaWikiDescription($row->id, $convertedDescription);
+            echo sprintf('Converted description for %s::%s', $row->id, $row->name);
         }
-
     }
 }
 
