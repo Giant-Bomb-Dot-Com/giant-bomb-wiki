@@ -106,3 +106,37 @@ We should add stuff here.
 
 1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
 2. We can use translatewiki.net and i18n to allow / help with multi-language support.
+
+### [Package Manager](#Package-Manager)
+
+The package manager chosen is [pnpm](https://pnpm.io) for its speed.
+
+With `pnpm` ready, install the configured packages with
+
+```sh
+pnpm install
+```
+
+This will install packages defined in the [pnpm workspace config file](pnpm-workspace.yaml).
+
+### E2E Testing
+
+The end-to-end tests use the [Cypress](https://www.cypress.io) framework.
+
+After setting up the [package manager](#Package-Manager), execute the `cypress` tests in headless mode with
+
+```sh
+pnpm cypess run
+```
+
+The tests should run within the terminal and end with the test results.
+
+To open the cypress UI, run
+
+```sh
+pnpm cypress open
+```
+
+### Continuous Integration
+
+A Github Action workflow will be added to execute a subset of the `cypress` tests as part of the pull request pipeline.

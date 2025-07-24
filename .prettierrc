@@ -1,3 +1,4 @@
 {
-    "editorconfig": true
+    "editorconfig": true,
+    "semi": true
 }
