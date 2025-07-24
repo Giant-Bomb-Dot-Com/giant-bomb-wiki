@@ -102,3 +102,16 @@ We should add stuff here.
 
 1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
 2. We can use translatewiki.net and i18n to allow / help with multi-language support.
+
+### Testing
+
+The end-to-end tests are in `cypress`. With the wiki containers running, the tests can be executed without a browser opening (i.e. headless).
+From the root of the repo, excute:
+```sh
+pnpm cypess run
+```
+
+To open the cypress UI, run
+```sh
+pnpm cypress open
+```
