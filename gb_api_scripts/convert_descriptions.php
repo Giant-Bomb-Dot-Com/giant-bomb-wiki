@@ -33,9 +33,9 @@ class ConvertToMWDescriptions extends Maintenance
 
         $classname = ucfirst($resource);
         $db = getenv('MARIADB_API_DUMP_DATABASE');
-        $content = new $classname($this->getDB(DB_PRIMARY, [], $db));
-        $converter = new HtmlToMediaWikiConverter($content, $db);
+        $converter = new HtmlToMediaWikiConverter($this->getDB(DB_PRIMARY, [], $db));
 
+        $content = new $classname($this->getDB(DB_PRIMARY, [], $db));
         $rows = $content->getTextToConvert($this->getOption('id', false));
         foreach ($rows as $row) {
             $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);

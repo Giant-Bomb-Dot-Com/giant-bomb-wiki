@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/resource.php');
 
 use Wikimedia\Rdbms\IDatabase;
 
@@ -10,39 +9,14 @@ class HtmlToMediaWikiConverter
     use CommonVariablesAndMethods;
 
     private DOMDocument $dom;
-    private Resource $content;
     private int $typeId;
     private int $id;
 
-    public function __construct(Resource $content) 
+    public function __construct(IDatabase $dbw) 
     {
-        $this->content = $content;
+        $this->dbw = $dbw;
         $this->dom = new DOMDocument();
         libxml_use_internal_errors(true);
-    }
-
-    /**
-     * Downloads an image file to a local folder
-     * 
-     * @param string $imageUrl
-     * @param string $storagePath Path to storage
-     */
-    public function downloadImage(string $imageUrl, string $storage)
-    {
-        $ch = curl_init($imageUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-
-        $image = curl_exec($ch);
-        curl_close($ch);
-
-        if ($image !== false) {
-            file_put_contents($storage, $image);
-            echo "Image downloaded successfully to: " . $storage . "\r\n";
-        } else {
-            echo "Error downloading image.\r\n";
-        }
     }
 
     /**
@@ -51,10 +25,15 @@ class HtmlToMediaWikiConverter
      * @param string $description
      * @param int    $typeId
      * @param int    $id
-     * @return string
+     * @return string|false
      */
-    public function convert(string $description, int $typeId, int $id): string
+    public function convert(string $description, int $typeId, int $id): string|false
     {
+        if (empty($description)) {
+            echo sprintf("WARNING: description for %s-%s is empty.\n", $typeId, $id);
+            return false;
+        }
+
         $this->typeId = $typeId;
         $this->id = $id;
 
@@ -83,8 +62,13 @@ class HtmlToMediaWikiConverter
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
         libxml_use_internal_errors(true);
-        $this->dom->loadHTML('<div>'.$description.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $success = $this->dom->loadHTML('<div>'.$description.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
+
+        if (!$success) {
+            echo sprintf("WARNING: failed to load html for %s-%s.\n", $typeId, $id);
+            return false;
+        }
 
         $block = $this->dom->getElementsByTagName('div')->item(0);
 
@@ -155,8 +139,17 @@ class HtmlToMediaWikiConverter
             }
         }
 
+        $modifiedDescription = $this->getInnerHtml($block);
+
+        // dom->saveHtml applies htmlentities which we have to fix for the img tag
+        //     to appear correctly
+        $modifiedDescription = str_replace('&lt;img', '<img', $modifiedDescription);
+        $modifiedDescription = str_replace('&amp;lt;img', '<img', $modifiedDescription);
+        $modifiedDescription = str_replace('/&amp;gt;', '/>', $modifiedDescription);
+        $modifiedDescription = str_replace('/&gt;', '/>', $modifiedDescription);
+
         // return the modified description
-        return $this->getInnerHtml($block);
+        return $modifiedDescription;
     }
 
     /**
@@ -181,7 +174,7 @@ class HtmlToMediaWikiConverter
      */
     function convertTable(DOMElement $table): string
     {
-        $mwTable = "\n{| class='wikitable' style='margin:auto'\n";
+        $mwTable = "\n{| class='wikitable' style='margin:auto;width:100%;'\n";
 
         $caption = $table->getElementsByTagName('caption')->item(0);
         if ($caption) {
@@ -258,6 +251,9 @@ class HtmlToMediaWikiConverter
         $isExternalLink = (bool)preg_match('/^http/', $parts['dirname']);
 
         if ($isExternalLink) {
+            $parts['dirname'] = str_replace('static.giantbomb.com', 'www.giantbomb.com/a', $parts['dirname']);
+            $parts['dirname'] = str_replace('giantbomb1.cbsistatic.com', 'www.giantbomb.com/a', $parts['dirname']);
+            $href = $parts['dirname'] . '/' . $parts['basename'];
             // different format for external link
             $mwLink = "[$href $displayText]";
         }
@@ -274,7 +270,7 @@ class HtmlToMediaWikiConverter
                     $resource = $this->map[$contentTypeId]['className'];
                     require_once(__DIR__.'/'.$resource.'.php');
                     $classname = ucfirst($resource);
-                    $this->map[$contentTypeId]['content'] = new $classname($this->content->getDb());
+                    $this->map[$contentTypeId]['content'] = new $classname($this->dbw);
                 }
 
                 $name = $this->map[$contentTypeId]['content']->getName($contentId);
@@ -296,23 +292,22 @@ class HtmlToMediaWikiConverter
     }
 
     /**
-     * Converts <figure> to MediaWiki image syntax.
+     * Converts <figure> to MediaWiki image syntax. External image links is just the url.
      *
      * @param DOMElement  $figure The <figure> element to convert.
      * @return string|false The MediaWiki formatted image string.
      */
     function convertFigure(DOMElement $figure): string|false
     {
-        $mwFigure = '';
-        $caption = '';
         $align = $figure->getAttribute('data-align');
-        $width = $figure->getAttribute('data-width');
-        $imageGuid = $figure->getAttribute('data-ref-id');
 
+        $src = '';
         $img = $figure->getElementsByTagName('img')->item(0);
+
         if ($img) {
             $src = $img->getAttribute('data-src') ?: $img->getAttribute('src');
-            $caption = $img->getAttribute('alt');
+            $alt = $img->getAttribute('alt');
+            $width = $img->getAttribute('data-width');
         }
         else {
             echo "WARNING: Missing img tag in figure element.\r\n";
@@ -320,43 +315,21 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        $parts = pathinfo($src);
-        $filename = $parts['basename'];
-
-
-        $layout = (empty($caption) || $caption == "No Caption Provided") ? "thumb" : "frame|$caption";
-
-        $mwFigure = "[[File:$filename|$align|{$width}px|$layout]]";
-
-        // create a db entry for the image found in the description
-        list($imageTypeId, $imageId) = explode('-', $imageGuid);
-        $this->content->insertOrUpdate("image", [
-            'id' => $imageId,
-            'assoc_type_id' => $this->typeId,
-            'assoc_id' => $this->id,
-            'image' => $src,
-            'caption' => $caption,
-        ], ['assoc_type_id', 'assoc_id', 'image']);
-
-        // create directory for image with the pattern /images/entity-guid/image-id/
-        $entityPath = sprintf(__DIR__.'/images/%s-%s/', $this->typeId, $this->id);
-        $storagePath = sprintf('%s/%s/', $entityPath, $imageId);
-        if (!file_exists($storagePath.$filename)) {
-            if (!is_dir($entityPath)) {
-                mkdir($entityPath);
-            }
-            if (!is_dir($storagePath)) {
-                mkdir($storagePath);
-            }
-
-            // download the image to store in the local file system
-            $this->downloadImage($src, $storagePath.$filename);
+        $style = "";
+        if ($align == 'right') {
+            $style = "style='float:right;margin-left:40px;max-width:280px;' ";
         }
-        else {
-            echo sprintf("Image already exists in the filesystem at %s%s \r\n", $storagePath, $filename);
+        else if ($align == 'left') {
+            $style = "style='float:left;margin-right:40px;max-width:280px;' ";
         }
 
-        return $mwFigure;
+        $mwImage = "<img src='$src' width='$width' $style";
+        if ($alt != 'No Caption Provided') {
+            $mwImage .= "alt='$alt' ";
+        }
+        $mwImage .= "/>\n";
+
+        return $mwImage;
     }
 
     /**
