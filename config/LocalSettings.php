@@ -15,9 +15,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-
-
-
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
@@ -62,6 +59,15 @@ $wgDBserver = "db";
 $wgDBname = getenv("MARIADB_DATABASE");
 $wgDBuser = getenv("MARIADB_USER");
 $wgDBpassword = getenv("MARIADB_PASSWORD");
+
+## Database settings for gb_api_dump
+$wgExternalDataSources['gb_api_dump'] = [ 
+    'server' => 'db',
+    'type' => 'mysql',
+    'name' => getenv("MARIADB_API_DUMP_DATABASE"),
+    'user' => getenv("MARIADB_USER"),
+    'password' => getenv("MARIADB_PASSWORD")
+];
 
 # MySQL specific settings
 $wgDBprefix = "";
