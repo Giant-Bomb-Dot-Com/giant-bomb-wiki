@@ -3,6 +3,7 @@ node_modules/
 images/
 cache/
 logs/
+mountpoint/
 
 .idea/
 .vscode/*
@@ -10,3 +11,5 @@ logs/
 !.vscode/extensions.json
 .DS_Store
 wiki_schema.sql
+gcs_key.json
+.env
