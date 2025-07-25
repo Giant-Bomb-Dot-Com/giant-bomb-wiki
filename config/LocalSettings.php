@@ -84,6 +84,10 @@ $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
+# Mounted gcs bucket for images
+$wgUploadDirectory = '/var/www/html/images';
+$wgUploadPath = '/images';
+
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
 

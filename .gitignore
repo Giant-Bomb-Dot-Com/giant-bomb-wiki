@@ -9,3 +9,5 @@ logs/
 !.vscode/settings.json
 !.vscode/extensions.json
 .DS_Store
+.env
+gcs_key.json

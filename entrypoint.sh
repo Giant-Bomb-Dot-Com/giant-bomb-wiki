@@ -1,6 +1,20 @@
 #!/usr/bin/env sh
 set -e
 
+gcsfuse --foreground -o allow_other --dir-mode=777 --file-mode=777 gb_mw /var/www/html/images &
+
+# Give gcsfuse a moment to start (optional, but can help)
+sleep 5
+
+# Check if the mount point is accessible (optional, but good practice)
+if ! mountpoint -q /var/www/html/images; then
+    echo "GCSFuse mount failed!"
+    exit 1
+fi
+
+cd /var/www/html/
+ls -l | echo
+
 # If LocalSettings.php exists in the host-mounted config folder, copy it in
 if [ ! -f /var/www/html/LocalSettings.php ]; then
   #make sure our db has time to start up

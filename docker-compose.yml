@@ -12,6 +12,7 @@ services:
 
   wiki:
     build: .
+    privileged: true
     env_file:
       - .env
     depends_on:
@@ -20,16 +21,22 @@ services:
     ports:
       - "8080:80"
     volumes:
+      #Use gscfuse to mount images
+      - /dev/fuse:/dev/fuse
+      - ./gcs_key.json:/etc/gcloud/service-account.json
+      - ./mountpoint:/var/www/html/images
       #Skins
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
 
       - ./config:/config
-      - wiki-data:/var/www/html/images
+      - ./data:/data/
       - ./entrypoint.sh:/entrypoint.sh:ro
+    environment:
+    - GOOGLE_APPLICATION_CREDENTIALS=/etc/gcloud/service-account.json
     entrypoint: ["/entrypoint.sh"]
 
 volumes:
   db-data:
-  wiki-data: {}
+  

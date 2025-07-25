@@ -7,18 +7,24 @@ USER root
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
- && apt-get install libzip-dev unzip wget -y
+ && apt-get install gnupg lsb-release libzip-dev unzip wget -y
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN chown -R www-data:www-data /var/www/html
+
+RUN lsb_release -c -s > /tmp/lsb_release && \
+    GCSFUSE_REPO=$(cat /tmp/lsb_release) && \
+    echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
+    wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get update && apt-get install -y gcsfuse
 
 RUN cd /var/www/html \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-result-formats \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-scribunto dev-master \
- && php /usr/local/bin/composer require --no-update wikimedia/css-sanitizer \
+ && php /usr/local/bin/composer require --no-update "wikimedia/css-sanitizer:^5.5.0" \
  && docker-php-ext-configure zip \
  && docker-php-ext-install zip \
  && cd /var/www/html/extensions/ \
