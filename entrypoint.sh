@@ -1,17 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-gcsfuse --foreground -o allow_other --dir-mode=777 --file-mode=777 gb_mw /var/www/html/images &
-
-# Give gcsfuse a moment to start (optional, but can help)
-sleep 5
-
-# Check if the mount point is accessible (optional, but good practice)
-if ! mountpoint -q /var/www/html/images; then
-    echo "GCSFuse mount failed!"
-    exit 1
-fi
-
 cd /var/www/html/
 ls -l | echo
 
@@ -54,6 +43,27 @@ if [ ! -f /var/www/html/LocalSettings.php ]; then
  fi
 
  /usr/sbin/apache2ctl stop
+fi
+
+# Place this after the above patch so the process doesn't
+# get shut down prematurely
+if [ "$MV_ENV" = "prod" ]; then
+  WWW_DATA_UID=$(id -u www-data)
+  WWW_DATA_GID=$(id -g www-data)
+
+  gcsfuse --foreground \
+          -o allow_other \
+          --dir-mode=755 \
+          --file-mode=644 \
+          --uid="$WWW_DATA_UID" \
+          --gid="$WWW_DATA_GID" \
+          "$GCS_BUCKET_NAME" \
+          /var/www/html/images &
+  sleep 5
+  if ! mountpoint -q /var/www/html/images; then
+      echo "GCSFuse mount failed!"
+      exit 1
+  fi
 fi
 
 cp /config/LocalSettings.php /var/www/html/LocalSettings.php

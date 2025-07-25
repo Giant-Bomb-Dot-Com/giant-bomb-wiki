@@ -1,0 +1,7 @@
+services:
+  wiki:
+    extends:
+      service: wiki
+      file: docker-compose.yml 
+    environment:
+      - MV_ENV=dev

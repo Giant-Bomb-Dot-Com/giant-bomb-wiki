@@ -3,6 +3,7 @@ node_modules/
 images/
 cache/
 logs/
+mountpoint/
 
 .idea/
 .vscode/*

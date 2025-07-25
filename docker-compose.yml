@@ -1,6 +1,7 @@
 services:
   db:
     image: mariadb:11
+    command: --skip-name-resolve=0
     env_file:
       - .env
     volumes:
@@ -11,8 +12,8 @@ services:
       retries: 5
 
   wiki:
-    build: .
-    privileged: true
+    build: 
+      context: .
     env_file:
       - .env
     depends_on:
@@ -21,10 +22,6 @@ services:
     ports:
       - "8080:80"
     volumes:
-      #Use gscfuse to mount images
-      - /dev/fuse:/dev/fuse
-      - ./gcs_key.json:/etc/gcloud/service-account.json
-      - ./mountpoint:/var/www/html/images
       #Skins
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
@@ -32,11 +29,10 @@ services:
 
       - ./config:/config
       - ./data:/data/
+      - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
-    environment:
-    - GOOGLE_APPLICATION_CREDENTIALS=/etc/gcloud/service-account.json
     entrypoint: ["/entrypoint.sh"]
 
 volumes:
   db-data:
-  
+  wiki-data: {}

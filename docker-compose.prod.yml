@@ -1,0 +1,24 @@
+services:
+  wiki:
+    build:
+      context: .
+      args:
+        INSTALL_GCSFUSE: "true"
+    privileged: true
+    extends:
+      service: wiki
+      file: docker-compose.yml
+    volumes:
+      - /dev/fuse:/dev/fuse
+      # remove this when kubernetes manages auth with workload identity
+      - ./gcs_key.json:/etc/gcloud/service-account.json
+    environment:
+      - MV_ENV=prod
+      - GCS_BUCKET_NAME=gb_mw
+      # remove this when kubernetes manages auth with workload identity
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/gcloud/service-account.json
+    # cap_add:
+    #   - SYS_ADMIN
+    #   - MKNOD
+    # security_opt:
+    #   - apparmor:unconfined
