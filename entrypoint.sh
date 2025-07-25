@@ -16,8 +16,9 @@ cd /var/www/html/
 ls -l | echo
 
 # If LocalSettings.php exists in the host-mounted config folder, copy it in
-if [ ! -f /var/www/html/LocalSettings.php ]; then
+if [ ! -f /var/.installed ]; then
   #make sure our db has time to start up
+  echo "LocalSettings.php not found. Starting install..."  
   cd /var/www/html/
   #INSTALL MEDIAWIKI
   php maintenance/install.php \
@@ -53,7 +54,16 @@ if [ ! -f /var/www/html/LocalSettings.php ]; then
   cd /var/www/html/ && php maintenance/run.php update 
  fi
 
+ if [ -f /data/wiki_init.zip ]; then
+   echo "Importing initial templates and pages."
+   cd /data && unzip wiki_init.zip
+   cd /var/www/html/maintenance
+   php ./importDump.php < /data/wiki_init.xml
+   rm /data/wiki_init.xml
+ fi
+
  /usr/sbin/apache2ctl stop
+ touch /var/.installed
 fi
 
 cp /config/LocalSettings.php /var/www/html/LocalSettings.php
