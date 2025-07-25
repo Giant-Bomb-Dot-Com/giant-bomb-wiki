@@ -6,6 +6,7 @@ services:
       - .env
     volumes:
       - db-data:/var/lib/mysql
+      - ./wiki_schema.sql:/docker-entrypoint-initdb.d/wiki_schema.sql:ro
     healthcheck:
       test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_DATABASE -e 'SHOW DATABASES;'"
       interval: 5s

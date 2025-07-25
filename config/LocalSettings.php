@@ -59,9 +59,9 @@ $wgEmailAuthentication = true;
 ## Database settings
 $wgDBtype = "mysql";
 $wgDBserver = "db";
-$wgDBname = "gb_wiki";
-$wgDBuser = "wiki_admin";
-$wgDBpassword = "BYPASS.takes.prove.solved.slaying.locket";
+$wgDBname = getenv("MARIADB_DATABASE");
+$wgDBuser = getenv("MARIADB_USER");
+$wgDBpassword = getenv("MARIADB_PASSWORD");
 
 # MySQL specific settings
 $wgDBprefix = "";
@@ -109,7 +109,7 @@ $wgLocaltimezone = "UTC";
 ## be publicly accessible from the web.
 #$wgCacheDirectory = "$IP/cache";
 
-$wgSecretKey = $_ENV['MW_SK'];
+$wgSecretKey = getenv('MW_SK');
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
@@ -147,6 +147,9 @@ wfLoadSkin( 'Vector' );
 # to LocalSettings.php. Check specific extension documentation for more details.
 # The following extensions were automatically enabled:
 wfLoadExtension( 'CodeEditor' );
+wfLoadExtension( 'PageImages' );
+wfLoadExtension( 'ParserFunctions' );
+wfLoadExtension( 'Popups' );
 wfLoadExtension( 'Scribunto' );
 wfLoadExtension( 'SemanticExtraSpecialProperties' );
 wfLoadExtension( 'SemanticMediaWiki' );
@@ -155,10 +158,14 @@ wfLoadExtension( 'SemanticScribunto' );
 wfLoadExtension( 'TemplateData' );
 wfLoadExtension( 'TemplateStyles' );
 wfLoadExtension( 'TemplateStylesExtender' );
+wfLoadExtension( 'TextExtracts' );
 wfLoadExtension( 'WikiEditor' );
 
 
 # End of automatically generated settings.
 # Add more configuration options below.
 
+$wgPFEnableStringFunctions = true;
+$wgPopupsHideOptInOnPreferencesPage = true;
+$wgPopupsReferencePreviewsBetaFeature = false;
 #$wgShowExceptionDetails = true;

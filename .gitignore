@@ -10,5 +10,6 @@ mountpoint/
 !.vscode/settings.json
 !.vscode/extensions.json
 .DS_Store
-.env
+wiki_schema.sql
 gcs_key.json
+.env
