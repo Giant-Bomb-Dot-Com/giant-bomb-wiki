@@ -1,0 +1,20 @@
+services:
+  db:
+    extends:
+      service: db
+      file: docker-compose.yml
+    volumes:
+      - ./gb_api_db_init:/docker-entrypoint-initdb.d
+    healthcheck:
+      interval: 30s
+
+  wiki:
+    build:
+      context: .
+      args:
+        INSTALL_API: "true"
+    extends:
+      service: wiki
+      file: docker-compose.yml
+    volumes:
+      - ./gb_api_scripts:/var/www/html/maintenance/gb_api_scripts
