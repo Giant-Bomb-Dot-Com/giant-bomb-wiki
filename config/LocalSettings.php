@@ -90,6 +90,10 @@ $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
+# Allow external images
+$wgAddImgTagWhitelist = true;
+$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
+
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
 
@@ -146,6 +150,7 @@ wfLoadSkin( 'Vector' );
 # wfLoadExtension( 'ExtensionName' );
 # to LocalSettings.php. Check specific extension documentation for more details.
 # The following extensions were automatically enabled:
+wfLoadExtension( 'AddImgTag' );
 wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
