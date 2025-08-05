@@ -222,7 +222,8 @@ abstract class Resource
      * Fills in the connector tables
      * 
      * @param array $map A mapping table defining the field names and table name
-     * @param int $mainFieldId The id of the main field
+     * @param int   $mainFieldId The id of the main field
+     * @param array &$crawl A queue of the next entities to pull from the API
      * @param array $relations An array that includes the id of the relation field
      */
     public function addRelations(array $map, int $mainFieldId, array $relations, array &$crawl): void

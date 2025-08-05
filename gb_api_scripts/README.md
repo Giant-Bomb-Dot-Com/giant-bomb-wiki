@@ -1,9 +1,9 @@
 # Prep work
 
 - Add your api key to the .env file. The api key can be found at https://www.giantbomb.com/api when you're logged into the site
-- Run `docker ps` and grab the container name for the wiki
+- Run `docker ps` and grab the container name for the wiki and db
 
-# pull_data.php
+# pull_data.php (OPTIONAL - the data is in /gb_api_db_init)
 
 Retrieves the wiki entity details.
 
@@ -33,7 +33,7 @@ Retrieves the wiki entity details.
     - theme (dumped)
     - thing (alias for object: dumped - missing relations: requires looping through one at a time)
 
-# fill_relations.php
+# fill_relations.php (OPTIONAL - too slow)
 
 Retrieves the wiki entity relationships.
 
@@ -44,12 +44,12 @@ Retrieves the wiki entity relationships.
   - max: The maximum amount of requests to make. Default is 200. Can not exceed 200.
   - offset: Tells the API the number of entities to skip before pulling.
 
-# wiki_entity_crawl.php
+# target_crawl.php
 
 Crawls through a targeted entity to fill in its relationships and the relationship's relationships. Degree of depth is 1.
 
 - Check https://www.giantbomb.com/api to make sure the Current API Usage is clean.
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/fill_relations.php <resource> <id>`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php gb_api_scripts/target_crawl.php <resource> <id>`
 - Options:
   - apikey: To use an apikey other than the one defined in your `.env` file.
 
@@ -67,6 +67,6 @@ docker exec -it giant-bomb-wiki-db-1 mariadb -u root -psurvived.charly.UGLIER.re
 # To dump the table data
 
 - Navigate to the `gb_api_db_init` folder
-- Run `docker exec <container name> mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... > <num>_<type>.sql`
+- Run `docker exec <db container name> mariadb-dump -u root -p<password> gb_api_dump <main_table> <relation_table1>... > <num>_<type>.sql`
 - Edit the resulting sql script add the line `USE gb_api_dump;`.
 - Gzip the file if you are pushing it up.
