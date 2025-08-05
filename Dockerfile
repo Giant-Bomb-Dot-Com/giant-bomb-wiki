@@ -11,6 +11,8 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+COPY ./gb_api_scripts /var/www/html/maintenance/gb_api_scripts/
+
 RUN chown -R www-data:www-data /var/www/html
 
 RUN cd /var/www/html \

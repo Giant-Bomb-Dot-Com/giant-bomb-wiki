@@ -9,4 +9,4 @@ logs/
 !.vscode/settings.json
 !.vscode/extensions.json
 .DS_Store
-wiki_schema.sql
+.env
