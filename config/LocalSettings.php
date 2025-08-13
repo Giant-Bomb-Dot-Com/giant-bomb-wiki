@@ -17,7 +17,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 $wikiEnv = getenv('MV_ENV') ?: ($_ENV['MV_ENV'] ?? 'dev');
 
-
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
@@ -63,6 +62,15 @@ $wgDBname = getenv("MARIADB_DATABASE");
 $wgDBuser = getenv("MARIADB_USER");
 $wgDBpassword = getenv("MARIADB_PASSWORD");
 
+## Database settings for gb_api_dump
+$wgExternalDataSources['gb_api_dump'] = [ 
+    'server' => 'db',
+    'type' => 'mysql',
+    'name' => getenv("MARIADB_API_DUMP_DATABASE"),
+    'user' => getenv("MARIADB_USER"),
+    'password' => getenv("MARIADB_PASSWORD")
+];
+
 # MySQL specific settings
 $wgDBprefix = "";
 $wgDBssl = false;
@@ -89,6 +97,10 @@ if ($wikiEnv == 'prod') {
     $wgUploadDirectory = '/var/www/html/images';
     $wgUploadPath = $wgScriptPath.'/images';
 }
+
+# Allow external images
+$wgAddImgTagWhitelist = true;
+$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
@@ -146,6 +158,7 @@ wfLoadSkin( 'Vector' );
 # wfLoadExtension( 'ExtensionName' );
 # to LocalSettings.php. Check specific extension documentation for more details.
 # The following extensions were automatically enabled:
+wfLoadExtension( 'AddImgTag' );
 wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );

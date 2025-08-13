@@ -38,9 +38,9 @@ if [ ! -f /var/.installed ]; then
     --retry-max-time 40 \
     -s -L 'http://localhost/index.php/Main_Page')
 
- if [ -z "`$RESP | grep "ERROR_SCHEMA_INVALID_KEY"`"  ]; then  
+ if [ -z "`$RESP | grep "ERROR_SCHEMA_INVALID_KEY"`"  ]; then
   echo "PATCHING SCHEMA"
-  cd /var/www/html/ && php maintenance/run.php update 
+  cd /var/www/html/ && php maintenance/run.php update
  fi
 
  if [ -f /data/wiki_init.zip ]; then
