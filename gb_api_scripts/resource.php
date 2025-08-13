@@ -165,7 +165,7 @@ abstract class Resource
      */
     public function getTextToConvert($id = false)
     {
-        $clause = ($id) ? 'id = '.$id : 'description != "" AND description_new = ""';
+        $clause = ($id) ? 'id = '.$id : 'description != "" AND mw_formatted_description IS NULL';
 
         $qb = $this->dbw->newSelectQueryBuilder();
         $qb->select(['id', 'name', 'description'])
@@ -201,7 +201,7 @@ abstract class Resource
     {
         $ub = $this->dbw->newUpdateQueryBuilder();
         $ub->update(static::TABLE_NAME)
-             ->set(['description_new' => $mwDescription])
+             ->set(['mw_formatted_description' => $mwDescription])
              ->where(['id' => $id])
              ->caller(__METHOD__);
 
