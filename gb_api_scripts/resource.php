@@ -179,12 +179,27 @@ abstract class Resource
     /**
      * Get name
      * 
-     * @return int|false
+     * @return string|false
      */
     public function getName(int $id)
     {
         $qb = $this->dbw->newSelectQueryBuilder();
         $qb->field('name')
+           ->from(static::TABLE_NAME)
+           ->where('id = '.$id);
+
+        return $qb->fetchField();
+    }
+
+    /**
+     * Get the page name
+     * 
+     * @return string|false
+     */
+    public function getPageName(int $id)
+    {
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb->field('mw_page_name')
            ->from(static::TABLE_NAME)
            ->where('id = '.$id);
 
