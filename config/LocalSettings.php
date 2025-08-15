@@ -15,6 +15,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
+$wikiEnv = getenv('MV_ENV') ?: ($_ENV['MV_ENV'] ?? 'dev');
+
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
@@ -89,6 +91,12 @@ $wgMemCachedServers = [];
 $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
+
+if ($wikiEnv == 'prod') {
+    # Mounted gcs bucket for images
+    $wgUploadDirectory = '/var/www/html/images';
+    $wgUploadPath = $wgScriptPath.'/images';
+}
 
 # Allow external images
 $wgAddImgTagWhitelist = true;

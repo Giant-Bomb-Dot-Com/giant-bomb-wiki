@@ -1,5 +1,6 @@
 FROM mediawiki:1.43.1
 
+ARG INSTALL_GCSFUSE="false"
 ARG INSTALL_API="false"
 
 WORKDIR /var/www/html
@@ -9,7 +10,7 @@ USER root
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
- && apt-get install libzip-dev unzip wget -y
+ && apt-get install gnupg lsb-release libzip-dev unzip wget -y
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -19,6 +20,14 @@ RUN if [ "$INSTALL_API" = "false" ]; then \
     fi
 
 RUN chown -R www-data:www-data /var/www/html
+
+RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
+    lsb_release -c -s > /tmp/lsb_release && \
+    GCSFUSE_REPO=$(cat /tmp/lsb_release) && \
+    echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
+    wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get update && apt-get install -y gcsfuse; \
+    fi
 
 RUN cd /var/www/html \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
