@@ -265,22 +265,28 @@ class HtmlToMediaWikiConverter
                 $contentTypeId = (int)$contentTypeId;
                 $contentId = (int)$contentId;
 
-                // instantiate the content class to retrieve the name for the page
-                if (is_null($this->map[$contentTypeId]['content'])) {
-                    $resource = $this->map[$contentTypeId]['className'];
-                    require_once(__DIR__.'/'.$resource.'.php');
-                    $classname = ucfirst($resource);
-                    $this->map[$contentTypeId]['content'] = new $classname($this->dbw);
-                }
+                // what to do with releases?
+                if (!is_null($this->map[$contentTypeId]['plural'])) {
 
-                $name = $this->map[$contentTypeId]['content']->getName($contentId);
-                // convert the slug into the name if missing from the db
-                if ($name === false) {
-                    $name = str_replace('-',' ',$name);
-                    $name = ucwords($name);
-                }
+                    // instantiate the content class to retrieve the name for the page
+                    if (is_null($this->map[$contentTypeId]['content'])) {
+                        $resource = $this->map[$contentTypeId]['className'];
+                        require_once(__DIR__.'/'.$resource.'.php');
+                        $classname = ucfirst($resource);
+                        $this->map[$contentTypeId]['content'] = new $classname($this->dbw);
+                    }
 
-                $mwLink = "[[$name|$displayText]]";
+                    $name = $this->map[$contentTypeId]['content']->getPageName($contentId);
+                    // convert the slug into the name if missing from the db
+                    if ($name === false) {
+                        $name = str_replace('-',' ',$name);
+                        $name = ucwords($name);
+                    }
+
+                    $pagename = ucfirst($this->map[$contentTypeId]['plural']) . '/' . $name;
+
+                    $mwLink = "[[$pagename|$displayText]]";
+                }
             }
         }
 

@@ -165,7 +165,7 @@ abstract class Resource
      */
     public function getTextToConvert($id = false)
     {
-        $clause = ($id) ? 'id = '.$id : 'description != "" AND description_new = ""';
+        $clause = ($id) ? 'id = '.$id : 'description != "" AND mw_formatted_description IS NULL';
 
         $qb = $this->dbw->newSelectQueryBuilder();
         $qb->select(['id', 'name', 'description'])
@@ -179,12 +179,27 @@ abstract class Resource
     /**
      * Get name
      * 
-     * @return int|false
+     * @return string|false
      */
     public function getName(int $id)
     {
         $qb = $this->dbw->newSelectQueryBuilder();
         $qb->field('name')
+           ->from(static::TABLE_NAME)
+           ->where('id = '.$id);
+
+        return $qb->fetchField();
+    }
+
+    /**
+     * Get the page name
+     * 
+     * @return string|false
+     */
+    public function getPageName(int $id)
+    {
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb->field('mw_page_name')
            ->from(static::TABLE_NAME)
            ->where('id = '.$id);
 
@@ -201,7 +216,7 @@ abstract class Resource
     {
         $ub = $this->dbw->newUpdateQueryBuilder();
         $ub->update(static::TABLE_NAME)
-             ->set(['description_new' => $mwDescription])
+             ->set(['mw_formatted_description' => $mwDescription])
              ->where(['id' => $id])
              ->caller(__METHOD__);
 
