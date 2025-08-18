@@ -6,7 +6,7 @@ services:
     volumes:
       - ./gb_api_db_init:/docker-entrypoint-initdb.d
     healthcheck:
-      interval: 30s
+      interval: 35s
 
   wiki:
     build:
