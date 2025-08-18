@@ -62,8 +62,6 @@ Pulls down descriptions from the db, converts it to MediaWiki format and updates
   - id: Targets a specified entity.
   - apikey: To use an apikey other than the one defined in your `.env` file.
 
-docker exec -it giant-bomb-wiki-db-1 mariadb -u root -psurvived.charly.UGLIER.reefs.wreck.tagged gb_api_dump -e "SELECT description_new FROM wiki_game WHERE id = 36765;"
-
 # To dump the table data
 
 - Navigate to the `gb_api_db_init` folder
