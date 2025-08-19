@@ -15,7 +15,7 @@ ALTER TABLE `wiki_game` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET ut
 ALTER TABLE `wiki_game_genre` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;                     
 ALTER TABLE `wiki_person` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;                         
 ALTER TABLE `wiki_company` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;                        
-ALTER TABLE `wiki_concept` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;    
+ALTER TABLE `wiki_concept` ADD COLUMN `mw_page_name` varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
 -- copy name column to mw_page_name column
 UPDATE wiki_game_dlc SET mw_page_name = name;
 UPDATE wiki_franchise SET mw_page_name = name;
