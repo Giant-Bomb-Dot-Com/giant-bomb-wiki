@@ -14,6 +14,9 @@ services:
   wiki:
     build:
       context: .
+      args:
+        INSTALL_API: "false"
+        INSTALL_GCSFUSE: "false"
     env_file:
       - .env
     depends_on:
@@ -31,6 +34,8 @@ services:
       - ./data:/data/
       - wiki-data:/var/www/html/images
       - ./entrypoint.sh:/entrypoint.sh:ro
+    environment:
+      - MV_ENV=dev
     entrypoint: ["/entrypoint.sh"]
 
 volumes:

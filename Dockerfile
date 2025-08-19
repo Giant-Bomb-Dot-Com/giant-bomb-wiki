@@ -14,6 +14,8 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+
+# LOAD API SCRIPTS - UNNEEDED AFTER DATA TRANSFERRED
 COPY ./gb_api_scripts /var/www/html/maintenance/gb_api_scripts/
 RUN if [ "$INSTALL_API" = "false" ]; then \
     rm -rf /var/www/html/maintenance/gb_api_scripts/; \
@@ -21,6 +23,7 @@ RUN if [ "$INSTALL_API" = "false" ]; then \
 
 RUN chown -R www-data:www-data /var/www/html
 
+# MOUNT GCS IMAGE FOLDER
 RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
     lsb_release -c -s > /tmp/lsb_release && \
     GCSFUSE_REPO=$(cat /tmp/lsb_release) && \

@@ -4,6 +4,7 @@ set -e
 cd /var/www/html/
 ls -l | echo
 
+
 # If LocalSettings.php exists in the host-mounted config folder, copy it in
 if [ ! -f /var/.installed ]; then
   #make sure our db has time to start up
@@ -75,6 +76,38 @@ if [ "$MV_ENV" = "prod" ]; then
       exit 1
   fi
 fi
+
+# Disable script execution in images folder
+chmod 644 /var/www/html/images/.htaccess
+if [ -f /var/www/html/images/.htaccess ]; then
+    cat <<'EOF' >> /var/www/html/images/.htaccess
+# Prevent the execution of common script types.
+<FilesMatch "\.(php|phtml|php3|php4|php5|php6|inc|js|pl|py|cgi|sh|bash|zsh)$">
+    Require all denied
+</FilesMatch>
+EOF
+else
+    cat <<'EOF' > /var/www/html/images/.htaccess
+# Set the X-Content-Type-Options header to prevent MIME sniffing.
+<IfModule headers_module>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Prevent the execution of common script types.
+<FilesMatch "\.(php|phtml|php3|php4|php5|php6|inc|js|pl|py|cgi|sh|bash|zsh)$">
+    Require all denied
+</FilesMatch>
+
+# Explicitly turn off the PHP engine in this directory as a redundant layer of security.
+<IfModule php7_module>
+    php_flag engine off
+</IfModule>
+<IfModule php_module>
+    php_flag engine off
+</IfModule>
+EOF
+fi
+chmod 444 /var/www/html/images/.htaccess
 
 cp /config/LocalSettings.php /var/www/html/LocalSettings.php
 exec apache2-foreground

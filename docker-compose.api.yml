@@ -6,7 +6,10 @@ services:
     volumes:
       - ./gb_api_db_init:/docker-entrypoint-initdb.d
     healthcheck:
-      interval: 35s
+      test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD $MARIADB_API_DUMP_DATABASE -e 'SELECT 1 FROM wiki_accessory WHERE mw_page_name IS NOT NULL LIMIT 1;'"
+      interval: 5s
+      retries: 10
+      start_period: 30s
 
   wiki:
     build:
