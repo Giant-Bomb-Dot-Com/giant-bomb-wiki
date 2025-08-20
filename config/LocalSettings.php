@@ -160,6 +160,8 @@ wfLoadSkin( 'Vector' );
 # The following extensions were automatically enabled:
 wfLoadExtension( 'AddImgTag' );
 wfLoadExtension( 'CodeEditor' );
+wfLoadExtension( 'DisplayTitle' );
+wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'Popups' );
@@ -182,3 +184,7 @@ $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
 #$wgShowExceptionDetails = true;
+
+# Allows the use of DISPLAYTITLE magic keyword
+$wgAllowDisplayTitle = true;
+$wgRestrictDisplayTitle = false;

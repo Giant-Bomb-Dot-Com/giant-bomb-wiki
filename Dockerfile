@@ -14,7 +14,6 @@ RUN set -x; \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-
 # LOAD API SCRIPTS - UNNEEDED AFTER DATA TRANSFERRED
 COPY ./gb_api_scripts /var/www/html/maintenance/gb_api_scripts/
 RUN if [ "$INSTALL_API" = "false" ]; then \
@@ -41,7 +40,9 @@ RUN cd /var/www/html \
  && docker-php-ext-configure zip \
  && docker-php-ext-install zip \
  && cd /var/www/html/extensions/ \
- && git clone https://github.com/TopRealm/mediawiki-extensions-AddImgTag AddImgTag \ 
+ && git clone https://github.com/TopRealm/mediawiki-extensions-AddImgTag AddImgTag \
+ && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle \
+ && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
