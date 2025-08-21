@@ -1,6 +1,7 @@
 <?php
 
-trait CommonVariablesAndMethods {
+trait CommonVariablesAndMethods 
+{
 	protected $map = [
         3000 => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
         3005 => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
@@ -20,4 +21,85 @@ trait CommonVariablesAndMethods {
         3032 => ['className' => 'theme', 'plural' => 'themes', 'content' => null, 'count' => 0],
         3055 => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
     ];
+
+    protected $namespaces = [
+        'page' => 0,
+        'template' => 10,
+        'category' => 14,
+        'property' => 102,
+        'form' => 106
+    ];
+
+    /**
+     * Creates and saves xml file to be imported into mediawiki through importDump
+     * 
+     * @param string $filename
+     * @param array  $data
+     * @return bool
+     */
+    protected function createXML(string $filename, array $data): bool
+    {
+        $path = '/var/www/html/maintenance/gb_api_scripts/';
+
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        // Define namespaces
+        $mwNamespace = 'http://www.mediawiki.org/xml/export-0.11/';
+        $xsiNamespace = 'http://www.w3.org/2001/XMLSchema-instance';
+        $dom->createElementNS($mwNamespace, 'mediawiki');
+
+        // Create the root element with namespaces and attributes
+        $mediawiki = $dom->createElementNS($mwNamespace, 'mediawiki');
+        $mediawiki->setAttribute('xmlns:xsi', $xsiNamespace);
+        $mediawiki->setAttribute('xsi:schemaLocation', 'http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd');
+        $mediawiki->setAttribute('version', '0.11');
+        $mediawiki->setAttribute('xml:lang', 'en');
+        $dom->appendChild($mediawiki);
+
+        foreach ($data as $set) {
+            // Create the <page> element
+            $page = $dom->createElementNS($mwNamespace, 'page');
+            $mediawiki->appendChild($page);
+
+            // Create and append child elements to <page>
+            $title = $dom->createElementNS($mwNamespace, 'title', htmlspecialchars($set['title']));
+            $page->appendChild($title);
+
+            $ns = $dom->createElementNS($mwNamespace, 'ns', $set['namespace']);
+            $page->appendChild($ns);
+
+            // Create the <revision> element
+            $revision = $dom->createElementNS($mwNamespace, 'revision');
+            $page->appendChild($revision);
+
+            // Create and append child elements to <revision>
+            $model = $dom->createElementNS($mwNamespace, 'model', 'wikitext');
+            $revision->appendChild($model);
+
+            $format = $dom->createElementNS($mwNamespace, 'format', 'text/x-wiki');
+            $revision->appendChild($format);
+
+            // Create the <text> element with the generated content
+            $text = $dom->createElementNS($mwNamespace, 'text', $set['description']);
+            $text->setAttribute('xml:space', 'preserve');
+            $revision->appendChild($text);
+        }
+
+        try {
+            // Save the XML to the specified file
+            $result = $dom->save($path.$filename);
+            if ($result !== false) {
+                echo "MediaWiki XML file '{$filename}' created successfully.\n";
+                return true;
+            } else {
+                echo "Error: Could not save the XML file.\n";
+                return false;
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage() . "\n";
+            return false;
+        }
+    }
 }
