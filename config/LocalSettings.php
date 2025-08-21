@@ -158,10 +158,7 @@ wfLoadSkin( 'Vector' );
 # wfLoadExtension( 'ExtensionName' );
 # to LocalSettings.php. Check specific extension documentation for more details.
 # The following extensions were automatically enabled:
-wfLoadExtension( 'AddImgTag' );
 wfLoadExtension( 'CodeEditor' );
-wfLoadExtension( 'DisplayTitle' );
-wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'Popups' );
@@ -180,11 +177,24 @@ wfLoadExtension( 'WikiEditor' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
+wfLoadExtension( 'AddImgTag' );
+wfLoadExtension( 'DisplayTitle' );
+wfLoadExtension( 'PageForms' );
+
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
-#$wgShowExceptionDetails = true;
+
+# Turn on subpages
+$wgNamespacesWithSubpages[NS_MAIN] = true;
+$wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 
 # Allows the use of DISPLAYTITLE magic keyword
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
+
+# Remove before prod push
+$wgShowExceptionDetails = true;
+$wgDevelopmentWarnings = true;
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
