@@ -11,7 +11,6 @@ class ConvertToMWDescriptions extends Maintenance
         $this->addDescription("Converts descriptions into MediaWiki format");
         $this->addArg('resource', 'Wiki type');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
-        $this->addOption('apikey', 'Api key used to make requests to the GB api', false, true, 'a');
     }
 
     /**
