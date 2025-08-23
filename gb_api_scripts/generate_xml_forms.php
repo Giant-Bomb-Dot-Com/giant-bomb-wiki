@@ -17,7 +17,7 @@ class GenerateXMLForms extends Maintenance
         $data = [
             [
                 'title' => 'Form:Rating',
-                'namespace' => $this->namespace['form'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Rating" form.
@@ -48,7 +48,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 {{{standard input|free text|rows=10}}}
 </includeonly>
-MARKUP;
+MARKUP,
             ],
         ];
 

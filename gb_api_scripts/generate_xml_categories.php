@@ -17,63 +17,63 @@ class GenerateXMLCategories extends Maintenance
         $data = [
             [
                 'title' => 'Category:Accessories',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Accessories category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Accessories category.'
             ],
             [
                 'title' => 'Category:Characters',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Characters category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Characters category.'
             ],
             [
                 'title' => 'Category:Companies',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Companies category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Companies category.'
             ],
             [
                 'title' => 'Category:Concepts',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Concepts category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Concepts category.'
             ],
             [
                 'title' => 'Category:DLCs',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Dlcs category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Dlcs category.'
             ],
             [
                 'title' => 'Category:Franchises',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Franchises category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Franchises category.'
             ],
             [
                 'title' => 'Category:Games',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Games category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Games category.'
             ],
             [
                 'title' => 'Category:Genres',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Genres category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Genres category.'
             ],
             [
                 'title' => 'Category:Locations',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Locations category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Locations category.'
             ],
             [
                 'title' => 'Category:Objects',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Objects category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Objects category.'
             ],
             [
                 'title' => 'Category:People',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the People category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the People category.'
             ],
             [
                 'title' => 'Category:Platforms',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Platforms category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Platforms category.'
             ],
             [
                 'title' => 'Category:Ratings',
@@ -82,8 +82,8 @@ class GenerateXMLCategories extends Maintenance
             ],
             [
                 'title' => 'Category:Themes',
-                'namespace' => $this->namespace['category'],
-                'dsecription' => 'This is the Themes category.'
+                'namespace' => $this->namespaces['category'],
+                'description' => 'This is the Themes category.'
             ],
         ];
 

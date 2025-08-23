@@ -32,11 +32,11 @@ class GenerateXMLTemplates extends Maintenance
 
 ''':''' {{#ask:[[Foaf:homepage::{{SUBJECTPAGENAME}}]]|format=list}}
 </includeonly>
-MARKUP;
+MARKUP,
             ],
             [
                 'title' => 'Template:CreateWithForm',
-                'namespace' => $this->namespace['template'],
+                'namespace' => $this->namespaces['template'],
                 'description' => '<includeonly>
 {{#formlink:
   form={{{1}}}

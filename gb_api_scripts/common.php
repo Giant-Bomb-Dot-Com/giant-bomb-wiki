@@ -2,6 +2,9 @@
 
 trait CommonVariablesAndMethods 
 {
+    /**
+     * Maps wiki type ids to their info
+     */
 	protected $map = [
         3000 => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
         3005 => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
@@ -22,6 +25,9 @@ trait CommonVariablesAndMethods
         3055 => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
     ];
 
+    /**
+     * Mediawiki namespaces
+     */
     protected $namespaces = [
         'page' => 0,
         'core' => 8,

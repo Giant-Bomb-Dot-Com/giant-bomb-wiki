@@ -228,7 +228,7 @@ The allowed values for this property are:
             ],
             [
                 'title' => 'Property:Has display name',
-                'namespace' => $this->namespace['property'],
+                'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
@@ -387,7 +387,7 @@ The allowed values for this property are:
             ],
             [
                 'title' => 'MediaWiki:Noarticletext',
-                'namespace' => $this->namespace['core'],
+                'namespace' => $this->namespaces['core'],
                 'description' => <<<MARKUP
 There is currently no text in this page.
 You can [[Special:Search/{{PAGENAME}}|search for this page title]] in other pages,
@@ -409,7 +409,7 @@ or [{{fullurl:{{FULLPAGENAME}}|action=edit}} create this page]</span>.
 | Ratings = {{CreateWithForm|Rating}}
 | Themes = {{CreateWithForm|Theme}}
 }}
-MARKUP;
+MARKUP,
             ],
         ];
 
