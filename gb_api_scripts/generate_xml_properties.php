@@ -262,65 +262,6 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
-                'title' => 'Category:Ratings',
-                'namespace' => $this->namespaces['category'],
-                'description' => '{{#default_form:}}'
-            ],
-            [
-                'title' => 'Template:Rating',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<noinclude>
-{{#template_params:Name (property=Has name)|Explanation (property=Stands for)|Image (property=Has image)|Description (property=Has description)}}
-</noinclude><includeonly>
-'''Name:''' [[Has name::{{{Name|}}}]]
-
-'''Explanation:''' [[Stands for::{{{Explanation|}}}]]
-
-'''Image:''' [[Has image::{{{Image|}}}]]
-
-'''Description:''' [[Has description::{{{Description|}}}]]
-
-''':''' {{#ask:[[Foaf:homepage::{{SUBJECTPAGENAME}}]]|format=list}}
-</includeonly>
-MARKUP;
-            ],
-            [
-                'title' => 'Form:Rating',
-                'namespace' => $this->namespace['form'],
-                'description' => <<<MARKUP
-<noinclude>
-This is the "Rating" form.
-To create a page with this form, enter the page name below;
-if a page with that name already exists, you will be sent to a form to edit that page.
-
-{{#forminput:form=Rating|super_page=Ratings}}
-
-</noinclude><includeonly>
-<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Rating}}}
-{| class="formtable"
-! Name: 
-| {{{field|Name|mandatory|property=Has name}}}
-|-
-! Explanation: 
-| {{{field|Explanation|property=Stands for}}}
-|-
-! Image: 
-| {{{field|Image|property=Has image}}}
-|-
-! Description: 
-| {{{field|Description|property=Has description}}}
-|}
-{{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
-</includeonly>
-MARKUP;
-            ],
-            [
                 'title' => 'Property:Has rating board',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
@@ -470,17 +411,6 @@ or [{{fullurl:{{FULLPAGENAME}}|action=edit}} create this page]</span>.
 }}
 MARKUP;
             ],
-            [
-                'title' => 'Template:CreateWithForm',
-                'namespace' => $this->namespace['template'],
-                'description' => '<includeonly>
-{{#formlink:
-  form={{{1}}}
-| link text=Create with form
-| target={{PAGENAME}}
-}}
-</includeonly>'
-            ]
         ];
 
         $this->createXML('properties.xml', $data);
