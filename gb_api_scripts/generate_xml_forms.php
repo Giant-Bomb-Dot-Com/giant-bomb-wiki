@@ -15,6 +15,42 @@ class GenerateXMLForms extends Maintenance
     public function execute()
     {
         $data = [
+            'title' => 'Form:Accessory',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Accessory" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Accessory|super_page=Accessories}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Accessory}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Image|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             [
                 'title' => 'Form:Rating',
                 'namespace' => $this->namespaces['form'],
@@ -39,8 +75,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Image: 
 | {{{field|Image|property=Has image}}}
 |-
-! Description: 
-| {{{field|Description|property=Has description}}}
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
 |}
 {{{end template}}}
 

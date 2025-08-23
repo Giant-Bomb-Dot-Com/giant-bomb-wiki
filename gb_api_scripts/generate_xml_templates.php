@@ -16,21 +16,171 @@ class GenerateXMLTemplates extends Maintenance
     {
         $data = [
             [
+                'title' => 'Template:Accessory',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+| Image (property=Has image)
+| Caption (property=Has caption)
+| Deck (property=Has deck)
+}}
+==Documentation==
+This template is used to create accessory pages, set its display title and infobox.
+
+'''Name''': The name of the accessory.
+
+'''Guid''': The accessory identifier from Giant Bomb.
+
+'''Image''': The image filename of the accessory. Image appears in the infobox.
+
+'''Caption''': The caption for the above image.
+
+'''Deck''': The short description of the accessory.
+</noinclude>
+<includeonly>
+{{#set:
+| Has name={{{Name|}}}
+| Has guid={{{Guid|}}}
+| Has image={{{Image|}}}
+| Has caption={{{Caption|}}}
+| Has deck={{{Deck|}}}
+}}
+{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+}}
+{{DISPLAYTITLE:{{{Name|}}}}}
+[[Category:Accessories|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Infobox',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+{{main other|{{short description|2=noreplace|{{{deck|}}}}}}}{{#invoke:infobox|infoboxTemplate
+<!-- Start and Styling -->
+| child          = {{{child|}}}
+| subbox         = {{{subbox|}}}
+| bodyclass      = {{#ifeq:{{{collapsible|}}}|yes|collapsible {{#if:{{{state|}}}|{{{state}}}|autocollapse}}}}
+| templatestyles = Infobox/styles.css
+| aboveclass     = fn
+| italic title   = {{{italic title|<noinclude>no</noinclude>}}}
+
+<!-- Title -->
+| above          = <includeonly>{{{title|{{PAGENAMEBASE}}}}}</includeonly>
+
+<!-- Image -->
+| image          = {{#invoke:InfoboxImage|InfoboxImage|image={{{image|}}}|size={{{image size|{{{image_size|{{{imagesize|}}}}}}}}}|sizedefault=frameless|upright={{{image_upright|1}}}|alt={{{alt|}}}|border={{{border|}}}|suppressplaceholder=yes}}
+
+| caption        = {{{caption|}}}
+
+<!-- Start of content -->
+| label2  = [[Video game developer|Developer(s)]]
+| data2   = {{{developer|}}}
+
+| label3  = [[Video game publisher|Publisher(s)]]
+| data3   = {{{publisher|}}}
+
+| label4  = [[Video game creative director|Director(s)]]
+| data4   = {{{director|}}}
+
+| label5  = [[Video game producer|Producer(s)]]
+| data5   = {{{producer|}}}
+
+| label6  = [[Video game designer|Designer(s)]]
+| data6   = {{{designer|}}}
+
+| label7  = [[Video game programmer|Programmer(s)]]
+| data7   = {{{programmer|}}}
+
+| label8  = [[Video game artist|Artist(s)]]
+| data8   = {{{artist|}}}
+
+| label9  = [[Video game writer|Writer(s)]]
+| data9   = {{{writer|}}}
+
+| label10 = [[Video game composer|Composer(s)]]
+| data10  = {{{composer|}}}
+
+| label11 = Series
+| data11  = {{{series|}}}
+
+| label12 = [[Game engine|Engine]]
+| data12  = {{{engine|}}}
+
+| label13 = [[Computing platform|Platform(s)]]
+| data13  = {{{platform|{{{platforms|}}}}}}
+
+| label14 = Release
+| data14  = {{{released|{{{release|}}}}}}
+
+| label15 = [[Video game genre|Genre(s)]]
+| data15  = {{{genre|}}}
+
+| label16 = Mode(s)
+| data16  = {{{modes|}}}
+
+| label17 = [[Arcade system board|Arcade system]]
+| data17  = {{{arcade system|}}}
+
+| label18 = Stands for
+| data18 = {{{stands for|}}}
+
+<!-- For embedded content -->
+| data30  = {{{embedded|}}}
+
+}}{{main other|{{#ifeq:{{lc:{{{italic title|}}}}}|no||{{italic title|force={{#ifeq:{{lc:{{{italic title|}}}}}|force|true}}}}}}
+}}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for }}<noinclude>
+{{documentation}}
+</noinclude>
+MARKUP,
+            ],
+            [
                 'title' => 'Template:Rating',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
 <noinclude>
-{{#template_params:Name (property=Has name)|Explanation (property=Stands for)|Image (property=Has image)|Description (property=Has description)}}
-</noinclude><includeonly>
-'''Name:''' [[Has name::{{{Name|}}}]]
+{{#template_params:
+  Name (property=Has name)
+| Explanation (property=Stands for)
+| Image (property=Has image)
+| Caption (property=Has caption)
+}}
+==Documentation==
+This template is used to create rating pages, sets its display title and infobox.
 
-'''Explanation:''' [[Stands for::{{{Explanation|}}}]]
+'''Name''': The name of the rating.
 
-'''Image:''' [[Has image::{{{Image|}}}]]
+'''Explanation''': The long form representation of the rating.
 
-'''Description:''' [[Has description::{{{Description|}}}]]
+'''Image''': The image filename of the rating. Image appears in the infobox.
 
-''':''' {{#ask:[[Foaf:homepage::{{SUBJECTPAGENAME}}]]|format=list}}
+'''Caption''': The caption for the above image.
+</noinclude>
+<includeonly>
+{{#set:
+| Has name={{{Name|}}}
+| Stands for={{{Explanation|}}}
+| Has image={{{Image|}}}
+| Has caption={{{Caption|}}}
+}}
+{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+| stands for={{{Explanation|}}}
+}}
+{{DISPLAYTITLE:{{{Name|}}}}}
+[[Category:Ratings|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
             ],

@@ -41,6 +41,16 @@ class GenerateXMLProperties extends Maintenance
                 'description' => 'This is a property of type [[Has type::Date]].'
             ],
             [
+                'title' => 'Property:Has alias',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
+                'title' => 'Property:Has caption',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
                 'title' => 'Property:Has city',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
