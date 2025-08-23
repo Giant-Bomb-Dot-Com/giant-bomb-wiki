@@ -9,7 +9,7 @@ class GenerateXMLPages extends Maintenance
     public function __construct() 
     {
         parent::__construct();
-        $this->addDescription("Generates XML for categories");
+        $this->addDescription("Generates XML for pages used to setup content pages");
     }
 
     public function execute()
