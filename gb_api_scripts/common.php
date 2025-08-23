@@ -24,6 +24,7 @@ trait CommonVariablesAndMethods
 
     protected $namespaces = [
         'page' => 0,
+        'core' => 8,
         'template' => 10,
         'category' => 14,
         'property' => 102,
@@ -73,6 +74,16 @@ trait CommonVariablesAndMethods
             // Create the <revision> element
             $revision = $dom->createElementNS($mwNamespace, 'revision');
             $page->appendChild($revision);
+
+            // Create the contributor element
+            $contributor = $dom->createElementNS($mwNamespace, 'contributor');
+            $revision->appendChild($contributor);
+
+            // Add Giantbomb user as contributor
+            $giantbomb = $dom->createElementNS($mwNamespace, 'username', 'Giantbomb');
+            $contributor->appendChild($giantbomb);
+            $userId = $dom->createElementNS($mwNamespace, 'id', 1);
+            $contributor->appendChild($userId);
 
             // Create and append child elements to <revision>
             $model = $dom->createElementNS($mwNamespace, 'model', 'wikitext');
