@@ -15,7 +15,8 @@ class GenerateXMLForms extends Maintenance
     public function execute()
     {
         $data = [
-            'title' => 'Form:Accessory',
+            [
+                'title' => 'Form:Accessory',
                 'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
@@ -51,6 +52,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
+            ],
             [
                 'title' => 'Form:Rating',
                 'namespace' => $this->namespaces['form'],
