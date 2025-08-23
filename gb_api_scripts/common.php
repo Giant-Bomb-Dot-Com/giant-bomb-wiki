@@ -40,7 +40,7 @@ trait CommonVariablesAndMethods
      */
     protected function createXML(string $filename, array $data): bool
     {
-        $path = '/var/www/html/maintenance/gb_api_scripts/';
+        $path = '/var/www/html/maintenance/gb_api_scripts/import_xml/';
 
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
