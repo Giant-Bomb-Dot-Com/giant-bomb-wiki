@@ -53,6 +53,9 @@ RUN cd /var/www/html \
  RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
         sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
+# So can be docker exec after build
+COPY --chmod=755 installwiki.sh /installwiki.sh
+
 # START CONTAINER
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
