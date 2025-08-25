@@ -39,7 +39,7 @@ class ConvertToMWDescriptions extends Maintenance
         foreach ($rows as $row) {
             $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
             $content->updateMediaWikiDescription($row->id, $convertedDescription);
-            echo sprintf('Converted description for %s::%s', $row->id, $row->name);
+            echo sprintf("Converted description for %s::%s\n", $row->id, $row->name);
         }
 
         echo 'done';
