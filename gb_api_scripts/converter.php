@@ -244,7 +244,7 @@ class HtmlToMediaWikiConverter
         $mwLink = '';
         $contentGuid = $link->getAttribute('data-ref-id');
         $href = $link->getAttribute('href');
-        $displayText = $this->getInnerHtml($link);
+        $displayText = trim($this->getInnerHtml($link));
 
         // check for external link
         $parts = pathinfo($href);
@@ -283,9 +283,7 @@ class HtmlToMediaWikiConverter
                         $name = ucwords($name);
                     }
 
-                    $pagename = ucfirst($this->map[$contentTypeId]['plural']) . '/' . $name;
-
-                    $mwLink = "[[$pagename|$displayText]]";
+                    $mwLink = "[[$name|$displayText]]";
                 }
                 else {
                     echo $contentTypeId."-".$contentId.": 0 is external link, unmatched number is non-wiki gb url.\r\n";
