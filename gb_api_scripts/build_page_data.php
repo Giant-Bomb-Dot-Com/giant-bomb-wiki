@@ -45,11 +45,13 @@ trait BuildPageData
 
             $result = $qb->fetchfield();
 
-            // craft the semantic table row for the relation
-            $relations .= '| '.ucwords($key).'='.$qb->fetchField();
-            if ($lastKey != $key) {
-            	$relations .= "\n";
-            }
+            if (!empty($result)) {
+	            // craft the semantic table row for the relation
+	            $relations .= '| '.ucwords($key).'='.$result;
+	            if ($lastKey != $key) {
+	            	$relations .= "\n";
+	            }
+	        }
         }
 
         return $relations;   	
