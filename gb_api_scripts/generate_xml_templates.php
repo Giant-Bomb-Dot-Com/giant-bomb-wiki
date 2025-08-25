@@ -33,9 +33,9 @@ This template is used to create accessory pages, set its display title and infob
 
 '''Name''': The display name of the accessory.
 
-'''Aliases''': Alternative names for the accessory.
-
 '''Guid''': The accessory identifier from Giant Bomb.
+
+'''Aliases''': Alternative names for the accessory.
 
 '''Image''': The image filename of the accessory. Image appears in the infobox.
 
@@ -46,12 +46,12 @@ This template is used to create accessory pages, set its display title and infob
 <includeonly>
 {{#set:
 | Has name={{{Name|}}}
-| Has aliases={{{Aliases|}}}
-| Has guid={{{Guid|}}}
-| Has image={{{Image|}}}
-| Has caption={{{Caption|}}}
-| Has deck={{{Deck|}}}
 }}
+{{#if:{{{Guid|}}}|{{#set:Has aliases={{{Guid|}}}}}}}
+{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}
+{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}
+{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}
+{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
 {{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -71,8 +71,8 @@ MARKUP,
 <noinclude>
 {{#template_params:
   Name (property=Has name)
-| RealName (property=Has real name)
 | Guid (property=Has guid)
+| RealName (property=Has real name)
 | Aliases (property=Has aliases)
 | Gender (property=Has gender)
 | Birthday (property=Has birthday)
@@ -87,9 +87,9 @@ This template is used to create character pages, set its display title and infob
 
 '''Name''': The display name of the character.
 
-'''RealName''': The real name of the character.
-
 '''Guid''': The character identifier from Giant Bomb.
+
+'''RealName''': The real name of the character.
 
 '''Aliases''': Alternative names for the character.
 
@@ -102,6 +102,8 @@ This template is used to create character pages, set its display title and infob
 '''Caption''': The caption for the above image.
 
 '''Deck''': The short description of the character.
+
+'''Concepts''': The concept pages related to the character.
 </noinclude>
 <includeonly>
 {{#set:

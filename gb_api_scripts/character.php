@@ -4,7 +4,6 @@ require_once(__DIR__.'/resource.php');
 require_once(__DIR__.'/common.php');
 require_once(__DIR__.'/build_page_data.php');
 
-use Wikimedia\Rdbms\SelectQueryBuilder;
 use Wikimedia\Rdbms\MysqliResultWrapper;
 
 class Character extends Resource
@@ -16,7 +15,7 @@ class Character extends Resource
     const RESOURCE_SINGULAR = "character";
     const RESOURCE_MULTIPLE = "characters";
     const TABLE_NAME = "wiki_character";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
     const RELATION_TABLE_MAP = [
         "concepts" => [
             "table" => "wiki_assoc_character_concept", 
@@ -153,6 +152,7 @@ class Character extends Resource
             $infoboxImage = basename($imageFragment);
 
             $description = <<<MARKUP
+$row->mw_formatted_description
 {{Character
 | Name=$row->name
 | Guid=$guid
@@ -160,12 +160,12 @@ class Character extends Resource
 | RealName=$row->real_name
 | Gender=$row->gender
 | Birthday=$row->birthday
+| Death=$row->death
 | Deck=$row->deck
 | Image=$infoboxImage
 | Caption=Image of $row->real_name
 $relations
 }}
-$row->mw_formatted_description
 MARKUP;
             $content[] = [
                 'title' => $row->mw_page_name,

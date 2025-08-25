@@ -61,25 +61,49 @@ class Accessory extends Resource
     {
         $content = [];
         foreach ($data as $row) {
+            $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
             $guid = self::TYPE_ID.'-'.$row->id;
-            $desc = htmlspecialchars($row->mw_formatted_description);
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+            $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
 
             $description = <<<MARKUP
-{{Accessory
-| Name=$row->name
-| Guid=$guid
-| Aliases=$row->aliases
-| Image=$infoboxImage
-| Caption=image of $row->name
-| Deck=$row->deck
-}}
 $desc
+{{Accessory
+| Name=$name
+| Guid=$guid
+
 MARKUP;
+            // only include if there is content to save db space
+            if (!empty($row->aliases)) {
+                $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
+                $description .= <<<MARKUP
+| Aliases=$aliases
+
+MARKUP;
+            }
+
+            if (!empty($row->deck)) {
+                $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
+                $description .= <<<MARKUP
+| Deck=$deck
+
+MARKUP;
+            }
+
+            if (!empty($row->infobox_image)) {
+                $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+                $infoboxImage = basename($imageFragment);
+                $description .= <<<MARKUP
+| Image=$infoboxImage
+| Caption=image of $name
+
+MARKUP;
+            }
+
+            $description .= "}}\n";
+
             $content[] = [
                 'title' => $row->mw_page_name,
-                'namespace' => $this->namespace['page'],
+                'namespace' => $this->namespaces['page'],
                 'description' => $description
             ];
         }
