@@ -23,6 +23,7 @@ class GenerateXMLTemplates extends Maintenance
 {{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
+| Aliases (property=Has aliases)
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
@@ -30,7 +31,9 @@ class GenerateXMLTemplates extends Maintenance
 ==Documentation==
 This template is used to create accessory pages, set its display title and infobox.
 
-'''Name''': The name of the accessory.
+'''Name''': The display name of the accessory.
+
+'''Aliases''': Alternative names for the accessory.
 
 '''Guid''': The accessory identifier from Giant Bomb.
 
@@ -43,6 +46,7 @@ This template is used to create accessory pages, set its display title and infob
 <includeonly>
 {{#set:
 | Has name={{{Name|}}}
+| Has aliases={{{Aliases|}}}
 | Has guid={{{Guid|}}}
 | Has image={{{Image|}}}
 | Has caption={{{Caption|}}}
@@ -57,6 +61,67 @@ This template is used to create accessory pages, set its display title and infob
 }}
 {{DISPLAYTITLE:{{{Name|}}}}}
 [[Category:Accessories|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Character',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+| RealName (property=Has real name)
+| Guid (property=Has guid)
+| Aliases (property=Has aliases)
+| Gender (property=Has gender)
+| Birthday (property=Has birthday)
+| Image (property=Has image)
+| Caption (property=Has caption)
+| Deck (property=Has deck)
+| Concepts (property=Has concepts)
+| 
+}}
+==Documentation==
+This template is used to create character pages, set its display title and infobox.
+
+'''Name''': The display name of the character.
+
+'''RealName''': The real name of the character.
+
+'''Guid''': The character identifier from Giant Bomb.
+
+'''Aliases''': Alternative names for the character.
+
+'''Gender''': The character's gender.
+
+'''Birthday''': The character's birth date.
+
+'''Image''': The image filename of the character. Image appears in the infobox.
+
+'''Caption''': The caption for the above image.
+
+'''Deck''': The short description of the character.
+</noinclude>
+<includeonly>
+{{#set:
+| Has name={{{Name|}}}
+| Has guid={{{Guid|}}}
+| Has image={{{Image|}}}
+| Has caption={{{Caption|}}}
+| Has deck={{{Deck|}}}
+| Has aliases={{{Aliases|}}}
+}}
+{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+| aliases={{{Aliases|}}}
+}}
+{{DISPLAYTITLE:{{{Name|}}}}}
+[[Category:Characters|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
             ],
@@ -133,6 +198,9 @@ MARKUP,
 | label18 = Stands for
 | data18 = {{{stands for|}}}
 
+| label19 = Aliases
+| data19 = {{{aliases|}}}
+
 <!-- For embedded content -->
 | data30  = {{{embedded|}}}
 
@@ -149,6 +217,7 @@ MARKUP,
 <noinclude>
 {{#template_params:
   Name (property=Has name)
+| Guid (property=Has guid)
 | Explanation (property=Stands for)
 | Image (property=Has image)
 | Caption (property=Has caption)
@@ -156,7 +225,9 @@ MARKUP,
 ==Documentation==
 This template is used to create rating pages, sets its display title and infobox.
 
-'''Name''': The name of the rating.
+'''Name''': The display name of the rating.
+
+'''Guid''': The rating identifier from Giant Bomb.
 
 '''Explanation''': The long form representation of the rating.
 
@@ -167,6 +238,7 @@ This template is used to create rating pages, sets its display title and infobox
 <includeonly>
 {{#set:
 | Has name={{{Name|}}}
+| Has guid={{{Guid|}}}
 | Stands for={{{Explanation|}}}
 | Has image={{{Image|}}}
 | Has caption={{{Caption|}}}

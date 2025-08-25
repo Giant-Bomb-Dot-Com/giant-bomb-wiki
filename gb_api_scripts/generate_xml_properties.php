@@ -26,7 +26,7 @@ class GenerateXMLProperties extends Maintenance
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
-                'title' => 'Property:Has alias',
+                'title' => 'Property:Has aliases',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
@@ -39,11 +39,6 @@ class GenerateXMLProperties extends Maintenance
                 'title' => 'Property:Has birthday',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Date]].'
-            ],
-            [
-                'title' => 'Property:Has alias',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
                 'title' => 'Property:Has caption',
@@ -386,7 +381,7 @@ The allowed values for this property are:
 * [[Allows value::PC 2560x1600]]'
             ],
             [
-                'title' => 'Property:Has zipcode',
+                'title' => 'Property:Has zip',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],

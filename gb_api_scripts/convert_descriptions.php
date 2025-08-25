@@ -14,9 +14,9 @@ class ConvertToMWDescriptions extends Maintenance
     }
 
     /**
-     * - Retrieve all entries from the resource table that has a description and an empty description_new field
+     * - Retrieve all entries from the resource table that has a description and an empty mw_formatted_description field
      * - Replace html tags with MediaWiki formatting
-     * - Update the entry's description_new field
+     * - Update the entry's mw_formatted_description field
      */
     public function execute()
     {
@@ -41,6 +41,8 @@ class ConvertToMWDescriptions extends Maintenance
             $content->updateMediaWikiDescription($row->id, $convertedDescription);
             echo sprintf('Converted description for %s::%s', $row->id, $row->name);
         }
+
+        echo 'done';
     }
 }
 

@@ -1,13 +1,20 @@
 <?php
 
 require_once(__DIR__.'/resource.php');
+require_once(__DIR__.'/common.php');
+require_once(__DIR__.'/build_page_data.php');
+
+use Wikimedia\Rdbms\MysqliResultWrapper;
 
 class Thing extends Resource
 {
+    use BuildPageData;
+
     const TYPE_ID = 3055;
     const RESOURCE_SINGULAR = "object";
     const RESOURCE_MULTIPLE = "objects";
     const TABLE_NAME = "wiki_thing";
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [
         "characters" =>  ["table" => "wiki_assoc_character_thing", "mainField" => "thing_id", "relationField" => "character_id"],
         "concepts" => ["table" => "wiki_assoc_concept_thing", "mainField" => "thing_id", "relationField" => "concept_id"],
@@ -62,6 +69,41 @@ class Thing extends Resource
             'description' => (is_null($data['description'])) ? '' : $data['description'],
             'aliases' => $data['aliases'],
         ], ['id']);
+    }
+
+    /**
+     * Prepends semantic data to description
+     * 
+     * @param MysqliResultWrapper $data
+     * @return void
+     */
+    public function getPageDataArray(MysqliResultWrapper $data): array
+    {
+        $content = [];
+        foreach ($data as $row) {
+            $guid = self::TYPE_ID.'-'.$row->id;
+            $desc = htmlspecialchars($row->mw_formatted_description);
+            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+
+            $description = <<<MARKUP
+{{Object
+| Name=$row->name
+| Guid=$guid
+| Image=$infoboxImage
+| Caption=image of $row->name
+| Deck=$row->deck
+}}
+$desc
+MARKUP;
+            $content[] = [
+                'title' => $row->mw_page_name,
+                'namespace' => $this->namespace['page'],
+                'description' => $description
+            ];
+        }
+
+        return $content;
     }
 }
 

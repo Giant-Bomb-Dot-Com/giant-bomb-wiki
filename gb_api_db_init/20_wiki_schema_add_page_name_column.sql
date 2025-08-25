@@ -52,6 +52,7 @@ UPDATE wiki_game_dlc SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])
 UPDATE wiki_game_dlc SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_game_dlc SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_game_dlc SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_game_dlc SET mw_page_name = CONCAT('DLCs/', mw_page_name);
 UPDATE wiki_franchise SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_franchise SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_franchise SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -59,6 +60,7 @@ UPDATE wiki_franchise SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z]
 UPDATE wiki_franchise SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_franchise SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_franchise SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_franchise SET mw_page_name = CONCAT('Franchises/', mw_page_name);
 UPDATE wiki_game_theme SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_game_theme SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_game_theme SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -66,6 +68,7 @@ UPDATE wiki_game_theme SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z
 UPDATE wiki_game_theme SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_game_theme SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_game_theme SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_game_theme SET mw_page_name = CONCAT('Themes/', mw_page_name);
 UPDATE wiki_accessory SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_accessory SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_accessory SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -73,6 +76,7 @@ UPDATE wiki_accessory SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z]
 UPDATE wiki_accessory SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_accessory SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_accessory SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_accessory SET mw_page_name = CONCAT('Accessories/', mw_page_name);
 UPDATE wiki_platform SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_platform SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_platform SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -80,6 +84,7 @@ UPDATE wiki_platform SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])
 UPDATE wiki_platform SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_platform SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_platform SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_platform SET mw_page_name = CONCAT('Platforms/', mw_page_name);
 UPDATE wiki_location SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_location SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_location SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -87,6 +92,7 @@ UPDATE wiki_location SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])
 UPDATE wiki_location SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_location SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_location SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_location SET mw_page_name = CONCAT('Locations/', mw_page_name);
 UPDATE wiki_character SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_character SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_character SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -94,6 +100,7 @@ UPDATE wiki_character SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z]
 UPDATE wiki_character SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_character SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_character SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_character SET mw_page_name = CONCAT('Characters/', mw_page_name);
 UPDATE wiki_thing SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_thing SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_thing SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -101,6 +108,7 @@ UPDATE wiki_thing SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])[\'
 UPDATE wiki_thing SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_thing SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_thing SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_thing SET mw_page_name = CONCAT('Objects/', mw_page_name);
 UPDATE wiki_game SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_game SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_game SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -108,6 +116,7 @@ UPDATE wiki_game SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])[\'\
 UPDATE wiki_game SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_game SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_game SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_game SET mw_page_name = CONCAT('Games/', mw_page_name);
 UPDATE wiki_game_genre SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_game_genre SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_game_genre SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -115,6 +124,7 @@ UPDATE wiki_game_genre SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z
 UPDATE wiki_game_genre SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_game_genre SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_game_genre SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_game_genre SET mw_page_name = CONCAT('Genres/', mw_page_name);
 UPDATE wiki_person SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_person SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_person SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -122,6 +132,7 @@ UPDATE wiki_person SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])[\
 UPDATE wiki_person SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_person SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_person SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_person SET mw_page_name = CONCAT('People/', mw_page_name);
 UPDATE wiki_company SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_company SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_company SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -129,6 +140,7 @@ UPDATE wiki_company SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])[
 UPDATE wiki_company SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_company SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_company SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_company SET mw_page_name = CONCAT('Companies/', mw_page_name);
 UPDATE wiki_concept SET mw_page_name = REGEXP_REPLACE(mw_page_name, '%[0-9a-fA-F]{2}', '');
 UPDATE wiki_concept SET mw_page_name = REPLACE(mw_page_name, '&amp;', ' And ');
 UPDATE wiki_concept SET mw_page_name = REPLACE(mw_page_name, '&', ' And ');
@@ -136,3 +148,4 @@ UPDATE wiki_concept SET mw_page_name = REGEXP_REPLACE(mw_page_name, '([a-zA-Z])[
 UPDATE wiki_concept SET mw_page_name = REGEXP_REPLACE(mw_page_name, '[-—#<>\\[\\]|{}~\\`!@$%^*()+=.,:;“”"’’\'?\\`~–_™]+', ' ');
 UPDATE wiki_concept SET mw_page_name = TRIM(REGEXP_REPLACE(mw_page_name, ' +', ' '));
 UPDATE wiki_concept SET mw_page_name = REPLACE(mw_page_name, ' ', '_');
+UPDATE wiki_concept SET mw_page_name = CONCAT('Concepts/', mw_page_name);
