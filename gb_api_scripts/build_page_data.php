@@ -24,20 +24,12 @@ trait BuildPageData
 		$lastKey = array_key_last(self::RELATION_TABLE_MAP);
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
-        	// concatenate all the rows page names into a single field delimited by a comma
-        	$groupConcat = $this->getDb()->buildGroupConcatField(
-				', ',
-				$relation['relationTable'],
-				$relation['relationTable'].'.mw_page_name'
-			);
-
+            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ', ')";
         	// join the relation table with the connector table to get the page names
             $qb = $this->getDb()->newSelectQueryBuilder()
                        ->select(['mw_page_name' => $groupConcat])
-                       ->from($relation['relationTable'], 'o')
-                       ->leftJoin($relation['table'],
-                                  'j',
-                                  'j.'.$relation['relationField'].' = o.id')
+                       ->from($relation['table'], 'j')
+                       ->join($relation['relationTable'],'o','j.'.$relation['relationField'].' = o.id')
                        ->where('j.'.$relation['mainField'].' = '.$id)
                        ->groupBy('j.'.$relation['mainField'])
                        ->caller(__METHOD__);

@@ -56,15 +56,19 @@ class GenerateXMLResource extends Maintenance
             // create 100mb files
             if ($size > self::CHUNK_SIZE) {
                 $filename = sprintf('%s_%07d.xml', $resource, $count);
-                $this->createXML($filename, $data);
+                $this->streamXML($filename, $data);
                 $data = [];
                 $size = 0;
+            }
+
+            if ($count % 1000 == 0) {
+                echo "$count...\n";
             }
         }
 
         if ($size != 0) {
             $filename = sprintf('%s_%07d.xml', $resource, $count);
-            $this->createXML($filename, $data);
+            $this->streamXML($filename, $data);
         }
     }
 }

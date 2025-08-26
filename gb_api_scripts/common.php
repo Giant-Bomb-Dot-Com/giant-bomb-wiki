@@ -65,6 +65,8 @@ trait CommonVariablesAndMethods
         $mediawiki->setAttribute('xml:lang', 'en');
         $dom->appendChild($mediawiki);
 
+        echo "Generating xml...\n";
+        $count = 0;
         foreach ($data as $set) {
             // Create the <page> element
             $page = $dom->createElementNS($mwNamespace, 'page');
@@ -102,6 +104,11 @@ trait CommonVariablesAndMethods
             $text = $dom->createElementNS($mwNamespace, 'text', $set['description']);
             $text->setAttribute('xml:space', 'preserve');
             $revision->appendChild($text);
+
+            if ($count % 1000 == 0) {
+                echo "$count pages blocks created...\n";
+            }
+            $count++;
         }
 
         try {
@@ -118,5 +125,67 @@ trait CommonVariablesAndMethods
             echo "Error: " . $e->getMessage() . "\n";
             return false;
         }
+    }
+
+    /**
+     * Creates pages blocks and streams direct to file. Faster than using domdocument.
+     * 
+     * @param string $filename
+     * @param array  $data
+     * @return bool
+     */
+    protected function streamXML(string $filename, array $data)
+    {
+        $path = '/var/www/html/maintenance/gb_api_scripts/import_xml/';
+        $file = $path.$filename;
+
+        $xml = new XMLWriter();
+        $xml->openURI($file);
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
+
+        $mediaWikiNS = 'http://www.mediawiki.org/xml/export-0.11/';
+        $xsiNS = 'http://www.w3.org/2001/XMLSchema-instance';
+
+        $xml->startDocument('1.0', 'UTF-8');
+
+        $xml->startElementNS(null, 'mediawiki', $mediaWikiNS);
+            $xml->writeAttribute('xmlns:xsi', $xsiNS);
+            $xml->writeAttributeNS('xsi', 'schemaLocation', null, "http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd");
+            $xml->writeAttribute('version', '0.11');
+            $xml->writeAttribute('xml:lang', 'en');
+
+            $count = 0;
+            foreach ($data as $page) {
+                $xml->startElement('page');
+                    $xml->writeElement('title', $page['title']);
+                    $xml->writeElement('ns', $page['namespace']);
+                    $xml->startElement('revision');
+                        $xml->startElement('contributor');
+                            $xml->writeElement('username', 'Giantbomb');
+                            $xml->writeElement('id', 1);
+                        $xml->endElement(); 
+                        $xml->writeElement('model', 'wikitext');
+                        $xml->writeElement('format', 'text/x-wiki');
+                        $xml->startElement('text');
+                            $xml->writeAttribute('xml:space', 'preserve');
+                            $xml->writeRaw($page['description']);
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+
+                if ($count % 1000 == 0) {
+                    echo "$count pages blocks created...\n";
+                }
+                $count++;
+            }
+
+        $xml->endElement();
+        $xml->endDocument();
+
+        $xml->flush();
+
+        echo "Generated $file!\n";
+        echo "Total pages generated: $count\n";
     }
 }
