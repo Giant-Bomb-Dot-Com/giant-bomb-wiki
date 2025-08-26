@@ -5,6 +5,7 @@ cache/
 logs/
 mountpoint/
 gb_api_scripts/images/
+gb_api_scripts/import_xml/
 
 .idea/
 .vscode/*
