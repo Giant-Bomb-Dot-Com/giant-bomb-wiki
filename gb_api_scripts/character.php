@@ -135,9 +135,9 @@ class Character extends Resource
     }
 
     /**
-     * Converts result data into page data array of ['title', 'namespace', 'description']
+     * Converts result row into page data array of ['title', 'namespace', 'description']
      * 
-     * @param stdClass $data
+     * @param stdClass $row
      * @return array
      */
     public function getPageDataArray(stdClass $row): array

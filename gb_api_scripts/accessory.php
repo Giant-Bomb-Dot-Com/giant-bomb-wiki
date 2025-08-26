@@ -4,8 +4,6 @@ require_once(__DIR__.'/resource.php');
 require_once(__DIR__.'/common.php');
 require_once(__DIR__.'/build_page_data.php');
 
-use Wikimedia\Rdbms\MysqliResultWrapper;
-
 class Accessory extends Resource
 {
     use CommonVariablesAndMethods;
@@ -52,10 +50,10 @@ class Accessory extends Resource
     }
 
     /**
-     * Prepends semantic data to description
+     * Converts result row into page data array of ['title', 'namespace', 'description']
      * 
-     * @param stdClass $data
-     * @return void
+     * @param stdClass $row
+     * @return array
      */
     public function getPageDataArray(stdClass $row): array
     {
@@ -72,11 +70,9 @@ $desc
 MARKUP;
         // only include if there is content to save db space
         if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
+            $aliases = explode("\n", $row->aliases);
+            $aliases = implode(',', $aliases);
+            $description .= '| Aliases=' . htmlspecialchars($aliases, ENT_XML1, 'UTF-8') . "\n";
         }
 
         if (!empty($row->deck)) {

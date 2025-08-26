@@ -4,8 +4,6 @@ require_once(__DIR__.'/resource.php');
 require_once(__DIR__.'/common.php');
 require_once(__DIR__.'/build_page_data.php');
 
-use Wikimedia\Rdbms\MysqliResultWrapper;
-
 class Franchise extends Resource
 {
     use BuildPageData;
@@ -70,38 +68,62 @@ class Franchise extends Resource
     }
 
     /**
-     * Prepends semantic data to description
+     * Converts result row into page data array of ['title', 'namespace', 'description']
      * 
-     * @param MysqliResultWrapper $data
-     * @return void
+     * @param stdClass $row
+     * @return array
      */
-    public function getPageDataArray(MysqliResultWrapper $data): array
+    public function getPageDataArray(stdClass $row): array
     {
-        $content = [];
-        foreach ($data as $row) {
-            $guid = self::TYPE_ID.'-'.$row->id;
-            $desc = htmlspecialchars($row->mw_formatted_description);
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+        $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
+        $guid = self::TYPE_ID.'-'.$row->id;
+        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $relations = $this->getRelationsFromDB($row->id);
 
-            $description = <<<MARKUP
-{{Franchise
-| Name=$row->name
-| Guid=$guid
-| Image=$infoboxImage
-| Caption=image of $row->name
-| Deck=$row->deck
-}}
+        $description = <<<MARKUP
 $desc
+{{Franchise
+| Name=$name
+| Guid=$guid
+
 MARKUP;
-            $content[] = [
-                'title' => $row->mw_page_name,
-                'namespace' => $this->namespace['page'],
-                'description' => $description
-            ];
+        // only include if there is content to save db space
+        if (!empty($row->aliases)) {
+            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
+| Aliases=$aliases
+
+MARKUP;
         }
 
-        return $content;
+        if (!empty($row->deck)) {
+            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
+| Deck=$deck
+
+MARKUP;
+        }
+
+        if (!empty($row->infobox_image)) {
+            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+            $description .= <<<MARKUP
+| Image=$infoboxImage
+| Caption=image of $name
+
+MARKUP;
+        }
+
+        $description .= <<<MARKUP
+$relations
+}};
+MARKUP;
+
+        return [
+            'title' => $row->mw_page_name,
+            'namespace' => $this->namespaces['page'],
+            'description' => $description
+        ];
     }
 }
 

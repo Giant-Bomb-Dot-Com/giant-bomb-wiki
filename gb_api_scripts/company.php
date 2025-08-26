@@ -4,8 +4,6 @@ require_once(__DIR__.'/resource.php');
 require_once(__DIR__.'/common.php');
 require_once(__DIR__.'/build_page_data.php');
 
-use Wikimedia\Rdbms\MysqliResultWrapper;
-
 class Company extends Resource
 {
     use BuildPageData;
@@ -14,7 +12,7 @@ class Company extends Resource
     const RESOURCE_SINGULAR = "company";
     const RESOURCE_MULTIPLE = "companies";
     const TABLE_NAME = "wiki_company";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website'];
     const RELATION_TABLE_MAP = [
         "characters" =>  ["table" => "wiki_assoc_character_company", "mainField" => "company_id", "relationField" => "character_id"],
         "concepts" => ["table" => "wiki_assoc_company_concept", "mainField" => "company_id", "relationField" => "concept_id"],
@@ -87,38 +85,62 @@ class Company extends Resource
     }
 
     /**
-     * Prepends semantic data to description
+     * Converts result row into page data array of ['title', 'namespace', 'description']
      * 
-     * @param MysqliResultWrapper $data
-     * @return void
+     * @param stdClass $row
+     * @return array
      */
-    public function getPageDataArray(MysqliResultWrapper $data): array
+    public function getPageDataArray(stdClass $row): array
     {
-        $content = [];
-        foreach ($data as $row) {
-            $guid = self::TYPE_ID.'-'.$row->id;
-            $desc = htmlspecialchars($row->mw_formatted_description);
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+        $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
+        $guid = self::TYPE_ID.'-'.$row->id;
+        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $relations = $this->getRelationsFromDB($row->id);
 
-            $description = <<<MARKUP
-{{Company
-| Name=$row->name
-| Guid=$guid
-| Image=$infoboxImage
-| Caption=image of $row->name
-| Deck=$row->deck
-}}
+        $description = <<<MARKUP
 $desc
+{{Company
+| Name=$name
+| Guid=$guid
+
 MARKUP;
-            $content[] = [
-                'title' => $row->mw_page_name,
-                'namespace' => $this->namespace['page'],
-                'description' => $description
-            ];
+        // only include if there is content to save db space
+        if (!empty($row->aliases)) {
+            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
+| Aliases=$aliases
+
+MARKUP;
         }
 
-        return $content;
+        if (!empty($row->deck)) {
+            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
+| Deck=$deck
+
+MARKUP;
+        }
+
+        if (!empty($row->infobox_image)) {
+            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+            $description .= <<<MARKUP
+| Image=$infoboxImage
+| Caption=image of $name
+
+MARKUP;
+        }
+
+        $description .= <<<MARKUP
+$relations
+}};
+MARKUP;
+
+        return [
+            'title' => $row->mw_page_name,
+            'namespace' => $this->namespaces['page'],
+            'description' => $description
+        ];
     }
 }
 

@@ -47,7 +47,7 @@ This template is used to create accessory pages, set its display title and infob
 {{#set:
 | Has name={{{Name|}}}
 }}
-{{#if:{{{Guid|}}}|{{#set:Has aliases={{{Guid|}}}}}}}
+{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}
 {{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}
 {{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}
 {{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}
@@ -80,16 +80,22 @@ MARKUP,
 | Caption (property=Has caption)
 | Deck (property=Has deck)
 | Concepts (property=Has concepts)
-| 
+| Enemies (property=Has enemies)
+| Franchises (property=Has franchises)
+| Friends (property=Has friends)
+| Games (property=Has games)
+| Locations (property=Has locations)
+| People (property=Has people)
+| Objects (property=Has objects)
 }}
 ==Documentation==
 This template is used to create character pages, set its display title and infobox.
 
 '''Name''': The display name of the character.
 
-'''Guid''': The character identifier from Giant Bomb.
-
 '''RealName''': The real name of the character.
+
+'''Guid''': The character identifier from Giant Bomb.
 
 '''Aliases''': Alternative names for the character.
 
@@ -104,16 +110,41 @@ This template is used to create character pages, set its display title and infob
 '''Deck''': The short description of the character.
 
 '''Concepts''': The concept pages related to the character.
+
+'''Enemies''': The character pages considered an enemy to the character.
+
+'''Franchises''': The franchise pages related to the character.
+
+'''Friends''': The character pages considered a friend to the character.
+
+'''Games''': The game pages related to the character.
+
+'''Locations''': The location pages related to the character.
+
+'''People''': The person pages related to the character.
+
+'''Objects''': The object pages related to the character.
 </noinclude>
 <includeonly>
 {{#set:
 | Has name={{{Name|}}}
-| Has guid={{{Guid|}}}
-| Has image={{{Image|}}}
-| Has caption={{{Caption|}}}
-| Has deck={{{Deck|}}}
-| Has aliases={{{Aliases|}}}
 }}
+{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}
+{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName|}}}}}}}
+{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}
+{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender|}}}}}}}
+{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday|}}}}}}}
+{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}
+{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}
+{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
+{{#if:{{{Concepts|}}}|{{#set:Has concepts={{{Concepts|}}}}}}}
+{{#if:{{{Enemies|}}}|{{#set:Has enemies={{{Enemies|}}}}}}}
+{{#if:{{{Franchises|}}}|{{#set:Has franchises={{{Franchises|}}}}}}}
+{{#if:{{{Friends|}}}|{{#set:Has friends={{{Friends|}}}}}}}
+{{#if:{{{Games|}}}|{{#set:Has games={{{Games|}}}}}}}
+{{#if:{{{Locations|}}}|{{#set:Has locations={{{Locations|}}}}}}}
+{{#if:{{{People|}}}|{{#set:Has people={{{People|}}}}}}}
+{{#if:{{{Objects|}}}|{{#set:Has objects={{{Objects|}}}}}}}
 {{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -121,6 +152,9 @@ This template is used to create character pages, set its display title and infob
 | image size=40
 | caption={{{Caption|}}}
 | aliases={{{Aliases|}}}
+| gender={{{Gender|}}}
+| birthday={{{Birthday|}}}
+| real name={{{RealName|}}}
 }}
 {{DISPLAYTITLE:{{{Name|}}}}}
 [[Category:Characters|{{SUBPAGENAME}}]]
@@ -203,11 +237,20 @@ MARKUP,
 | label19 = Aliases
 | data19 = {{{aliases|}}}
 
+| label20 = Gender
+| data20 = {{{gender|}}}
+
+| label21 = Birthday
+| data21 = {{{birthday|}}}
+
+| label22 = RealName
+| data22 = {{{real name|}}}
+
 <!-- For embedded content -->
 | data30  = {{{embedded|}}}
 
 }}{{main other|{{#ifeq:{{lc:{{{italic title|}}}}}|no||{{italic title|force={{#ifeq:{{lc:{{{italic title|}}}}}|force|true}}}}}}
-}}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for }}<noinclude>
+}}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for | gender | birthday | real name }}<noinclude>
 {{documentation}}
 </noinclude>
 MARKUP,
