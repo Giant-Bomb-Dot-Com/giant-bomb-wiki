@@ -4,7 +4,9 @@ require_once(__DIR__.'/common.php');
 
 class GenerateXMLResource extends Maintenance
 {
-	use CommonVariablesAndMethods;
+    use CommonVariablesAndMethods;
+
+    const CHUNK_SIZE = 100000000;
 
     public function __construct() 
     {
@@ -36,14 +38,34 @@ class GenerateXMLResource extends Maintenance
         $content = new $classname($this->getDB(DB_PRIMARY, [], $db));
 
         if ($id = $this->getOption('id', false)) {
-        	$rows = $content->getById($id);
+            $result = $content->getById($id);
         }
         else {
-        	$rows = $content->getAll();
+            $result = $content->getAll();
         }
 
-        $data = $content->getPageDataArray($rows);
-		$this->createXML($resource.'_pages.xml', $data);
+        $data = [];
+        $count = 0;
+        $size = 0;
+        foreach ($result as $row) {
+            $pageData = $content->getPageDataArray($row);
+            $count++;
+            $size += strlen($pageData['description']);
+            $data[] = $pageData;
+
+            // create 100mb files
+            if ($size > self::CHUNK_SIZE) {
+                $filename = sprintf('%s_%07d.xml', $resource, $count);
+                $this->createXML($filename, $data);
+                $data = [];
+                $size = 0;
+            }
+        }
+
+        if ($size != 0) {
+            $filename = sprintf('%s_%07d.xml', $resource, $count);
+            $this->createXML($filename, $data);
+        }
     }
 }
 

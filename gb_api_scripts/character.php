@@ -4,8 +4,6 @@ require_once(__DIR__.'/resource.php');
 require_once(__DIR__.'/common.php');
 require_once(__DIR__.'/build_page_data.php');
 
-use Wikimedia\Rdbms\MysqliResultWrapper;
-
 class Character extends Resource
 {
     use CommonVariablesAndMethods;
@@ -139,42 +137,75 @@ class Character extends Resource
     /**
      * Converts result data into page data array of ['title', 'namespace', 'description']
      * 
-     * @param MysqliResultWrapper $data
+     * @param stdClass $data
      * @return array
      */
-    public function getPageDataArray(MysqliResultWrapper $data): array
+    public function getPageDataArray(stdClass $row): array
     {
-        $content = [];
-        foreach ($data as $row) {
-            $guid = self::TYPE_ID.'-'.$row->id;
-            $relations = $this->getRelationsFromDB($row->id);
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+        $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
+        $guid = self::TYPE_ID.'-'.$row->id;
+        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $relations = $this->getRelationsFromDB($row->id);
 
-            $description = <<<MARKUP
-$row->mw_formatted_description
+        $description = <<<MARKUP
+$desc
 {{Character
-| Name=$row->name
+| Name=$name
 | Guid=$guid
-| Aliases=$row->aliases
-| RealName=$row->real_name
-| Gender=$row->gender
-| Birthday=$row->birthday
-| Death=$row->death
-| Deck=$row->deck
-| Image=$infoboxImage
-| Caption=Image of $row->real_name
-$relations
-}}
+
 MARKUP;
-            $content[] = [
-                'title' => $row->mw_page_name,
-                'namespace' => $this->namespaces['page'],
-                'description' => $description
-            ];
+        // only include if there is content to save db space
+        if (!empty($row->aliases)) {
+            $aliases = explode("\n", $row->aliases);
+            $aliases = implode(',', $aliases);
+            $description .= '| Aliases=' . htmlspecialchars($aliases, ENT_XML1, 'UTF-8') . "\n";
         }
 
-        return $content;
+        if (!empty($row->real_name)) {
+            $description .= '| RealName=' . htmlspecialchars($row->real_name, ENT_XML1, 'UTF-8') . "\n";
+        }
+
+        if (!empty($row->gender)) {
+            switch ($row->gender) {
+                case 0: $gender = 'Female'; break;
+                case 1: $gender = 'Male'; break;
+                default: $gender = 'Non-Binary'; break;
+            }
+            $description .= '| Gender=' . htmlspecialchars($gender, ENT_XML1, 'UTF-8') . "\n";
+        }
+
+        if (!empty($row->birthday)) {
+            $description .= '| Birthday=' . htmlspecialchars($row->birthday, ENT_XML1, 'UTF-8') . "\n";
+        }
+
+        if (!empty($row->death)) {
+            $description .= '| Death=' . htmlspecialchars($row->death, ENT_XML1, 'UTF-8') . "\n";
+        }
+
+        if (!empty($row->deck)) {
+            $description .= '| Deck=' . htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') . "\n";
+        }
+
+        if (!empty($row->infobox_image)) {
+            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+            $description .= <<<MARKUP
+| Image=$infoboxImage
+| Caption=image of $name
+
+MARKUP;
+        }
+
+        $description .= <<<MARKUP
+$relations
+}};
+MARKUP;
+
+        return [
+            'title' => $row->mw_page_name,
+            'namespace' => $this->namespaces['page'],
+            'description' => $description
+        ];
     }
 }
 

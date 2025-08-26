@@ -54,61 +54,56 @@ class Accessory extends Resource
     /**
      * Prepends semantic data to description
      * 
-     * @param MysqliResultWrapper $data
+     * @param stdClass $data
      * @return void
      */
-    public function getPageDataArray(MysqliResultWrapper $data): array
+    public function getPageDataArray(stdClass $row): array
     {
-        $content = [];
-        foreach ($data as $row) {
-            $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
-            $guid = self::TYPE_ID.'-'.$row->id;
-            $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
+        $guid = self::TYPE_ID.'-'.$row->id;
+        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
 
-            $description = <<<MARKUP
+        $description = <<<MARKUP
 $desc
 {{Accessory
 | Name=$name
 | Guid=$guid
 
 MARKUP;
-            // only include if there is content to save db space
-            if (!empty($row->aliases)) {
-                $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-                $description .= <<<MARKUP
+        // only include if there is content to save db space
+        if (!empty($row->aliases)) {
+            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
 | Aliases=$aliases
 
 MARKUP;
-            }
+        }
 
-            if (!empty($row->deck)) {
-                $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-                $description .= <<<MARKUP
+        if (!empty($row->deck)) {
+            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
+            $description .= <<<MARKUP
 | Deck=$deck
 
 MARKUP;
-            }
+        }
 
-            if (!empty($row->infobox_image)) {
-                $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-                $infoboxImage = basename($imageFragment);
-                $description .= <<<MARKUP
+        if (!empty($row->infobox_image)) {
+            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+            $description .= <<<MARKUP
 | Image=$infoboxImage
 | Caption=image of $name
 
 MARKUP;
-            }
-
-            $description .= "}}\n";
-
-            $content[] = [
-                'title' => $row->mw_page_name,
-                'namespace' => $this->namespaces['page'],
-                'description' => $description
-            ];
         }
 
-        return $content;
+        $description .= "}}\n";
+
+        return [
+            'title' => $row->mw_page_name,
+            'namespace' => $this->namespaces['page'],
+            'description' => $description
+        ];
     }
 }
 

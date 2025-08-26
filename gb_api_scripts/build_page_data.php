@@ -1,7 +1,6 @@
 <?php
 
 use Wikimedia\Rdbms\SelectQueryBuilder;
-use Wikimedia\Rdbms\MysqliResultWrapper;
 
 trait BuildPageData 
 {
@@ -11,7 +10,7 @@ trait BuildPageData
      * @param MysqliResultWrapper $data
      * @return array
      */
-    abstract public function getPageDataArray(MysqliResultWrapper $data): array;
+    abstract public function getPageDataArray(stdClass $data): array;
 
     /**
      * Loops through the relation table map to obtain a comma delimited list of relation page names
