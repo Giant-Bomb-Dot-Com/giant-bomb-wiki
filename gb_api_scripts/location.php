@@ -14,7 +14,26 @@ class Location extends Resource
     const RESOURCE_MULTIPLE = "locations";
     const TABLE_NAME = "wiki_location";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
-
+    const RELATION_TABLE_MAP = [
+        "characters" =>  [
+            "table" => "wiki_assoc_character_location", 
+            "mainField" => "location_id", 
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id", 
+        ],
+        "concepts" =>  [
+            "table" => "wiki_assoc_concept_location", 
+            "mainField" => "location_id", 
+            "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
+        ],
+        "objects" =>  [
+            "table" => "wiki_assoc_location_thing", 
+            "mainField" => "location_id", 
+            "relationTable" => "wiki_thing",
+            "relationField" => "thing_id"
+        ],
+    ];
     /**
      * Matching table fields to api response fields
      * 
@@ -60,46 +79,15 @@ class Location extends Resource
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
-        $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Location
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatSchematicData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+        ]);
 
         return [
             'title' => $row->mw_page_name,

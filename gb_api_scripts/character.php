@@ -20,56 +20,48 @@ class Character extends Resource
             "mainField" => "character_id", 
             "relationField" => "concept_id", 
             "relationTable" => "wiki_concept",
-            "relationName" => "concept_name",
         ],
         "enemies" =>  [
             "table" => "wiki_assoc_character_enemy", 
             "mainField" => "character_id", 
             "relationField" => "enemy_character_id", 
             "relationTable" => "wiki_character",
-            "relationName" => "enemy_name",
         ],
         "franchises" =>  [
             "table" => "wiki_assoc_character_franchise", 
             "mainField" => "character_id", 
             "relationField" => "franchise_id", 
             "relationTable" => "wiki_franchise",
-            "relationName" => "franchise_name",
         ],
         "friends" =>  [
             "table" => "wiki_assoc_character_friend", 
             "mainField" => "character_id", 
             "relationField" => "friend_character_id", 
             "relationTable" => "wiki_character",
-            "relationName" => "friend_name",
         ],
         "games" =>  [
             "table" => "wiki_assoc_game_character", 
             "mainField" => "character_id", 
             "relationField" => "game_id", 
             "relationTable" => "wiki_game",
-            "relationName" => "game_name",
         ],
         "locations" =>  [
             "table" => "wiki_assoc_character_location", 
             "mainField" => "character_id", 
             "relationField" => "location_id", 
             "relationTable" => "wiki_location",
-            "relationName" => "location_name",
         ],
         "people" =>  [
             "table" => "wiki_assoc_character_person", 
             "mainField" => "character_id", 
             "relationField" => "person_id", 
             "relationTable" => "wiki_person",
-            "relationName" => "person_name",
         ],
         "objects" =>  [
             "table" => "wiki_assoc_character_thing", 
             "mainField" => "character_id", 
             "relationField" => "thing_id", 
             "relationTable" => "wiki_thing",
-            "relationName" => "object_name",
         ],
     ];
 
@@ -139,7 +131,7 @@ class Character extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."\n".$this->formatTemplateData([
+        $description = $desc."\n".$this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,

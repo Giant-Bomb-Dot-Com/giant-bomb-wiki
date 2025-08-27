@@ -13,15 +13,50 @@ class Person extends Resource
     const RESOURCE_SINGULAR = "person";
     const RESOURCE_MULTIPLE = "people";
     const TABLE_NAME = "wiki_person";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','real_name','birthday','country','death','gender','hometown'];
     const RELATION_TABLE_MAP = [
-        "characters" =>  ["table" => "wiki_assoc_character_person", "mainField" => "person_id", "relationField" => "character_id"],
-        "concepts" => ["table" => "wiki_assoc_concept_person", "mainField" => "person_id", "relationField" => "concept_id"],
-        "franchises" =>  ["table" => "wiki_assoc_franchise_person", "mainField" => "person_id", "relationField" => "franchise_id"],
-        "games" =>  ["table" => "wiki_assoc_game_person", "mainField" => "person_id", "relationField" => "game_id"],
-        "locations" =>  ["table" => "wiki_assoc_location_person", "mainField" => "person_id", "relationField" => "location_id"],
-        "objects" =>  ["table" => "wiki_assoc_person_thing", "mainField" => "person_id", "relationField" => "thing_id"],
-        "people" =>  ["table" => "wiki_assoc_person_similar", "mainField" => "person_id", "relationField" => "similar_person_id"],
+        "characters" =>  [
+            "table" => "wiki_assoc_character_person", 
+            "mainField" => "person_id",  
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id"
+        ],
+        "concepts" => [
+            "table" => "wiki_assoc_concept_person", 
+            "mainField" => "person_id", 
+            "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
+        ],
+        "franchises" =>  [
+            "table" => "wiki_assoc_franchise_person", 
+            "mainField" => "person_id",  
+            "relationTable" => "wiki_franchise",
+            "relationField" => "franchise_id"
+        ],
+        "games" =>  [
+            "table" => "wiki_assoc_game_person", 
+            "mainField" => "person_id", 
+            "relationTable" => "wiki_game",
+            "relationField" => "game_id"
+        ],
+        "locations" =>  [
+            "table" => "wiki_assoc_location_person", 
+            "mainField" => "person_id", 
+            "relationTable" => "wiki_location",
+            "relationField" => "location_id"
+        ],
+        "objects" =>  [
+            "table" => "wiki_assoc_person_thing", 
+            "mainField" => "person_id",  
+            "relationTable" => "wiki_thing",
+            "relationField" => "thing_id"
+        ],
+        "people" =>  [
+            "table" => "wiki_assoc_person_similar", 
+            "mainField" => "person_id",  
+            "relationTable" => "wiki_person",
+            "relationField" => "similar_person_id"
+        ],
     ];
 
     /**
@@ -92,44 +127,22 @@ class Person extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Person
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatSchematicData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+            'last_name' => $row->last_name,
+            'gender' => $row->gender,
+            'hometown' => $row->hometown,
+            'birthday' => $row->birthday,
+            'death' => $row->death,
+            'website' => $row->website,
+            'twitter' => $row->twitter,
+            'relations' => $relations
+        ]);
 
         return [
             'title' => $row->mw_page_name,

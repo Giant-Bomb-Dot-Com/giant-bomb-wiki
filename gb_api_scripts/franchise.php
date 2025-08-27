@@ -15,12 +15,42 @@ class Franchise extends Resource
     const TABLE_NAME = "wiki_franchise";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [
-        "characters" =>  ["table" => "wiki_assoc_character_franchise", "mainField" => "franchise_id", "relationField" => "character_id"],
-        "concepts" => ["table" => "wiki_assoc_concept_franchise", "mainField" => "franchise_id", "relationField" => "concept_id"],
-        "games" =>  ["table" => "wiki_assoc_game_franchise", "mainField" => "franchise_id", "relationField" => "game_id"],
-        "locations" =>  ["table" => "wiki_assoc_franchise_location", "mainField" => "franchise_id", "relationField" => "location_id"],
-        "objects" =>  ["table" => "wiki_assoc_franchise_thing", "mainField" => "franchise_id", "relationField" => "thing_id"],
-        "people" =>  ["table" => "wiki_assoc_franchise_person", "mainField" => "franchise_id", "relationField" => "person_id"],
+        "characters" =>  [
+            "table" => "wiki_assoc_character_franchise", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id"
+        ],
+        "concepts" => [
+            "table" => "wiki_assoc_concept_franchise", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
+        ],
+        "games" =>  [
+            "table" => "wiki_assoc_game_franchise", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_game_dlc",
+            "relationField" => "game_id"
+        ],
+        "locations" =>  [
+            "table" => "wiki_assoc_franchise_location", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_location",
+            "relationField" => "location_id"
+        ],
+        "objects" =>  [
+            "table" => "wiki_assoc_franchise_thing", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_thing",
+            "relationField" => "thing_id"
+        ],
+        "people" =>  [
+            "table" => "wiki_assoc_franchise_person", 
+            "mainField" => "franchise_id", 
+            "relationTable" => "wiki_person",
+            "relationField" => "person_id"
+        ],
     ];
 
     /**
@@ -81,44 +111,15 @@ class Franchise extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Franchise
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatSchematicData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+            'relations' => $relatons
+        ]);
 
         return [
             'title' => $row->mw_page_name,

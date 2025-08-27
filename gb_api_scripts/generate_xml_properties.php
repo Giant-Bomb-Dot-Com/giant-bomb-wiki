@@ -195,9 +195,9 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Number]].'
             ],
             [
-                'title' => 'Property:Has manufacturer ID',
+                'title' => 'Property:Has manufacturer',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has maximum players',

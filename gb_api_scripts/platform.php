@@ -13,7 +13,7 @@ class Platform extends Resource
     const RESOURCE_SINGULAR = "platform";
     const RESOURCE_MULTIPLE = "platforms";
     const TABLE_NAME = "wiki_platform";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','short_name','release_date','release_date_type','install_base','online_support','original_price','manufacturer_id'];
 
     /**
      * Matching table fields to api response fields
@@ -74,46 +74,22 @@ class Platform extends Resource
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
-        $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Platform
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatSchematicData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+            'short_name' => $row->short_name,
+            'release_date' => $row->release_date,
+            'release_date_type' => $row->release_date_type,
+            'install_base' => $row->install_base,
+            'online_support' => $row->online_support,
+            'original_price' => $row->original_price,
+            'manufacturer_id' => $row->manufacturer_id
+        ]);
 
         return [
             'title' => $row->mw_page_name,

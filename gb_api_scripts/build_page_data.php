@@ -55,7 +55,7 @@ trait BuildPageData
      * @param array $data
      * @return string
      */
-    public function formatTemplateData(array $data): string
+    public function formatSchematicData(array $data): string
     {
         // start with wiki type
         $wikiType = ucwords(static::RESOURCE_SINGULAR);
@@ -67,6 +67,7 @@ trait BuildPageData
         // only include if there is content to save db space
         if (!empty($data['aliases'])) {
             $aliases = explode("\n", $data['aliases']);
+            $aliases = array_map('trim', $aliases);
             $aliases = implode(',', $aliases);
             $text .= "\n| Aliases={$aliases}";
         }
@@ -104,43 +105,86 @@ trait BuildPageData
         }
 
         if (!empty($data['birthday'])) {
-            $text .= "\n| Birthday={$birthday}";
+            $text .= "\n| Birthday={$data['birthday']}";
         }
 
         if (!empty($data['death'])) {
-            $text .= "\n| Death={$death}";
+            $text .= "\n| Death={$data['death']}";
         }
 
         if (!empty($data['abbreviation'])) {
-            $text .= "\n| Abbreviation={$abbreviation}";
+            $text .= "\n| Abbreviation={$data['abbreviation']}";
         }
 
         if (!empty($data['founded_date'])) {
-            $text .= "\n| FoundedDate={$foundedDate}";
+            $text .= "\n| FoundedDate={$data['founded_date']}";
         }
 
         if (!empty($data['address'])) {
-            $text .= "\n| Address={$address}";
+            $text .= "\n| Address={$data['address']}";
         }
 
         if (!empty($data['city'])) {
-            $text .= "\n| City={$city}";
+            $text .= "\n| City={$data['city']}";
         }
 
         if (!empty($data['country'])) {
-            $text .= "\n| Country={$country}";
+            $text .= "\n| Country={$data['country']}";
         }
 
         if (!empty($data['state'])) {
-            $text .= "\n| State={$state}";
+            $text .= "\n| State={$data['state']}";
         }
 
         if (!empty($data['phone'])) {
-            $text .= "\n| Phone={$phone}";
+            $text .= "\n| Phone={$data['phone']}";
         }
 
         if (!empty($data['website'])) {
-            $text .= "\n| Website={$website}";
+            $text .= "\n| Website={$data['website']}";
+        }
+
+        if (!empty($data['release_date'])) {
+            $text .= "\n| ReleaseDate={$data['release_date']}";
+        }
+
+        if (!empty($data['release_date_type'])) {
+            $text .= "\n| ReleaseDateType={$data['release_date_type']}";
+        }
+
+        if (!empty($data['install_base'])) {
+            $text .= "\n| InstallBase={$data['install_base']}";
+        }
+
+        if (!empty($data['online_support'])) {
+            $onlineSupport = ($data['online_support'] == 1) ? 'Yes' : 'No';
+            $text .= "\n| OnlineSupport={$onlineSupport}";
+        }
+
+        if (!empty($data['original_price'])) {
+            $text .= "\n| OriginalPrice={$data['original_price']}";
+        }
+
+        if (!empty($data['manufacturer_id'])) {
+            $qb = $this->getDb()->newSelectQueryBuilder()
+                        ->select(['mw_page_name'])
+                        ->from('wiki_company')
+                        ->where('id = '.$data['manufacturer_id'])
+                        ->caller(__METHOD__);
+            $manufacturer = $qb->fetchField();
+            $text .= "\n| Manufacturer={$manufacturer}";
+        }
+
+        if (!empty($data['last_name'])) {
+            $text .= "\n| LastName={$data['last_name']}";
+        }
+
+        if (!empty($data['hometown'])) {
+            $text .= "\n| Hometown={$data['hometown']}";
+        }
+
+        if (!empty($data['twitter'])) {
+            $text .= "\n| Twitter={$data['twitter']}";
         }
 
         if (!empty($data['relations'])) {

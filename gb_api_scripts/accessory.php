@@ -61,7 +61,7 @@ class Accessory extends Resource
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
 
-        $description = $desc."\n".$this->formatTemplateData([
+        $description = $desc."\n".$this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
