@@ -54,6 +54,62 @@ if a page with that name already exists, you will be sent to a form to edit that
 MARKUP,
             ],
             [
+                'title' => 'Form:Character',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Character" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Character|super_page=Characters}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Character}}}
+'''Name:''' {{{field|Name|property=has name}}}
+
+'''Guid:''' {{{field|Guid|property=has guid}}}
+
+'''RealName:''' {{{field|RealName|property=has real name}}}
+
+'''Aliases:''' {{{field|Aliases|property=has aliases}}}
+
+'''Gender:''' {{{field|Gender|property=has gender}}}
+
+'''Birthday:''' {{{field|Birthday|property=has birthday}}}
+
+'''Image:''' {{{field|Image|property=has image}}}
+
+'''Caption:''' {{{field|Caption|property=has caption}}}
+
+'''Deck:''' {{{field|Deck|property=has deck}}}
+
+'''Concepts:''' {{{field|Concepts|property=has concepts|_autocomplete|_suggested_category=Concepts}}}
+
+'''Enemies:''' {{{field|Enemies|property=has enemies|_autocomplete|_suggested_category=Characters}}}
+
+'''Franchises:''' {{{field|Franchises|property=has franchises|_autocomplete|_suggested_category=Franchises}}}
+
+'''Friends:''' {{{field|Friends|property=has friends|_autocomplete|_suggested_category=Characters}}}
+
+'''Games:''' {{{field|Games|property=has games|_autocomplete|_suggested_category=Games}}}
+
+'''Locations:''' {{{field|Locations|property=has locations|_autocomplete|_suggested_category=Locations}}}
+
+'''People:''' {{{field|People|property=has people|_autocomplete|_suggested_category=People}}}
+
+'''Objects:''' {{{field|Objects|property=has objects|_autocomplete|_suggested_category=Objects}}}
+
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
+            ]
+            [
                 'title' => 'Form:Rating',
                 'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
