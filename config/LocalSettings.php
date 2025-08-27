@@ -98,10 +98,6 @@ if ($wikiEnv == 'prod') {
     $wgUploadPath = $wgScriptPath.'/images';
 }
 
-# Allow external images
-$wgAddImgTagWhitelist = true;
-$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
-
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
 
@@ -177,7 +173,6 @@ wfLoadExtension( 'WikiEditor' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
-wfLoadExtension( 'AddImgTag' );
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 

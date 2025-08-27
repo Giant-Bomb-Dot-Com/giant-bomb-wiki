@@ -321,19 +321,24 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        $style = "";
         if ($align == 'right') {
-            $style = "style='float:right;margin-left:40px;max-width:280px;' ";
+            $float = 'right';
         }
         else if ($align == 'left') {
-            $style = "style='float:left;margin-right:40px;max-width:280px;' ";
+            $float = 'left';
+        }
+        else {
+            $float = 'none';
         }
 
-        $mwImage = "<img src='$src' width='$width' $style";
+        $imageFragment = parse_url($src, PHP_URL_PATH);
+        $imageFile = basename($imageFragment);
+
+        $mwImage = "[[File:{$imageFile}|thumb|{$float}";
         if ($alt != 'No Caption Provided') {
-            $mwImage .= "alt='$alt' ";
+            $mwImage .= "|alt={$alt}|{$alt}";
         }
-        $mwImage .= "/>\n";
+        $mwImage .= "]] ";
 
         return $mwImage;
     }
