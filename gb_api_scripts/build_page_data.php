@@ -47,4 +47,72 @@ trait BuildPageData
 
         return $relations;   	
     }
+
+    /**
+     * Creates the semantic table based on fields in the incoming $data array
+     *
+     * @param array $data
+     * @return string
+     */
+    public function formatTemplateData(array $data): string
+    {
+        // start with wiki type
+        $wikiType = ucwords(static::RESOURCE_SINGULAR);
+        $text = "{{{$wikiType}\n";
+
+        // name and guid is guaranteed to exist
+        $text .= "| Name={$data['name']}\n| Guid={$data['guid']}\n";
+
+        // only include if there is content to save db space
+        if (!empty($data['aliases'])) {
+            $aliases = explode("\n", $data['aliases']);
+            $aliases = implode(',', $aliases);
+            $aliases = htmlspecialchars($aliases, ENT_XML1, 'UTF-8');
+            $text .= "| Aliases={$aliases}\n";
+        }
+
+        if (!empty($data['deck'])) {
+            $deck = htmlspecialchars($data['deck'], ENT_XML1, 'UTF-8');
+            $text .= "| Deck={$deck}\n";
+        }
+
+        if (!empty($data['infobox_image'])) {
+            $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
+            $infoboxImage = basename($imageFragment);
+            $text .= "| Image={$infoboxImage}\n";
+            $text .= "| Caption=image of {$data['name']}\n";
+        }
+
+        if (!empty($data['real_name'])) {
+            $realName = htmlspecialchars($data['real_name'], ENT_XML1, 'UTF-8');
+            $text .= "| RealName={$realName}\n";
+        }
+
+        if (!empty($data['gender'])) {
+            switch ($data['gender']) {
+                case 0: $gender = 'Female'; break;
+                case 1: $gender = 'Male'; break;
+                default: $gender = 'Non-Binary'; break;
+            }
+            $text .= "| Gender={$gender}\n";
+        }
+
+        if (!empty($data['birthday'])) {
+            $birthday = htmlspecialchars($data['birthday'], ENT_XML1, 'UTF-8');
+            $text .= "| Birthday={$birthday}\n";
+        }
+
+        if (!empty($data['death'])) {
+            $death = htmlspecialchars($data['death'], ENT_XML1, 'UTF-8');
+            $text .= "| Death={$death}\n";
+        }
+
+        if (!empty($data['relations'])) {
+            $text .= $data['relations'];
+        }
+        
+        $text .= "}}\n";
+
+        return $text;
+    }
 }

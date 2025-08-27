@@ -147,48 +147,18 @@ class Character extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."{{Character\n| Name=$name\n| Guid=$guid\n";
-
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = explode("\n", $row->aliases);
-            $aliases = implode(',', $aliases);
-            $description .= '| Aliases=' . htmlspecialchars($aliases, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->real_name)) {
-            $description .= '| RealName=' . htmlspecialchars($row->real_name, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->gender)) {
-            switch ($row->gender) {
-                case 0: $gender = 'Female'; break;
-                case 1: $gender = 'Male'; break;
-                default: $gender = 'Non-Binary'; break;
-            }
-            $description .= '| Gender=' . htmlspecialchars($gender, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->birthday)) {
-            $description .= '| Birthday=' . htmlspecialchars($row->birthday, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->death)) {
-            $description .= '| Death=' . htmlspecialchars($row->death, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->deck)) {
-            $description .= '| Deck=' . htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') . "\n";
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= '| Image='.$infoboxImage."\n";
-            $description .= '| Caption=image of '.$name."\n";
-        }
-
-        $description .= $relations."\n}};\n";
+        $description = $desc."\n".$this->formatTemplateData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'real_name' => $row->real_name,
+            'gender' => $row->gender,
+            'birthday' => $row->birthday,
+            'death' => $row->death,
+            'relations' => $relations
+        ]);
 
         return [
             'title' => $row->mw_page_name,
