@@ -66,7 +66,8 @@ class Accessory extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
         ]);
 
         return [

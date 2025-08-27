@@ -235,7 +235,7 @@ abstract class Resource
     }
 
     /**
-     * Creates the query builder to retrieve all fields and relationships for accessories
+     * Creates the query builder to retrieve all fields and relationships
      */
     public function getAllFieldsQueryBuilder(SelectQueryBuilder $qb): SelectQueryBuilder
     {

@@ -6,6 +6,7 @@ require_once(__DIR__.'/build_page_data.php');
 
 class Platform extends Resource
 {
+    use CommonVariablesAndMethods;
     use BuildPageData;
 
     const TYPE_ID = 3045;

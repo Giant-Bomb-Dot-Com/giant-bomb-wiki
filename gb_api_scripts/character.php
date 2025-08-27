@@ -21,7 +21,6 @@ class Character extends Resource
             "relationField" => "concept_id", 
             "relationTable" => "wiki_concept",
             "relationName" => "concept_name",
-            "relationPageName" => "concept_page_name"
         ],
         "enemies" =>  [
             "table" => "wiki_assoc_character_enemy", 
@@ -29,7 +28,6 @@ class Character extends Resource
             "relationField" => "enemy_character_id", 
             "relationTable" => "wiki_character",
             "relationName" => "enemy_name",
-            "relationPageName" => "enemy_page_name"
         ],
         "franchises" =>  [
             "table" => "wiki_assoc_character_franchise", 
@@ -37,7 +35,6 @@ class Character extends Resource
             "relationField" => "franchise_id", 
             "relationTable" => "wiki_franchise",
             "relationName" => "franchise_name",
-            "relationPageName" => "franchise_page_name"
         ],
         "friends" =>  [
             "table" => "wiki_assoc_character_friend", 
@@ -45,7 +42,6 @@ class Character extends Resource
             "relationField" => "friend_character_id", 
             "relationTable" => "wiki_character",
             "relationName" => "friend_name",
-            "relationPageName" => "friend_page_name"
         ],
         "games" =>  [
             "table" => "wiki_assoc_game_character", 
@@ -53,7 +49,6 @@ class Character extends Resource
             "relationField" => "game_id", 
             "relationTable" => "wiki_game",
             "relationName" => "game_name",
-            "relationPageName" => "game_page_name"
         ],
         "locations" =>  [
             "table" => "wiki_assoc_character_location", 
@@ -61,7 +56,6 @@ class Character extends Resource
             "relationField" => "location_id", 
             "relationTable" => "wiki_location",
             "relationName" => "location_name",
-            "relationPageName" => "location_page_name"
         ],
         "people" =>  [
             "table" => "wiki_assoc_character_person", 
@@ -69,7 +63,6 @@ class Character extends Resource
             "relationField" => "person_id", 
             "relationTable" => "wiki_person",
             "relationName" => "person_name",
-            "relationPageName" => "person_page_name"
         ],
         "objects" =>  [
             "table" => "wiki_assoc_character_thing", 
@@ -77,7 +70,6 @@ class Character extends Resource
             "relationField" => "thing_id", 
             "relationTable" => "wiki_thing",
             "relationName" => "object_name",
-            "relationPageName" => "object_page_name"
         ],
     ];
 
@@ -153,6 +145,7 @@ class Character extends Resource
             'aliases' => $row->aliases,
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
             'real_name' => $row->real_name,
             'gender' => $row->gender,
             'birthday' => $row->birthday,
