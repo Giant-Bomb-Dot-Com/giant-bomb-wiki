@@ -118,7 +118,7 @@ class Franchise extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
-            'relations' => $relatons
+            'relations' => $relations
         ]);
 
         return [

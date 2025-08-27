@@ -187,6 +187,30 @@ trait BuildPageData
             $text .= "\n| Twitter={$data['twitter']}";
         }
 
+        if (!empty($data['launch_price'])) {
+            $text .= "\n| LaunchPrice={$data['launch_price']}";
+        }
+
+        if (!empty($data['game_id'])) {
+            $qb = $this->getDb()->newSelectQueryBuilder()
+                        ->select(['mw_page_name'])
+                        ->from('wiki_game')
+                        ->where('id = '.$data['game_id'])
+                        ->caller(__METHOD__);
+            $game = $qb->fetchField();
+            $text .= "\n| Games={$game}";
+        }
+
+        if (!empty($data['platform_id'])) {
+            $qb = $this->getDb()->newSelectQueryBuilder()
+                        ->select(['mw_page_name'])
+                        ->from('wiki_platform')
+                        ->where('id = '.$data['platform_id'])
+                        ->caller(__METHOD__);
+            $platform = $qb->fetchField();
+            $text .= "\n| Platforms={$platform}";
+        }
+
         if (!empty($data['relations'])) {
             $text .= "\n".$data['relations'];
         }

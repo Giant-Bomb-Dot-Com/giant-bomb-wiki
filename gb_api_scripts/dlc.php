@@ -13,7 +13,7 @@ class Dlc extends Resource
     const RESOURCE_SINGULAR = "dlc";
     const RESOURCE_MULTIPLE = "dlcs";
     const TABLE_NAME = "wiki_game_dlc";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','game_id','platform_id','release_date','release_date_type','launch_price'];
 
     /**
      * Matching table fields to api response fields
@@ -74,9 +74,12 @@ class Dlc extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
+            'game_id' => $row->game_id,
+            'platform_id' => $row->platform_id,
+            'release_date' => $row->release_date,
+            'release_date_type' => $row->release_date_type,
+            'launch_price' => $row->launch_price
         ]);
-
-        $description .= "}}\n";
 
         return [
             'title' => $row->mw_page_name,
