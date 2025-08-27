@@ -16,6 +16,76 @@ class GenerateXMLPages extends Maintenance
     {
         $data = [
             [
+                'title' => 'Accessories',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of accessories'
+            ],
+            [
+                'title' => 'Characters',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of characters'
+            ],
+            [
+                'title' => 'Companies',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of companies'
+            ],
+            [
+                'title' => 'Concepts',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of concepts'
+            ],
+            [
+                'title' => 'DLCs',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of dlcs'
+            ],
+            [
+                'title' => 'Franchises',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of franchises'
+            ],
+            [
+                'title' => 'Games',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of games'
+            ],
+            [
+                'title' => 'Genres',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of genres'
+            ],
+            [
+                'title' => 'Locations',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of locations'
+            ],
+            [
+                'title' => 'People',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of people'
+            ],
+            [
+                'title' => 'Objects',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of objects'
+            ],
+            [
+                'title' => 'Platforms',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of platforms'
+            ],
+            [
+                'title' => 'Ratings',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of ratings'
+            ],
+            [
+                'title' => 'Themes',
+                'namespace' => $this->namespaces['page'],
+                'description' => 'Landing page of themes'
+            ],
+            [
                 'title' => 'Ratings/BBFC_12',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
