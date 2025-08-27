@@ -33,6 +33,12 @@ class Location extends Resource
             "relationTable" => "wiki_thing",
             "relationField" => "thing_id"
         ],
+        "similar" =>  [
+            "table" => "wiki_assoc_location_similar", 
+            "mainField" => "location_id", 
+            "relationTable" => "wiki_location",
+            "relationField" => "similar_location_id"
+        ],
     ];
     /**
      * Matching table fields to api response fields
@@ -79,6 +85,7 @@ class Location extends Resource
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $relations = $this->getRelationsFromDB($row->id);
 
         $description = $desc."\n".$this->formatSchematicData([
             'name' => $name,
@@ -87,6 +94,7 @@ class Location extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
+            'relations' => $relations
         ]);
 
         return [
