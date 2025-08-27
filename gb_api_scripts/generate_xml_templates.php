@@ -136,7 +136,7 @@ MARKUP,
 <!-- Start and Styling -->
 | child          = {{{child|}}}
 | subbox         = {{{subbox|}}}
-| bodyclass      = {{#ifeq:{{{collapsible|}}}|yes|collapsible {{#if:{{{state|}}}|{{{state}}}|autocollapse}}}}
+| bodyclass      = ib-content hproduct {{#ifeq:{{{collapsible|}}}|yes|collapsible {{#if:{{{state|}}}|{{{state}}}|autocollapse}}}}
 | templatestyles = Infobox/styles.css
 | aboveclass     = fn
 | italic title   = {{{italic title|<noinclude>no</noinclude>}}}
@@ -220,6 +220,22 @@ MARKUP,
 }}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for | gender | birthday | real name }}<noinclude>
 {{documentation}}
 </noinclude>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Infobox/styles.css',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+/* {{pp-template|small=yes}} */
+.ib-content .infobox-label {
+    white-space: nowrap;
+    /* to ensure gap between any long/nonwrapped label and subsequent data on same line */
+    padding-right: 0.65em; 
+}
+
+.ib-content .infobox-above {
+    font-style: italic; font-size: 125%;
+}
 MARKUP,
             ],
             [
