@@ -69,11 +69,12 @@ trait BuildPageData
             $aliases = explode("\n", $data['aliases']);
             $aliases = array_map('trim', $aliases);
             $aliases = implode(',', $aliases);
+            $aliases = trim(htmlspecialchars($aliases, ENT_XML1, 'UTF-8'));
             $text .= "\n| Aliases={$aliases}";
         }
 
         if (!empty($data['deck'])) {
-            $deck = htmlspecialchars($data['deck'], ENT_XML1, 'UTF-8');
+            $deck = trim(htmlspecialchars($data['deck'], ENT_XML1, 'UTF-8'));
             $text .= "\n| Deck={$deck}";
         }
 

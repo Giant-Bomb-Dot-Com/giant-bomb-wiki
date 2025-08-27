@@ -30,7 +30,7 @@ class Franchise extends Resource
         "games" =>  [
             "table" => "wiki_assoc_game_franchise", 
             "mainField" => "franchise_id", 
-            "relationTable" => "wiki_game_dlc",
+            "relationTable" => "wiki_game",
             "relationField" => "game_id"
         ],
         "locations" =>  [

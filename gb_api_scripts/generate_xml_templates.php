@@ -182,8 +182,7 @@ MARKUP,
                 'title' => 'Template:Rating',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-<noinclude>
-{{#template_params:
+<noinclude>{{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
 | Explanation (property=Stands for)
@@ -201,16 +200,12 @@ This template is used to create rating pages, sets its display title and infobox
 
 '''Image''': The image filename of the rating. Image appears in the infobox.
 
-'''Caption''': The caption for the above image.
-</noinclude>
-<includeonly>
-{{#set:
+'''Caption''': The caption for the above image.</noinclude><includeonly>{{#set:
 | Has name={{{Name|}}}
 | Has guid={{{Guid|}}}
 | Stands for={{{Explanation|}}}
 | Has image={{{Image|}}}
-| Has caption={{{Caption|}}}
-}}
+| Has caption={{{Caption|}}} }}
 {{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -232,7 +227,40 @@ MARKUP,
             [
                 'title' => 'Template:Theme',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+| Aliases (property=Has aliases)
+| Image (property=Has image)
+| Caption (property=Has caption)
+| Deck (property=Has deck)
+}}
+==Documentation==
+This template is used to create theme pages, set its display title and infobox.
+
+'''Name''': The display name of the theme.
+
+'''Guid''': The theme identifier from Giant Bomb.
+
+'''Aliases''': Alternative names for the theme.
+
+'''Image''': The image filename of the theme. Image appears in the infobox.
+
+'''Caption''': The caption for the above image.
+
+'''Deck''': The short description of the theme.</noinclude><includeonly>{{#set:Has name={{{Name|}}}}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
+{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+}}
+{{DISPLAYTITLE:{{{Name|}}}}}
+[[Category:Themes|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Template:Infobox',
