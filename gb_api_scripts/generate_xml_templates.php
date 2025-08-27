@@ -19,8 +19,7 @@ class GenerateXMLTemplates extends Maintenance
                 'title' => 'Template:Accessory',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-<noinclude>
-{{#template_params:
+<noinclude>{{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
 | Aliases (property=Has aliases)
@@ -41,17 +40,7 @@ This template is used to create accessory pages, set its display title and infob
 
 '''Caption''': The caption for the above image.
 
-'''Deck''': The short description of the accessory.
-</noinclude>
-<includeonly>
-{{#set:
-| Has name={{{Name|}}}
-}}
-{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}
-{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}
-{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}
-{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}
-{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
+'''Deck''': The short description of the accessory.</noinclude><includeonly>{{#set:Has name={{{Name|}}}}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
 {{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -68,8 +57,7 @@ MARKUP,
                 'title' => 'Template:Character',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-<noinclude>
-{{#template_params:
+<noinclude>{{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
 | RealName (property=Has real name)
@@ -123,38 +111,17 @@ This template is used to create character pages, set its display title and infob
 
 '''People''': The person pages related to the character.
 
-'''Objects''': The object pages related to the character.
-</noinclude>
-<includeonly>
-{{#set:
-| Has name={{{Name|}}}
-}}
-{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}
-{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName|}}}}}}}
-{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}
-{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender|}}}}}}}
-{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday|}}}}}}}
-{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}
-{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}
-{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}
-{{#if:{{{Concepts|}}}|{{#set:Has concepts={{{Concepts|}}}}}}}
-{{#if:{{{Enemies|}}}|{{#set:Has enemies={{{Enemies|}}}}}}}
-{{#if:{{{Franchises|}}}|{{#set:Has franchises={{{Franchises|}}}}}}}
-{{#if:{{{Friends|}}}|{{#set:Has friends={{{Friends|}}}}}}}
-{{#if:{{{Games|}}}|{{#set:Has games={{{Games|}}}}}}}
-{{#if:{{{Locations|}}}|{{#set:Has locations={{{Locations|}}}}}}}
-{{#if:{{{People|}}}|{{#set:Has people={{{People|}}}}}}}
-{{#if:{{{Objects|}}}|{{#set:Has objects={{{Objects|}}}}}}}
+'''Objects''': The object pages related to the character.</noinclude><includeonly>{{#set:Has name={{{Name|}}}}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName|}}}}}}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender|}}}}}}}{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday|}}}}}}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}{{#arraymap:{{{Concepts|}}}|,|@@|[[Has concepts::@@| ]]|}}{{#arraymap:{{{Enemies|}}}|,|@@|[[Has enemies::@@| ]]|}}{{#arraymap:{{{Franchises|}}}|,|@@|[[Has franchises::@@| ]]|}}{{#arraymap:{{{Friends|}}}|,|@@|[[Has friends::@@| ]]|}}{{#arraymap:{{{Games|}}}|,|@@|[[Has games::@@| ]]|}}{{#arraymap:{{{Locations|}}}|,|@@|[[Has locations::@@| ]]|}}{{#arraymap:{{{People|}}}|,|@@|[[Has people::@@| ]]|}}{{#arraymap:{{{Objects|}}}|,|@@|[[Has objects::@@| ]]|}}
 {{Infobox
-| title={{{Name|}}}
-| italic title=no
-| image={{{Image|}}}
-| image size=40
-| caption={{{Caption|}}}
-| aliases={{{Aliases|}}}
-| gender={{{Gender|}}}
-| birthday={{{Birthday|}}}
-| real name={{{RealName|}}}
+|title={{{Name|}}}
+|italic title=no
+|image={{{Image|}}}
+|image size=40
+|caption={{{Caption|}}}
+|aliases={{{Aliases|}}}
+|gender={{{Gender|}}}
+|birthday={{{Birthday|}}}
+|real name={{{RealName|}}}
 }}
 {{DISPLAYTITLE:{{{Name|}}}}}
 [[Category:Characters|{{SUBPAGENAME}}]]

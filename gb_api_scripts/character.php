@@ -147,13 +147,8 @@ class Character extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Character
-| Name=$name
-| Guid=$guid
+        $description = $desc."{{Character\n| Name=$name\n| Guid=$guid\n";
 
-MARKUP;
         // only include if there is content to save db space
         if (!empty($row->aliases)) {
             $aliases = explode("\n", $row->aliases);
@@ -189,17 +184,11 @@ MARKUP;
         if (!empty($row->infobox_image)) {
             $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
             $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
+            $description .= '| Image='.$infoboxImage."\n";
+            $description .= '| Caption=image of '.$name."\n";
         }
 
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description .= $relations."\n}};\n";
 
         return [
             'title' => $row->mw_page_name,

@@ -24,7 +24,7 @@ trait BuildPageData
 		$lastKey = array_key_last(self::RELATION_TABLE_MAP);
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
-            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ', ')";
+            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
         	// join the relation table with the connector table to get the page names
             $qb = $this->getDb()->newSelectQueryBuilder()
                        ->select(['mw_page_name' => $groupConcat])
