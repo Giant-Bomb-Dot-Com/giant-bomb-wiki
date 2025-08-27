@@ -6,6 +6,7 @@ require_once(__DIR__.'/build_page_data.php');
 
 class Company extends Resource
 {
+    use CommonVariablesAndMethods;
     use BuildPageData;
 
     const TYPE_ID = 3010;
@@ -14,13 +15,48 @@ class Company extends Resource
     const TABLE_NAME = "wiki_company";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website'];
     const RELATION_TABLE_MAP = [
-        "characters" =>  ["table" => "wiki_assoc_character_company", "mainField" => "company_id", "relationField" => "character_id"],
-        "concepts" => ["table" => "wiki_assoc_company_concept", "mainField" => "company_id", "relationField" => "concept_id"],
-        "developed_games" =>  ["table" => "wiki_assoc_game_developer", "mainField" => "company_id", "relationField" => "game_id"],
-        "locations" =>  ["table" => "wiki_assoc_company_location", "mainField" => "company_id", "relationField" => "location_id"],
-        "objects" =>  ["table" => "wiki_assoc_company_thing", "mainField" => "company_id", "relationField" => "thing_id"],
-        "people" =>  ["table" => "wiki_assoc_company_person", "mainField" => "company_id", "relationField" => "person_id"],
-        "published_games" =>  ["table" => "wiki_assoc_game_publisher", "mainField" => "company_id", "relationField" => "game_id"],
+        "characters" => [
+            "table" => "wiki_assoc_character_company", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id"
+        ],
+        "concepts" => [
+            "table" => "wiki_assoc_company_concept", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
+        ],
+        "developed_games" => [
+            "table" => "wiki_assoc_game_developer", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_game",
+            "relationField" => "game_id"
+        ],
+        "locations" => [
+            "table" => "wiki_assoc_company_location", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_location",
+            "relationField" => "location_id"
+        ],
+        "objects" => [
+            "table" => "wiki_assoc_company_thing", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_thing",
+            "relationField" => "thing_id"
+        ],
+        "people" => [
+            "table" => "wiki_assoc_company_person", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_person",
+            "relationField" => "person_id"
+        ],
+        "published_games" => [
+            "table" => "wiki_assoc_game_publisher", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_game",
+            "relationField" => "game_id"
+        ],
     ];
 
     /**
@@ -97,44 +133,23 @@ class Company extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Company
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatTemplateData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+            'abbreviation' => $row->abbreviation,
+            'founded_date' => $row->founded_date,
+            'address' => $row->address,
+            'city' => $row->city,
+            'country' => $row->country,
+            'state' => $row->state,
+            'phone' => $row->phone,
+            'website' => $row->website,
+            'relations' => $relations
+        ]);
 
         return [
             'title' => $row->mw_page_name,

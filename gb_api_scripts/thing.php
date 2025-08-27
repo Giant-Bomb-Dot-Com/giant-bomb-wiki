@@ -6,6 +6,7 @@ require_once(__DIR__.'/build_page_data.php');
 
 class Thing extends Resource
 {
+    use CommonVariablesAndMethods;
     use BuildPageData;
 
     const TYPE_ID = 3055;
@@ -14,13 +15,48 @@ class Thing extends Resource
     const TABLE_NAME = "wiki_thing";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [
-        "characters" =>  ["table" => "wiki_assoc_character_thing", "mainField" => "thing_id", "relationField" => "character_id"],
-        "concepts" => ["table" => "wiki_assoc_concept_thing", "mainField" => "thing_id", "relationField" => "concept_id"],
-        "franchises" =>  ["table" => "wiki_assoc_franchise_thing", "mainField" => "thing_id", "relationField" => "franchise_id"],
-        "games" =>  ["table" => "wiki_assoc_game_thing", "mainField" => "thing_id", "relationField" => "game_id"],
-        "locations" =>  ["table" => "wiki_assoc_location_thing", "mainField" => "thing_id", "relationField" => "location_id"],
-        "people" =>  ["table" => "wiki_assoc_person_thing", "mainField" => "thing_id", "relationField" => "person_id"],
-        "similar" =>  ["table" => "wiki_assoc_thing_similar", "mainField" => "thing_id", "relationField" => "similar_thing_id"],
+        "characters" =>  [
+            "table" => "wiki_assoc_character_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id"
+        ],
+        "concepts" => [
+            "table" => "wiki_assoc_concept_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
+        ],
+        "franchises" =>  [
+            "table" => "wiki_assoc_franchise_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_franchise",
+            "relationField" => "franchise_id"
+        ],
+        "games" =>  [
+            "table" => "wiki_assoc_game_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_game",
+            "relationField" => "game_id"
+        ],
+        "locations" =>  [
+            "table" => "wiki_assoc_location_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_location",
+            "relationField" => "location_id"
+        ],
+        "people" =>  [
+            "table" => "wiki_assoc_person_thing", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_person",
+            "relationField" => "person_id"
+        ],
+        "similar" =>  [
+            "table" => "wiki_assoc_thing_similar", 
+            "mainField" => "thing_id", 
+            "relationTable" => "wiki_thing",
+            "relationField" => "similar_thing_id"
+        ],
     ];
 
     /**
@@ -82,44 +118,15 @@ class Thing extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = <<<MARKUP
-$desc
-{{Object
-| Name=$name
-| Guid=$guid
-
-MARKUP;
-        // only include if there is content to save db space
-        if (!empty($row->aliases)) {
-            $aliases = htmlspecialchars($row->aliases, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Aliases=$aliases
-
-MARKUP;
-        }
-
-        if (!empty($row->deck)) {
-            $deck = htmlspecialchars($row->deck, ENT_XML1, 'UTF-8');
-            $description .= <<<MARKUP
-| Deck=$deck
-
-MARKUP;
-        }
-
-        if (!empty($row->infobox_image)) {
-            $imageFragment = parse_url($row->infobox_image, PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
-            $description .= <<<MARKUP
-| Image=$infoboxImage
-| Caption=image of $name
-
-MARKUP;
-        }
-
-        $description .= <<<MARKUP
-$relations
-}};
-MARKUP;
+        $description = $desc."\n".$this->formatTemplateData([
+            'name' => $name,
+            'guid' => $guid,
+            'aliases' => $row->aliases,
+            'deck' => $row->deck,
+            'infobox_image' => $row->infobox_image,
+            'background_image' => $row->background_image,
+            'relations' => $relations
+        ]);
 
         return [
             'title' => $row->mw_page_name,
