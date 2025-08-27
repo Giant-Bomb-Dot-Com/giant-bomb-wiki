@@ -22,6 +22,7 @@ trait BuildPageData
     {
 		$relations = '';
 		$lastKey = array_key_last(self::RELATION_TABLE_MAP);
+
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
             $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
@@ -58,34 +59,39 @@ trait BuildPageData
     {
         // start with wiki type
         $wikiType = ucwords(static::RESOURCE_SINGULAR);
-        $text = "{{{$wikiType}\n";
+        $text = "{{{$wikiType}";
 
         // name and guid is guaranteed to exist
-        $text .= "| Name={$data['name']}\n| Guid={$data['guid']}\n";
+        $text .= "\n| Name={$data['name']}\n| Guid={$data['guid']}";
 
         // only include if there is content to save db space
         if (!empty($data['aliases'])) {
             $aliases = explode("\n", $data['aliases']);
             $aliases = implode(',', $aliases);
-            $aliases = htmlspecialchars($aliases, ENT_XML1, 'UTF-8');
-            $text .= "| Aliases={$aliases}\n";
+            $text .= "\n| Aliases={$aliases}";
         }
 
         if (!empty($data['deck'])) {
             $deck = htmlspecialchars($data['deck'], ENT_XML1, 'UTF-8');
-            $text .= "| Deck={$deck}\n";
+            $text .= "\n| Deck={$deck}";
         }
 
         if (!empty($data['infobox_image'])) {
             $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
             $infoboxImage = basename($imageFragment);
-            $text .= "| Image={$infoboxImage}\n";
-            $text .= "| Caption=image of {$data['name']}\n";
+            $text .= "\n| Image={$infoboxImage}";
+            $text .= "\n| Caption=image of {$data['name']}";
+        }
+
+        if (!empty($data['background_image'])) {
+            $imageFragment = parse_url($data['background_image'], PHP_URL_PATH);
+            $backgroundImage = basename($imageFragment);
+            $text .= "\n| BackgroundImage={$backgroundImage}";
+            $text .= "\n| Caption=background image used in Giant Bomb's game page for {$data['name']}";
         }
 
         if (!empty($data['real_name'])) {
-            $realName = htmlspecialchars($data['real_name'], ENT_XML1, 'UTF-8');
-            $text .= "| RealName={$realName}\n";
+            $text .= "\n| RealName={$realName}";
         }
 
         if (!empty($data['gender'])) {
@@ -94,24 +100,54 @@ trait BuildPageData
                 case 1: $gender = 'Male'; break;
                 default: $gender = 'Non-Binary'; break;
             }
-            $text .= "| Gender={$gender}\n";
+            $text .= "\n| Gender={$gender}";
         }
 
         if (!empty($data['birthday'])) {
-            $birthday = htmlspecialchars($data['birthday'], ENT_XML1, 'UTF-8');
-            $text .= "| Birthday={$birthday}\n";
+            $text .= "\n| Birthday={$birthday}";
         }
 
         if (!empty($data['death'])) {
-            $death = htmlspecialchars($data['death'], ENT_XML1, 'UTF-8');
-            $text .= "| Death={$death}\n";
+            $text .= "\n| Death={$death}";
+        }
+
+        if (!empty($data['abbreviation'])) {
+            $text .= "\n| Abbreviation={$abbreviation}";
+        }
+
+        if (!empty($data['founded_date'])) {
+            $text .= "\n| FoundedDate={$foundedDate}";
+        }
+
+        if (!empty($data['address'])) {
+            $text .= "\n| Address={$address}";
+        }
+
+        if (!empty($data['city'])) {
+            $text .= "\n| City={$city}";
+        }
+
+        if (!empty($data['country'])) {
+            $text .= "\n| Country={$country}";
+        }
+
+        if (!empty($data['state'])) {
+            $text .= "\n| State={$state}";
+        }
+
+        if (!empty($data['phone'])) {
+            $text .= "\n| Phone={$phone}";
+        }
+
+        if (!empty($data['website'])) {
+            $text .= "\n| Website={$website}";
         }
 
         if (!empty($data['relations'])) {
-            $text .= $data['relations'];
+            $text .= "\n".$data['relations'];
         }
-        
-        $text .= "}}\n";
+
+        $text .= "\n}}\n";
 
         return $text;
     }
