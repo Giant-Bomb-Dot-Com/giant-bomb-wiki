@@ -108,7 +108,57 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
-            ]
+            ],
+            [
+                'title' => 'Form:Company',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Concept',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:DLC',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Franchise',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Game',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Genre',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Location',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Object',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Person',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Platform',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
             [
                 'title' => 'Form:Rating',
                 'namespace' => $this->namespaces['form'],
@@ -146,6 +196,16 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
+            ],
+            [
+                'title' => 'Form:Release',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Form:Theme',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
             ],
         ];
 

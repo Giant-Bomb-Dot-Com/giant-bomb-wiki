@@ -129,6 +129,112 @@ This template is used to create character pages, set its display title and infob
 MARKUP,
             ],
             [
+                'title' => 'Template:Company',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Concept',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:DLC',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Franchise',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Game',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Genre',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Location',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Object',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Person',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Platform',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Rating',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+| Explanation (property=Stands for)
+| Image (property=Has image)
+| Caption (property=Has caption)
+}}
+==Documentation==
+This template is used to create rating pages, sets its display title and infobox.
+
+'''Name''': The display name of the rating.
+
+'''Guid''': The rating identifier from Giant Bomb.
+
+'''Explanation''': The long form representation of the rating.
+
+'''Image''': The image filename of the rating. Image appears in the infobox.
+
+'''Caption''': The caption for the above image.
+</noinclude>
+<includeonly>
+{{#set:
+| Has name={{{Name|}}}
+| Has guid={{{Guid|}}}
+| Stands for={{{Explanation|}}}
+| Has image={{{Image|}}}
+| Has caption={{{Caption|}}}
+}}
+{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+| stands for={{{Explanation|}}}
+}}
+{{DISPLAYTITLE:{{{Name|}}}}}
+[[Category:Ratings|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Release',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
+                'title' => 'Template:Theme',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
+            ],
+            [
                 'title' => 'Template:Infobox',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
@@ -239,52 +345,6 @@ MARKUP,
 .ib-content .infobox-above {
     font-style: italic; font-size: 125%;
 }
-MARKUP,
-            ],
-            [
-                'title' => 'Template:Rating',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<noinclude>
-{{#template_params:
-  Name (property=Has name)
-| Guid (property=Has guid)
-| Explanation (property=Stands for)
-| Image (property=Has image)
-| Caption (property=Has caption)
-}}
-==Documentation==
-This template is used to create rating pages, sets its display title and infobox.
-
-'''Name''': The display name of the rating.
-
-'''Guid''': The rating identifier from Giant Bomb.
-
-'''Explanation''': The long form representation of the rating.
-
-'''Image''': The image filename of the rating. Image appears in the infobox.
-
-'''Caption''': The caption for the above image.
-</noinclude>
-<includeonly>
-{{#set:
-| Has name={{{Name|}}}
-| Has guid={{{Guid|}}}
-| Stands for={{{Explanation|}}}
-| Has image={{{Image|}}}
-| Has caption={{{Caption|}}}
-}}
-{{Infobox
-| title={{{Name|}}}
-| italic title=no
-| image={{{Image|}}}
-| image size=40
-| caption={{{Caption|}}}
-| stands for={{{Explanation|}}}
-}}
-{{DISPLAYTITLE:{{{Name|}}}}}
-[[Category:Ratings|{{SUBPAGENAME}}]]
-</includeonly>
 MARKUP,
             ],
             [
