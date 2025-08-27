@@ -210,14 +210,17 @@ MARKUP,
 | label21 = Birthday
 | data21 = {{{birthday|}}}
 
-| label22 = RealName
+| label22 = Real Name
 | data22 = {{{real name|}}}
+
+| label23 = Death
+| data23 = {{{death|}}}
 
 <!-- For embedded content -->
 | data30  = {{{embedded|}}}
 
 }}{{main other|{{#ifeq:{{lc:{{{italic title|}}}}}|no||{{italic title|force={{#ifeq:{{lc:{{{italic title|}}}}}|force|true}}}}}}
-}}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for | gender | birthday | real name }}<noinclude>
+}}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| alt | arcade system | artist | caption | border | child | collapsible | commons | composer | designer | developer | director | embedded | engine | genre | image | image_size | image_upright | italic title | modes | noicon | onlysourced | platform | platforms | producer | programmer | publisher | qid | refs | release | released | series | state | subbox | suppressfields | title | writer | stands for | gender | birthday | real name | death }}<noinclude>
 {{documentation}}
 </noinclude>
 MARKUP,
