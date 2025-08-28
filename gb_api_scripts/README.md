@@ -4,9 +4,13 @@
 - Run `docker ps` and grab the container name for the wiki and db
 
 # generate_xml_categories.php
+
 # generate_xml_forms.php
+
 # generate_xml_properties.php
+
 # generate_xml_templates.php
+
 # generate_xml_pages.php
 
 Generates the categories/forms/properties/templates/pagas xml file for import via importDump.php
