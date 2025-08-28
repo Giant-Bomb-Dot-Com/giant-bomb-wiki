@@ -111,7 +111,7 @@ class Franchise extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -119,7 +119,7 @@ class Franchise extends Resource
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
             'relations' => $relations
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

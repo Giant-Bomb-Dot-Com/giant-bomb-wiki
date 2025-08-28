@@ -44,14 +44,14 @@ class Theme extends Resource
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

@@ -25,7 +25,7 @@ trait BuildPageData
 
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
-            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
+            $groupConcat = "GROUP_CONCAT(SUBSTRING_INDEX(o.mw_page_name, '/', -1) SEPARATOR ',')";
         	// join the relation table with the connector table to get the page names
             $qb = $this->getDb()->newSelectQueryBuilder()
                        ->select(['mw_page_name' => $groupConcat])
@@ -93,6 +93,7 @@ trait BuildPageData
         }
 
         if (!empty($data['real_name'])) {
+            $realName = trim(htmlspecialchars($data['real_name'], ENT_XML1, 'UTF-8'));
             $text .= "\n| RealName={$realName}";
         }
 
@@ -122,15 +123,18 @@ trait BuildPageData
         }
 
         if (!empty($data['address'])) {
-            $text .= "\n| Address={$data['address']}";
+            $address = trim(htmlspecialchars($data['address'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| Address={$address}";
         }
 
         if (!empty($data['city'])) {
-            $text .= "\n| City={$data['city']}";
+            $city = trim(htmlspecialchars($data['city'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| City={$city}";
         }
 
         if (!empty($data['country'])) {
-            $text .= "\n| Country={$data['country']}";
+            $country = trim(htmlspecialchars($data['country'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| Country={$country}";
         }
 
         if (!empty($data['state'])) {
@@ -199,6 +203,7 @@ trait BuildPageData
                         ->where('id = '.$data['game_id'])
                         ->caller(__METHOD__);
             $game = $qb->fetchField();
+            $game = substr($game, strpos($game, '/') + 1);
             $text .= "\n| Games={$game}";
         }
 
@@ -209,6 +214,7 @@ trait BuildPageData
                         ->where('id = '.$data['platform_id'])
                         ->caller(__METHOD__);
             $platform = $qb->fetchField();
+            $platform = substr($platform, strpos($platform, '/') + 1);
             $text .= "\n| Platforms={$platform}";
         }
 

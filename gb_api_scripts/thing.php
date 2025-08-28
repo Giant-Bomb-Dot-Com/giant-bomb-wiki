@@ -51,7 +51,7 @@ class Thing extends Resource
             "relationTable" => "wiki_person",
             "relationField" => "person_id"
         ],
-        "similar" =>  [
+        "objects" =>  [
             "table" => "wiki_assoc_thing_similar", 
             "mainField" => "thing_id", 
             "relationTable" => "wiki_thing",
@@ -118,7 +118,7 @@ class Thing extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -126,7 +126,7 @@ class Thing extends Resource
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
             'relations' => $relations
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

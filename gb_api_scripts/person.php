@@ -13,7 +13,7 @@ class Person extends Resource
     const RESOURCE_SINGULAR = "person";
     const RESOURCE_MULTIPLE = "people";
     const TABLE_NAME = "wiki_person";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','real_name','birthday','country','death','gender','hometown'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','last_name','birthday','country','death','gender','hometown','twitter','website'];
     const RELATION_TABLE_MAP = [
         "characters" =>  [
             "table" => "wiki_assoc_character_person", 
@@ -127,7 +127,7 @@ class Person extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -142,7 +142,7 @@ class Person extends Resource
             'website' => $row->website,
             'twitter' => $row->twitter,
             'relations' => $relations
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

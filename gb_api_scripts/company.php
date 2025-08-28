@@ -133,7 +133,7 @@ class Company extends Resource
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
         $relations = $this->getRelationsFromDB($row->id);
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -149,7 +149,7 @@ class Company extends Resource
             'phone' => $row->phone,
             'website' => $row->website,
             'relations' => $relations
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

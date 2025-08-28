@@ -67,7 +67,7 @@ class Dlc extends Resource
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -79,7 +79,7 @@ class Dlc extends Resource
             'release_date' => $row->release_date,
             'release_date_type' => $row->release_date_type,
             'launch_price' => $row->launch_price
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

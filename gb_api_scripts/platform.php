@@ -75,7 +75,7 @@ class Platform extends Resource
         $guid = self::TYPE_ID.'-'.$row->id;
         $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
 
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -89,7 +89,7 @@ class Platform extends Resource
             'online_support' => $row->online_support,
             'original_price' => $row->original_price,
             'manufacturer_id' => $row->manufacturer_id
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

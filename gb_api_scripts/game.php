@@ -192,7 +192,7 @@ class Game extends Resource
         $relations = $this->getRelationsFromDB($row->id);
 
         // TODO: how to handle releases, dlcs, people
-        $description = $desc."\n".$this->formatSchematicData([
+        $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
@@ -200,7 +200,7 @@ class Game extends Resource
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
             'relations' => $relations
-        ]);
+        ]).$desc;
 
         return [
             'title' => $row->mw_page_name,

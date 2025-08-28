@@ -205,7 +205,43 @@ MARKUP,
             [
                 'title' => 'Form:Theme',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Theme" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Theme|super_page=Themes}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Theme}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=has deck}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
         ];
 

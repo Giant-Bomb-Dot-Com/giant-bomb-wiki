@@ -46,6 +46,11 @@ class GenerateXMLProperties extends Maintenance
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
+                'title' => 'Property:Has characters',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
                 'title' => 'Property:Has city',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
@@ -63,6 +68,11 @@ class GenerateXMLProperties extends Maintenance
 The allowed values for this property are:
 * [[Allows value::Nintendo Product ID]]
 * [[Allows value::Sony Company Code]]'
+            ],
+            [
+                'title' => 'Property:Has concepts',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has country',
@@ -110,12 +120,12 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
-                'title' => 'Property:Has credits',
+                'title' => 'Property:Has developers',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
-                'title' => 'Property:Has developers',
+                'title' => 'Property:Has developed games',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
@@ -126,6 +136,11 @@ The allowed values for this property are:
             ],
             [
                 'title' => 'Property:Has enemies',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
+                'title' => 'Property:Has franchises',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
@@ -155,6 +170,11 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
+                'title' => 'Property:Has published games',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
                 'title' => 'Property:Has platforms',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
@@ -170,7 +190,17 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
+                'title' => 'Property:Has similar locations',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
                 'title' => 'Property:Has similar objects',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
+                'title' => 'Property:Has similar people',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
@@ -245,6 +275,16 @@ The allowed values for this property are:
                 'title' => 'Property:Has original price',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Number]].'
+            ],
+            [
+                'title' => 'Property:Has person',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
+                'title' => 'Property:Has people',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has product code',
