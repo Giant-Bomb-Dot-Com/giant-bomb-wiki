@@ -94,10 +94,10 @@ trait CommonVariablesAndMethods
             $contributor->appendChild($userId);
 
             // Create and append child elements to <revision>
-            $model = $dom->createElementNS($mwNamespace, 'model', 'wikitext');
+            $model = $dom->createElementNS($mwNamespace, 'model', (array_key_exists('model', $set)) ? $set['model'] : 'wikitext');
             $revision->appendChild($model);
 
-            $format = $dom->createElementNS($mwNamespace, 'format', 'text/x-wiki');
+            $format = $dom->createElementNS($mwNamespace, 'format', (array_key_exists('format', $set)) ? $set['format'] : 'text/x-wiki');
             $revision->appendChild($format);
 
             // Create the <text> element with the generated content
@@ -165,8 +165,8 @@ trait CommonVariablesAndMethods
                             $xml->writeElement('username', 'Giantbomb');
                             $xml->writeElement('id', 1);
                         $xml->endElement(); 
-                        $xml->writeElement('model', 'wikitext');
-                        $xml->writeElement('format', 'text/x-wiki');
+                        $xml->writeElement('model', (array_key_exists('model', $page)) ? $page['model'] : 'wikitext');
+                        $xml->writeElement('format', (array_key_exists('format', $page)) ? $page['format'] : 'text/x-wiki');
                         $xml->startElement('text');
                             $xml->writeAttribute('xml:space', 'preserve');
                             $xml->writeRaw($page['description']);

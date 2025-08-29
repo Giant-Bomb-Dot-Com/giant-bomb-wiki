@@ -1117,6 +1117,8 @@ MARKUP,
             [
                 'title' => 'Template:Infobox/styles.css',
                 'namespace' => $this->namespaces['template'],
+                'model' => 'Sanitized CSS',
+                'format' => 'text/css',
                 'description' => <<<MARKUP
 /* {{pp-template|small=yes}} */
 .ib-content .infobox-label {
