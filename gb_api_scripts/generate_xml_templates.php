@@ -1149,8 +1149,7 @@ MARKUP,
                 'title' => 'Template:SetPropertyPrefix',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-{{#explode:{{{3}}}|/|0|Has_Prefix}}
-{{#if:{{#var:Has_Prefix}}|{{#set:{{{1|}}}={{{3|}}}}}|{{#set:{{{1|}}}={{{2|}}}/{{{3|}}}}} }}
+{{#if: {{#explode:{{{3}}}|/|1}}|{{#set:{{{1|}}}={{{3|}}}}}|{{#set:{{{1|}}}={{{2|}}}/{{{3|}}}}} }}
 <noinclude>
 This template automatically prefixes a value and sets a semantic property to allow editors to enter the wiki name without the category in the semantic table.
 
