@@ -138,7 +138,8 @@ trait BuildPageData
         }
 
         if (!empty($data['state'])) {
-            $text .= "\n| State={$data['state']}";
+            $state = trim(htmlspecialchars($data['state'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| State={$state}";
         }
 
         if (!empty($data['phone'])) {
