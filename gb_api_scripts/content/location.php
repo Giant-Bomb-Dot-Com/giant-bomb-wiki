@@ -1,8 +1,8 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
 class Location extends Resource
 {

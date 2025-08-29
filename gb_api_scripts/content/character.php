@@ -1,61 +1,67 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
-class Thing extends Resource
+class Character extends Resource
 {
     use CommonVariablesAndMethods;
     use BuildPageData;
 
-    const TYPE_ID = 3055;
-    const RESOURCE_SINGULAR = "object";
-    const RESOURCE_MULTIPLE = "objects";
-    const TABLE_NAME = "wiki_thing";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TYPE_ID = 3005;
+    const RESOURCE_SINGULAR = "character";
+    const RESOURCE_MULTIPLE = "characters";
+    const TABLE_NAME = "wiki_character";
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
     const RELATION_TABLE_MAP = [
-        "characters" =>  [
-            "table" => "wiki_assoc_character_thing", 
-            "mainField" => "thing_id", 
-            "relationTable" => "wiki_character",
-            "relationField" => "character_id"
-        ],
         "concepts" => [
-            "table" => "wiki_assoc_concept_thing", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_character_concept", 
+            "mainField" => "character_id", 
+            "relationField" => "concept_id", 
             "relationTable" => "wiki_concept",
-            "relationField" => "concept_id"
+        ],
+        "enemies" =>  [
+            "table" => "wiki_assoc_character_enemy", 
+            "mainField" => "character_id", 
+            "relationField" => "enemy_character_id", 
+            "relationTable" => "wiki_character",
         ],
         "franchises" =>  [
-            "table" => "wiki_assoc_franchise_thing", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_character_franchise", 
+            "mainField" => "character_id", 
+            "relationField" => "franchise_id", 
             "relationTable" => "wiki_franchise",
-            "relationField" => "franchise_id"
+        ],
+        "friends" =>  [
+            "table" => "wiki_assoc_character_friend", 
+            "mainField" => "character_id", 
+            "relationField" => "friend_character_id", 
+            "relationTable" => "wiki_character",
         ],
         "games" =>  [
-            "table" => "wiki_assoc_game_thing", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_game_character", 
+            "mainField" => "character_id", 
+            "relationField" => "game_id", 
             "relationTable" => "wiki_game",
-            "relationField" => "game_id"
         ],
         "locations" =>  [
-            "table" => "wiki_assoc_location_thing", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_character_location", 
+            "mainField" => "character_id", 
+            "relationField" => "location_id", 
             "relationTable" => "wiki_location",
-            "relationField" => "location_id"
         ],
         "people" =>  [
-            "table" => "wiki_assoc_person_thing", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_character_person", 
+            "mainField" => "character_id", 
+            "relationField" => "person_id", 
             "relationTable" => "wiki_person",
-            "relationField" => "person_id"
         ],
         "objects" =>  [
-            "table" => "wiki_assoc_thing_similar", 
-            "mainField" => "thing_id", 
+            "table" => "wiki_assoc_character_thing", 
+            "mainField" => "character_id", 
+            "relationField" => "thing_id", 
             "relationTable" => "wiki_thing",
-            "relationField" => "similar_thing_id"
         ],
     ];
 
@@ -70,9 +76,13 @@ class Thing extends Resource
      * deck = deck
      * description = description
      * aliases = aliases
+     * real_name = real_name
+     * gender = gender
+     * birthyday = birthday
+     * death = ?
+     * ? = last_name
      * 
      * @param array $data The api response array.
-     * @param array &$crawl Contains the relationships to further crawl through.
      * @return int 
      */
     public function process(array $data, array &$crawl): int
@@ -96,12 +106,15 @@ class Thing extends Resource
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
             'image_id' => $imageId,
+            'aliases' => $data['aliases'],
+            'real_name' => $data['real_name'],
+            'gender' => $data['gender'],
+            'birthday' => $data['birthday'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
             'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
-            'aliases' => $data['aliases'],
         ], ['id']);
     }
 
@@ -125,6 +138,10 @@ class Thing extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
+            'real_name' => $row->real_name,
+            'gender' => $row->gender,
+            'birthday' => $row->birthday,
+            'death' => $row->death,
             'relations' => $relations
         ]).$desc;
 

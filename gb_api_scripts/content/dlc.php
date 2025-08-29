@@ -1,37 +1,33 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
-class Platform extends Resource
+class Dlc extends Resource
 {
     use CommonVariablesAndMethods;
     use BuildPageData;
 
-    const TYPE_ID = 3045;
-    const RESOURCE_SINGULAR = "platform";
-    const RESOURCE_MULTIPLE = "platforms";
-    const TABLE_NAME = "wiki_platform";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','short_name','release_date','release_date_type','install_base','online_support','original_price','manufacturer_id'];
+    const TYPE_ID = 3020;
+    const RESOURCE_SINGULAR = "dlc";
+    const RESOURCE_MULTIPLE = "dlcs";
+    const TABLE_NAME = "wiki_game_dlc";
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','game_id','platform_id','release_date','release_date_type','launch_price'];
 
     /**
      * Matching table fields to api response fields
      * 
      * id = id
      * image_id = image->original_url
+     * game_id = game->id
+     * platform_id = platform->id
      * date_created = date_added
      * date_updated = date_last_updated
+     * name = name
      * deck = deck
      * description = description
-     * name = name
-     * short_name = abbreviation
-     * aliases = aliases
      * release_date = release_date
-     * install_base = install_base
-     * online_support = online_support
-     * original_price = original_price
-     * manufacturer_id = company->id
      * 
      * @param array $data The api response array.
      * @return int 
@@ -48,18 +44,14 @@ class Platform extends Resource
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
             'image_id' => $imageId,
+            'game_id' => (is_null($data['game'])) ? null : $data['game']['id'],
+            'platform_id' => (is_null($data['platform'])) ? null : $data['platform']['id'],
+            'release_date' => $data['release_date'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
-            'name' => (is_null($data['name'])) ? '' : $data['name'],
-            'short_name' => $data['abbreviation'],
-            'aliases' => $data['aliases'],
-            'release_date' => $data['release_date'],
-            'install_base' => $data['install_base'],
-            'online_support' => $data['online_support'],
-            'original_price' => $data['original_price'],
-            'manufacturer_id' => (is_null($data['company'])) ? null : $data['company']['id'],
         ], ['id']);
     }
 
@@ -82,13 +74,11 @@ class Platform extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
-            'short_name' => $row->short_name,
+            'game_id' => $row->game_id,
+            'platform_id' => $row->platform_id,
             'release_date' => $row->release_date,
             'release_date_type' => $row->release_date_type,
-            'install_base' => $row->install_base,
-            'online_support' => $row->online_support,
-            'original_price' => $row->original_price,
-            'manufacturer_id' => $row->manufacturer_id
+            'launch_price' => $row->launch_price
         ]).$desc;
 
         return [

@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/common.php');
+require_once(__DIR__.'/libs/common.php');
 
 class GenerateXMLResource extends Maintenance
 {
@@ -26,7 +26,7 @@ class GenerateXMLResource extends Maintenance
     {
         $resource = $this->getArg(0);
 
-        $filePath = sprintf('%s/%s.php', __DIR__, $resource);
+        $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
         if (file_exists($filePath)) {
             include $filePath; 
         } else {

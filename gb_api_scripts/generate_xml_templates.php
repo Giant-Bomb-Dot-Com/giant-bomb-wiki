@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/common.php');
+require_once(__DIR__.'/libs/common.php');
 
 class GenerateXMLTemplates extends Maintenance
 {
@@ -357,6 +357,11 @@ This template is used to create concept pages, set its display title and infobox
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Concepts|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
+            ],
+            [
+                'title' => 'Template:Credit',
+                'namespace' => $this->namespaces['template'],
+                'description' => ''
             ],
             [
                 'title' => 'Template:DLC',
@@ -1154,10 +1159,10 @@ MARKUP,
 This template automatically prefixes a value and sets a semantic property to allow editors to enter the wiki name without the category in the semantic table.
 
 ==Usage==
-<nowiki>{{SetPrefixedProperty|Property Name|Namespace|Page Name}}</nowiki>
+<nowiki>{{SetPropertyPrefix|Property Name|Namespace|Page Name}}</nowiki>
 
 ==Example==
-<nowiki>{{SetPrefixedProperty|Has character|Characters|Mario}}</nowiki>
+<nowiki>{{SetPropertyPrefix|Has character|Characters|Mario}}</nowiki>
 </noinclude>
 MARKUP,
             ],

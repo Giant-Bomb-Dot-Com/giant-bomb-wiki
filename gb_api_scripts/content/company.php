@@ -1,67 +1,61 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
-class Character extends Resource
+class Company extends Resource
 {
     use CommonVariablesAndMethods;
     use BuildPageData;
 
-    const TYPE_ID = 3005;
-    const RESOURCE_SINGULAR = "character";
-    const RESOURCE_MULTIPLE = "characters";
-    const TABLE_NAME = "wiki_character";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
+    const TYPE_ID = 3010;
+    const RESOURCE_SINGULAR = "company";
+    const RESOURCE_MULTIPLE = "companies";
+    const TABLE_NAME = "wiki_company";
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website'];
     const RELATION_TABLE_MAP = [
+        "characters" => [
+            "table" => "wiki_assoc_character_company", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_character",
+            "relationField" => "character_id"
+        ],
         "concepts" => [
-            "table" => "wiki_assoc_character_concept", 
-            "mainField" => "character_id", 
-            "relationField" => "concept_id", 
+            "table" => "wiki_assoc_company_concept", 
+            "mainField" => "company_id", 
             "relationTable" => "wiki_concept",
+            "relationField" => "concept_id"
         ],
-        "enemies" =>  [
-            "table" => "wiki_assoc_character_enemy", 
-            "mainField" => "character_id", 
-            "relationField" => "enemy_character_id", 
-            "relationTable" => "wiki_character",
-        ],
-        "franchises" =>  [
-            "table" => "wiki_assoc_character_franchise", 
-            "mainField" => "character_id", 
-            "relationField" => "franchise_id", 
-            "relationTable" => "wiki_franchise",
-        ],
-        "friends" =>  [
-            "table" => "wiki_assoc_character_friend", 
-            "mainField" => "character_id", 
-            "relationField" => "friend_character_id", 
-            "relationTable" => "wiki_character",
-        ],
-        "games" =>  [
-            "table" => "wiki_assoc_game_character", 
-            "mainField" => "character_id", 
-            "relationField" => "game_id", 
+        "developed_games" => [
+            "table" => "wiki_assoc_game_developer", 
+            "mainField" => "company_id", 
             "relationTable" => "wiki_game",
+            "relationField" => "game_id"
         ],
-        "locations" =>  [
-            "table" => "wiki_assoc_character_location", 
-            "mainField" => "character_id", 
-            "relationField" => "location_id", 
+        "locations" => [
+            "table" => "wiki_assoc_company_location", 
+            "mainField" => "company_id", 
             "relationTable" => "wiki_location",
+            "relationField" => "location_id"
         ],
-        "people" =>  [
-            "table" => "wiki_assoc_character_person", 
-            "mainField" => "character_id", 
-            "relationField" => "person_id", 
-            "relationTable" => "wiki_person",
-        ],
-        "objects" =>  [
-            "table" => "wiki_assoc_character_thing", 
-            "mainField" => "character_id", 
-            "relationField" => "thing_id", 
+        "objects" => [
+            "table" => "wiki_assoc_company_thing", 
+            "mainField" => "company_id", 
             "relationTable" => "wiki_thing",
+            "relationField" => "thing_id"
+        ],
+        "people" => [
+            "table" => "wiki_assoc_company_person", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_person",
+            "relationField" => "person_id"
+        ],
+        "published_games" => [
+            "table" => "wiki_assoc_game_publisher", 
+            "mainField" => "company_id", 
+            "relationTable" => "wiki_game",
+            "relationField" => "game_id"
         ],
     ];
 
@@ -75,12 +69,15 @@ class Character extends Resource
      * name = name
      * deck = deck
      * description = description
+     * abbreviation = abbreviation
      * aliases = aliases
-     * real_name = real_name
-     * gender = gender
-     * birthyday = birthday
-     * death = ?
-     * ? = last_name
+     * founded_date = date_founded
+     * address = location_address
+     * city = location_city
+     * country = location_country
+     * state = location_state
+     * phone = phone
+     * website = website
      * 
      * @param array $data The api response array.
      * @return int 
@@ -106,15 +103,20 @@ class Character extends Resource
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],
             'image_id' => $imageId,
-            'aliases' => $data['aliases'],
-            'real_name' => $data['real_name'],
-            'gender' => $data['gender'],
-            'birthday' => $data['birthday'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
             'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
+            'abbreviation' => $data['abbreviation'],
+            'aliases' => $data['aliases'],
+            'founded_date' => $data['date_founded'],
+            'address' => $data['location_address'],
+            'city' => $data['location_city'],
+            'country' => $data['location_country'],
+            'state' => $data['location_state'],
+            'phone' => $data['phone'],
+            'website' => $data['website'],
         ], ['id']);
     }
 
@@ -138,10 +140,14 @@ class Character extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
-            'real_name' => $row->real_name,
-            'gender' => $row->gender,
-            'birthday' => $row->birthday,
-            'death' => $row->death,
+            'abbreviation' => $row->abbreviation,
+            'founded_date' => $row->founded_date,
+            'address' => $row->address,
+            'city' => $row->city,
+            'country' => $row->country,
+            'state' => $row->state,
+            'phone' => $row->phone,
+            'website' => $row->website,
             'relations' => $relations
         ]).$desc;
 

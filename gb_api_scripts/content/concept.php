@@ -1,53 +1,60 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
-class Franchise extends Resource
+class Concept extends Resource
 {
     use CommonVariablesAndMethods;
     use BuildPageData;
 
-    const TYPE_ID = 3025;
-    const RESOURCE_SINGULAR = "franchise";
-    const RESOURCE_MULTIPLE = "franchises";
-    const TABLE_NAME = "wiki_franchise";
+    const TYPE_ID = 3015;
+    const RESOURCE_SINGULAR = "concept";
+    const RESOURCE_MULTIPLE = "concepts";
+    const ROOT_PAGE_NAME = "Concepts/";
+    const TABLE_NAME = "wiki_concept";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [
         "characters" =>  [
-            "table" => "wiki_assoc_character_franchise", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_character_concept", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_character",
             "relationField" => "character_id"
         ],
         "concepts" => [
-            "table" => "wiki_assoc_concept_franchise", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_concept_similar", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_concept",
-            "relationField" => "concept_id"
+            "relationField" => "similar_concept_id"
+        ],
+        "franchises" =>  [
+            "table" => "wiki_assoc_concept_franchise", 
+            "mainField" => "concept_id", 
+            "relationTable" => "wiki_franchise",
+            "relationField" => "franchise_id"
         ],
         "games" =>  [
-            "table" => "wiki_assoc_game_franchise", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_game_concept", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_game",
             "relationField" => "game_id"
         ],
         "locations" =>  [
-            "table" => "wiki_assoc_franchise_location", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_concept_location", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_location",
             "relationField" => "location_id"
         ],
         "objects" =>  [
-            "table" => "wiki_assoc_franchise_thing", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_concept_thing", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_thing",
             "relationField" => "thing_id"
         ],
         "people" =>  [
-            "table" => "wiki_assoc_franchise_person", 
-            "mainField" => "franchise_id", 
+            "table" => "wiki_assoc_concept_person", 
+            "mainField" => "concept_id", 
             "relationTable" => "wiki_person",
             "relationField" => "person_id"
         ],

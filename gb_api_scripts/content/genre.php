@@ -1,18 +1,18 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
-require_once(__DIR__.'/common.php');
-require_once(__DIR__.'/build_page_data.php');
+require_once(__DIR__.'/../libs/resource.php');
+require_once(__DIR__.'/../libs/common.php');
+require_once(__DIR__.'/../libs/build_page_data.php');
 
-class Accessory extends Resource
+class Genre extends Resource
 {
     use CommonVariablesAndMethods;
     use BuildPageData;
 
-    const TYPE_ID = 3000;
-    const RESOURCE_SINGULAR = "accessory";
-    const RESOURCE_MULTIPLE = "accessories";
-    const TABLE_NAME = "wiki_accessory";
+    const TYPE_ID = 3060;
+    const RESOURCE_SINGULAR = "genre";
+    const RESOURCE_MULTIPLE = "genres";
+    const TABLE_NAME = "wiki_game_genre";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
 
     /**
@@ -22,16 +22,16 @@ class Accessory extends Resource
      * image_id = image->original_url
      * date_created = date_added
      * date_updated = date_last_updated
-     * name = name
      * deck = deck
      * description = description
+     * name = name
      * 
      * @param array $data The api response array.
      * @return int 
      */
     public function process(array $data, array &$crawl): int
     {
-        // save the foreign relation first to get its id
+        // save the image relation first to get its id
         $imageId = $this->insertOrUpdate("image", [
             'assoc_type_id' => self::TYPE_ID,
             'assoc_id' => $data['id'],
@@ -43,9 +43,9 @@ class Accessory extends Resource
             'image_id' => $imageId,
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
-            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
         ], ['id']);
     }
 

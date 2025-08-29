@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/common.php');
+require_once(__DIR__.'/libs/common.php');
 
 class GenerateXMLProperties extends Maintenance
 {
