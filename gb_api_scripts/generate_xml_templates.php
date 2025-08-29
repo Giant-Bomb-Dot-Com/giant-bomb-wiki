@@ -29,8 +29,7 @@ class GenerateXMLTemplates extends Maintenance
 }}
 ==Documentation==
 This template is used to create accessory pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -91,8 +90,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create character pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -193,8 +191,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create company pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -304,8 +301,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create concept pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -378,11 +374,16 @@ MARKUP,
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
+| Characters (property=Has characters)
+| Concepts (property=Has concepts)
+| Games (property=Has games)
+| Locations (property=Has locations)
+| Objects (property=Has objects)
+| People (property=Has people)
 }}
 ==Documentation==
 This template is used to create franchise pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -450,8 +451,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create game pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -501,8 +501,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create genre pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -549,11 +548,14 @@ MARKUP,
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
+| Characters (property=Has characters)
+| Concepts (property=Has concepts)
+| Locations (property=Has locations)
+| Objects (property=Has objects)
 }}
 ==Documentation==
 This template is used to create location pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -612,11 +614,17 @@ MARKUP,
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
+| Characters (property=Has characters)
+| Concepts (property=Has concepts)
+| Franchises (property=Has franchises)
+| Games (property=Has games)
+| Locations (property=Has locations)
+| Objects (property=Has objects)
+| People (property=Has people)
 }}
 ==Documentation==
 This template is used to create object pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -700,8 +708,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create person pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -802,8 +809,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create platform pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -873,8 +879,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create rating pages, sets its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-
@@ -925,8 +930,7 @@ MARKUP,
 }}
 ==Documentation==
 This template is used to create theme pages, set its display title and infobox.
-{! class="wikitable"
-|+ Field descriptions
+{| class="wikitable"
 |-
 ! Field Name !! Description
 |-

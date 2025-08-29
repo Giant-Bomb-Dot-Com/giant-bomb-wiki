@@ -7,6 +7,7 @@ class GenerateXMLResource extends Maintenance
     use CommonVariablesAndMethods;
 
     const CHUNK_SIZE = 100000000;
+    const LIMIT_SIZE = 50000;
 
     public function __construct() 
     {
@@ -53,8 +54,8 @@ class GenerateXMLResource extends Maintenance
             $size += strlen($pageData['description']);
             $data[] = $pageData;
 
-            // create 100mb files
-            if ($size > self::CHUNK_SIZE) {
+            // limit size of file to either 100mb or 50000 pages
+            if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {
                 $filename = sprintf('%s_%07d.xml', $resource, $count);
                 $this->streamXML($filename, $data);
                 $data = [];
