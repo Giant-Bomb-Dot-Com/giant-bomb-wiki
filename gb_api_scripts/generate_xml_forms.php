@@ -67,40 +67,62 @@ if a page with that name already exists, you will be sent to a form to edit that
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Character}}}
-'''Name:''' {{{field|Name|property=has name}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Guid:
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases:
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image:
+| {{{field|Image|property=Has image}}}
+|-
+! Caption:
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck:
+| {{{field|Deck|property=Has deck}}}
+|-
+! Real Name:
+| {{{field|RealName|property=Has real name}}}
+|-
+! Gender:
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Birthday:
+| {{{field|Birthday|property=Has birthday}}}
+|}
 
-'''Guid:''' {{{field|Guid|property=has guid}}}
+'''Relationships'''
 
-'''RealName:''' {{{field|RealName|property=has real name}}}
-
-'''Aliases:''' {{{field|Aliases|property=has aliases}}}
-
-'''Gender:''' {{{field|Gender|property=has gender}}}
-
-'''Birthday:''' {{{field|Birthday|property=has birthday}}}
-
-'''Image:''' {{{field|Image|property=has image}}}
-
-'''Caption:''' {{{field|Caption|property=has caption}}}
-
-'''Deck:''' {{{field|Deck|property=has deck}}}
-
-'''Concepts:''' {{{field|Concepts|property=has concepts|_autocomplete|_suggested_category=Concepts}}}
-
-'''Enemies:''' {{{field|Enemies|property=has enemies|_autocomplete|_suggested_category=Characters}}}
-
-'''Franchises:''' {{{field|Franchises|property=has franchises|_autocomplete|_suggested_category=Franchises}}}
-
-'''Friends:''' {{{field|Friends|property=has friends|_autocomplete|_suggested_category=Characters}}}
-
-'''Games:''' {{{field|Games|property=has games|_autocomplete|_suggested_category=Games}}}
-
-'''Locations:''' {{{field|Locations|property=has locations|_autocomplete|_suggested_category=Locations}}}
-
-'''People:''' {{{field|People|property=has people|_autocomplete|_suggested_category=People}}}
-
-'''Objects:''' {{{field|Objects|property=has objects|_autocomplete|_suggested_category=Objects}}}
-
+{| class="formtable"
+! Concepts:
+| {{{field|Concepts|property=Has concepts|list}}}
+|-
+! Enemies:
+| {{{field|Enemies|property=Has enemies|list}}}
+|-
+! Friends:
+| {{{field|Friends|property=Has friends|list}}}
+|-
+! Franchises:
+| {{{field|Franchises|property=Has franchises|list}}}}
+|-
+! Games:
+| {{{field|Games|property=Has games|list}}}
+|-
+! Locations:
+| {{{field|Locations|property=Has locations|list}}}
+|-
+! People:
+| {{{field|People|property=Has people|list}}}
+|-
+! Objects:
+| {{{field|Objects|property=Has objects|list}}}
+|}
 {{{end template}}}
 
 '''Free text:'''
@@ -218,22 +240,22 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{for template|Theme}}}
 {| class="formtable"
 ! Name: 
-| {{{field|Name|property=has name}}}
+| {{{field|Name|property=Has name}}}
 |-
 ! Guid: 
-| {{{field|Guid|property=has guid}}}
+| {{{field|Guid|property=Has guid}}}
 |-
 ! Aliases: 
-| {{{field|Aliases|property=has aliases}}}
+| {{{field|Aliases|property=Has aliases}}}
 |-
 ! Image: 
-| {{{field|Image|property=has image}}}
+| {{{field|Image|property=Has image}}}
 |-
 ! Caption: 
-| {{{field|Caption|property=has caption}}}
+| {{{field|Caption|property=Has caption}}}
 |-
 ! Deck: 
-| {{{field|Deck|property=has deck}}}
+| {{{field|Deck|property=Has deck}}}
 |}
 {{{end template}}}
 
