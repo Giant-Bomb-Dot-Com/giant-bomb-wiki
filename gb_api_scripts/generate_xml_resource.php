@@ -6,7 +6,7 @@ class GenerateXMLResource extends Maintenance
 {
     use CommonVariablesAndMethods;
 
-    const CHUNK_SIZE = 100000000;
+    const CHUNK_SIZE = 50000000;
     const LIMIT_SIZE = 50000;
 
     public function __construct() 

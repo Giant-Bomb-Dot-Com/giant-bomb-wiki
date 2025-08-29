@@ -165,6 +165,11 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
+                'title' => 'Property:Has phone',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
                 'title' => 'Property:Has publishers',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'

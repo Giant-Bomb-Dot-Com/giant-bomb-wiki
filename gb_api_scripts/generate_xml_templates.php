@@ -207,7 +207,7 @@ This template is used to create company pages, set its display title and infobox
 |-
 | Deck || The short description for the company.
 |-
-| Abbereviation || The abbreviation of the company's name.
+| Abbreviation || The abbreviation of the company's name.
 |-
 | FoundedDate || The company's founded date.
 |-
@@ -244,7 +244,7 @@ This template is used to create company pages, set its display title and infobox
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#if:{{{Abbereviation|}}}|{{#set:Has abbreviation={{{Abbereviation|}}}}}}}<!--
+-->{{#if:{{{Abbereviation|}}}|{{#set:Has abbreviation={{{Abbreviation|}}}}}}}<!--
 -->{{#if:{{{FoundedDate|}}}|{{#set:Has founded date={{{FoundedDate|}}}}}}}<!--
 -->{{#if:{{{Address|}}}|{{#set:Has address={{{Address|}}}}}}}<!--
 -->{{#if:{{{City|}}}|{{#set:Has city={{{City|}}}}}}}<!--
@@ -1075,7 +1075,7 @@ MARKUP,
 | label30 = [[Companies|Manufacturer]]
 | data30 = {{{manufacturer|}}}
 
-| label31 = [[Characters|Character(s)]
+| label31 = [[Characters|Character(s)]]
 | data31 = {{{characters|}}}
 
 | label32 = [[Concepts|Concept(s)]]
