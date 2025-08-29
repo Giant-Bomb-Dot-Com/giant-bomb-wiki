@@ -138,14 +138,14 @@ This template is used to create character pages, set its display title and infob
 -->{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName|}}}}}}}<!--
 -->{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender|}}}}}}}<!--
 -->{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday|}}}}}}}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Enemies|}}}|,|@@|{{SetPropertyPrefix|Has enemies|Enemies|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Friends|}}}|,|@@|{{SetPropertyPrefix|Has friends|Friends|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Enemies|}}}|,|@@|{{SetPropertyPrefix|Has enemies|Enemies|@@}}| }}<!--
+-->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|@@}}| }}<!--
+-->{{#arraymap:{{{Friends|}}}|,|@@|{{SetPropertyPrefix|Has friends|Friends|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -252,13 +252,13 @@ This template is used to create company pages, set its display title and infobox
 -->{{#if:{{{State|}}}|{{#set:Has state={{{State|}}}}}}}<!--
 -->{{#if:{{{Phone|}}}|{{#set:Has phone={{{Phone|}}}}}}}<!--
 -->{{#if:{{{Website|}}}|{{#set:Has website={{{Website|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Developed|}}}|,|@@|{{SetPropertyPrefix|Has developed games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Published|}}}|,|@@|{{SetPropertyPrefix|Has published games|Games|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
+-->{{#arraymap:{{{Developed|}}}|,|@@|{{SetPropertyPrefix|Has developed games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Published|}}}|,|@@|{{SetPropertyPrefix|Has published games|Games|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -338,13 +338,13 @@ This template is used to create concept pages, set its display title and infobox
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has similar concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has similar concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -418,12 +418,12 @@ This template is used to create franchise pages, set its display title and infob
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has similar objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has similar objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -586,10 +586,10 @@ This template is used to create location pages, set its display title and infobo
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has similar locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has similar locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -661,13 +661,13 @@ This template is used to create object pages, set its display title and infobox.
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has similar objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has similar objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -763,13 +763,13 @@ This template is used to create person pages, set its display title and infobox.
 -->{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday|}}}}}}}<!--
 -->{{#if:{{{Death|}}}|{{#set:Has death={{{Death|}}}}}}}<!--
 -->{{#if:{{{Website|}}}|{{#set:Has website={{{Website|}}}}}}}<!--
--->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has similar concepts|Concepts|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|{{#trim:@@}}}}| }}<!--
--->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has similar people|People|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has similar concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has similar people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -852,7 +852,7 @@ This template is used to create platform pages, set its display title and infobo
 -->{{#if:{{{InstallBase|}}}|{{#set:Has install base={{{InstallBase|}}}}}}}<!--
 -->{{#if:{{{OnlineSupport|}}}|{{#set:Has online support={{{OnlineSupport|}}}}}}}<!--
 -->{{#if:{{{OriginalPrice|}}}|{{#set:Has original price={{{OriginalPrice|}}}}}}}<!--
--->{{#arraymap:{{{Manufacturer|}}}|,|@@|{{SetPropertyPrefix|Has manufacturer|Companies|{{#trim:@@}}}}| }}<!--
+-->{{#arraymap:{{{Manufacturer|}}}|,|@@|{{SetPropertyPrefix|Has manufacturer|Companies|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
