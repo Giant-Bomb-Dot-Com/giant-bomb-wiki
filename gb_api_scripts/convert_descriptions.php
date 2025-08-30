@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/converter.php');
+require_once(__DIR__.'/libs/converter.php');
 
 class ConvertToMWDescriptions extends Maintenance
 {
@@ -11,19 +11,18 @@ class ConvertToMWDescriptions extends Maintenance
         $this->addDescription("Converts descriptions into MediaWiki format");
         $this->addArg('resource', 'Wiki type');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
-        $this->addOption('apikey', 'Api key used to make requests to the GB api', false, true, 'a');
     }
 
     /**
-     * - Retrieve all entries from the resource table that has a description and an empty description_new field
+     * - Retrieve all entries from the resource table that has a description and an empty mw_formatted_description field
      * - Replace html tags with MediaWiki formatting
-     * - Update the entry's description_new field
+     * - Update the entry's mw_formatted_description field
      */
     public function execute()
     {
         $resource = $this->getArg(0);
 
-        $filePath = sprintf('%s/%s.php', __DIR__, $resource);
+        $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
         if (file_exists($filePath)) {
             include $filePath; 
         } else {
@@ -40,8 +39,10 @@ class ConvertToMWDescriptions extends Maintenance
         foreach ($rows as $row) {
             $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
             $content->updateMediaWikiDescription($row->id, $convertedDescription);
-            echo sprintf('Converted description for %s::%s', $row->id, $row->name);
+            echo sprintf("Converted description for %s::%s\n", $row->id, $row->name);
         }
+
+        echo 'done';
     }
 }
 

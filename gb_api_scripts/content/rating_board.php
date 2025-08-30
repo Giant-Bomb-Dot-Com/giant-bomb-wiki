@@ -1,13 +1,13 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
+require_once(__DIR__.'/../libs/resource.php');
 
-class Location extends Resource
+class Rating_board extends Resource
 {
-    const TYPE_ID = 3035;
-    const RESOURCE_SINGULAR = "location";
-    const RESOURCE_MULTIPLE = "locations";
-    const TABLE_NAME = "wiki_location";
+    const TYPE_ID = 3070;
+    const RESOURCE_SINGULAR = "rating_board";
+    const RESOURCE_MULTIPLE = "rating_boards";
+    const TABLE_NAME = "wiki_game_release_rating_board";
 
     /**
      * Matching table fields to api response fields
@@ -16,9 +16,9 @@ class Location extends Resource
      * image_id = image->original_url
      * date_created = date_added
      * date_updated = date_last_updated
+     * name = name
      * deck = deck
      * description = description
-     * name = name
      * 
      * @param array $data The api response array.
      * @return int 
@@ -37,9 +37,9 @@ class Location extends Resource
             'image_id' => $imageId,
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
+            'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
-            'name' => (is_null($data['name'])) ? '' : $data['name'],
         ], ['id']);
     }
 }
