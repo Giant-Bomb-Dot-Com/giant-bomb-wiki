@@ -29,14 +29,12 @@ services:
       - ./skins:/var/www/html/skins:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
-
       - ./config:/config
       - ./data:/data/
       - wiki-data:/var/www/html/images
-      - ./entrypoint.sh:/entrypoint.sh:ro
     environment:
       - MV_ENV=dev
-    entrypoint: ["/entrypoint.sh"]
+    restart: unless-stopped
 
 volumes:
   db-data:

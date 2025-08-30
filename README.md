@@ -4,17 +4,19 @@ We should add stuff here.
 
 ## Running the wiki for the first time
 
-- Have docker desktop installed and running.
-- Copy `.env.example` to `.env`.
-- The GB_API_KEY can be retrieved from https://www.giantbomb.com/api when logged into the site.
-- NOTE: If you are updating a previous install for the first time since getting the .env file, you will need to remove your volumes (`docker compose down -v`) so everything is built using the new credentials.
-- Run `docker compose up -d` in the root of this repo.
-- It will take a few minutes to fully install and start the repo. You can watch the wiki container log once the containers have started to watch progress, or just wait a few minutes.
-- You should now be able to access the wiki at http://localhost:8080/.
-- The default admin username is giantbomb
-- The default admin password is gbwikipass
-- By default the vector skin is loaded. To load the giantbomb vue skin change see instuctions in the Skins section below.
-- You can visit http://localhost:8080/index.php/Special:Version to see the loaded features.
+1. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/) and run it
+2. Copy `.env.example` to `.env` and fill out the missing values accordingly
+   - (optional) If you need services that will use the Giant Bomb legacy API, the GB_API_KEY can be retrieved from the [GB API page](https://www.giantbomb.com/api) when logged into the site.
+3. From the terminal, run `docker compose up -d`
+   - This will download and install the database and the wiki and automatically start the wiki web service.
+4. Run `docker compose build --no-cache`
+   - This will go fetch every necessary Mediawiki extensions and prepare the next step to allow running the `installwiki.sh` script.
+   - `--no-cache` is important if new extensions/skins have been added since the last build
+5. Configure Mediawiki with `docker exec <container-name> /bin/bash /installwiki.sh`
+   - This is a one time action to configure Mediawiki and install the necessary Mediawiki extensions/skins as seen in `/config/LocalSettings.php`.
+   - It also performs some web-centric configurations.
+6. Visit the Special Version page http://localhost:8080/index.php/Special:Version to see the installed extensions/skins and their versions.
+7. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
 
 ## Skins
 
