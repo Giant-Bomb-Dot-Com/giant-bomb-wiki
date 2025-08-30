@@ -158,7 +158,7 @@ trait CommonVariablesAndMethods
             $count = 0;
             foreach ($data as $page) {
                 $xml->startElement('page');
-                    $xml->writeElement('title', $page['title']);
+                    $xml->writeElement('title', trim($page['title'], ' _'));
                     $xml->writeElement('ns', $page['namespace']);
                     $xml->startElement('revision');
                         $xml->startElement('contributor');
