@@ -271,7 +271,7 @@ class HtmlToMediaWikiConverter
                     // instantiate the content class to retrieve the name for the page
                     if (is_null($this->map[$contentTypeId]['content'])) {
                         $resource = $this->map[$contentTypeId]['className'];
-                        require_once(__DIR__.'/'.$resource.'.php');
+                        require_once('/var/www/html/maintenance/gb_api_scripts/content/'.$resource.'.php');
                         $classname = ucfirst($resource);
                         $this->map[$contentTypeId]['content'] = new $classname($this->dbw);
                     }
@@ -394,5 +394,40 @@ class HtmlToMediaWikiConverter
         }
 
         return $result;
+    }
+
+    /**
+     * Converts the name to a MW friendly format
+     * 
+     * @param string $pageName
+     * @return string
+     */
+    public function convertName(string $pageName): string
+    {
+        // handle accents
+        if (class_exists('Transliterator')) {
+            $transliterator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII;');
+            $pageName = $transliterator->transliterate($pageName);
+        }
+
+        // remove percent-encoded characters
+        $pageName = preg_replace('/%[0-9a-fA-F]{2}/', '', $pageName);
+
+        // replace '&amp;' and '&'
+        $pageName = str_replace(['&amp;', '&'], ' And ', $pageName);
+
+        // remove apostrophes between letters
+        $pageName = preg_replace('/([a-zA-Z])[\'’]([a-zA-Z])/u', '$1$2', $pageName);
+
+        // replace all non-alphanumeric characters with a space
+        $pageName = preg_replace('/[^a-zA-Z0-9]/', ' ', $pageName);
+
+        // reduce consecutive spaces
+        $pageName = preg_replace('/\s+/', ' ', $pageName);
+
+        // trim and replace spaces with underscores
+        $pageName = str_replace(' ', '_', trim($pageName));
+
+        return $pageName;
     }
 }

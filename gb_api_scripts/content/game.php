@@ -12,6 +12,7 @@ class Game extends Resource
     const TYPE_ID = 3030;
     const RESOURCE_SINGULAR = "game";
     const RESOURCE_MULTIPLE = "games";
+    const PAGE_NAMESPACE = "Games/";
     const TABLE_NAME = "wiki_game";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [

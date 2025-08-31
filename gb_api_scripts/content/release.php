@@ -7,6 +7,7 @@ class Release extends Resource
     const TYPE_ID = 3050;
     const RESOURCE_SINGULAR = "release";
     const RESOURCE_MULTIPLE = "releases";
+    const PAGE_NAMESPACE = "Releases/";
     const TABLE_NAME = "wiki_game_release";
     const RELATION_TABLE_MAP = [
         "developers" => ["table" => "wiki_game_release_to_developer", "mainField" => "release_id", "relationField" => "company_id"],

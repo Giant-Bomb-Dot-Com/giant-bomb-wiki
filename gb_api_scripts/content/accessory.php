@@ -12,6 +12,7 @@ class Accessory extends Resource
     const TYPE_ID = 3000;
     const RESOURCE_SINGULAR = "accessory";
     const RESOURCE_MULTIPLE = "accessories";
+    const PAGE_NAMESPACE = "Accessories/";
     const TABLE_NAME = "wiki_accessory";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
 

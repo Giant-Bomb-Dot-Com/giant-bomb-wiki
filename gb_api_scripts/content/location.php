@@ -12,6 +12,7 @@ class Location extends Resource
     const TYPE_ID = 3035;
     const RESOURCE_SINGULAR = "location";
     const RESOURCE_MULTIPLE = "locations";
+    const PAGE_NAMESPACE = "Locations/";
     const TABLE_NAME = "wiki_location";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [

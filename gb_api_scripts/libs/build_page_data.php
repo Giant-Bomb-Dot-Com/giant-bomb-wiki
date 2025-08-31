@@ -147,7 +147,8 @@ trait BuildPageData
         }
 
         if (!empty($data['website'])) {
-            $text .= "\n| Website={$data['website']}";
+            $website = trim(htmlspecialchars($data['website'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| Website={$website}";
         }
 
         if (!empty($data['release_date'])) {

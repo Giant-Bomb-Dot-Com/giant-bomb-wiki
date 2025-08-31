@@ -12,6 +12,7 @@ class Theme extends Resource
     const TYPE_ID = 3032;
     const RESOURCE_SINGULAR = "theme";
     const RESOURCE_MULTIPLE = "themes";
+    const PAGE_NAMESPACE = "Themes/";
     const TABLE_NAME = "wiki_game_theme";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
 

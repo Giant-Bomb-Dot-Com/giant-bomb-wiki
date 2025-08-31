@@ -12,6 +12,7 @@ class Character extends Resource
     const TYPE_ID = 3005;
     const RESOURCE_SINGULAR = "character";
     const RESOURCE_MULTIPLE = "characters";
+    const PAGE_NAMESPACE = "Characters/";
     const TABLE_NAME = "wiki_character";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
     const RELATION_TABLE_MAP = [

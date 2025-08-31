@@ -12,7 +12,7 @@ class Concept extends Resource
     const TYPE_ID = 3015;
     const RESOURCE_SINGULAR = "concept";
     const RESOURCE_MULTIPLE = "concepts";
-    const ROOT_PAGE_NAME = "Concepts/";
+    const PAGE_NAMESPACE = "Concepts/";
     const TABLE_NAME = "wiki_concept";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [

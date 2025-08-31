@@ -12,6 +12,7 @@ class Platform extends Resource
     const TYPE_ID = 3045;
     const RESOURCE_SINGULAR = "platform";
     const RESOURCE_MULTIPLE = "platforms";
+    const PAGE_NAMESPACE = "Platforms/";
     const TABLE_NAME = "wiki_platform";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','short_name','release_date','release_date_type','install_base','online_support','original_price','manufacturer_id'];
 

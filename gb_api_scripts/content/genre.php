@@ -12,6 +12,7 @@ class Genre extends Resource
     const TYPE_ID = 3060;
     const RESOURCE_SINGULAR = "genre";
     const RESOURCE_MULTIPLE = "genres";
+    const PAGE_NAMESPACE = "Genres/";
     const TABLE_NAME = "wiki_game_genre";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
 

@@ -12,6 +12,7 @@ class Thing extends Resource
     const TYPE_ID = 3055;
     const RESOURCE_SINGULAR = "object";
     const RESOURCE_MULTIPLE = "objects";
+    const PAGE_NAMESPACE = "Objects/";
     const TABLE_NAME = "wiki_thing";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [

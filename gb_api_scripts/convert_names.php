@@ -2,14 +2,13 @@
 
 require_once(__DIR__.'/libs/converter.php');
 
-class ConvertToMWDescriptions extends Maintenance
+class ConvertToMWPageNames extends Maintenance
 {
-
     public function __construct() 
     {
         parent::__construct();
-        $this->addDescription("Converts descriptions into MediaWiki format");
-        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, release, theme, thing', false, true, 'r');
+        $this->addDescription("Converts names into MediaWiki page names");
+        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('force', 'Forces conversion without checking for an empty mw_formatted_description field.', false, false, 'f');
     }
@@ -21,7 +20,8 @@ class ConvertToMWDescriptions extends Maintenance
      */
     public function execute()
     {
-        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','release','theme','thing'];
+        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','theme','thing'];
+        $seenNames = array_fill_keys($resources, []);
 
         if ($resourceOption = $this->getOption('resource', false)) {
             if (in_array($resourceOption, $resources)) {
@@ -43,19 +43,31 @@ class ConvertToMWDescriptions extends Maintenance
 
             $classname = ucfirst($resource);
             $content = new $classname($db);
-            $rows = $content->getTextToConvert($this->getOption('id', false), $this->getOption('force', false));
+            $rows = $content->getNamesToConvert($this->getOption('id', false), $this->getOption('force', false));
             foreach ($rows as $row) {
-                $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
-                $content->updateMediaWikiDescription($row->id, $convertedDescription);
-                echo sprintf("Converted %s description for %s::%s\n", $resource, $row->id, $row->name);
+
+                // append id to duplicate names
+                if (!isset($seenNames[$resource][$row->name])) {
+                    $name = $row->name;
+                    $seenNames[$resource][$name] = 1;
+                }
+                else {
+                    $name = $row->name.'_'.$row->id;
+                }
+
+                $convertedPageName = $content::PAGE_NAMESPACE.$converter->convertName($name);
+                $content->updateMediaWikiPageName($row->id, $convertedPageName);
+                echo sprintf("Converted %s name for %s::%s => %s\n", $resource, $row->id, $row->name, $convertedPageName);
             }
+
+            unset($seenNames[$resource]);
         }
 
         echo "done\n";
     }
 }
 
-$maintClass = ConvertToMWDescriptions::class;
+$maintClass = ConvertToMWPageNames::class;
 
 require_once RUN_MAINTENANCE_IF_MAIN; 
 ?>

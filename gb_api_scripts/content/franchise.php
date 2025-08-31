@@ -12,6 +12,7 @@ class Franchise extends Resource
     const TYPE_ID = 3025;
     const RESOURCE_SINGULAR = "franchise";
     const RESOURCE_MULTIPLE = "franchises";
+    const PAGE_NAMESPACE = "Franchises/";
     const TABLE_NAME = "wiki_franchise";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
     const RELATION_TABLE_MAP = [

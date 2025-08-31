@@ -12,6 +12,7 @@ class Dlc extends Resource
     const TYPE_ID = 3020;
     const RESOURCE_SINGULAR = "dlc";
     const RESOURCE_MULTIPLE = "dlcs";
+    const PAGE_NAMESPACE = "DLCs/";
     const TABLE_NAME = "wiki_game_dlc";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','game_id','platform_id','release_date','release_date_type','launch_price'];
 
