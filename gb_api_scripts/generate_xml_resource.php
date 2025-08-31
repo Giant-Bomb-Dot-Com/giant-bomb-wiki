@@ -13,7 +13,7 @@ class GenerateXMLResource extends Maintenance
     {
         parent::__construct();
         $this->addDescription("Converts db content into xml");
-        $this->addArg('resource', 'Wiki type');
+        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
     }
 
@@ -24,52 +24,62 @@ class GenerateXMLResource extends Maintenance
      */
     public function execute()
     {
-        $resource = $this->getArg(0);
+        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','theme','thing'];
 
-        $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
-        if (file_exists($filePath)) {
-            include $filePath; 
-        } else {
-            echo "Error: External script not found at {$filePath}";
-            exit(1);
+        if ($resourceOption = $this->getOption('resource', false)) {
+            if (in_array($resourceOption, $resources)) {
+                $resources = [$resourceOption];
+            }
         }
 
-        $classname = ucfirst($resource);
-        $db = getenv('MARIADB_API_DUMP_DATABASE');
-        $content = new $classname($this->getDB(DB_PRIMARY, [], $db));
+        $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE'));
 
-        if ($id = $this->getOption('id', false)) {
-            $result = $content->getById($id);
-        }
-        else {
-            $result = $content->getAll();
-        }
+        foreach ($resources as $resource) {
 
-        $data = [];
-        $count = 0;
-        $size = 0;
-        foreach ($result as $row) {
-            $pageData = $content->getPageDataArray($row);
-            $count++;
-            $size += strlen($pageData['description']);
-            $data[] = $pageData;
+            $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
+            if (file_exists($filePath)) {
+                include $filePath; 
+            } else {
+                echo "Error: External script not found at {$filePath}";
+                exit(1);
+            }
 
-            // limit size of file to either 100mb or 50000 pages
-            if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {
+            $classname = ucfirst($resource);
+            $content = new $classname($db);
+
+            if ($id = $this->getOption('id', false)) {
+                $result = $content->getById($id);
+            }
+            else {
+                $result = $content->getAll();
+            }
+
+            $data = [];
+            $count = 0;
+            $size = 0;
+            foreach ($result as $row) {
+                $pageData = $content->getPageDataArray($row);
+                $count++;
+                $size += strlen($pageData['description']);
+                $data[] = $pageData;
+
+                // limit size of file to either 100mb or 50000 pages
+                if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {
+                    $filename = sprintf('%s_%07d.xml', $resource, $count);
+                    $this->streamXML($filename, $data);
+                    $data = [];
+                    $size = 0;
+                }
+
+                if ($count % 1000 == 0) {
+                    echo "$count...\n";
+                }
+            }
+
+            if ($size != 0) {
                 $filename = sprintf('%s_%07d.xml', $resource, $count);
                 $this->streamXML($filename, $data);
-                $data = [];
-                $size = 0;
             }
-
-            if ($count % 1000 == 0) {
-                echo "$count...\n";
-            }
-        }
-
-        if ($size != 0) {
-            $filename = sprintf('%s_%07d.xml', $resource, $count);
-            $this->streamXML($filename, $data);
         }
     }
 }
