@@ -343,10 +343,10 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].
 
 The allowed values for this property are:
-* [[Allows value::Full Date]]
-* [[Allows value::Month/Year]]
-* [[Allows value::Only Year]]
-* [[Allows value::By Quarter]]'
+* [[Allows value::Full]]
+* [[Allows value::Month]]
+* [[Allows value::Quarter]]
+* [[Allows value::Year]]'
             ],
             [
                 'title' => 'Property:Has short name',

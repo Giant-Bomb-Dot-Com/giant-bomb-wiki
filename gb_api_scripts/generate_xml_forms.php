@@ -282,7 +282,58 @@ MARKUP,
             [
                 'title' => 'Form:DLC',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "DLC" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=DLC|super_page=DLCs}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|DLC}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Platform: 
+| {{{field|Guid|property=Has platform}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! ReleaseDate: 
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! ReleaseDateType: 
+| {{{field|ReleaseDateType|property=Has release date type}}}
+|-
+! LaunchPrice: 
+| {{{field|LaunchPrice|property=Has launch price}}}
+|-
+! Game: 
+| {{{field|Game|property=Has game|list}}}
+|-
+! Platform: 
+| {{{field|Platform|property=Has platform|list}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Franchise',

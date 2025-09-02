@@ -366,7 +366,74 @@ MARKUP,
             [
                 'title' => 'Template:DLC',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+| Aliases (property=Has aliases)
+| Image (property=Has image)
+| Caption (property=Has caption)
+| Deck (property=Has deck)
+| ReleaseDate (property=Has release date)
+| ReleaseDateType (property=Has release date type)
+| LaunchPrice (property=Has launch price)
+| Game (property=Has game)
+| Platform (property=Has platform)
+}}
+==Documentation==
+This template is used to create DLC pages, set its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the DLC.
+|-
+| Guid || The identifier from Giant Bomb. 
+|-
+| Aliases || Alternative names.
+|-
+| Image || The image filename of the DLC. Image appears in the infobox.
+|-
+| Caption || The caption for the above image.
+|-
+| Deck || The short description for the DLC.
+|-
+| ReleaseDate || The DLC's release date.
+|-
+| ReleaseDateType || The format of the release date.
+|-
+| LaunchPrice || The price of the DLC at launch in USD.
+|-
+| Game || The game related to the DLC.
+|-
+| Platform || The platform related to the DLC.
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}<!--
+-->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
+-->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
+-->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
+-->{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate|}}}}}}}<!--
+-->{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}}}<!--
+-->{{#if:{{{LaunchPrice|}}}|{{#set:Has launch price={{{LaunchPrice|}}}}}}}<!--
+-->{{#arraymap:{{{Game|}}}|,|@@|{{SetPropertyPrefix|Has game|Game|@@}}| }}<!--
+-->{{#arraymap:{{{Platform|}}}|,|@@|{{SetPropertyPrefix|Has platform|Platform|@@}}| }}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+| aliases={{{Aliases|}}}
+| deck={{{Deck|}}}
+| release date={{{ReleaseDate|}}}
+| release date type={{{ReleaseDateType|}}}
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:DLCs|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Template:Franchise',

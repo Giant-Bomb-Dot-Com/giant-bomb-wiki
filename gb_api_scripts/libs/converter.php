@@ -154,7 +154,7 @@ class HtmlToMediaWikiConverter
             return '[[' . str_replace('&', 'and', $matches[1]) . ']]';
         }, $modifiedDescription);
 
-        // replace teh ampersand with &amp; outside of page links
+        // replace the ampersand with &amp; outside of page links
         $modifiedDescription = str_replace('&amp;amp;', '&amp;', $modifiedDescription);
 
         // return the modified description

@@ -14,7 +14,7 @@ class GenerateXMLResource extends Maintenance
         parent::__construct();
         $this->addDescription("Converts db content into xml");
         $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
-        $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
+        $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
     }
 
     /**
@@ -47,7 +47,7 @@ class GenerateXMLResource extends Maintenance
             $classname = ucfirst($resource);
             $content = new $classname($db);
 
-            if ($id = $this->getOption('id', false)) {
+            if ($this->getOption('resource', false) && $id = $this->getOption('id', false)) {
                 $result = $content->getById($id);
             }
             else {
