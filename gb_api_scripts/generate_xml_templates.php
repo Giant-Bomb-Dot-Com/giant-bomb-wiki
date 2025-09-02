@@ -292,7 +292,7 @@ MARKUP,
 | Caption (property=Has caption)
 | Deck (property=Has deck)
 | Characters (property=Has characters)
-| Concepts (property=Has concepts)
+| Concepts (property=Has similar concepts)
 | Franchises (property=Has franchises)
 | Games (property=Has games)
 | Locations (property=Has locations)
@@ -479,7 +479,7 @@ This template is used to create franchise pages, set its display title and infob
 |-
 | Locations || The locations related to the franchise.
 |-
-| Objects || The objects similar to the franchise.
+| Objects || The objects related to the franchise.
 |-
 | People || The people that worked on the franchise.
 |}
@@ -494,7 +494,7 @@ This template is used to create franchise pages, set its display title and infob
 -->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
 -->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
 -->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
--->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has similar objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
 -->{{#arraymap:{{{People|}}}|,|@@|{{SetPropertyPrefix|Has people|People|@@}}| }}<!--
 -->{{Infobox
 | title={{{Name|}}}
@@ -622,7 +622,7 @@ MARKUP,
 | Deck (property=Has deck)
 | Characters (property=Has characters)
 | Concepts (property=Has concepts)
-| Locations (property=Has locations)
+| Locations (property=Has similar locations)
 | Objects (property=Has objects)
 }}
 ==Documentation==
@@ -643,13 +643,13 @@ This template is used to create location pages, set its display title and infobo
 |-
 | Deck || The short description of the location.
 |-
-| Characters || The characters related to the object.
+| Characters || The characters related to the location.
 |-
-| Concepts || The concepts related to the object.
+| Concepts || The concepts related to the location.
 |-
-| Locations || The locations related to the object.
+| Locations || The locations similar to the location.
 |-
-| Objects || The objects similar to the object.
+| Objects || The objects related to the location.
 |}
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
@@ -691,7 +691,7 @@ MARKUP,
 | Franchises (property=Has franchises)
 | Games (property=Has games)
 | Locations (property=Has locations)
-| Objects (property=Has objects)
+| Objects (property=Has similar objects)
 | People (property=Has people)
 }}
 ==Documentation==
@@ -776,7 +776,7 @@ MARKUP,
 | Games (property=Has games)
 | Locations (property=Has locations)
 | Objects (property=has objects)
-| People (property=Has people)
+| People (property=Has similar people)
 }}
 ==Documentation==
 This template is used to create person pages, set its display title and infobox.
@@ -820,7 +820,7 @@ This template is used to create person pages, set its display title and infobox.
 |-
 | Objects || The objects related to the person.
 |-
-| People || The people simiilar to the person.
+| People || The people similar to the person.
 |}
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
@@ -836,7 +836,7 @@ This template is used to create person pages, set its display title and infobox.
 -->{{#if:{{{Death|}}}|{{#set:Has death={{{Death|}}}}}}}<!--
 -->{{#if:{{{Website|}}}|{{#set:Has website={{{Website|}}}}}}}<!--
 -->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
--->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has similar concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
 -->{{#arraymap:{{{Franchises|}}}|,|@@|{{SetPropertyPrefix|Has franchises|Franchises|@@}}| }}<!--
 -->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
 -->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--

@@ -115,6 +115,11 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
+                'title' => 'Property:Has hometown',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
                 'title' => 'Property:Has concepts',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'

@@ -254,7 +254,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Characters|property=Has characters|list}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has similar concepts|list}}}
 |-
 ! Locations:
 | {{{field|Locations|property=Has locations|list}}}
@@ -403,22 +403,239 @@ MARKUP,
             [
                 'title' => 'Form:Genre',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Genre" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Genre|super_page=Genres}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Genre}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Location',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Location" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Location|super_page=Locations}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Location}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! Characters: 
+| {{{field|Characters|property=Has characters|list}}}
+|-
+! Concepts: 
+| {{{field|Concepts|property=Has concepts|list}}}
+|-
+! Locations: 
+| {{{field|Locations|property=Has similar locations|list}}}
+|-
+! Objects: 
+| {{{field|Objects|property=Has objects|list}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Object',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Object" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Object|super_page=Objects}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Object}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! People: 
+| {{{field|Guid|property=Has people}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! Characters: 
+| {{{field|Characters|property=Has characters|list}}}
+|-
+! Concepts: 
+| {{{field|Concepts|property=Has concepts|list}}}
+|-
+! Franchises: 
+| {{{field|Franchises|property=Has franchises|list}}}
+|-
+! Games: 
+| {{{field|Games|property=Has games|list}}}
+|-
+! Locations: 
+| {{{field|Locations|property=Has locations|list}}}
+|-
+! Objects: 
+| {{{field|Objects|property=Has similar objects|list}}}
+|-
+! People: 
+| {{{field|People|property=Has people|list}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Person',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Person" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Person|super_page=People}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Person}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! People: 
+| {{{field|Guid|property=Has people}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! LastName: 
+| {{{field|LastName|property=Has last name}}}
+|-
+! Gender: 
+| {{{field|Gender|property=Has gender}}}
+|-
+! Hometown: 
+| {{{field|Hometown|property=Has hometown}}}
+|-
+! Birthday: 
+| {{{field|Birthday|property=Has birthday}}}
+|-
+! Death: 
+| {{{field|Death|property=Has death}}}
+|-
+! Website: 
+| {{{field|Website|property=Has website}}}
+|-
+! Characters: 
+| {{{field|Characters|property=Has characters|list}}}
+|-
+! Concepts: 
+| {{{field|Concepts|property=Has concepts|list}}}
+|-
+! Franchises: 
+| {{{field|Franchises|property=Has franchises|list}}}
+|-
+! Games: 
+| {{{field|Games|property=Has games|list}}}
+|-
+! Locations: 
+| {{{field|Locations|property=Has locations|list}}}
+|-
+! Objects: 
+| {{{field|Objects|property=Has objects|list}}}
+|-
+! People: 
+| {{{field|People|property=Has similar people|list}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Platform',
