@@ -159,9 +159,9 @@ trait BuildPageData
             // key in resource.php
             // value in generate_xml_properties.php
             switch($data['release_date_type']) {
-                case 1: $releaseDateType = 'Month'; break;
-                case 2: $releaseDateType = 'Quarter'; break;
-                case 3: $releaseDateType = 'Year'; break;
+                case '1': $releaseDateType = 'Month'; break;
+                case '2': $releaseDateType = 'Quarter'; break;
+                case '3': $releaseDateType = 'Year'; break;
                 default: $releaseDateType = 'Full'; break;
             }
             $text .= "\n| ReleaseDateType={$releaseDateType}";

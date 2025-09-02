@@ -14,7 +14,7 @@ class Game extends Resource
     const RESOURCE_MULTIPLE = "games";
     const PAGE_NAMESPACE = "Games/";
     const TABLE_NAME = "wiki_game";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','release_date','release_date_type','background_image_id', 'image_id'];
     const RELATION_TABLE_MAP = [
         "characters" => [
             "table" => "wiki_assoc_game_character",
@@ -181,7 +181,7 @@ class Game extends Resource
     {
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        $desc = (empty($row->mw_formatted_description)) ? '' : $row->mw_formatted_description;
         $relations = $this->getRelationsFromDB($row->id);
 
         // TODO: how to handle releases, dlcs, people

@@ -62,7 +62,9 @@ class HtmlToMediaWikiConverter
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
         libxml_use_internal_errors(true);
-        $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . $description . '</body></html>';
+        $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . 
+                              mb_convert_encoding($description, 'HTML-ENTITIES', 'UTF-8') . 
+                              '</body></html>';
 
         $success = $this->dom->loadHTML($wrappedDescription, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
