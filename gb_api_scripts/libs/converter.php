@@ -15,7 +15,7 @@ class HtmlToMediaWikiConverter
     public function __construct(IDatabase $dbw) 
     {
         $this->dbw = $dbw;
-        $this->dom = new DOMDocument();
+        $this->dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
     }
 
@@ -62,7 +62,9 @@ class HtmlToMediaWikiConverter
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
         libxml_use_internal_errors(true);
-        $success = $this->dom->loadHTML('<div>'.$description.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . $description . '</body></html>';
+
+        $success = $this->dom->loadHTML($wrappedDescription, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
         if (!$success) {
@@ -70,7 +72,7 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        $block = $this->dom->getElementsByTagName('div')->item(0);
+        $block = $this->dom->getElementsByTagName('body')->item(0);
 
         // figures has an embedded link to the image so we process this first
         $figuresToProcess = [];
@@ -141,12 +143,19 @@ class HtmlToMediaWikiConverter
 
         $modifiedDescription = $this->getInnerHtml($block);
 
-        // dom->saveHtml applies htmlentities which we have to fix for the img tag
-        //     to appear correctly
-        $modifiedDescription = str_replace('&lt;img', '<img', $modifiedDescription);
-        $modifiedDescription = str_replace('&amp;lt;img', '<img', $modifiedDescription);
-        $modifiedDescription = str_replace('/&amp;gt;', '/>', $modifiedDescription);
-        $modifiedDescription = str_replace('/&gt;', '/>', $modifiedDescription);
+        // account for entities that were not saved by the utf-8 encoding
+        $modifiedDescription = str_replace('&lt;', '<', $modifiedDescription);
+        $modifiedDescription = str_replace('&amp;lt;', '<', $modifiedDescription);
+        $modifiedDescription = str_replace('&amp;gt;', '>', $modifiedDescription);
+        $modifiedDescription = str_replace('&gt;', '>', $modifiedDescription);
+
+        // replace the ampersand with and for page links
+        $modifiedDescription = preg_replace_callback('/\[\[([^\]]+)\]\]/', function($matches) {
+            return '[[' . str_replace('&', 'and', $matches[1]) . ']]';
+        }, $modifiedDescription);
+
+        // replace teh ampersand with &amp; outside of page links
+        $modifiedDescription = str_replace('&amp;amp;', '&amp;', $modifiedDescription);
 
         // return the modified description
         return $modifiedDescription;
