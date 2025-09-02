@@ -48,6 +48,7 @@ class Dlc extends Resource
             'game_id' => (is_null($data['game'])) ? null : $data['game']['id'],
             'platform_id' => (is_null($data['platform'])) ? null : $data['platform']['id'],
             'release_date' => $data['release_date'],
+            'release_date_type' => $data['release_date_type'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
             'name' => (is_null($data['name'])) ? '' : $data['name'],

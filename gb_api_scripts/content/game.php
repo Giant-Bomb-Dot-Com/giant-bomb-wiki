@@ -90,13 +90,6 @@ class Game extends Resource
         ],
     ];
 
-    // Explains the stored release date
-    const RELEASE_DATE_TYPE_NO_RELEASE = 0;
-    const RELEASE_DATE_TYPE_FULL_DATE = 1;
-    const RELEASE_DATE_TYPE_MONTH_YEAR = 2;
-    const RELEASE_DATE_TYPE_QTR_YEAR = 3;
-    const RELEASE_DATE_TYPE_ONLY_YEAR = 4;
-
     /**
      * Matching table fields to api response fields
      * 
@@ -144,11 +137,10 @@ class Game extends Resource
         }
 
         $releaseDate = null;
-        $releaseDateType = self::RELEASE_DATE_TYPE_NO_RELEASE;
+        $releaseDateType = self::RELEASE_DATE_TYPE_USE_DATE;
 
         if (!empty($data['original_release_date'])) {
             $releaseDate = $data['original_release_date'];
-            $releaseDateType = self::RELEASE_DATE_TYPE_FULL_DATE;
         }
         else if (!empty($data['expected_release_year'])) {
             if (!empty($data['expected_release_quarter'])) {
@@ -161,7 +153,7 @@ class Game extends Resource
             }
             else {
                 $releaseDate = sprintf('01-01-%s 00:00:00', $data['expected_release_year']);
-                $releaseDataType = self::RELEASE_DATE_TYPE_ONLY_YEAR;
+                $releaseDateType = self::RELEASE_DATE_TYPE_ONLY_YEAR;
             }
         }
 
@@ -200,6 +192,8 @@ class Game extends Resource
             'deck' => $row->deck,
             'infobox_image' => $row->infobox_image,
             'background_image' => $row->background_image,
+            'release_date' => $row->release_date,
+            'release_date_type' => $row->release_date_type,
             'relations' => $relations
         ]).$desc;
 

@@ -22,13 +22,6 @@ class Release extends Resource
         "multiPlayerFeatures" => ["table" => "wiki_game_release_feature"],
     ];
 
-    // Explains the stored release date
-    const RELEASE_DATE_TYPE_NO_RELEASE = 0;
-    const RELEASE_DATE_TYPE_FULL_DATE = 1;
-    const RELEASE_DATE_TYPE_MONTH_YEAR = 2;
-    const RELEASE_DATE_TYPE_QTR_YEAR = 3;
-    const RELEASE_DATE_TYPE_ONLY_YEAR = 4;
-
     /**
      * Matching table fields to api response fields
      * 
@@ -107,11 +100,10 @@ class Release extends Resource
         }
 
         $releaseDate = null;
-        $releaseDateType = self::RELEASE_DATE_TYPE_NO_RELEASE;
+        $releaseDateType = self::RELEASE_DATE_TYPE_USE_DATE;
 
         if (!empty($data['release_date'])) {
             $releaseDate = $data['release_date'];
-            $releaseDateType = self::RELEASE_DATE_TYPE_FULL_DATE;
         }
         else if (!empty($data['expected_release_year'])) {
             if (!empty($data['expected_release_quarter'])) {
@@ -124,9 +116,10 @@ class Release extends Resource
             }
             else {
                 $releaseDate = sprintf('01-01-%s 00:00:00', $data['expected_release_year']);
-                $releaseDataType = self::RELEASE_DATE_TYPE_ONLY_YEAR;
+                $releaseDateType = self::RELEASE_DATE_TYPE_ONLY_YEAR;
             }
         }
+
 
         return $this->insertOrUpdate(self::TABLE_NAME, [
             'id' => $data['id'],

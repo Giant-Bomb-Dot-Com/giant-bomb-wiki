@@ -12,6 +12,11 @@ use Wikimedia\Rdbms\MysqliResultWrapper;
  */
 abstract class Resource 
 {
+    const RELEASE_DATE_TYPE_USE_DATE = 0;
+    const RELEASE_DATE_TYPE_MONTH_YEAR = 1;
+    const RELEASE_DATE_TYPE_QTR_YEAR = 2;
+    const RELEASE_DATE_TYPE_ONLY_YEAR = 3;
+
     private IDatabase $dbw;
     private bool $crawlRelations;
 

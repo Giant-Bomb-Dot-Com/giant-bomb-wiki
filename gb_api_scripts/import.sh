@@ -16,8 +16,8 @@ done
 
 php /var/www/html/maintenance/run.php /var/www/html/maintenance/rebuildtextindex.php
 php /var/www/html/maintenance/run.php /var/www/html/maintenance/rebuildrecentchanges.php
-
+php /var/www/html/maintenance/run.php /var/www/html/maintenance/initSiteStats.php
 
 echo "Run ./runjobs.sh"
-echo "Then rebuildLinks.php"
+echo "Then refreshLinks.php"
 echo "Then ./runJobs.sh again"
