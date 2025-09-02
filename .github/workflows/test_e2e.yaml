@@ -24,6 +24,15 @@ jobs:
         uses: docker/setup-compose-action@v1.2
       - name: Install pnpm explicitly
         uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install Node.js to use the cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          cache: "pnpm"
+      - name: Install pnpm and dependencies
+        run: pnpm install
       - name: Start every service, install the wiki, and upload logs
         run: |
           docker compose up --build -d
