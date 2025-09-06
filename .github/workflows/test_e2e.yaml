@@ -21,7 +21,7 @@ jobs:
           echo "MW_DB_USER=giantbomb.ci" >> .env
           echo "MW_PASS=gbwikipass.ci" >> .env
       - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1.2
+        uses: docker/setup-compose-action@v1
       - name: Install pnpm explicitly
         uses: pnpm/action-setup@v4
         with:
@@ -33,7 +33,17 @@ jobs:
           cache: "pnpm"
       - name: Install pnpm and dependencies
         run: pnpm install
-      - name: Start every service, install the wiki, and upload logs
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true # Load the image just built so it won't get re-built with docker compose up
+          cache-from: type=gha # github action cache
+          cache-to: type=gha,mode=max
+      - name: Start every service, install the wiki, and get logs
         run: |
           docker compose up --build -d
           docker exec giant-bomb-wiki-wiki-1 /bin/bash /installwiki.sh
@@ -49,4 +59,4 @@ jobs:
           wait-on: "http://localhost:8080"
           wait-on-timeout: 180 # seconds
           browser: chrome
-          with: cypress/e2e/special_version.cy.ts
+          spec: cypress/e2e/special_version.cy.ts
