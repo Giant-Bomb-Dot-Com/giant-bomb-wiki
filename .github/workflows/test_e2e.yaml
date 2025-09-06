@@ -1,0 +1,62 @@
+name: Test Mediawiki Version Page End-to-End
+on: [workflow_dispatch, pull_request]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+      - name: Create the .env file the installation will require
+        run: |
+          echo "MARIADB_DATABASE: gb_wiki_ci" >> .env
+          echo "MARIADB_API_DUMP_DATABASE=gb_api_dump" >> .env
+          echo "MARIADB_USER=wiki_admin_ci" >> .env
+          echo "MARIADB_PASSWORD=test.password.ci" >> .env
+          echo "MARIADB_ROOT_PASSWORD: gb_root_ci" >> .env
+          echo "MW_SITE_SERVER=http://localhost:8080" >> .env
+          echo "MW_SCRIPT_PATH=\"\"" >> .env
+          echo "MW_SITE_NAME=\"Giant Bomb Wiki\"" >> .env
+          echo "MW_DB_HOST=db" >> .env
+          echo "MW_DB_NAME=gb_wiki_ci" >> .env
+          echo "MW_DB_USER=giantbomb.ci" >> .env
+          echo "MW_PASS=gbwikipass.ci" >> .env
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+      - name: Install pnpm explicitly
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install Node.js to use the cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          cache: "pnpm"
+      - name: Install pnpm and dependencies
+        run: pnpm install
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true # Load the image just built so it won't get re-built with docker compose up
+          cache-from: type=gha # github action cache
+          cache-to: type=gha,mode=max
+      - name: Start every service, install the wiki, and get logs
+        run: |
+          docker compose up --build -d
+          docker exec giant-bomb-wiki-wiki-1 /bin/bash /installwiki.sh
+          docker compose logs --tail=50 > logs.txt
+      - name: Upload docker logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-logs
+          path: logs.txt
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v6
+        with:
+          wait-on: "http://localhost:8080"
+          wait-on-timeout: 180 # seconds
+          browser: chrome
+          spec: cypress/e2e/special_version.cy.ts
