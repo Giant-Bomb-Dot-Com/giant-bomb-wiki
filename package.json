@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "cypress": "^14.5.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "format": "pnpm prettier --write --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{js,json,ts,yaml}'",
+    "format:check": "pnpm prettier --check --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{js,json,ts,yaml}'"
+  }
+}
