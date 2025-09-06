@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/giantbomb_api.php');
+require_once(__DIR__.'/libs/giantbomb_api.php');
 
 class FillRelationsFromGBApi extends Maintenance
 {
@@ -26,7 +26,7 @@ class FillRelationsFromGBApi extends Maintenance
         $resource = $this->getArg(0);
 
         // dynamically include the resource class based on the resource argument
-        $filePath = sprintf('%s/%s.php', __DIR__, $resource);
+        $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
         if (file_exists($filePath)) {
             include $filePath; 
         } else {

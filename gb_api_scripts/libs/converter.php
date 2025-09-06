@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/common.php');
+require_once(__DIR__.'/../libs/common.php');
 
 use Wikimedia\Rdbms\IDatabase;
 
@@ -244,7 +244,7 @@ class HtmlToMediaWikiConverter
         $mwLink = '';
         $contentGuid = $link->getAttribute('data-ref-id');
         $href = $link->getAttribute('href');
-        $displayText = $this->getInnerHtml($link);
+        $displayText = trim($this->getInnerHtml($link));
 
         // check for external link
         $parts = pathinfo($href);
@@ -266,7 +266,7 @@ class HtmlToMediaWikiConverter
                 $contentId = (int)$contentId;
 
                 // what to do with releases?
-                if (!is_null($this->map[$contentTypeId]['plural'])) {
+                if (isset($this->map[$contentTypeId]) && !is_null($this->map[$contentTypeId]['plural'])) {
 
                     // instantiate the content class to retrieve the name for the page
                     if (is_null($this->map[$contentTypeId]['content'])) {
@@ -283,9 +283,11 @@ class HtmlToMediaWikiConverter
                         $name = ucwords($name);
                     }
 
-                    $pagename = ucfirst($this->map[$contentTypeId]['plural']) . '/' . $name;
-
-                    $mwLink = "[[$pagename|$displayText]]";
+                    $mwLink = "[[$name|$displayText]]";
+                }
+                else {
+                    echo $contentTypeId."-".$contentId.": 0 is external link, unmatched number is non-wiki gb url.\r\n";
+                    $mwLink = "[$href $displayText]";
                 }
             }
         }
@@ -366,7 +368,7 @@ class HtmlToMediaWikiConverter
                 // check for nested lists within this <li> element
                 foreach ($child->childNodes as $listChild) {
                     if ($listChild->nodeType === XML_ELEMENT_NODE && in_array($listChild->tagName, ['ul','ol'])) {
-                        $mwList .= convertList($listChild, $depth + 1);
+                        $mwList .= $this->convertList($listChild, $depth + 1);
                     }
                 }
             }

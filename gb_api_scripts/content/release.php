@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/resource.php');
+require_once(__DIR__.'/../libs/resource.php');
 
 class Release extends Resource
 {

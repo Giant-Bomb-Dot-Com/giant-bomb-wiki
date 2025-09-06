@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - cypress
+
+# allow cypress run its postinstall script so it can install into its binary cache
+# https://docs.cypress.io/app/get-started/install-cypress#pnpm-configuration
+sideEffectsCache: false

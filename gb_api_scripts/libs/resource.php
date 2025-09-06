@@ -3,6 +3,7 @@
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\InsertQueryBuilder;
 use Wikimedia\Rdbms\SelectQueryBuilder;
+use Wikimedia\Rdbms\MysqliResultWrapper;
 
 /**
  * Resource Class
@@ -207,7 +208,61 @@ abstract class Resource
     }
 
     /**
-     * Stores the media wiki description in the description_new field
+     * Get the wiki object by id
+     * 
+     * @param int $id
+     * @return MysqliResultWrapper
+     */
+    public function getById(int $id): MysqliResultWrapper
+    {
+        $qb = $this->getAllFieldsQueryBuilder($this->dbw->newSelectQueryBuilder())->where(['o.id' => $id, 'o.deleted' => 0]);
+        $result = $qb->fetchResultSet();
+
+        return $result;
+    }
+
+    /**
+     * Get all the wiki objects
+     * 
+     * @return MysqliResultWrapper
+     */
+    public function getAll(): MysqliResultWrapper
+    {
+        $qb = $this->getAllFieldsQueryBuilder($this->dbw->newSelectQueryBuilder())->where(['o.deleted' => 0]);
+        $result = $qb->fetchResultSet();
+
+        return $result;
+    }
+
+    /**
+     * Creates the query builder to retrieve all fields and relationships
+     */
+    public function getAllFieldsQueryBuilder(SelectQueryBuilder $qb): SelectQueryBuilder
+    {
+        $prefix = function($element) { 
+            return 'o.'.$element;
+        };
+
+        $fields = array_merge(
+            array_map($prefix, static::TABLE_FIELDS),
+            [
+                'image1.image AS infobox_image',
+                'image2.image AS background_image'
+            ]
+        );
+        return $qb->select($fields)
+                ->from(static::TABLE_NAME, 'o')
+                ->leftJoin('image',
+                           'image1',
+                           'o.image_id = image1.id')
+                ->leftJoin('image',
+                           'image2',
+                           'o.background_image_id = image2.id')
+                ->caller( __METHOD__ );
+    }
+
+    /**
+     * Stores the media wiki description in the mw_formatted_description field
      * 
      * @param int $id
      * @param string $mwDescription
@@ -252,6 +307,7 @@ abstract class Resource
                 preg_match('/(\w+)\/(\d{4})\-(\d+)/', $entry['api_detail_url'], $match);
 
                 switch ($match[1]) {
+                    case 'developer': $resource = 'company'; break;
                     case 'publisher': $resource = 'company'; break;
                     case 'enemy': $resource = 'character'; break;
                     case 'friend': $resource ='character'; break;
@@ -296,9 +352,10 @@ abstract class Resource
     }
 
     /**
-     * Implemented by child classes to match the api fields to the db fields
+     * Match the api fields to the db fields
      * 
      * @param array $data
+     * @param array &$relations
      * @return int
      */
     abstract public function process(array $data, array &$relations): int;
