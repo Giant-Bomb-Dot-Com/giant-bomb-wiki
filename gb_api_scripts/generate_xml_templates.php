@@ -520,6 +520,22 @@ MARKUP,
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
+| ReleaseDate (property=Has release date)
+| ReleaseDateType (property=Has release date type)
+| Characters (property=Has characters)
+| Concepts (property=Has concepts)
+| Credits (property=Has credits)
+| Developers (property=Has developers)
+| Franchise (property=Has franchise)
+| Games (property=Has similar games)
+| Genres (property=Has genres)
+| Locations (property=Has locations)
+| Objects (property=Has objects)
+| Platforms (property=Has platforms)
+| Publishers (property=Has publishers)
+| Themes (property=Has themes)
+| Releases
+| Credits
 }}
 ==Documentation==
 This template is used to create game pages, set its display title and infobox.
@@ -538,6 +554,78 @@ This template is used to create game pages, set its display title and infobox.
 | Caption || The caption for the above image.
 |-
 | Deck || The short description of the game.
+|-
+| ReleaseDate || The game's release date.
+|-
+| ReleaseDateType || The format of the release date.
+|-
+| Characters || The characters found in the game.
+|-
+| Concepts || The concepts found in the game.
+|-
+| Credits || The people that worked on the game.
+|-
+| Developers || The developers of the game.
+|-
+| Franchise || The franchise the game belongs with.
+|-
+| Games || The games similar to the game.
+|-
+| Genres || The genres associated to the game.
+|-
+| Locations || The locations found in the game.
+|-
+| Objects || The objects found in the game.
+|-
+| Platforms || The platforms available for the game.
+|-
+| Publishers || The publshers of the game.
+|-
+| Themes || The themes found in the game.
+|-
+| Releases || The game's releases stored as subobjects.
+|-
+| ↳ Name || Name of release.
+|-
+| ↳ Image || Image of release.
+|-
+| ↳ Region || Region of release.
+|-
+| ↳ Game || Game the release is for.
+|-
+| ↳ Platform || Platform the release is on.
+|-
+| ↳ Rating || Rating of release.
+|-
+| ↳ Developer || Developers of release.
+|-
+| ↳ Publisher || Image of release.
+|-
+| ↳ ReleaseDate || Release date of release.
+|-
+| ↳ ReleaseDateType || Format for release date.
+|-
+| ↳ ProductCode || Numeric identifier representing the release product.
+|-
+| ↳ ProductCodeType || Type of product code (e.g. UPC).
+|-
+| ↳ CompanyCode || Identifier of release on a console platform
+|-
+| ↳ CompanyCodeType || The company the code is for.
+|-
+| ↳ WidescreenSupport || If the release supports widescreens. (The Rorie Test)
+|-
+| ↳ Resolutions || Resolutions the release supports.
+|-
+| ↳ SoundSystems || Sound systems the release supports.
+|-
+| ↳ SinglePlayerFeatures || Single player features the release supports.
+|-
+| ↳ MultiplayerFeatures || Multi-player features release supports.
+|-
+| ↳ MinimumPlayers || Minimum amount of players the release supports.
+|-
+| ↳ MaxmiumPlayers || Maximum amount of players the release supports.
 |}
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
@@ -546,6 +634,20 @@ This template is used to create game pages, set its display title and infobox.
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
+-->{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate|}}}}}}}<!--
+-->{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}}}<!--
+-->{{#arraymap:{{{Characters|}}}|,|@@|{{SetPropertyPrefix|Has characters|Characters|@@}}| }}<!--
+-->{{#arraymap:{{{Concepts|}}}|,|@@|{{SetPropertyPrefix|Has concepts|Concepts|@@}}| }}<!--
+-->{{#arraymap:{{{Developers|}}}|,|@@|{{SetPropertyPrefix|Has developers|Developers|@@}}| }}<!--
+-->{{#arraymap:{{{Franchise|}}}|,|@@|{{SetPropertyPrefix|Has franchise|Franchise|@@}}| }}<!--
+-->{{#arraymap:{{{Games|}}}|,|@@|{{SetPropertyPrefix|Has games|Games|@@}}| }}<!--
+-->{{#arraymap:{{{Genres|}}}|,|@@|{{SetPropertyPrefix|Has genres|Genres|@@}}| }}<!--
+-->{{#arraymap:{{{Locations|}}}|,|@@|{{SetPropertyPrefix|Has locations|Locations|@@}}| }}<!--
+-->{{#arraymap:{{{Objects|}}}|,|@@|{{SetPropertyPrefix|Has objects|Objects|@@}}| }}<!--
+-->{{#arraymap:{{{Platforms|}}}|,|@@|{{SetPropertyPrefix|Has platforms|Platforms|@@}}| }}<!--
+-->{{#arraymap:{{{Publishers|}}}|,|@@|{{SetPropertyPrefix|Has publishers|Publishers|@@}}| }}<!--
+-->{{#arraymap:{{{Themes|}}}|,|@@|{{SetPropertyPrefix|Has themes|Themes|@@}}| }}<!--
+-->{{#arraymaptemplate:{{{Releases|}}}|,|Release}}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -554,8 +656,48 @@ This template is used to create game pages, set its display title and infobox.
 | caption={{{Caption|}}}
 | aliases={{{Aliases|}}}
 | deck={{{Deck|}}}
+| release date={{{ReleaseDate|}}}
+| release date type={{{ReleaseDateType|}}}
+| developers={{{Developers|}}}
+| publishers={{{Publishers|}}}
+| platforms={{{Platforms|}}}
+| franchise={{{Franchise|}}}
+| genres={{{Genres|}}}
+| themes={{{Themes|}}}
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Games|{{SUBPAGENAME}}]]
+== Releases ==
+{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Release]]
+|format=template
+|link=none
+|template=ReleaseRow
+|mainlabel=-
+|named args=yes
+|sep=,
+|?Has image=Image
+|?Has name=Name
+|?Has region=Region
+|?Has games=Game
+|?Has platforms=Platform
+|?Has rating=Rating
+|?Has developers=Developers
+|?Has publishers=Publishers
+|?Has release date=ReleaseDate
+|?Has release date type=ReleaseDateType
+|?Has product code=ProductCode
+|?Has product code type=ProductCodeType
+|?Has company code=CompanyCode
+|?Has company code type=CompanyCodeType
+|?Has widescreen support=WidescreenSupport
+|?Has resolutions=Resolutions
+|?Has sound systems=SoundSystems
+|?Has single player features=SinglePlayerFeatures
+|?Has multiplayer features=MultiPlayerFeatures
+|?Has minimum players=MinimumPlayers
+|?Has maximum players=MaximumPlayers
+|introtemplate=ReleaseTableHeader
+|outrotemplate=ReleaseTableFooter
+}}
 </includeonly>
 MARKUP,
             ],
@@ -566,7 +708,6 @@ MARKUP,
 <noinclude>{{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
-| Aliases (property=Has aliases)
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
@@ -581,8 +722,6 @@ This template is used to create genre pages, set its display title and infobox.
 |-
 | Guid || The identifier from Giant Bomb. 
 |-
-| Aliases || Alternative names.
-|-
 | Image || The image filename of the genre. Image appears in the infobox.
 |-
 | Caption || The caption for the above image.
@@ -592,7 +731,6 @@ This template is used to create genre pages, set its display title and infobox.
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
 -->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
--->{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}<!--
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
@@ -602,7 +740,6 @@ This template is used to create genre pages, set its display title and infobox.
 | image={{{Image|}}}
 | image size=40
 | caption={{{Caption|}}}
-| aliases={{{Aliases|}}}
 | deck={{{Deck|}}}
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Genres|{{SUBPAGENAME}}]]
@@ -634,8 +771,6 @@ This template is used to create location pages, set its display title and infobo
 | Name || The display name of the location.
 |-
 | Guid || The identifier from Giant Bomb. 
-|-
-| Aliases || Alternative names.
 |-
 | Image || The image filename of the location. Image appears in the infobox.
 |-
@@ -971,7 +1106,7 @@ This template is used to create rating pages, sets its display title and infobox
 -->{{#if:{{{Explanation|}}}|{{#set:Stands for={{{Explanation|}}}}}}}<!--
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
--->>{{Infobox
+-->{{Infobox
 | title={{{Name|}}}
 | italic title=no
 | image={{{Image|}}}
@@ -986,7 +1121,90 @@ MARKUP,
             [
                 'title' => 'Template:Release',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<<MARKUP
+{{#subobject:
+|Has object type=Release
+|Has name={{{Name|}}}
+|Has image={{{Image|}}}
+|Has region={{{Region|}}}
+|Has games={{{Game|}}}
+|Has platforms={{{Platform|}}}
+|Has rating={{{Rating|}}}
+|Has developers={{{Developers|}}}
+|Has publishers={{{Publishers|}}}
+|Has release date={{{ReleaseDate|}}}
+|Has release date type={{{ReleaseDateType|}}}
+|Has product code={{{ProductCode|}}}
+|Has product code type={{{ProductCodeType|}}}
+|Has company code={{{CompanyCode|}}}
+|Has company code type={{{CompanyCodeType|}}}
+|Has widescreen support={{{WidescreenSupport|}}}
+|Has resolutions={{{Resolutions|}}}
+|Has sound systems={{{SoundSystems|}}}
+|Has single player features={{{SingleplayerFeatures|}}}
+|Has multiplayer features={{{MultiplayerFeatures|}}}
+|Has minimum players={{{MinimumPlayers|}}}
+|Has maximum players={{{MaximumPlayers|}}}
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Resolution',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+}}
+==Documentation==
+This template is used to create resolution pages, sets its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the resolution.
+|-
+| Guid || The identifier from Giant Bomb. 
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Resolutions|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Sound System',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+}}
+==Documentation==
+This template is used to create sound system pages, sets its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the sound system.
+|-
+| Guid || The identifier from Giant Bomb. 
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Sound Systems|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Template:Theme',
@@ -995,7 +1213,6 @@ MARKUP,
 <noinclude>{{#template_params:
   Name (property=Has name)
 | Guid (property=Has guid)
-| Aliases (property=Has aliases)
 | Image (property=Has image)
 | Caption (property=Has caption)
 | Deck (property=Has deck)
@@ -1010,8 +1227,6 @@ This template is used to create theme pages, set its display title and infobox.
 |-
 | Guid || The identifier from Giant Bomb. 
 |-
-| Aliases || Alternative names.
-|-
 | Image || The image filename of the theme. Image appears in the infobox.
 |-
 | Caption || The caption for the above image.
@@ -1021,7 +1236,6 @@ This template is used to create theme pages, set its display title and infobox.
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
 -->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
--->{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}<!--
 -->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
 -->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
 -->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
@@ -1032,7 +1246,6 @@ This template is used to create theme pages, set its display title and infobox.
 | image size=40
 | caption={{{Caption|}}}
 | deck={{{Deck|}}}
-| aliases={{{Aliases|}}}
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Themes|{{SUBPAGENAME}}]]
 </includeonly>
@@ -1136,7 +1349,7 @@ MARKUP,
 | data26 = {{{short name|}}}
 
 | label27 = Release Date
-| data27 = {{{release date type|}}}
+| data27 = {{{release date|}}}
 
 | label28 = Install Base
 | data28 = {{{install base|}}}
@@ -1177,6 +1390,9 @@ MARKUP,
 | label40 = [[Games|Published Game(s)]]
 | data40 = {{{published games|}}}
 
+| label41 = Release Date Type
+| data41 = {{{release date type|}}}
+
 <!-- For embedded content -->
 | data50  = {{{embedded|}}}
 
@@ -1187,9 +1403,79 @@ MARKUP,
 MARKUP,
             ],
             [
+                'title' => 'Template:ReleaseRow',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+|-
+| [[File:{{{Image}}}]]
+| {{{Name}}}
+| {{{Region}}}
+| [[{{{Game}}}]]
+| [[{{{Platform|}}}]]
+| [[{{{Rating}}}]]
+| {{#arraymap:{{{Developers}}}|,|val|[[val]]}}
+| {{#arraymap:{{{Publishers}}}|,|val|[[val]]}}
+| {{{ReleaseDate}}}
+| {{{ReleaseDateType}}}
+| {{{ProductCode}}}
+| {{{ProductCodeType}}}
+| {{{CompanyCode}}}
+| {{{CompanyCodeType}}}
+| {{{WidescreenSupport}}}
+| {{#arraymap:{{{Resolutions}}}|,|val|val}}
+| {{#arraymap:{{{SoundSystems}}}|,|val|val}}
+| {{#arraymap:{{{SinglePlayerFeatures}}}|,|val|val}}
+| {{#arraymap:{{{MultiPlayerFeatures}}}|,|val|val}}
+| {{{MinimumPlayers}}}
+| {{{MaximumPlayers}}}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:ReleaseTableFooter',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+|}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:ReleaseTableHeader',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+{| class="wikitable"
+|-
+! Image
+! Name
+! Region
+! Game
+! Platform
+! Rating
+! Developers
+! Publishers
+! Release Date
+! Release Date Type
+! Product Code
+! Product Code Type
+! Company Code
+! Company Code Type
+! Widescreen Support
+! Resolutions
+! Sound Systems
+! Single Player Features
+! Mutliplayer Features
+! Minimum Players
+! Maximum Players
+</includeonly>
+MARKUP,
+            ],
+            [
                 'title' => 'Template:Infobox/styles.css',
                 'namespace' => $this->namespaces['template'],
-                'model' => 'Sanitized CSS',
+                'model' => 'sanitized-css',
                 'format' => 'text/css',
                 'description' => <<<MARKUP
 /* {{pp-template|small=yes}} */
@@ -1223,7 +1509,7 @@ MARKUP,
                 'description' => <<<MARKUP
 {{#if: {{#explode:{{{3}}}|/|1}}|{{#set:{{{1|}}}={{{3|}}}}}|{{#set:{{{1|}}}={{{2|}}}/{{{3|}}}}} }}
 <noinclude>
-This template automatically prefixes a value and sets a semantic property to allow editors to enter the wiki name without the category in the semantic table.
+This template automatically prefixes a namespace to allow editors to enter the wiki name without the namespace.
 
 ==Usage==
 <nowiki>{{SetPropertyPrefix|Property Name|Namespace|Page Name}}</nowiki>

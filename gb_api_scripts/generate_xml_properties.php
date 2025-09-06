@@ -145,7 +145,7 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
-                'title' => 'Property:Has franchises',
+                'title' => 'Property:Has franchise',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
@@ -168,6 +168,11 @@ The allowed values for this property are:
                 'title' => 'Property:Has objects',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
+                'title' => 'Property:Has object type',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
                 'title' => 'Property:Has phone',
@@ -252,19 +257,7 @@ The allowed values for this property are:
             [
                 'title' => 'Property:Has multiplayer features',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].
-
-The allowed values for this property are:
-* [[Allows value::Local co-op]]
-* [[Allows value::LAN co-op]]
-* [[Allows value::Online co-op]]
-* [[Allows value::Local competitive]]
-* [[Allows value::LAN competitive]]
-* [[Allows value::Online competitive]]
-* [[Allows value::Local splitscreen]]
-* [[Allows value::Online splitscreen]]
-* [[Allows value::Pass and play]]
-* [[Allows value::Voice chat]]'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has name',
@@ -361,29 +354,12 @@ The allowed values for this property are:
             [
                 'title' => 'Property:Has single player features',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].
-
-The allowed values for this property are:
-* [[Allows value::Camera support]]
-* [[Allows value::Voice control]]
-* [[Allows value::Motion control]]
-* [[Allows value::Driving wheel (native)]]
-* [[Allows value::Flightstick (native)]]
-* [[Allows value::PC gamepad (native)]]
-* [[Allows value::Head tracking (native)]]'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
-                'title' => 'Property:Has sound system',
+                'title' => 'Property:Has sound systems',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].
-
-The allowed values for this property are:
-* [[Allows value::5.1]]
-* [[Allows value::7.1]]
-* [[Allows value::Dolby Pro Logic II]]
-* [[Allows value::DTS]]
-* [[Allows value::Mono]]
-* [[Allows value::Stereo]]'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has state',
@@ -410,25 +386,9 @@ The allowed values for this property are:
 * [[Allows value::No]]'
             ],
             [
-                'title' => 'Property:Has resolution',
+                'title' => 'Property:Has resolutions',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Number]].
-
-The allowed values for this property are:
-* [[Allows value::1080p]]
-* [[Allows value::1080i]]
-* [[Allows value::720p]]
-* [[Allows value::480p]]
-* [[Allows value::PC CGA 320x200]]
-* [[Allows value::PC EGA 640x350]]
-* [[Allows value::PC VGA 640x480]]
-* [[Allows value::PC WVGA 768x480]]
-* [[Allows value::PC SVGA 800x600]]
-* [[Allows value::PC 1024x768]]
-* [[Allows value::PC 1440x900]]
-* [[Allows value::PC 1600x1200]]
-* [[Allows value::PC 2560x1440]]
-* [[Allows value::PC 2560x1600]]'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has zip',
@@ -449,20 +409,24 @@ You can [[Special:Search/{{PAGENAME}}|search for this page title]] in other page
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} search the related logs],
 or [{{fullurl:{{FULLPAGENAME}}|action=edit}} create this page]</span>.
 {{#switch: {{#explode:{{PAGENAME}}|/|0}}
-| Accessories = {{CreateWithForm|Accessory}}
-| Companies = {{CreateWithForm|Company}}
-| Concepts = {{CreateWithForm|Concept}}
-| Characters = {{CreateWithForm|Character}}
-| DLCs = {{CreateWithForm|DLC}}
-| Franchises = {{CreateWithForm|Franchise}}
-| Games = {{CreateWithForm|Game}}
-| Genres = {{CreateWithForm|Genre}}
-| Locations = {{CreateWithForm|Location}}
-| Objects = {{CreateWithForm|Object}}
-| People = {{CreateWithForm|Person}}
-| Platforms = {{CreateWithForm|Platform}}
-| Ratings = {{CreateWithForm|Rating}}
-| Themes = {{CreateWithForm|Theme}}
+| Accessories={{CreateWithForm|Accessory}}
+| Companies={{CreateWithForm|Company}}
+| Concepts={{CreateWithForm|Concept}}
+| Characters={{CreateWithForm|Character}}
+| DLCs={{CreateWithForm|DLC}}
+| Franchises={{CreateWithForm|Franchise}}
+| Games={{CreateWithForm|Game}}
+| Genres={{CreateWithForm|Genre}}
+| Locations={{CreateWithForm|Location}}
+| Multiplayer Features={{CreateWithForm|Multiplayer Feature}}
+| Objects={{CreateWithForm|Object}}
+| People={{CreateWithForm|Person}}
+| Platforms={{CreateWithForm|Platform}}
+| Ratings={{CreateWithForm|Rating}}
+| Resolutions={{CreateWithForm|Resolution}}
+| Single Player Features={{CreateWithForm|Single Player Feature}}
+| Sound Systems={{CreateWithForm|Sound System}}
+| Themes={{CreateWithForm|Theme}}
 }}
 MARKUP,
             ],

@@ -86,6 +86,86 @@ class GenerateXMLPages extends Maintenance
                 'description' => 'Landing page of themes'
             ],
             [
+                'title' => 'Multiplayer Features/Local_co_op',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Local co-op
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/LAN_co_op',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=LAN co-op
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/Online_co_op',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Online co-op
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/Local_competitive',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Local competitive
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/LAN_competitive',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=LAN competitive
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/Online_competitive',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Online competitive
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/Pass_and_play',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Pass and Play
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer Features/Voice_chat',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Features
+| Name=Voice chat
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
                 'title' => 'Ratings/BBFC_12',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
@@ -544,6 +624,276 @@ MARKUP,
 | Explanation=Suitable for ages 7 and over
 }}
 Content with scenes or sounds that can possibly be frightening to younger children should fall in this category. Very mild forms of violence (implied, non-detailed, or non-realistic violence) are acceptable for a game with a PEGI 7 rating.
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/1080p',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=1080p
+| Guid=5
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/1080i',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=1080i
+| Guid=6
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/720p',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=720p
+| Guid=7
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/480p',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=480p
+| Guid=8
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_CGA_320x200',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC CGA 320x200
+| Guid=9
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_EGA_640x350',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC EGA 640x350
+| Guid=10
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_VGA_640x480',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC VGA 640x480
+| Guid=11
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_WVGA_768x480',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC WVGA 768x480
+| Guid=12
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_SVGA_800x600',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC SVGA 800x600
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_1024x768',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC 1024x768
+| Guid=14
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_1440x900',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC 1440x900
+| Guid=15
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_1600x1200',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC 1600x1200
+| Guid=16
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_2560x1440',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC 2560x1440
+| Guid=17
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/PC_2560x1600',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=PC 2560x1600
+| Guid=18
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Camera_support',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Camera support
+| Guid=8
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Voice_control',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Voice control
+| Guid=3
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Motion_control',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Motion control
+| Guid=10
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Driving_wheel_native',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Driving wheel (native)
+| Guid=11
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Flightstick_native',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Flightstick (native)
+| Guid=12
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/PC_gamepad_native',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=PC gamepad (native)
+| Guid=13
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single Player Features/Head_tracking_native',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Single Player Features
+| Name=Head tracking (native)
+| Guid=14
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/5.1',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=5.1
+| Guid=6
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/7.1',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=7.1
+| Guid=7
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/Dolby_Pro_Logic_II',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=5.1
+| Guid=8
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/DTS',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=DTS
+| Guid=9
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/Mono',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=Mono
+| Guid=4
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Sound Systems/Stereo',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Sound Systems
+| Name=Stereo
+| Guid=5
+}}
 MARKUP,
             ],
         ];

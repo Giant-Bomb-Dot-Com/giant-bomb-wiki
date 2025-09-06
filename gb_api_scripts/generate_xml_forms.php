@@ -131,7 +131,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Company',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Company" form.
@@ -218,7 +218,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Concept',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Concept" form.
@@ -281,7 +281,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:DLC',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "DLC" form.
@@ -337,7 +337,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Franchise',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Franchise" form.
@@ -397,12 +397,59 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Game',
-                'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Game" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Game|super_page=Games}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Game}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
+|-
+! Releases:
+| {{{field|Releases|holds template}}}
+|}
+{{{end template}}}
+{{{for template|Release|multiple|add button text=Add another release|label=Releases|embed in field=Game[Releases]}}}
+{| class="formtable"
+! Release Name:
+| {{{field|ReleaseName|property=Has name}}}
+|-
+! Region:
+| {{{field|Region|property=Has region}}}
+|}
+{{{end template}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Genre',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Genre" form.
@@ -444,7 +491,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Location',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Location" form.
@@ -496,8 +543,38 @@ if a page with that name already exists, you will be sent to a form to edit that
 MARKUP,
             ],
             [
+                'title' => 'Form:Multiplayer Feature',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Multiplayer Feature" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Multiplayer Feature|super_page=Multiplayer Features}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Multiplayer Feature}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
+            ],
+            [
                 'title' => 'Form:Object',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Object" form.
@@ -559,7 +636,7 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Person',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Person" form.
@@ -639,8 +716,65 @@ MARKUP,
             ],
             [
                 'title' => 'Form:Platform',
-                'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Platform" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Platform|super_page=Platforms}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Platform}}}
+{| class="formtable"
+! Name: 
+| {{{field|Name|property=Has name}}}
+|-
+! Manufacturer: 
+| {{{field|Guid|property=Has manufacturer}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|property=Has image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! ShortName: 
+| {{{field|ShortName|property=Has short name}}}
+|-
+! ReleaseDate: 
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! ReleaseDateType: 
+| {{{field|ReleaseDateType|property=Has release date type}}}
+|-
+! InstallBase: 
+| {{{field|InstallBase|property=Has install base}}}
+|-
+! OnlineSupport: 
+| {{{field|OnlineSupport|property=Has online support}}}
+|-
+! OriginalPrice: 
+| {{{field|OriginalPrice|property=Has original price}}}
+|-
+! Manufacturer: 
+| {{{field|Manufacturer|property=Has manufacturer}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Rating',
@@ -682,13 +816,98 @@ if a page with that name already exists, you will be sent to a form to edit that
 MARKUP,
             ],
             [
-                'title' => 'Form:Release',
-                'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'title' => 'Form:Resolution',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Resolution" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Resolution|super_page=Resolutions}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Resolution}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Form:Single Player Feature',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Single Player Feature" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Single Player Feature|super_page=Single Player Features}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Single Player Feature}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Form:Sound System',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Sound System" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Sound System|super_page=Sound Systems}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Sound System}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|}
+{{{end template}}}
+
+'''Free text:'''
+
+{{{standard input|free text|rows=10}}}
+</includeonly>
+MARKUP,
             ],
             [
                 'title' => 'Form:Theme',
-                'namespace' => $this->namespaces['template'],
+                'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
 <noinclude>
 This is the "Theme" form.

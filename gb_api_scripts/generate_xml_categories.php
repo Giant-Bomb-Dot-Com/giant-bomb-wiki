@@ -97,6 +97,15 @@ This category lists the different locations found in video games.
 MARKUP,
             ],
             [
+                'title' => 'Category:Multiplayer Features',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different multiplayer features for video games.
+
+{{#default_form:Multiplayer Feature}}
+MARKUP,
+            ],
+            [
                 'title' => 'Category:Objects',
                 'namespace' => $this->namespaces['category'],
                 'description' => <<<MARKUP
@@ -130,6 +139,33 @@ MARKUP,
 This category lists the different regional rating options for video games.
 
 {{#default_form:Rating}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Resolutions',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different resolutions for video games.
+
+{{#default_form:Resolution}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Single Player Features',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different single player features for video games.
+
+{{#default_form:Single Player Feature}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Sound Systems',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different sound systems for video games.
+
+{{#default_form:Sound System}}
 MARKUP,
             ],
             [

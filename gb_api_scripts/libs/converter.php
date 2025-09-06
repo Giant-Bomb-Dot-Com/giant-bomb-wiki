@@ -61,6 +61,9 @@ class HtmlToMediaWikiConverter
         // replace <p> with \n
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
+        // replace <br> with \n
+        $description = preg_replace('/<br>/', "\n", $description);
+
         libxml_use_internal_errors(true);
         $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . 
                               mb_convert_encoding($description, 'HTML-ENTITIES', 'UTF-8') . 
