@@ -37,6 +37,9 @@ class HtmlToMediaWikiConverter
         $this->typeId = $typeId;
         $this->id = $id;
 
+        // replace empty h# tags
+        $description = preg_replace('/<h\d{1}>\s*<\/h\d{1}>/', "", $description);
+
         // replace the h2s with ==
         $description = preg_replace('/<h2>(.*?)<\/h2>/', "\n==$1==\n", $description);
 
@@ -58,11 +61,14 @@ class HtmlToMediaWikiConverter
         // replace the empty <p> tags
         $description = preg_replace('/<p>\s?<\/p>/', "", $description);
 
-        // replace <p> with \n
+        // replace <p> with newline
         $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
 
-        // replace <br> with \n
-        $description = preg_replace('/<br>/', "\n", $description);
+        // replace <br> with newline
+        $description = preg_replace('/<br.*>/', "\n", $description);
+
+        // replace hr with markup version
+        $description = preg_replace('/<hr.*>/', "-----", $description);
 
         libxml_use_internal_errors(true);
         $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . 
@@ -93,6 +99,23 @@ class HtmlToMediaWikiConverter
             $textNode = $this->dom->createTextNode($mwFigure);
             if ($figure->parentNode) {
                 $figure->parentNode->replaceChild($textNode, $figure);
+            }
+        }
+
+        // followed by non-figure images
+        $imagesToProcess = [];
+        $images = $block->getElementsByTagName('img');
+        foreach ($images as $imageNode) {
+            $imagesToProcess[] = $imageNode;
+        }
+        foreach (array_reverse($imagesToProcess) as $image) {
+            if ($image->hasAttribute('style')) {
+                continue;
+            }
+            $mwLink = $this->convertImage($image);
+            $textNode = $this->dom->createTextNode($mwLink);
+            if ($image->parentNode) {
+                $image->parentNode->replaceChild($textNode, $image);
             }
         }
 
@@ -146,13 +169,26 @@ class HtmlToMediaWikiConverter
             }
         }
 
+        $twitterToProcess = [];
+        $twitters = $block->getElementsByTagName('div');
+        foreach ($twitters as $twitterNode) {
+            $twitterToProcess[] = $twitterNode;
+        }
+        foreach (array_reverse($twitterToProcess) as $twitter) {
+            if ($twitter->hasAttribute('data-embed-type') && $twitter->getAttribute('data-embed-type') == 'tweet') {
+                $mwTwitter = "<div>".$twitter->getAttribute('data-src')."</div>";
+                $textNode = $this->dom->createTextNode($mwTwitter);
+                if ($twitter->parentNode) {
+                    $twitter->parentNode->replaceChild($textNode, $twitter);
+                }
+            }
+        }
+
         $modifiedDescription = $this->getInnerHtml($block);
 
         // account for entities that were not saved by the utf-8 encoding
-        $modifiedDescription = str_replace('&lt;', '<', $modifiedDescription);
-        $modifiedDescription = str_replace('&amp;lt;', '<', $modifiedDescription);
-        $modifiedDescription = str_replace('&amp;gt;', '>', $modifiedDescription);
-        $modifiedDescription = str_replace('&gt;', '>', $modifiedDescription);
+        $modifiedDescription = str_replace('&amp;lt;', '&lt;', $modifiedDescription);
+        $modifiedDescription = str_replace('&amp;gt;', '&gt;', $modifiedDescription);
 
         // replace the ampersand with and for page links
         $modifiedDescription = preg_replace_callback('/\[\[([^\]]+)\]\]/', function($matches) {
@@ -186,7 +222,7 @@ class HtmlToMediaWikiConverter
      * @param DOMElement  $table The table element to convert.
      * @return string The MediaWiki formatted table.
      */
-    function convertTable(DOMElement $table): string
+    public function convertTable(DOMElement $table): string
     {
         $mwTable = "\n{| class='wikitable' style='margin:auto;width:100%;'\n";
 
@@ -253,12 +289,15 @@ class HtmlToMediaWikiConverter
      * @param DOMElement  $link The <a> element to convert.
      * @return string The MediaWiki formatted link string.
      */
-    function convertLink(DOMElement $link): string
+    public function convertLink(DOMElement $link): string
     {
         $mwLink = '';
         $contentGuid = $link->getAttribute('data-ref-id');
         $href = $link->getAttribute('href');
         $displayText = trim($this->getInnerHtml($link));
+        if (preg_match('/<img src="(.+)"\/?>/', $displayText, $matches)) {
+            $displayText = $matches[1];
+        }
 
         // check for external link
         $parts = pathinfo($href);
@@ -319,7 +358,7 @@ class HtmlToMediaWikiConverter
      * @param DOMElement  $figure The <figure> element to convert.
      * @return string|false The MediaWiki formatted image string.
      */
-    function convertFigure(DOMElement $figure): string|false
+    public function convertFigure(DOMElement $figure): string|false
     {
         $align = $figure->getAttribute('data-align');
 
@@ -337,21 +376,36 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        $style = "";
+        $style = '';
         if ($align == 'right') {
-            $style = "style='float:right;margin-left:40px;max-width:280px;' ";
+            $style = 'float:right;margin-left:40px;max-width:280px;';
         }
         else if ($align == 'left') {
-            $style = "style='float:left;margin-right:40px;max-width:280px;' ";
+            $style = 'float:left;margin-right:40px;max-width:280px;';
         }
 
-        $mwImage = "<img src='$src' width='$width' $style";
-        if ($alt != 'No Caption Provided') {
-            $mwImage .= "alt='$alt' ";
+        if ($alt == 'No Caption Provided') {
+            $alt = '';
         }
-        $mwImage .= "/>\n";
+
+        $mwImage = sprintf('<img src="%s" width="%s" style="%s" alt="%s" />', $src, $width, $style, $alt);        
+        $mwImage .= "\n";
 
         return $mwImage;
+    }
+
+    /**
+     * Converts <img> to MediaWiki image syntax. External image links is just the url.
+     *
+     * @param DOMElement  $image The <img> element to convert.
+     * @return string The MediaWiki formatted image string.
+     */
+    public function convertImage(DOMElement $image): string
+    {
+        $src = $image->getAttribute('src');
+        $alt = $image->getAttribute('alt');
+
+        return sprintf('<img src="%s" alt="%s" style="max-width:280px;" />', $src, $alt);
     }
 
     /**
@@ -361,7 +415,7 @@ class HtmlToMediaWikiConverter
      * @param int         $depth The current indentation depth (starts at 1).
      * @return string The MediaWiki formatted list string.
      */
-    function convertList(DOMElement $list, int $depth = 1): string
+    public function convertList(DOMElement $list, int $depth = 1): string
     {
         $mwList = '';
         $listPrefix = ($list->tagName === 'ul') ? '*' : '#';
