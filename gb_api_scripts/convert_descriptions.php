@@ -12,6 +12,7 @@ class ConvertToMWDescriptions extends Maintenance
         $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, release, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('force', 'Forces conversion without checking for an empty mw_formatted_description field.', false, false, 'f');
+        $this->addOption('debug', 'Prints out debug statements, does not update', false, false, 'd');
     }
 
     /**

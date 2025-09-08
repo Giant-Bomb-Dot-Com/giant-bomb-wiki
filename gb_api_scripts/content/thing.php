@@ -116,7 +116,12 @@ class Thing extends Resource
     {
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        if (empty($row->mw_formatted_description)) { 
+            $desc = (!empty($row->deck)) ? htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') : '';
+        }
+        else {
+            $desc = htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        }
         $relations = $this->getRelationsFromDB($row->id);
 
         $description = $this->formatSchematicData([

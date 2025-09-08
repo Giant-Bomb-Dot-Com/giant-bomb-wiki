@@ -26,6 +26,24 @@ trait CommonVariablesAndMethods
     ];
 
     /**
+     * Map pre-CBS GB type ids to current type ids
+     */
+    protected $typeIdMap = [
+        15 => 1300,
+        17 => 2300,
+        59 => 3000,
+        60 => 3045,
+        61 => 3030,
+        62 => 3025,
+        65 => 3010,
+        72 => 3040,
+        92 => 3015,
+        93 => 3055,
+        94 => 3005,
+        95 => 3035,
+    ];
+
+    /**
      * Mediawiki namespaces
      */
     protected $namespaces = [

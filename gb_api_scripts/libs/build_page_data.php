@@ -25,7 +25,7 @@ trait BuildPageData
 
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
-            $groupConcat = "GROUP_CONCAT(SUBSTRING_INDEX(o.mw_page_name, '/', -1) SEPARATOR ',')";
+            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
         	// join the relation table with the connector table to get the page names
             $qb = $this->getDb()->newSelectQueryBuilder()
                        ->select(['mw_page_name' => $groupConcat])
@@ -81,6 +81,7 @@ trait BuildPageData
         if (!empty($data['infobox_image'])) {
             $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
             $infoboxImage = basename($imageFragment);
+            $infoboxImage = str_replace('%20', ' ', $infoboxImage);
             $text .= "\n| Image={$infoboxImage}";
             $text .= "\n| Caption=image of {$data['name']}";
         }

@@ -428,6 +428,42 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
 |-
+! Characters:
+| {{{field|Characters|property=Has characters|list}}}
+|-
+! Concepts:
+| {{{field|Concepts|property=Has concepts|list}}}
+|-
+! Developers:
+| {{{field|Developers|property=Has developers|list}}}
+|-
+! Franchises:
+| {{{field|Franchises|property=Has franchises|list}}}
+|-
+! Genres:
+| {{{field|Genres|property=Has genres|list}}}
+|-
+! Locations:
+| {{{field|Locations|property=Has locations|list}}}
+|-
+! Objects:
+| {{{field|Objects|property=Has objects|list}}}
+|-
+! People:
+| {{{field|People|property=Has people|list}}}
+|-
+! Platforms:
+| {{{field|Platforms|property=Has platforms|list}}}
+|-
+! Publishers:
+| {{{field|Publishers|property=Has publishers|list}}}
+|-
+! Games:
+| {{{field|Games|property=Has similar games|list}}}
+|-
+! Themes:
+| {{{field|Themes|property=Has themes|list}}}
+|-
 ! Description:
 | {{{standard input|free text|rows=10}}}
 |-
@@ -435,13 +471,67 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Releases|holds template}}}
 |}
 {{{end template}}}
-{{{for template|Release|multiple|add button text=Add another release|label=Releases|embed in field=Game[Releases]}}}
+{{{for template|Release|multiple|add button text=Add release|label=Releases|embed in field=Game[Releases]}}}
 {| class="formtable"
 ! Release Name:
-| {{{field|ReleaseName|property=Has name}}}
+| {{{field|Name|property=Has name}}}
+|-
+! Image:
+| {{{field|Image|property=Has image}}}
 |-
 ! Region:
 | {{{field|Region|property=Has region}}}
+|-
+! Game:
+| {{{field|Game|property=Has games}}}
+|-
+! Platform:
+| {{{field|Platform|property=Has platforms}}}
+|-
+! Developers:
+| {{{field|Developers|property=Has developers}}}
+|-
+! Publishers:
+| {{{field|Publishers|property=Has publishers}}}
+|-
+! Release Date Type:
+| {{{field|ReleaseDateType|property=Has release date type}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! Product Code Type:
+| {{{field|ProductCodeType|property=Has product code type}}}
+|-
+! Product Code:
+| {{{field|ProductCode|property=Has product code}}}
+|-
+! Company Code Type:
+| {{{field|CompanyCodeType|property=Has company code type}}}
+|-
+! Company Code:
+| {{{field|CompanyCode|property=Has company code}}}
+|-
+! Widescreen Support:
+| {{{field|WidescreenSupport|property=Has widescreen support}}}
+|-
+! Resolutions:
+| {{{field|Resolutions|property=Has resolutions}}}
+|-
+! Sound Systems
+| {{{field|SoundSystems|property=Has sound systems}}}
+|-
+! Single Player Features:
+| {{{field|SinglePlayerFeatures|property=Has single player features}}}
+|-
+! Multiplayer Features:
+| {{{field|MultiplayerFeatures|property=Has multiplayer features}}}
+|-
+! Minimum Players:
+| {{{field|MinimumPlayers|property=Has minimum players}}}
+|-
+! Maximum Players:
+| {{{field|MaximumPlayers|property=Has maximum players}}}
 |}
 {{{end template}}}
 </includeonly>

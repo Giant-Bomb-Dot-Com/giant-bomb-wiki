@@ -37,38 +37,7 @@ class HtmlToMediaWikiConverter
         $this->typeId = $typeId;
         $this->id = $id;
 
-        // replace empty h# tags
-        $description = preg_replace('/<h\d{1}>\s*<\/h\d{1}>/', "", $description);
-
-        // replace the h2s with ==
-        $description = preg_replace('/<h2>(.*?)<\/h2>/', "\n==$1==\n", $description);
-
-        // replace the h3s with ===
-        $description = preg_replace('/<h3>(.*?)<\/h3>/', "\n===$1===\n", $description);
-
-        // replace the h4s with ====
-        $description = preg_replace('/<h4>(.*?)<\/h4>/', "\n====$1====\n", $description);
-
-        // replace the h5s with =====
-        $description = preg_replace('/<h5>(.*?)<\/h5>/', "\n=====$1=====\n", $description);
-
-        // replace the i|em with ''
-        $description = preg_replace('/<\/?(?:i|em)>/', "''", $description);
-
-        // replace the b|strong with '''
-        $description = preg_replace('/<\/?(?:b|strong)>/', "'''", $description);
-
-        // replace the empty <p> tags
-        $description = preg_replace('/<p>\s?<\/p>/', "", $description);
-
-        // replace <p> with newline
-        $description = preg_replace('/<p>(.*?)<\/p>/', "$1\n", $description);
-
-        // replace <br> with newline
-        $description = preg_replace('/<br.*>/', "\n", $description);
-
-        // replace hr with markup version
-        $description = preg_replace('/<hr.*>/', "-----", $description);
+        $description = $this->preProcess($description);
 
         libxml_use_internal_errors(true);
         $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . 
@@ -86,20 +55,19 @@ class HtmlToMediaWikiConverter
         $block = $this->dom->getElementsByTagName('body')->item(0);
 
         // figures has an embedded link to the image so we process this first
-        $figuresToProcess = [];
-        $figures = $block->getElementsByTagName('figure');
-        foreach ($figures as $figureNode) {
-            $figuresToProcess[] = $figureNode;
-        }
-        foreach (array_reverse($figuresToProcess) as $figure) {
-            $mwFigure = $this->convertFigure($figure);
+        $figureTags = $block->getElementsByTagName('figure');
+        for ($i = $figureTags->length - 1; $i >= 0; $i--) {
+            $figureTag = $figureTags->item($i);
+            $parent = $figureTag->parentNode;
+
+            $mwFigure = $this->convertFigure($figureTag);
             if ($mwFigure === false) {
                 continue;
             }
-            $textNode = $this->dom->createTextNode($mwFigure);
-            if ($figure->parentNode) {
-                $figure->parentNode->replaceChild($textNode, $figure);
-            }
+            $newTextNode = $this->dom->createTextNode($mwFigure);
+
+            $parent->insertBefore($newTextNode, $figureTag);
+            $parent->removeChild($figureTag);
         }
 
         // followed by non-figure images
@@ -109,29 +77,36 @@ class HtmlToMediaWikiConverter
             $imagesToProcess[] = $imageNode;
         }
         foreach (array_reverse($imagesToProcess) as $image) {
-            if ($image->hasAttribute('style')) {
+            if ($image->hasAttribute('style') && preg_match('/display/', $image->getAttribute('style')) === false) {
                 continue;
             }
-            $mwLink = $this->convertImage($image);
-            $textNode = $this->dom->createTextNode($mwLink);
-            if ($image->parentNode) {
-                $image->parentNode->replaceChild($textNode, $image);
+            $mwImage = $this->convertImage($image);
+            if ($mwImage === false) {
+                if ($image->parentNode) {
+                    $image->parentNode->removeChild($image);
+                }
+            }
+            else {
+                $textNode = $this->dom->createTextNode($mwImage);
+                if ($image->parentNode) {
+                    $image->parentNode->replaceChild($textNode, $image);
+                }
             }
         }
 
         // followed by all the links
-        $linksToProcess = [];
-        $links = $block->getElementsByTagName('a');
-        foreach ($links as $linkNode) {
-            $linksToProcess[] = $linkNode;
+        $aTags = $block->getElementsByTagName('a');
+        for ($i = $aTags->length - 1; $i >= 0; $i--) {
+            $aTag = $aTags->item($i);
+            $parent = $aTag->parentNode;
+
+            $mwLink = $this->convertLink($aTag);
+            $newTextNode = $this->dom->createTextNode($mwLink);
+
+            $parent->insertBefore($newTextNode, $aTag);
+            $parent->removeChild($aTag);
         }
-        foreach (array_reverse($linksToProcess) as $link) {
-            $mwLink = $this->convertLink($link);
-            $textNode = $this->dom->createTextNode($mwLink);
-            if ($link->parentNode) {
-                $link->parentNode->replaceChild($textNode, $link);
-            }
-        }
+
 
         // lists and tables go last because when getInnerHtml is called the
         //   brackets are converted to their html entity form and wouldn't
@@ -153,53 +128,124 @@ class HtmlToMediaWikiConverter
             }
         }
 
-        $tablesToProcess = [];
-        $tables = $block->getElementsByTagName('table');
-        foreach ($tables as $tableNode) {
-            $tablesToProcess[] = $tableNode;
-        }
-        foreach (array_reverse($tablesToProcess) as $table) {
-            $mwTable = $this->convertTable($table);
+        $tableTags = $block->getElementsByTagName('table');
+        for ($i = $tableTags->length - 1; $i >= 0; $i--) {
+            $tableTag = $tableTags->item($i);
+            $parent = $tableTag->parentNode;
+
+            $mwTable = $this->convertTable($tableTag);
             if ($mwTable === false) {
                 continue;
             }
-            $textNode = $this->dom->createTextNode($mwTable);
-            if ($table->parentNode) {
-                $table->parentNode->replaceChild($textNode, $table);
-            }
+            $newTextNode = $this->dom->createTextNode($mwTable);
+
+            $parent->insertBefore($newTextNode, $tableTag);
+            $parent->removeChild($tableTag);
         }
 
-        $twitterToProcess = [];
-        $twitters = $block->getElementsByTagName('div');
-        foreach ($twitters as $twitterNode) {
-            $twitterToProcess[] = $twitterNode;
-        }
-        foreach (array_reverse($twitterToProcess) as $twitter) {
-            if ($twitter->hasAttribute('data-embed-type') && $twitter->getAttribute('data-embed-type') == 'tweet') {
-                $mwTwitter = "<div>".$twitter->getAttribute('data-src')."</div>";
-                $textNode = $this->dom->createTextNode($mwTwitter);
-                if ($twitter->parentNode) {
-                    $twitter->parentNode->replaceChild($textNode, $twitter);
+        $divTags = $block->getElementsByTagName('div');
+        for ($i = $divTags->length - 1; $i >= 0; $i--) {
+            $divTag = $divTags->item($i);
+            $parent = $divTag->parentNode;
+
+            if ($divTag->hasAttribute('data-embed-type')) {
+                if (in_array($divTag->getAttribute('data-embed-type'), ['tweet', 'video'])) {
+                    $src = $divTag->getAttribute('data-src');
+                    $newTextNode = $this->dom->createTextNode($src);
+                    
+                    $parent->insertBefore($newTextNode, $divTag);
+                    $parent->removeChild($divTag);
                 }
             }
         }
 
+        $scriptTags = $block->getElementsByTagName('script');
+        for ($i = $scriptTags->length - 1; $i >= 0; $i--) {
+            $scriptTag = $scriptTags->item($i);
+            $parent = $scriptTag->parentNode;
+            $parent->removeChild($scriptTag);
+        }
+
+        $pTags = $block->getElementsByTagName('p');
+        for ($i = $pTags->length - 1; $i >= 0; $i--) {
+            $pTag = $pTags->item($i);
+            $parent = $pTag->parentNode;
+
+            $pContent = '';
+            foreach ($pTag->childNodes as $child) {
+                $pContent .= $this->dom->saveHTML($child);
+            }
+            
+            $newTextNode = $this->dom->createTextNode($pContent . "\n");
+
+            $parent->insertBefore($newTextNode, $pTag);
+            $parent->removeChild($pTag);
+        }
+
         $modifiedDescription = $this->getInnerHtml($block);
 
+        return $this->postProcess($modifiedDescription);
+    }
+
+    /**
+     * String manipulation of description to catch the easy ones
+     * 
+     * @param string $description
+     * @return string
+     */
+    public function preProcess(string $description): string
+    {
+        // replace empty h# tags
+        $description = preg_replace('/<h\d{1}.*?>\s*<\/h\d{1}>/', "", $description);
+
+        // replace the h2s with ==
+        $description = preg_replace('/<h2.*?>(.*?)<\/h2>/', "\n==$1==\n", $description);
+
+        // replace the h3s with ===
+        $description = preg_replace('/<h3.*?>(.*?)<\/h3>/', "\n===$1===\n", $description);
+
+        // replace the h4s with ====
+        $description = preg_replace('/<h4.*?>(.*?)<\/h4>/', "\n====$1====\n", $description);
+
+        // replace the h5s with =====
+        $description = preg_replace('/<h5.*?>(.*?)<\/h5>/', "\n=====$1=====\n", $description);
+
+        // replace the i|em with ''
+        $description = preg_replace('/<\/?(?:i|em)>/', "''", $description);
+
+        // replace the b|strong with '''
+        $description = preg_replace('/<\/?(?:b|strong)>/', "'''", $description);
+
+        // replace <br> with newline
+        $description = preg_replace('/<br.*?\/?>/', "\n", $description);
+
+        // replace hr with markup version
+        $description = preg_replace('/<hr.*?>/', "-----", $description);
+
+        return $description;
+    }
+
+    /**
+     * String manipulation of description to catch the overaggressive conversions
+     * 
+     * @param string $description
+     * @return string
+     */
+    public function postProcess(string $description): string
+    {
         // account for entities that were not saved by the utf-8 encoding
-        $modifiedDescription = str_replace('&amp;lt;', '&lt;', $modifiedDescription);
-        $modifiedDescription = str_replace('&amp;gt;', '&gt;', $modifiedDescription);
+        $description = str_replace('&amp;lt;', '&lt;', $description);
+        $description = str_replace('&amp;gt;', '&gt;', $description);
 
         // replace the ampersand with and for page links
-        $modifiedDescription = preg_replace_callback('/\[\[([^\]]+)\]\]/', function($matches) {
+        $description = preg_replace_callback('/\[\[([^\]]+)\]\]/', function($matches) {
             return '[[' . str_replace('&', 'and', $matches[1]) . ']]';
-        }, $modifiedDescription);
+        }, $description);
 
         // replace the ampersand with &amp; outside of page links
-        $modifiedDescription = str_replace('&amp;amp;', '&amp;', $modifiedDescription);
+        $description = str_replace('&amp;amp;', '&amp;', $description);
 
-        // return the modified description
-        return $modifiedDescription;
+        return $description;
     }
 
     /**
@@ -311,6 +357,14 @@ class HtmlToMediaWikiConverter
             $mwLink = "[$href $displayText]";
         }
         else {
+            // check for a relative link using the pre-CBS GB type id
+            if (empty($contentGuid)) {
+                if (preg_match('/\.\.\/\.\.\/(.+)\/(\d{2})\-(\d+)/', $href, $matches)) {
+                    $contentGuid = $this->typeIdMap[$matches[2]] . '-' . $matches[3];
+                    $href = 'https://www.giantbomb.com/'.$matches[1].'/'.$contentGuid.'/'; // in case its non-wiki gb url
+                }
+            }
+
             if (!empty($contentGuid) && strpos($contentGuid, '-') !== false) {
 
                 list($contentTypeId, $contentId) = explode('-', $contentGuid);
@@ -340,14 +394,11 @@ class HtmlToMediaWikiConverter
                 }
                 else {
                     echo $contentTypeId."-".$contentId.": 0 is external link, unmatched number is non-wiki gb url.\r\n";
+
                     $mwLink = "[$href $displayText]";
                 }
             }
         }
-
-        // replace the link with the mw version
-        $textNode = $this->dom->createTextNode($mwLink);
-        $link->parentNode->replaceChild($textNode, $link);
         
         return $mwLink;
     }
@@ -400,10 +451,14 @@ class HtmlToMediaWikiConverter
      * @param DOMElement  $image The <img> element to convert.
      * @return string The MediaWiki formatted image string.
      */
-    public function convertImage(DOMElement $image): string
+    public function convertImage(DOMElement $image): string|false
     {
         $src = $image->getAttribute('src');
         $alt = $image->getAttribute('alt');
+
+        if (true === preg_match('/data:image\/png;base64/', $src)) {
+            return false;
+        }
 
         return sprintf('<img src="%s" alt="%s" style="max-width:280px;" />', $src, $alt);
     }
