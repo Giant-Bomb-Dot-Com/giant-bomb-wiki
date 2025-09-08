@@ -150,6 +150,11 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
+                'title' => 'Property:Has franchises',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
                 'title' => 'Property:Has friends',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Page]].'
