@@ -427,20 +427,24 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        $style = '';
         if ($align == 'right') {
-            $style = 'float:right;margin-left:40px;max-width:280px;';
+            $float = 'right';
         }
         else if ($align == 'left') {
-            $style = 'float:left;margin-right:40px;max-width:280px;';
+            $float = 'left';
+        }
+        else {
+            $float = 'none';
         }
 
-        if ($alt == 'No Caption Provided') {
-            $alt = '';
-        }
+        $imageFragment = parse_url($src, PHP_URL_PATH);
+        $imageFile = basename($imageFragment);
 
-        $mwImage = sprintf('<img src="%s" width="%s" style="%s" alt="%s" />', $src, $width, $style, $alt);        
-        $mwImage .= "\n";
+        $mwImage = "[[File:{$imageFile}|thumb|{$float}";
+        if ($alt != 'No Caption Provided') {
+            $mwImage .= "|alt={$alt}|{$alt}";
+        }
+        $mwImage .= "]] ";
 
         return $mwImage;
     }
@@ -460,7 +464,7 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        return sprintf('<img src="%s" alt="%s" style="max-width:280px;" />', $src, $alt);
+        return $src;
     }
 
     /**
