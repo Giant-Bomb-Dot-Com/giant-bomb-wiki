@@ -89,7 +89,7 @@ class GenerateXMLPages extends Maintenance
                 'title' => 'Multiplayer Features/Local_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Local co-op
 | Guid=13
 }}
@@ -99,7 +99,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/LAN_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=LAN co-op
 | Guid=13
 }}
@@ -109,7 +109,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/Online_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Online co-op
 | Guid=13
 }}
@@ -119,7 +119,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/Local_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Local competitive
 | Guid=13
 }}
@@ -129,7 +129,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/LAN_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=LAN competitive
 | Guid=13
 }}
@@ -139,7 +139,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/Online_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Online competitive
 | Guid=13
 }}
@@ -149,7 +149,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/Pass_and_play',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Pass and Play
 | Guid=13
 }}
@@ -159,7 +159,7 @@ MARKUP,
                 'title' => 'Multiplayer Features/Voice_chat',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Multiplayer Features
+{{Multiplayer Feature
 | Name=Voice chat
 | Guid=13
 }}
@@ -770,7 +770,7 @@ MARKUP,
                 'title' => 'Single Player Features/Camera_support',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Camera support
 | Guid=8
 }}
@@ -780,7 +780,7 @@ MARKUP,
                 'title' => 'Single Player Features/Voice_control',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Voice control
 | Guid=3
 }}
@@ -790,7 +790,7 @@ MARKUP,
                 'title' => 'Single Player Features/Motion_control',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Motion control
 | Guid=10
 }}
@@ -800,7 +800,7 @@ MARKUP,
                 'title' => 'Single Player Features/Driving_wheel_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Driving wheel (native)
 | Guid=11
 }}
@@ -810,7 +810,7 @@ MARKUP,
                 'title' => 'Single Player Features/Flightstick_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Flightstick (native)
 | Guid=12
 }}
@@ -820,7 +820,7 @@ MARKUP,
                 'title' => 'Single Player Features/PC_gamepad_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=PC gamepad (native)
 | Guid=13
 }}
@@ -830,7 +830,7 @@ MARKUP,
                 'title' => 'Single Player Features/Head_tracking_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Single Player Features
+{{Single Player Feature
 | Name=Head tracking (native)
 | Guid=14
 }}
@@ -840,7 +840,7 @@ MARKUP,
                 'title' => 'Sound Systems/5.1',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=5.1
 | Guid=6
 }}
@@ -850,7 +850,7 @@ MARKUP,
                 'title' => 'Sound Systems/7.1',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=7.1
 | Guid=7
 }}
@@ -860,7 +860,7 @@ MARKUP,
                 'title' => 'Sound Systems/Dolby_Pro_Logic_II',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=5.1
 | Guid=8
 }}
@@ -870,7 +870,7 @@ MARKUP,
                 'title' => 'Sound Systems/DTS',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=DTS
 | Guid=9
 }}
@@ -880,7 +880,7 @@ MARKUP,
                 'title' => 'Sound Systems/Mono',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=Mono
 | Guid=4
 }}
@@ -890,7 +890,7 @@ MARKUP,
                 'title' => 'Sound Systems/Stereo',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
-{{Sound Systems
+{{Sound System
 | Name=Stereo
 | Guid=5
 }}

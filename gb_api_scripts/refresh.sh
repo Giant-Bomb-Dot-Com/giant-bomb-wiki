@@ -2,7 +2,7 @@
 
 num_pages=$(php /var/www/html/maintenance/showSiteStats.php | grep "Total pages" | sed 's/[^0-9]*//g')
 end_id=0
-delta=2000
+delta=1000
 
 echo "Beginning refreshLinks.php script"
 echo "  Total pages = $num_pages"

@@ -40,7 +40,7 @@ RUN cd /var/www/html \
  && docker-php-ext-configure zip \
  && docker-php-ext-install zip \
  && cd /var/www/html/extensions/ \
- && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git \
+ && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \

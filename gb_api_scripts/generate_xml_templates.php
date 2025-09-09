@@ -361,7 +361,16 @@ MARKUP,
             [
                 'title' => 'Template:Credit',
                 'namespace' => $this->namespaces['template'],
-                'description' => ''
+                'description' => <<< MARKUP
+{{#subobject:
+|Has object type=Credit
+|Has people={{{Person|}}}
+|Has companies={{{Company|}}}
+|Has department={{{Department|}}}
+|Has role={{{Role|}}}
+|Has note={{{Note|}}}
+}}
+MARKUP,
             ],
             [
                 'title' => 'Template:DLC',
@@ -524,9 +533,8 @@ MARKUP,
 | ReleaseDateType (property=Has release date type)
 | Characters (property=Has characters)
 | Concepts (property=Has concepts)
-| Credits (property=Has credits)
 | Developers (property=Has developers)
-| Franchise (property=Has franchise)
+| Franchise (property=Has franchises)
 | Games (property=Has similar games)
 | Genres (property=Has genres)
 | Locations (property=Has locations)
@@ -563,8 +571,6 @@ This template is used to create game pages, set its display title and infobox.
 |-
 | Concepts || The concepts found in the game.
 |-
-| Credits || The people that worked on the game.
-|-
 | Developers || The developers of the game.
 |-
 | Franchise || The franchise the game belongs with.
@@ -590,8 +596,6 @@ This template is used to create game pages, set its display title and infobox.
 | ↳ Image || Image of release.
 |-
 | ↳ Region || Region of release.
-|-
-| ↳ Game || Game the release is for.
 |-
 | ↳ Platform || Platform the release is on.
 |-
@@ -626,6 +630,18 @@ This template is used to create game pages, set its display title and infobox.
 | ↳ MinimumPlayers || Minimum amount of players the release supports.
 |-
 | ↳ MaxmiumPlayers || Maximum amount of players the release supports.
+|-
+| Credits || The people that worked on the game.
+|-
+| ↳ Person || Person that worked on the game.
+|-
+| ↳ RoleGroup || The department they worked for.
+|-
+| ↳ Role || Their specific role.
+|-
+| ↳ Company || The company they worked for.
+|-
+| ↳ Game || The game they worked on.
 |}
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
@@ -648,6 +664,7 @@ This template is used to create game pages, set its display title and infobox.
 -->{{#arraymap:{{{Publishers|}}}|,|@@|{{SetPropertyPrefix|Has publishers|Publishers|@@}}| }}<!--
 -->{{#arraymap:{{{Themes|}}}|,|@@|{{SetPropertyPrefix|Has themes|Themes|@@}}| }}<!--
 -->{{#arraymaptemplate:{{{Releases|}}}|,|Release}}<!--
+-->{{#arraymaptemplate:{{{Credits|}}}|,|Credit}}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -677,7 +694,6 @@ This template is used to create game pages, set its display title and infobox.
 |?Has image=Image
 |?Has name=Name
 |?Has region=Region
-|?Has games=Game
 |?Has platforms=Platform
 |?Has rating=Rating
 |?Has developers=Developers
@@ -697,6 +713,22 @@ This template is used to create game pages, set its display title and infobox.
 |?Has maximum players=MaximumPlayers
 |introtemplate=ReleaseTableHeader
 |outrotemplate=ReleaseTableFooter
+}}
+== Credits ==
+{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Credit]]
+|format=template
+|link=none
+|template=CreditRow
+|mainlabel=-
+|named args=yes
+|sep=,
+|?Has people=Person
+|?Has department=Department
+|?Has role=Role
+|?Has companies=Company
+|?Has note=Note
+|introtemplate=CreditTableHeader
+|outrotemplate=CreditTableFooter
 }}
 </includeonly>
 MARKUP,
@@ -807,6 +839,35 @@ This template is used to create location pages, set its display title and infobo
 | deck={{{Deck|}}}
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Locations|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Multiplayer Feature',
+                'namespace' => $this->namespace['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+}}
+==Documentation==
+This template is used to create multiplayer features pages, sets its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the sound system.
+|-
+| Guid || The identifier from Giant Bomb. 
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Multiplayer Features|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
             ],
@@ -1127,7 +1188,6 @@ MARKUP,
 |Has name={{{Name|}}}
 |Has image={{{Image|}}}
 |Has region={{{Region|}}}
-|Has games={{{Game|}}}
 |Has platforms={{{Platform|}}}
 |Has rating={{{Rating|}}}
 |Has developers={{{Developers|}}}
@@ -1141,7 +1201,7 @@ MARKUP,
 |Has widescreen support={{{WidescreenSupport|}}}
 |Has resolutions={{{Resolutions|}}}
 |Has sound systems={{{SoundSystems|}}}
-|Has single player features={{{SingleplayerFeatures|}}}
+|Has single player features={{{SinglePlayerFeatures|}}}
 |Has multiplayer features={{{MultiplayerFeatures|}}}
 |Has minimum players={{{MinimumPlayers|}}}
 |Has maximum players={{{MaximumPlayers|}}}
@@ -1174,6 +1234,35 @@ This template is used to create resolution pages, sets its display title and inf
 | italic title=no
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Resolutions|{{SUBPAGENAME}}]]
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Single Player Feature',
+                'namespace' => $this->namespace['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+}}
+==Documentation==
+This template is used to create single player features pages, sets its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the single player feature.
+|-
+| Guid || The identifier from Giant Bomb. 
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Single Player Features|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
             ],
@@ -1369,8 +1458,8 @@ MARKUP,
 | label33 = [[Characters|Enemies]]
 | data33 = {{{enemies|}}}
 
-| label6 = [[Themes|Theme(s)]]
-| data16  = {{{themes|}}}
+| label34 = [[Themes|Theme(s)]]
+| data34 = {{{themes|}}}
 
 | label35 = [[Characters|Friends]]
 | data35 = {{{friends|}}}
@@ -1411,7 +1500,6 @@ MARKUP,
 | [[File:{{{Image}}}]]
 | {{{Name}}}
 | {{{Region}}}
-| [[{{{Game}}}]]
 | [[{{{Platform|}}}]]
 | [[{{{Rating}}}]]
 | {{#arraymap:{{{Developers}}}|,|val|[[val]]}}
@@ -1423,10 +1511,10 @@ MARKUP,
 | {{{CompanyCode}}}
 | {{{CompanyCodeType}}}
 | {{{WidescreenSupport}}}
-| {{#arraymap:{{{Resolutions}}}|,|val|val}}
-| {{#arraymap:{{{SoundSystems}}}|,|val|val}}
-| {{#arraymap:{{{SinglePlayerFeatures}}}|,|val|val}}
-| {{#arraymap:{{{MultiPlayerFeatures}}}|,|val|val}}
+| {{#arraymap:{{{Resolutions}}}|,|val|[[val]]}}
+| {{#arraymap:{{{SoundSystems}}}|,|val|[[val]]}}
+| {{#arraymap:{{{SinglePlayerFeatures}}}|,|val|[[val]]}}
+| {{#arraymap:{{{MultiplayerFeatures}}}|,|val|[[val]]}}
 | {{{MinimumPlayers}}}
 | {{{MaximumPlayers}}}
 </includeonly>
@@ -1451,7 +1539,6 @@ MARKUP,
 ! Image
 ! Name
 ! Region
-! Game
 ! Platform
 ! Rating
 ! Developers
@@ -1469,6 +1556,44 @@ MARKUP,
 ! Mutliplayer Features
 ! Minimum Players
 ! Maximum Players
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:CreditRow',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+|-
+| [[{{{Person|}}}]]
+| [[{{{Company|}}}]]
+| {{{Department}}}
+| {{{Role}}}
+| {{{Note}}}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:CreditTableFooter',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+|}
+</includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:CreditTableHeader',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<includeonly>
+{| class="wikitable"
+|-
+! Person
+! Company
+! Department
+! Role
+! Note
 </includeonly>
 MARKUP,
             ],

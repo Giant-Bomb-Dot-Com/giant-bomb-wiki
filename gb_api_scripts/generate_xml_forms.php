@@ -45,12 +45,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -98,34 +97,33 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Birthday|property=Has birthday}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Enemies:
-| {{{field|Enemies|property=Has enemies|list}}}
+| {{{field|Enemies|property=Has enemies|input type=tokens|values from category=Characters}}}
 |-
 ! Friends:
-| {{{field|Friends|property=Has friends|list}}}
+| {{{field|Friends|property=Has friends|input type=tokens|values from category=Characters}}}
 |-
 ! Franchises:
-| {{{field|Franchises|property=Has franchises|list}}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}}
 |-
 ! Games:
-| {{{field|Games|property=Has games|list}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! People:
-| {{{field|People|property=Has people|list}}}
+| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -188,31 +186,30 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Website|property=Has website}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! People:
-| {{{field|People|property=Has people|list}}}
+| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
 |-
 ! Developed Games:
-| {{{field|Developed|property=Has developed games|list}}}
+| {{{field|Developed|property=Has developed games|input type=tokens|values from category=Games}}}
 |-
 ! Published Games:
-| {{{field|Published|property=Has published games|list}}}
+| {{{field|Published|property=Has published games|input type=tokens|values from category=Games}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -251,31 +248,30 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has similar concepts|list}}}
+| {{{field|Concepts|property=Has similar concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Franchises:
-| {{{field|Franchises|property=Has franchises|list}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
 |-
 ! Games:
-| {{{field|Games|property=Has games|list}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! People:
-| {{{field|People|property=Has people|list}}}
+| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -315,23 +311,22 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! ReleaseDate: 
 | {{{field|ReleaseDate|property=Has release date}}}
 |-
-! ReleaseDateType: 
-| {{{field|ReleaseDateType|property=Has release date type}}}
+! Release Date Type: 
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
 |-
-! LaunchPrice: 
+! Launch Price: 
 | {{{field|LaunchPrice|property=Has launch price}}}
 |-
 ! Game: 
-| {{{field|Game|property=Has game|list}}}
+| {{{field|Game|property=Has games|input type=tokens|max values=1|values from category=Games}}}
 |-
 ! Platform: 
-| {{{field|Platform|property=Has platform|list}}}
+| {{{field|Platform|property=Has platform|input type=tokens|values from category=Platforms}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -370,28 +365,27 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Games:
-| {{{field|Games|property=Has games|list}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! People:
-| {{{field|People|property=Has people|list}}}
+| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -429,46 +423,46 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers|list}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
 |-
 ! Franchises:
-| {{{field|Franchises|property=Has franchises|list}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Companies}}}
 |-
 ! Genres:
-| {{{field|Genres|property=Has genres|list}}}
+| {{{field|Genres|property=Has genres|input type=tokens|values from category=Genres}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|list}}}
-|-
-! People:
-| {{{field|People|property=Has people|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! Platforms:
-| {{{field|Platforms|property=Has platforms|list}}}
+| {{{field|Platforms|property=Has platforms|input type=tokens|values from category=Platforms}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers|list}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
 |-
 ! Games:
-| {{{field|Games|property=Has similar games|list}}}
+| {{{field|Games|property=Has similar games|input type=tokens|values from category=Games}}}
 |-
 ! Themes:
-| {{{field|Themes|property=Has themes|list}}}
+| {{{field|Themes|property=Has themes|input type=tokens|values from category=Themes}}}
 |-
 ! Description:
 | {{{standard input|free text|rows=10}}}
 |-
 ! Releases:
-| {{{field|Releases|holds template}}}
+| {{{field|Releases|holds template|multiple}}}
+|-
+! Credits:
+| {{{field|Credits|holds template|multiple}}}
 |}
 {{{end template}}}
 {{{for template|Release|multiple|add button text=Add release|label=Releases|embed in field=Game[Releases]}}}
@@ -482,58 +476,75 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Region:
 | {{{field|Region|property=Has region}}}
 |-
-! Game:
-| {{{field|Game|property=Has games}}}
+! Rating:
+| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
 |-
 ! Platform:
-| {{{field|Platform|property=Has platforms}}}
+| {{{field|Platform|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
 |-
 ! Release Date Type:
-| {{{field|ReleaseDateType|property=Has release date type}}}
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
 |-
 ! Release Date:
 | {{{field|ReleaseDate|property=Has release date}}}
 |-
 ! Product Code Type:
-| {{{field|ProductCodeType|property=Has product code type}}}
+| {{{field|ProductCodeType|property=Has product code type|input type=dropdown}}}
 |-
 ! Product Code:
 | {{{field|ProductCode|property=Has product code}}}
 |-
 ! Company Code Type:
-| {{{field|CompanyCodeType|property=Has company code type}}}
+| {{{field|CompanyCodeType|property=Has company code type|input type=dropdown}}}
 |-
 ! Company Code:
 | {{{field|CompanyCode|property=Has company code}}}
 |-
 ! Widescreen Support:
-| {{{field|WidescreenSupport|property=Has widescreen support}}}
+| {{{field|WidescreenSupport|property=Has widescreen support|input type=dropdown}}}
 |-
 ! Resolutions:
-| {{{field|Resolutions|property=Has resolutions}}}
+| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions}}}
 |-
 ! Sound Systems
-| {{{field|SoundSystems|property=Has sound systems}}}
+| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems}}}
 |-
 ! Single Player Features:
-| {{{field|SinglePlayerFeatures|property=Has single player features}}}
+| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features}}}
 |-
 ! Multiplayer Features:
-| {{{field|MultiplayerFeatures|property=Has multiplayer features}}}
+| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features}}}
 |-
 ! Minimum Players:
-| {{{field|MinimumPlayers|property=Has minimum players}}}
+| {{{field|MinimumPlayers|property=Has minimum players|default=1}}}
 |-
 ! Maximum Players:
 | {{{field|MaximumPlayers|property=Has maximum players}}}
 |}
 {{{end template}}}
+{{{for template|Credit|multiple|add button text=Add credit|label=Credits|embed in field=Game[Credits]}}}
+{| class="formtable"
+! Person:
+| {{{field|Person|property=Has people|input type=tokens|max values=1|values from category=People}}}
+|-
+! Company:
+| {{{field|Company|property=Has companies|input type=tokens|max values=1|values from category=Companies}}}
+|-
+! Department:
+| {{{field|Department|property=Has department|input type=dropdown|default=Unclassified}}}
+|-
+! Role:
+| {{{field|Role|property=Has role}}}
+|-
+! Note:
+| {{{field|Note|property=Has note}}}
+|}
 </includeonly>
 MARKUP,
             ],
@@ -570,12 +581,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -613,22 +623,21 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Characters: 
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts: 
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Locations: 
-| {{{field|Locations|property=Has similar locations|list}}}
+| {{{field|Locations|property=Has similar locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects: 
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -653,12 +662,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -696,31 +704,30 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Characters: 
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts: 
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Franchises: 
-| {{{field|Franchises|property=Has franchises|list}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
 |-
 ! Games: 
-| {{{field|Games|property=Has games|list}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
 |-
 ! Locations: 
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects: 
-| {{{field|Objects|property=Has similar objects|list}}}
+| {{{field|Objects|property=Has similar objects|input type=tokens|values from category=Objects}}}
 |-
 ! People: 
-| {{{field|People|property=Has people|list}}}
+| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -776,31 +783,30 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Website|property=Has website}}}
 |-
 ! Characters: 
-| {{{field|Characters|property=Has characters|list}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts: 
-| {{{field|Concepts|property=Has concepts|list}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
 |-
 ! Franchises: 
-| {{{field|Franchises|property=Has franchises|list}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
 |-
 ! Games: 
-| {{{field|Games|property=Has games|list}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
 |-
 ! Locations: 
-| {{{field|Locations|property=Has locations|list}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
 ! Objects: 
-| {{{field|Objects|property=Has objects|list}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
 |-
 ! People: 
-| {{{field|People|property=Has similar people|list}}}
+| {{{field|People|property=Has similar people|input type=tokens|values from category=People}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -843,26 +849,25 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! ReleaseDate: 
 | {{{field|ReleaseDate|property=Has release date}}}
 |-
-! ReleaseDateType: 
-| {{{field|ReleaseDateType|property=Has release date type}}}
+! Release Date Type: 
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
 |-
-! InstallBase: 
+! Install Base: 
 | {{{field|InstallBase|property=Has install base}}}
 |-
-! OnlineSupport: 
+! Online Support: 
 | {{{field|OnlineSupport|property=Has online support}}}
 |-
-! OriginalPrice: 
+! Original Price: 
 | {{{field|OriginalPrice|property=Has original price}}}
 |-
 ! Manufacturer: 
-| {{{field|Manufacturer|property=Has manufacturer}}}
+| {{{field|Manufacturer|property=Has manufacturer|input type=tokens|values from category=Companies}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -896,12 +901,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -926,12 +930,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -956,12 +959,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -986,12 +988,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
@@ -1028,12 +1029,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-
-'''Free text:'''
-
-{{{standard input|free text|rows=10}}}
 </includeonly>
 MARKUP,
             ],
