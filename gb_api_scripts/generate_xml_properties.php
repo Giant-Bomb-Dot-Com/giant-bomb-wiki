@@ -72,6 +72,13 @@ The allowed values for this property are:
 * [[Allows value::Sony Company Code]]'
             ],
             [
+                'title' => 'Property:Has companies',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for companies in the game industry.
+[[Has type::Page]]
+[[Allows value::Category:Companies]]'
+            ],
+            [
                 'title' => 'Property:Has concepts',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This property are for concepts found in games.
@@ -389,6 +396,12 @@ The allowed values for this property are:
                 'description' => 'This property are for single player features available in a game.
 [[Has type::Page]]
 [[Allows value::Category:Single Player Features]]'
+            ],
+            [
+                'title' => 'Property:Has superpage',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property links a subpage back to its parent page.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has sound systems',

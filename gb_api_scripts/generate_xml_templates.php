@@ -364,12 +364,55 @@ MARKUP,
                 'description' => <<< MARKUP
 {{#subobject:
 |Has object type=Credit
+|Has superpage={{{ParentPage|}}}
 |Has people={{{Person|}}}
 |Has companies={{{Company|}}}
 |Has department={{{Department|}}}
 |Has role={{{Role|}}}
 |Has note={{{Note|}}}
 }}
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Credits',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+ ParentPage (property=Has superpage)
+}}
+==Documentation==
+This template is used to create the credits subpage for games or dlcs.
+{| class="wikitable"
+|-
+| ParentPage || The parent page the credits are for.
+|-
+| Credit || The people that worked on the game/dlc stored as subobjects.
+|-
+| ↳ ParentPage || The game/dlc these credits are for.
+|-
+| ↳ Person || Person that worked on the game/dlc.
+|-
+| ↳ Company || The company they worked for.
+|-
+| ↳ Department || The department they worked for.
+|-
+| ↳ Role || Their specific role.
+|-
+| ↳ Note || Notes about their role from gb db.
+|}
+</noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
+-->{{#ifeq: {{#titleparts:{{FULLPAGENAME}}||-1}}|Credits|[[Category:Credits]]}}<!--
+-->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Credit]]
+|?Has people=Person
+|?Has companies=Company
+|?Has department=Department
+|?Has role=Role
+|?Has note=Note
+|format=broadtable
+|link=none
+|mainlabel=-
+}}
+</includeonly>
 MARKUP,
             ],
             [
@@ -534,7 +577,7 @@ MARKUP,
 | Characters (property=Has characters)
 | Concepts (property=Has concepts)
 | Developers (property=Has developers)
-| Franchise (property=Has franchises)
+| Franchise (property=Has franchise)
 | Games (property=Has similar games)
 | Genres (property=Has genres)
 | Locations (property=Has locations)
@@ -542,8 +585,6 @@ MARKUP,
 | Platforms (property=Has platforms)
 | Publishers (property=Has publishers)
 | Themes (property=Has themes)
-| Releases
-| Credits
 }}
 ==Documentation==
 This template is used to create game pages, set its display title and infobox.
@@ -588,60 +629,6 @@ This template is used to create game pages, set its display title and infobox.
 | Publishers || The publshers of the game.
 |-
 | Themes || The themes found in the game.
-|-
-| Releases || The game's releases stored as subobjects.
-|-
-| ↳ Name || Name of release.
-|-
-| ↳ Image || Image of release.
-|-
-| ↳ Region || Region of release.
-|-
-| ↳ Platform || Platform the release is on.
-|-
-| ↳ Rating || Rating of release.
-|-
-| ↳ Developer || Developers of release.
-|-
-| ↳ Publisher || Image of release.
-|-
-| ↳ ReleaseDate || Release date of release.
-|-
-| ↳ ReleaseDateType || Format for release date.
-|-
-| ↳ ProductCode || Numeric identifier representing the release product.
-|-
-| ↳ ProductCodeType || Type of product code (e.g. UPC).
-|-
-| ↳ CompanyCode || Identifier of release on a console platform
-|-
-| ↳ CompanyCodeType || The company the code is for.
-|-
-| ↳ WidescreenSupport || If the release supports widescreens. (The Rorie Test)
-|-
-| ↳ Resolutions || Resolutions the release supports.
-|-
-| ↳ SoundSystems || Sound systems the release supports.
-|-
-| ↳ SinglePlayerFeatures || Single player features the release supports.
-|-
-| ↳ MultiplayerFeatures || Multi-player features release supports.
-|-
-| ↳ MinimumPlayers || Minimum amount of players the release supports.
-|-
-| ↳ MaxmiumPlayers || Maximum amount of players the release supports.
-|-
-| Credits || The people that worked on the game.
-|-
-| ↳ Person || Person that worked on the game.
-|-
-| ↳ RoleGroup || The department they worked for.
-|-
-| ↳ Role || Their specific role.
-|-
-| ↳ Company || The company they worked for.
-|-
-| ↳ Game || The game they worked on.
 |}
 </noinclude><includeonly
 >{{#set:Has name={{{Name|}}}}}<!--
@@ -663,8 +650,6 @@ This template is used to create game pages, set its display title and infobox.
 -->{{#arraymap:{{{Platforms|}}}|,|@@|{{SetPropertyPrefix|Has platforms|Platforms|@@}}| }}<!--
 -->{{#arraymap:{{{Publishers|}}}|,|@@|{{SetPropertyPrefix|Has publishers|Publishers|@@}}| }}<!--
 -->{{#arraymap:{{{Themes|}}}|,|@@|{{SetPropertyPrefix|Has themes|Themes|@@}}| }}<!--
--->{{#arraymaptemplate:{{{Releases|}}}|,|Release}}<!--
--->{{#arraymaptemplate:{{{Credits|}}}|,|Credit}}<!--
 -->{{Infobox
 | title={{{Name|}}}
 | italic title=no
@@ -683,52 +668,25 @@ This template is used to create game pages, set its display title and infobox.
 | themes={{{Themes|}}}
 }}<!--
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Games|{{SUBPAGENAME}}]]
-== Releases ==
-{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Release]]
-|format=template
-|link=none
-|template=ReleaseRow
-|mainlabel=-
-|named args=yes
-|sep=,
-|?Has image=Image
-|?Has name=Name
-|?Has region=Region
-|?Has platforms=Platform
-|?Has rating=Rating
-|?Has developers=Developers
-|?Has publishers=Publishers
-|?Has release date=ReleaseDate
-|?Has release date type=ReleaseDateType
-|?Has product code=ProductCode
-|?Has product code type=ProductCodeType
-|?Has company code=CompanyCode
-|?Has company code type=CompanyCodeType
-|?Has widescreen support=WidescreenSupport
-|?Has resolutions=Resolutions
-|?Has sound systems=SoundSystems
-|?Has single player features=SinglePlayerFeatures
-|?Has multiplayer features=MultiPlayerFeatures
-|?Has minimum players=MinimumPlayers
-|?Has maximum players=MaximumPlayers
-|introtemplate=ReleaseTableHeader
-|outrotemplate=ReleaseTableFooter
+== {{#ifexist:{{PAGENAME}}/Releases|[[{{PAGENAME}}/Releases|Releases]]|Releases}} ==
+{{#formlink:
+|form=Releases
+|link text={{#ifexist:{{PAGENAME}}/Releases|Add/Edit Releases|Create Releases Page}}
+|target={{PAGENAME}}/Releases
+|field-Game={{PAGENAME}}
 }}
-== Credits ==
-{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Credit]]
-|format=template
-|link=none
-|template=CreditRow
-|mainlabel=-
-|named args=yes
-|sep=,
-|?Has people=Person
-|?Has department=Department
-|?Has role=Role
-|?Has companies=Company
-|?Has note=Note
-|introtemplate=CreditTableHeader
-|outrotemplate=CreditTableFooter
+{{#ifexist:{{PAGENAME}}/Releases
+|{{:{{PAGENAME}}/Releases}}
+}}
+== {{#ifexist:{{PAGENAME}}/Credits|[[{{PAGENAME}}/Credits|Credits]]|Credits}} ==
+{{#formlink:
+|form=Credits
+|link text={{#ifexist:{{PAGENAME}}/Credits|Add/Edit Credits|Create Credits Page}}
+|target={{PAGENAME}}/Credits
+|field-Game={{PAGENAME}}
+}}
+{{#ifexist:{{PAGENAME}}/Credits
+|{{:{{PAGENAME}}/Credits}}
 }}
 </includeonly>
 MARKUP,
@@ -844,7 +802,7 @@ MARKUP,
             ],
             [
                 'title' => 'Template:Multiplayer Feature',
-                'namespace' => $this->namespace['template'],
+                'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
 <noinclude>{{#template_params:
   Name (property=Has name)
@@ -1185,6 +1143,7 @@ MARKUP,
                 'description' => <<<MARKUP
 {{#subobject:
 |Has object type=Release
+|Has superpage={{{ParentPage|}}}
 |Has name={{{Name|}}}
 |Has image={{{Image|}}}
 |Has region={{{Region|}}}
@@ -1206,6 +1165,91 @@ MARKUP,
 |Has minimum players={{{MinimumPlayers|}}}
 |Has maximum players={{{MaximumPlayers|}}}
 }}
+MARKUP,
+            ],
+            [
+                'title' => 'Template:Releases',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+<noinclude>{{#template_params:
+ ParentPage (property=Has superpage)
+}}
+==Documentation==
+This template is used to create release subobjects.
+{| class="wikitable"
+|-
+| ParentPage || The parent page.
+|-
+| Release || The game/dlc releases stored as subobjects.
+|-
+| ↳ Name || Name of release.
+|-
+| ↳ Image || Image of release.
+|-
+| ↳ Region || Region of release.
+|-
+| ↳ Platform || Platform the release is on.
+|-
+| ↳ Rating || Rating of release.
+|-
+| ↳ Developer || Developers of release.
+|-
+| ↳ Publisher || Image of release.
+|-
+| ↳ ReleaseDate || Release date of release.
+|-
+| ↳ ReleaseDateType || Format for release date.
+|-
+| ↳ ProductCode || Numeric identifier representing the release product.
+|-
+| ↳ ProductCodeType || Type of product code (e.g. UPC).
+|-
+| ↳ CompanyCode || Identifier of release on a console platform
+|-
+| ↳ CompanyCodeType || The company the code is for.
+|-
+| ↳ WidescreenSupport || If the release supports widescreens. (The Rorie Test)
+|-
+| ↳ Resolutions || Resolutions the release supports.
+|-
+| ↳ SoundSystems || Sound systems the release supports.
+|-
+| ↳ SinglePlayerFeatures || Single player features the release supports.
+|-
+| ↳ MultiplayerFeatures || Multi-player features release supports.
+|-
+| ↳ MinimumPlayers || Minimum amount of players the release supports.
+|-
+| ↳ MaxmiumPlayers || Maximum amount of players the release supports.
+|}
+</noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
+-->{{#ifeq:{{#titleparts:{{FULLPAGENAME}}||-1}}|Releases|[[Category:Releases]]}}<!--
+-->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Release]]
+|format=broadtable
+|link=none
+|mainlabel=-
+|?Has image=Image
+|?Has name=Name
+|?Has region=Region
+|?Has platforms=Platform
+|?Has rating=Rating
+|?Has developers=Developers
+|?Has publishers=Publishers
+|?Has release date=ReleaseDate
+|?Has release date type=ReleaseDateType
+|?Has product code=ProductCode
+|?Has product code type=ProductCodeType
+|?Has company code=CompanyCode
+|?Has company code type=CompanyCodeType
+|?Has widescreen support=WidescreenSupport
+|?Has resolutions=Resolutions
+|?Has sound systems=SoundSystems
+|?Has single player features=SinglePlayerFeatures
+|?Has multiplayer features=MultiplayerFeatures
+|?Has minimum players=MinimumPlayers
+|?Has maximum players=MaximumPlayers
+}}
+</includeonly>
 MARKUP,
             ],
             [
@@ -1239,7 +1283,7 @@ MARKUP,
             ],
             [
                 'title' => 'Template:Single Player Feature',
-                'namespace' => $this->namespace['template'],
+                'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
 <noinclude>{{#template_params:
   Name (property=Has name)
@@ -1556,44 +1600,6 @@ MARKUP,
 ! Mutliplayer Features
 ! Minimum Players
 ! Maximum Players
-</includeonly>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:CreditRow',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-|-
-| [[{{{Person|}}}]]
-| [[{{{Company|}}}]]
-| {{{Department}}}
-| {{{Role}}}
-| {{{Note}}}
-</includeonly>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:CreditTableFooter',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-|}
-</includeonly>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:CreditTableHeader',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-{| class="wikitable"
-|-
-! Person
-! Company
-! Department
-! Role
-! Note
 </includeonly>
 MARKUP,
             ],

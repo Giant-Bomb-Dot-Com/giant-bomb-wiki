@@ -52,6 +52,15 @@ This category lists the different concepts found in video games.
 MARKUP,
             ],
             [
+                'title' => 'Category:Credits',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category is to add the edit with form tab on the credits page.
+
+{{#default_form:Credits}}
+MARKUP,
+            ],
+            [
                 'title' => 'Category:DLCs',
                 'namespace' => $this->namespaces['category'],
                 'description' => <<<MARKUP
@@ -139,6 +148,15 @@ MARKUP,
 This category lists the different regional rating options for video games.
 
 {{#default_form:Rating}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Releases',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category is to add the edit with form tab on the releases page.
+
+{{#default_form:Releases}}
 MARKUP,
             ],
             [

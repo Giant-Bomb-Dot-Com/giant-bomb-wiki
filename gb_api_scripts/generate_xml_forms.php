@@ -276,6 +276,52 @@ if a page with that name already exists, you will be sent to a form to edit that
 MARKUP,
             ],
             [
+                'title' => 'Form:Credits',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Credits" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Credits}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Credits}}}
+{| class="formtable"
+! {{ROOTPAGENAME}}:
+| {{{field|ParentPage|input type=tokens|property=Has superpage|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
+|}
+{{{end template}}}
+{{{for template|Credit|multiple|add button text=Add credit|label=Credits|displayed fields when minimized=Person,Department,Role}}}
+{| class="formtable"
+! {{ROOTPAGENAME}}: 
+| {{{field|ParentPage|input type=tokens|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Person: 
+| {{{field|Person|input type=tokens|max values=1|values from category=People}}}
+|-
+! Company: 
+| {{{field|Company|input type=tokens|max values=1|values from category=Companies}}}
+|-
+! Department: 
+| {{{field|Department|input type=dropdown|default=Unclassified}}}
+|-
+! Role: 
+| {{{field|Role}}}
+|-
+! Note: 
+| {{{field|Note}}}
+|}
+{{{end template}}}
+</includeonly>
+MARKUP,
+            ],
+            [
                 'title' => 'Form:DLC',
                 'namespace' => $this->namespaces['form'],
                 'description' => <<<MARKUP
@@ -457,94 +503,8 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Description:
 | {{{standard input|free text|rows=10}}}
-|-
-! Releases:
-| {{{field|Releases|holds template|multiple}}}
-|-
-! Credits:
-| {{{field|Credits|holds template|multiple}}}
 |}
 {{{end template}}}
-{{{for template|Release|multiple|add button text=Add release|label=Releases|embed in field=Game[Releases]}}}
-{| class="formtable"
-! Release Name:
-| {{{field|Name|property=Has name}}}
-|-
-! Image:
-| {{{field|Image|property=Has image}}}
-|-
-! Region:
-| {{{field|Region|property=Has region}}}
-|-
-! Rating:
-| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
-|-
-! Platform:
-| {{{field|Platform|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
-|-
-! Developers:
-| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
-|-
-! Publishers:
-| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
-|-
-! Release Date Type:
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
-|-
-! Release Date:
-| {{{field|ReleaseDate|property=Has release date}}}
-|-
-! Product Code Type:
-| {{{field|ProductCodeType|property=Has product code type|input type=dropdown}}}
-|-
-! Product Code:
-| {{{field|ProductCode|property=Has product code}}}
-|-
-! Company Code Type:
-| {{{field|CompanyCodeType|property=Has company code type|input type=dropdown}}}
-|-
-! Company Code:
-| {{{field|CompanyCode|property=Has company code}}}
-|-
-! Widescreen Support:
-| {{{field|WidescreenSupport|property=Has widescreen support|input type=dropdown}}}
-|-
-! Resolutions:
-| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions}}}
-|-
-! Sound Systems
-| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems}}}
-|-
-! Single Player Features:
-| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features}}}
-|-
-! Multiplayer Features:
-| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features}}}
-|-
-! Minimum Players:
-| {{{field|MinimumPlayers|property=Has minimum players|default=1}}}
-|-
-! Maximum Players:
-| {{{field|MaximumPlayers|property=Has maximum players}}}
-|}
-{{{end template}}}
-{{{for template|Credit|multiple|add button text=Add credit|label=Credits|embed in field=Game[Credits]}}}
-{| class="formtable"
-! Person:
-| {{{field|Person|property=Has people|input type=tokens|max values=1|values from category=People}}}
-|-
-! Company:
-| {{{field|Company|property=Has companies|input type=tokens|max values=1|values from category=Companies}}}
-|-
-! Department:
-| {{{field|Department|property=Has department|input type=dropdown|default=Unclassified}}}
-|-
-! Role:
-| {{{field|Role|property=Has role}}}
-|-
-! Note:
-| {{{field|Note|property=Has note}}}
-|}
 </includeonly>
 MARKUP,
             ],
@@ -907,6 +867,97 @@ if a page with that name already exists, you will be sent to a form to edit that
 |}
 {{{end template}}}
 </includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Form:Releases',
+                'namespace' => $this->namespaces['form'],
+                'description' => <<<MARKUP
+<noinclude>
+This is the "Releases" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Releases}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Releases}}}
+{| class="formtable"
+! {{ROOTPAGENAME}}:
+| {{{field|ParentPage|input type=tokens|property=Has superpage|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
+|}
+{{{end template}}}
+{{{for template|Release|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
+{| class="formtable"
+|-
+! {{ROOTPAGENAME}}: 
+| {{{field|ParentPage|input type=tokens|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Release Name:
+| {{{field|Name|property=Has name}}}
+|-
+! Image:
+| {{{field|Image|property=Has image}}}
+|-
+! Region:
+| {{{field|Region|property=Has region}}}
+|-
+! Rating:
+| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
+|-
+! Platform:
+| {{{field|Platform|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+|-
+! Developers:
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+|-
+! Publishers:
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+|-
+! Release Date Type:
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! Product Code Type:
+| {{{field|ProductCodeType|property=Has product code type|input type=dropdown}}}
+|-
+! Product Code:
+| {{{field|ProductCode|property=Has product code}}}
+|-
+! Company Code Type:
+| {{{field|CompanyCodeType|property=Has company code type|input type=dropdown}}}
+|-
+! Company Code:
+| {{{field|CompanyCode|property=Has company code}}}
+|-
+! Widescreen Support:
+| {{{field|WidescreenSupport|property=Has widescreen support|input type=dropdown}}}
+|-
+! Resolutions:
+| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions}}}
+|-
+! Sound Systems
+| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems}}}
+|-
+! Single Player Features:
+| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features}}}
+|-
+! Multiplayer Features:
+| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features}}}
+|-
+! Minimum Players:
+| {{{field|MinimumPlayers|property=Has minimum players|default=1}}}
+|-
+! Maximum Players:
+| {{{field|MaximumPlayers|property=Has maximum players}}}
+|}
+{{{end template}}}
 MARKUP,
             ],
             [
