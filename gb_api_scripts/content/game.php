@@ -58,12 +58,6 @@ class Game extends Resource
             "relationTable" => "wiki_thing",
             "relationField" => "thing_id"
         ],
-        "people" => [
-            "table" => "wiki_assoc_game_person", 
-            "mainField" => "game_id",  
-            "relationTable" => "wiki_person",
-            "relationField" => "person_id"
-        ],
         "platforms" => [
             "table" => "wiki_game_to_platform", 
             "mainField" => "game_id", 
@@ -207,6 +201,62 @@ class Game extends Resource
             'namespace' => $this->namespaces['page'],
             'description' => $description
         ];
+    }
+
+    /**
+     * Converts release and credits
+     * 
+     * @param stdClass $row
+     * @return array
+     */
+    public function getSubPageDataArray(stdClass $row): array
+    {
+        $result = [];
+        $credits = $this->getCreditsFromDB($row->id);
+
+        if ($credits->count() > 0) {
+            $roleMap = [
+                1 => 'Unclassified',
+                2 => 'Voice Actor',
+                3 => 'Thanks',
+                4 => 'Produciton',
+                5 => 'Visual Arts',
+                6 => 'Programming',
+                7 => 'Design',
+                8 => 'Audio',
+                9 => 'Business',
+                10 => 'Quality Assurance'
+            ];
+
+            $description = <<<MARKUP
+{{Credits
+|ParentPage={$row->mw_page_name}
+}}
+
+MARKUP;
+            foreach ($credits as $credit) {
+                $department = (is_null($credit->role_id)) ? $roleMap[1] : $roleMap[$credit->role_id];
+                $description .= <<<MARKUP
+{{Credit
+|ParentPage={$row->mw_page_name}
+|Person={$credit->mw_page_name}
+|Department={$department}
+|Role={$credit->description}
+}}
+
+MARKUP;
+            }
+
+            $result[] = [
+                'title' => $row->mw_page_name.'/Credits',
+                'namespace' => $this->namespaces['page'],
+                'description' => $description
+            ];
+        }
+
+        $releases = $this->getReleasesFromDB($row->id);
+
+        return $result;
     }
 }
 

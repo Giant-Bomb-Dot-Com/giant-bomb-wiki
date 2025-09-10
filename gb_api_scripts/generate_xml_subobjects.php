@@ -12,9 +12,8 @@ class GenerateXMLResource extends Maintenance
     public function __construct() 
     {
         parent::__construct();
-        $this->addDescription("Converts db content into xml");
-        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
-        $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
+        $this->addDescription("Converts releases and credits content into xml");
+        $this->addOption('resource', 'release|credits', false, true, 'r');
     }
 
     /**
@@ -24,7 +23,7 @@ class GenerateXMLResource extends Maintenance
      */
     public function execute()
     {
-        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','theme','thing'];
+        $resources = ['release','credits'];
 
         if ($resourceOption = $this->getOption('resource', false)) {
             if (in_array($resourceOption, $resources)) {
@@ -35,6 +34,9 @@ class GenerateXMLResource extends Maintenance
         $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE'));
 
         foreach ($resources as $resource) {
+            if ($resource == 'credits') {
+                $resource = 'person';
+            }
 
             $filePath = sprintf('%s/content/%s.php', __DIR__, $resource);
             if (file_exists($filePath)) {
@@ -46,32 +48,16 @@ class GenerateXMLResource extends Maintenance
 
             $classname = ucfirst($resource);
             $content = new $classname($db);
-
-            if ($this->getOption('resource', false) && $id = $this->getOption('id', false)) {
-                $result = $content->getById($id);
-            }
-            else {
-                $result = $content->getAll();
-            }
+            $result = $content->getAll();
 
             $data = [];
             $count = 0;
             $size = 0;
             foreach ($result as $row) {
-                $pageData = $content->getPageDataArray($row);
+                $pageData = $content->getSubPageDataArray($row);
                 $count++;
                 $size += strlen($pageData['description']);
                 $data[] = $pageData;
-
-                if ($resource == 'game') {
-                    $subpageData = $content->getSubPageDataArray($row);
-                    if (!empty($subpageData)) {
-                        $data = array_merge($data, $subpageData);
-                        foreach ($subpageData as $subpage) {
-                            $size += strlen($subpage['description']);
-                        }
-                    }
-                }
 
                 // limit size of file to either 100mb or 50000 pages
                 if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {

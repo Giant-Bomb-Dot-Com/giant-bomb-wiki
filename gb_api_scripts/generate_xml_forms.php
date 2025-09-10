@@ -313,9 +313,6 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Role: 
 | {{{field|Role}}}
-|-
-! Note: 
-| {{{field|Note}}}
 |}
 {{{end template}}}
 </includeonly>

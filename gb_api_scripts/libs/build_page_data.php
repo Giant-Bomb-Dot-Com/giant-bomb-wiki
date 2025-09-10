@@ -50,6 +50,33 @@ trait BuildPageData
     }
 
     /**
+     * Gets credits for a game
+     * 
+     * @param int $id
+     */
+    public function getCreditsFromDB(int $id)
+    {
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.person_id','o.description','o.role_id','p.mw_page_name'])
+                   ->from('wiki_assoc_game_person','o')
+                   ->join('wiki_person', 'p', 'o.person_id = p.id')
+                   ->where('o.game_id = '.$id)
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
+     * Gets releases for a game
+     * 
+     * @param int $id
+     */
+    public function getReleasesFromDB(int $id)
+    {
+        return [];
+    }
+
+    /**
      * Creates the semantic table based on fields in the incoming $data array
      *
      * @param array $data

@@ -369,7 +369,6 @@ MARKUP,
 |Has companies={{{Company|}}}
 |Has department={{{Department|}}}
 |Has role={{{Role|}}}
-|Has note={{{Note|}}}
 }}
 MARKUP,
             ],
@@ -397,8 +396,6 @@ This template is used to create the credits subpage for games or dlcs.
 | ↳ Department || The department they worked for.
 |-
 | ↳ Role || Their specific role.
-|-
-| ↳ Note || Notes about their role from gb db.
 |}
 </noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
 -->{{#ifeq: {{#titleparts:{{FULLPAGENAME}}||-1}}|Credits|[[Category:Credits]]}}<!--
@@ -407,7 +404,6 @@ This template is used to create the credits subpage for games or dlcs.
 |?Has companies=Company
 |?Has department=Department
 |?Has role=Role
-|?Has note=Note
 |format=broadtable
 |link=none
 |mainlabel=-
