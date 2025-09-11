@@ -418,7 +418,7 @@ MARKUP;
 
                     $releaseObjects[$release->id] = [
                         'ParentPage' => $row->mw_page_name,
-                        'Name' => $release->name,
+                        'Name' => htmlspecialchars($release->name, ENT_XML1, 'UTF-8'),
                         'Image' => $release->image_id, // join image table to replace with filename
                         'Region' => empty($release->region_id) ? '' : $regionMap[$release->region_id],
                         'Platform' => $release->platform,
