@@ -380,6 +380,7 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].
 
 The allowed values for this property are:
+* [[Allows value::None]]
 * [[Allows value::Full]]
 * [[Allows value::Month]]
 * [[Allows value::Quarter]]

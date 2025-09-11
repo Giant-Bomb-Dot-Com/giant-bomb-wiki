@@ -175,6 +175,9 @@ trait CommonVariablesAndMethods
 
             $count = 0;
             foreach ($data as $page) {
+                if (empty(trim($page['title']))) {
+                    continue;
+                }
                 $xml->startElement('page');
                     $xml->writeElement('title', trim($page['title'], ' _'));
                     $xml->writeElement('ns', $page['namespace']);

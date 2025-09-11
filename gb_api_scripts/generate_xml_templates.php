@@ -1141,6 +1141,7 @@ MARKUP,
 |Has object type=Release
 |Has superpage={{{ParentPage|}}}
 |Has name={{{Name|}}}
+|Has guid={{{Guid|}}}
 |Has image={{{Image|}}}
 |Has region={{{Region|}}}
 |Has platforms={{{Platform|}}}
@@ -1178,7 +1179,11 @@ This template is used to create release subobjects.
 |-
 | Release || The game/dlc releases stored as subobjects.
 |-
+| ↳ ParentPage || Parent page of release.
+|-
 | ↳ Name || Name of release.
+|-
+| ↳ Guid || Guid of release.
 |-
 | ↳ Image || Image of release.
 |-

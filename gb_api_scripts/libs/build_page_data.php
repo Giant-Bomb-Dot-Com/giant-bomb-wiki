@@ -68,12 +68,27 @@ trait BuildPageData
 
     /**
      * Gets releases for a game
-     * 
+     *
      * @param int $id
      */
     public function getReleasesFromDB(int $id)
     {
-        return [];
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.id','o.region_id','o.product_code_type','o.company_code_type','o.rating_id','o.image_id','o.release_date','o.release_date_type','o.product_code','o.company_code','o.name','o.description','o.widescreen_support','o.minimum_players','o.maximum_players','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a6.feature_id AS mp_feature_id','a7.resolution_id','a8.feature_id AS sp_feature_id','a9.soundsystem_id'])
+                   ->from('wiki_game_release', 'o')
+                   ->leftJoin('wiki_game_release_to_developer','a1','o.id = a1.release_id')
+                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
+                   ->leftJoin('wiki_game_release_to_publisher','a3','o.id = a3.release_id')
+                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
+                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
+                   ->leftJoin('wiki_game_release_to_multiplayer_feature','a6','o.id = a6.release_id')
+                   ->leftJoin('wiki_game_release_to_resolution','a7','o.id = a7.release_id')
+                   ->leftJoin('wiki_game_release_to_singleplayer_feature','a8','o.id = a8.release_id')
+                   ->leftJoin('wiki_game_release_to_sound_system','a9','o.id = a9.release_id')
+                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
     }
 
     /**

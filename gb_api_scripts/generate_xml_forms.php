@@ -897,6 +897,9 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Release Name:
 | {{{field|Name|property=Has name}}}
 |-
+! Guid:
+| {{{field|Guid|property=Has guid}}}
+|-
 ! Image:
 | {{{field|Image|property=Has image}}}
 |-

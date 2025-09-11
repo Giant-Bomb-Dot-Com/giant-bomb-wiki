@@ -256,6 +256,262 @@ MARKUP;
 
         $releases = $this->getReleasesFromDB($row->id);
 
+        if ($releases->count() > 0) {
+            $regionMap = [
+                1 => 'United States',
+                2 => 'United Kingdom',
+                6 => 'Japan',
+                11 => 'Australia',
+            ];
+
+            $releaseDateTypeMap = [
+                0 => 'Full',
+                1 => 'Month',
+                2 => 'Quarter',
+                3 => 'Year',
+                5 => 'None',
+            ];
+
+            $ratingsMap = [
+                1 => 'Ratings/ESRB_T',
+                2 => 'Ratings/PEGI_16',
+                5 => 'Ratings/BBFC_15', 
+                6 => 'Ratings/ESRB_E',  
+                7 => 'Ratings/PEGI_3', 
+                9 => 'Ratings/ESRB_K_A',
+                12 => 'Ratings/OFLC_MA15',   
+                13 => 'Ratings/OFLC_M15',   
+                14 => 'Ratings/OFLC_G',  
+                15 => 'Ratings/OFLC_G8',
+                16 => 'Ratings/ESRB_M',  
+                17 => 'Ratings/BBFC_18', 
+                18 => 'Ratings/PEGI_7', 
+                19 => 'Ratings/CERO_All_Ages',
+                20 => 'Ratings/BBFC_PG', 
+                21 => 'Ratings/BBFC_12', 
+                23 => 'Ratings/ESRB_AO', 
+                24 => 'Ratings/CERO_18',
+                25 => 'Ratings/CERO_A',  
+                26 => 'Ratings/ESRB_EC', 
+                27 => 'Ratings/CERO_C',  
+                28 => 'Ratings/CERO_15',
+                29 => 'Ratings/ESRB_E10',   
+                30 => 'Ratings/BBFC_U',  
+                31 => 'Ratings/OFLC_M',  
+                32 => 'Ratings/CERO_D',  
+                33 => 'Ratings/CERO_B',  
+                34 => 'Ratings/CERO_Z',  
+                36 => 'Ratings/PEGI_12',
+                37 => 'Ratings/PEGI_18',
+                38 => 'Ratings/OFLC_PG', 
+                39 => 'Ratings/OFLC_R18',
+            ];
+
+            $resolutionsMap = [
+                5 => 'Resolutions/1080p',
+                6 => 'Resolutions/1080i',
+                7 => 'Resolutions/720p',
+                8 => 'Resolutions/480p',
+                9 => 'Resolutions/PC_CGA_320x200',
+                10 => 'Resolutions/PC_EGA_640x350',
+                11 => 'Resolutions/PC_VGA_640x480',
+                12 => 'Resolutions/PC_WVGA_768x480',
+                13 => 'Resolutions/PC_SVGA_800x600',
+                14 => 'Resolutions/PC_1024x768',
+                15 => 'Resolutions/PC_1440x900',
+                16 => 'Resolutions/PC_1600x1200',
+                17 => 'Resolutions/PC_2560x1440',
+                18 => 'Resolutions/PC_2560x1600',
+                19 => 'Resolutions/Other_PC_Resolution',
+                20 => 'Resolutions/Other_Console_Resolution',
+            ];
+
+            $soundSystemsMap = [
+                4 => 'Sound_Systems/Mono',
+                5 => 'Sound_Systems/Stereo',
+                6 => 'Sound_Systems/5.1',
+                7 => 'Sound_Systems/7.1',
+                8 => 'Sound_Systems/Dolby_Pro_Logic_II',
+                9 => 'Sound_Systems/DTS',
+            ];
+
+            $productCodeTypeMap = [
+                1 => 'EAN/13',
+                2 => 'UPC/A',
+                3 => 'ISBN-10',
+            ];
+
+            $companyCodeTypeMap = [
+                1 => 'Nintendo Product ID',
+                2 => 'Sony Company Code',
+            ];
+
+            $featuresMap = [
+                8 => 'Single_Player_Features/Camera_support',
+                9 => 'Single_Player_Features/Voice_control',
+                10 => 'Single_Player_Features/Motion_control',
+                11 => 'Single_Player_Features/Driving_wheel_native',
+                12 => 'Single_Player_Features/Flightstick_native',
+                13 => 'Single_Player_Features/PC_gamepad_native',
+                14 => 'Single_Player_Features/Head_tracking_native',
+                15 => 'Multiplayer_Features/Local_co_op',
+                16 => 'Multiplayer_Features/LAN_co_op',
+                17 => 'Multiplayer_Features/Online_co_op',
+                18 => 'Multiplayer_Features/Local_competitive',
+                19 => 'Multiplayer_Features/LAN_competitive',
+                20 => 'Multiplayer_Features/Online_competitive',
+                21 => 'Multiplayer_Features/Local_splitscreen',
+                22 => 'Multiplayer_Features/Online_splitscreen',
+                23 => 'Multiplayer_Features/Pass_and_play',
+                24 => 'Multiplayer_Features/Voice_chat',
+                25 => 'Multiplayer_Features/Asynchronous_multiplayer',
+            ];
+
+            $description = <<<MARKUP
+{{Releases
+|ParentPage={$row->mw_page_name}
+}}
+
+MARKUP;
+
+            // hydrate release objects
+            $releaseObjects = [];
+            foreach ($releases as $release) {
+
+                if (!isset($releaseObjects[$release->id])) {
+                    $widescreenSupport = '';
+                    if ($release->widescreen_support == 0) {
+                        $widescreenSupport = 'No';
+                    }
+                    else if ($release->widescreen_support == 1) {
+                        $widescreenSupport = 'Yes';
+                    }
+
+                    $productCode = $release->product_code;
+                    $productCodeType = $release->product_code_type;
+                    if (!empty($release->product_code) && is_null($productCodeType)) {
+                        if (preg_match('/^(\d[ -]?){12}\d$/', trim($productCode))) { // EAN/13: 13 digits
+                            $productCodeType = $productCodeTypeMap[1];
+                        }
+                        else if (preg_match('/^(\d[ -]?){11}\d$/', trim($productCode))) { // UPC/A: 12 digits
+                            $productCodeType = $productCodeTypeMap[2];
+                        }
+                        else if (preg_match('/^(?:\d-?){9}[\dX]$/', trim($productCode))) { // ISBN-10: 10 digits
+                            $productCodeType = $productCodeTypeMap[3];
+                        }
+                    }
+
+                    $releaseDateType = $release->release_date_type;
+                    $releaseDate = $release->release_date;
+                    if (empty($releaseDate) || $releaseDate = '0000-00-00') {
+                        $releaseDate = '';
+                        $releaseDateType = $releaseDateTypeMap[5];
+                    }
+                    else {
+                        if (is_null($releaseDateType)) {
+                            $releaseDateType = $releaseDateTypeMap[0];
+                        }
+                        else {
+                            $releaseDateType = $releaseDateTypeMap[$releaseDateType];
+                        }
+                    }
+
+                    $releaseObjects[$release->id] = [
+                        'ParentPage' => $row->mw_page_name,
+                        'Name' => $release->name,
+                        'Image' => $release->image_id, // join image table to replace with filename
+                        'Region' => empty($release->region_id) ? '' : $regionMap[$release->region_id],
+                        'Platform' => $release->platform,
+                        'Rating' => empty($release->rating_id) ? '' : $ratingsMap[$release->rating_id],
+                        'Developers' => empty($release->developer) ? [] : [$release->developer => 0],
+                        'Publishers' => empty($release->publisher) ? [] : [$release->publisher => 0],
+                        'ReleaseDate' => $releaseDate,
+                        'ReleaseDateType' => $releaseDateType,
+                        'ProductCode' => $productCode,
+                        'ProductCodeType' => $productCodeType,
+                        'CompanyCode' => $release->company_code,
+                        'CompanyCodeType' => empty($release->company_code_type) ? '' : $companyCodeTypeMap[$release->company_code_type],
+                        'WidescreenSupport' => $widescreenSupport,
+                        'Resolutions' => empty($release->resolution_id) ? [] : [$resolutionsMap[$release->resolution_id] => 0],
+                        'SoundSystems' => empty($release->soundsystem_id) ? [] : [$soundSystemsMap[$release->soundsystem_id] => 0],
+                        'SinglePlayerFeatures' => (empty($release->sp_feature_id) || ($release->sp_feature_id < 8 || $release->sp_feature_id > 14)) ? [] : [$featuresMap[$release->sp_feature_id] => 0],
+                        'MultiplayerFeatures' => (empty($release->mp_feature_id) || ($release->mp_feature_id < 15 || $release->mp_feature_id > 25)) ? [] : [$featuresMap[$release->mp_feature_id] => 0],
+                        'MinimumPlayers' => $release->minimum_players,
+                        'MaximumPlayers' => $release->maximum_players,
+                    ];
+                }
+                else {
+                    if (!empty($release->developer)) {
+                        $releaseObjects[$release->id]['Developers'][$release->developer] = 0;
+                    }
+
+                    if (!empty($release->publisher)) {
+                        $releaseObjects[$release->id]['Publishers'][$release->publisher] = 0;
+                    }
+
+                    if (!empty($release->resolution_id)) {
+                        $releaseObjects[$release->id]['Resolutions'][$resolutionsMap[$release->resolution_id]] = 0;
+                    }
+
+                    if (!empty($release->soundsystem_id)) {
+                        $releaseObjects[$release->id]['SoundSystems'][$soundSystemsMap[$release->soundsystem_id]] = 0;
+                    }
+
+                    if (!empty($release->sp_feature_id) && ($release->sp_feature_id > 7 && $release->sp_feature_id < 15)) {
+                        $releaseObjects[$release->id]['SinglePlayerFeatures'][$featuresMap[$release->sp_feature_id]] = 0;
+                    }
+
+                    if (!empty($release->mp_feature_id) && ($release->mp_feature_id > 14 && $release->mp_feature_id < 26)) {
+                        $releaseObjects[$release->id]['MultiplayerFeatures'][$featuresMap[$release->mp_feature_id]] = 0;
+                    }                    
+                }
+            }
+
+            // convert db release object into mediawiki release objects
+            foreach ($releaseObjects as $releaseId => $obj) {
+                $developers = empty($obj['Developers']) ? '' : implode(',', array_keys($obj['Developers']));
+                $publishers = empty($obj['Publishers']) ? '' : implode(',', array_keys($obj['Publishers']));
+                $resolutions = empty($obj['Resolutions']) ? '' : implode(',', array_keys($obj['Resolutions']));
+                $soundSystems = empty($obj['SoundSystems']) ? '' : implode(',', array_keys($obj['SoundSystems']));
+                $spFeatures = empty($obj['SinglePlayerFeatures']) ? '' : implode(',', array_keys($obj['SinglePlayerFeatures']));
+                $mpFeatures = empty($obj['MultiplayerFeatures']) ? '' : implode(',', array_keys($obj['MultiplayerFeatures']));
+
+                $description .= <<<MARKUP
+{{Release
+|ParentPage={$obj['ParentPage']}
+|Guid=3050-{$releaseId}
+|Name={$obj['Name']}
+|Image={$obj['Image']}
+|Region={$obj['Region']}
+|Platform={$obj['Platform']}
+|Rating={$obj['Rating']}
+|Developers={$developers}
+|Publishers={$publishers}
+|ReleaseDate={$obj['ReleaseDate']}
+|ReleaseDateType={$obj['ReleaseDateType']}
+|ProductCode={$obj['ProductCode']}
+|ProductCodeType={$obj['ProductCodeType']}
+|CompanyCode={$obj['CompanyCode']}
+|CompanyCodeType={$obj['CompanyCodeType']}
+|WidescreenSupport={$obj['WidescreenSupport']}
+|Resolutions={$resolutions}
+|SoundSystems={$soundSystems}
+|SinglePlayerFeatures={$spFeatures}
+|MultiplayerFeatures={$mpFeatures}
+|MinimumPlayers={$obj['MinimumPlayers']}
+|MaximumPlayers={$obj['MaximumPlayers']}
+}}
+
+MARKUP;
+            }
+
+            $result[] = [
+                'title' => $row->mw_page_name.'/Releases',
+                'namespace' => $this->namespaces['page'],
+                'description' => $description
+            ];
+        }
+
         return $result;
     }
 }

@@ -86,82 +86,112 @@ class GenerateXMLPages extends Maintenance
                 'description' => 'Landing page of themes'
             ],
             [
-                'title' => 'Multiplayer Features/Local_co_op',
+                'title' => 'Multiplayer_Features/Local_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Local co-op
-| Guid=13
+| Guid=15
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/LAN_co_op',
+                'title' => 'Multiplayer_Features/LAN_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=LAN co-op
-| Guid=13
+| Guid=16
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/Online_co_op',
+                'title' => 'Multiplayer_Features/Online_co_op',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Online co-op
-| Guid=13
+| Guid=17
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/Local_competitive',
+                'title' => 'Multiplayer_Features/Local_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Local competitive
-| Guid=13
+| Guid=18
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/LAN_competitive',
+                'title' => 'Multiplayer_Features/LAN_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=LAN competitive
-| Guid=13
+| Guid=19
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/Online_competitive',
+                'title' => 'Multiplayer_Features/Online_competitive',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Online competitive
-| Guid=13
+| Guid=20
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/Pass_and_play',
+                'title' => 'Multiplayer_Features/Pass_and_play',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Pass and Play
-| Guid=13
+| Guid=23
 }}
 MARKUP,
             ],
             [
-                'title' => 'Multiplayer Features/Voice_chat',
+                'title' => 'Multiplayer_Features/Online_splitscreen',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Feature
+| Name=Online splitscreen
+| Guid=22
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer_Features/Local_splitscreen',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Feature
+| Name=Local splitscreen
+| Guid=21
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer_Features/Asynchronous_multiplayer',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Multiplayer Feature
+| Name=Asynchronous multiplayer
+| Guid=25
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Multiplayer_Features/Voice_chat',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Multiplayer Feature
 | Name=Voice chat
-| Guid=13
+| Guid=24
 }}
 MARKUP,
             ],
@@ -767,7 +797,27 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Camera_support',
+                'title' => 'Resolutions/Other_PC_Resolution',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=Other PC Resolution
+| Guid=19
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Resolutions/Other_Console_Resolution',
+                'namespace' => $this->namespaces['page'],
+                'description' => <<<MARKUP
+{{Resolution
+| Name=Other Console Resolution
+| Guid=20
+}}
+MARKUP,
+            ],
+            [
+                'title' => 'Single_Player_Features/Camera_support',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -777,17 +827,17 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Voice_control',
+                'title' => 'Single_Player_Features/Voice_control',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
 | Name=Voice control
-| Guid=3
+| Guid=9
 }}
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Motion_control',
+                'title' => 'Single_Player_Features/Motion_control',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -797,7 +847,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Driving_wheel_native',
+                'title' => 'Single_Player_Features/Driving_wheel_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -807,7 +857,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Flightstick_native',
+                'title' => 'Single_Player_Features/Flightstick_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -817,7 +867,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/PC_gamepad_native',
+                'title' => 'Single_Player_Features/PC_gamepad_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -827,7 +877,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Single Player Features/Head_tracking_native',
+                'title' => 'Single_Player_Features/Head_tracking_native',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Single Player Feature
@@ -837,7 +887,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/5.1',
+                'title' => 'Sound_Systems/5.1',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
@@ -847,7 +897,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/7.1',
+                'title' => 'Sound_Systems/7.1',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
@@ -857,7 +907,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/Dolby_Pro_Logic_II',
+                'title' => 'Sound_Systems/Dolby_Pro_Logic_II',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
@@ -867,7 +917,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/DTS',
+                'title' => 'Sound_Systems/DTS',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
@@ -877,7 +927,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/Mono',
+                'title' => 'Sound_Systems/Mono',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
@@ -887,7 +937,7 @@ MARKUP,
 MARKUP,
             ],
             [
-                'title' => 'Sound Systems/Stereo',
+                'title' => 'Sound_Systems/Stereo',
                 'namespace' => $this->namespaces['page'],
                 'description' => <<<MARKUP
 {{Sound System
