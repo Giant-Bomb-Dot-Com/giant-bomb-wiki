@@ -10,6 +10,12 @@ importers:
       cypress:
         specifier: ^14.5.2
         version: 14.5.2
+      cypress-dotenv:
+        specifier: ^3.0.1
+        version: 3.0.1(cypress@14.5.2)(dotenv@17.2.2)
+      dotenv:
+        specifier: ^17.2.2
+        version: 17.2.2
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -207,6 +213,13 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  camelcase@6.3.0:
+    resolution:
+      {
+        integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==,
+      }
+    engines: { node: ">=10" }
+
   caseless@0.12.0:
     resolution:
       {
@@ -322,6 +335,16 @@ packages:
       }
     engines: { node: ">= 8" }
 
+  cypress-dotenv@3.0.1:
+    resolution:
+      {
+        integrity: sha512-k1EGr8JJZdUxTsV7MbnVKGhgiU2q8LsFdDfGfmvofAQTODNhiHnqP7Hp8Cy7fhzVYb/7rkGcto0tPLLr2QCggA==,
+      }
+    engines: { node: ">=18.17.0", npm: ">= 10.x" }
+    peerDependencies:
+      cypress: ">= 10.x"
+      dotenv: ">= 10.x"
+
   cypress@14.5.2:
     resolution:
       {
@@ -372,6 +395,20 @@ packages:
         integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==,
       }
     engines: { node: ">=0.4.0" }
+
+  dotenv-parse-variables@2.0.0:
+    resolution:
+      {
+        integrity: sha512-/Tezlx6xpDqR6zKg1V4vLCeQtHWiELhWoBz5A/E0+A1lXN9iIkNbbfc4THSymS0LQUo8F1PMiIwVG8ai/HrnSA==,
+      }
+    engines: { node: ">= 8.3.0" }
+
+  dotenv@17.2.2:
+    resolution:
+      {
+        integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==,
+      }
+    engines: { node: ">=12" }
 
   dunder-proto@1.0.1:
     resolution:
@@ -678,6 +715,19 @@ packages:
       }
     engines: { node: ">=8" }
 
+  is-string-and-not-blank@0.0.2:
+    resolution:
+      {
+        integrity: sha512-FyPGAbNVyZpTeDCTXnzuwbu9/WpNXbCfbHXLpCRpN4GANhS00eEIP5Ef+k5HYSNIzIhdN9zRDoBj6unscECvtQ==,
+      }
+    engines: { node: ">=6.4.0" }
+
+  is-string-blank@1.0.1:
+    resolution:
+      {
+        integrity: sha512-9H+ZBCVs3L9OYqv8nuUAzpcT9OTgMD1yAWrG7ihlnibdkbtB850heAmYWxHuXc4CHy4lKeK69tN+ny1K7gBIrw==,
+      }
+
   is-typedarray@1.0.0:
     resolution:
       {
@@ -752,6 +802,12 @@ packages:
     peerDependenciesMeta:
       enquirer:
         optional: true
+
+  lodash.clonedeep@4.5.0:
+    resolution:
+      {
+        integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==,
+      }
 
   lodash.once@4.1.1:
     resolution:
@@ -1345,6 +1401,8 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
+  camelcase@6.3.0: {}
+
   caseless@0.12.0: {}
 
   chalk@4.1.2:
@@ -1399,6 +1457,16 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  cypress-dotenv@3.0.1(cypress@14.5.2)(dotenv@17.2.2):
+    dependencies:
+      camelcase: 6.3.0
+      cypress: 14.5.2
+      dotenv: 17.2.2
+      dotenv-parse-variables: 2.0.0
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - supports-color
 
   cypress@14.5.2:
     dependencies:
@@ -1466,6 +1534,15 @@ snapshots:
       supports-color: 8.1.1
 
   delayed-stream@1.0.0: {}
+
+  dotenv-parse-variables@2.0.0:
+    dependencies:
+      debug: 4.4.1(supports-color@8.1.1)
+      is-string-and-not-blank: 0.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  dotenv@17.2.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -1647,6 +1724,12 @@ snapshots:
 
   is-stream@2.0.1: {}
 
+  is-string-and-not-blank@0.0.2:
+    dependencies:
+      is-string-blank: 1.0.1
+
+  is-string-blank@1.0.1: {}
+
   is-typedarray@1.0.0: {}
 
   is-unicode-supported@0.1.0: {}
@@ -1688,6 +1771,8 @@ snapshots:
       wrap-ansi: 7.0.0
     optionalDependencies:
       enquirer: 2.4.1
+
+  lodash.clonedeep@4.5.0: {}
 
   lodash.once@4.1.1: {}
 

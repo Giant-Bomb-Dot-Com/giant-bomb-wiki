@@ -1,6 +1,6 @@
 # Prep work
 
-- Add your api key to the .env file. The api key can be found at https://www.giantbomb.com/api when you're logged into the site
+- Add your GiantBomb legacy API key (`GB_API_KEY`) to the .env file. It is retrieved from the [GB API page](https://www.giantbomb.com/api) when logged into the site.
 - Run `docker ps` and grab the container name for the wiki and db
 
 # generate_xml_categories.php
