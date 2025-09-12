@@ -13,7 +13,7 @@ class GenerateXMLResource extends Maintenance
     {
         parent::__construct();
         $this->addDescription("Converts db content into xml");
-        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
+        $this->addOption('resource', 'One of accessory, character, company, concept, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
     }
 
@@ -24,7 +24,7 @@ class GenerateXMLResource extends Maintenance
      */
     public function execute()
     {
-        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','theme','thing'];
+        $resources = ['accessory','character','company','concept','franchise','game','genre','location','person','platform','theme','thing'];
 
         if ($resourceOption = $this->getOption('resource', false)) {
             if (in_array($resourceOption, $resources)) {
@@ -73,7 +73,7 @@ class GenerateXMLResource extends Maintenance
                     }
                 }
 
-                // limit size of file to either 100mb or 50000 pages
+                // limit size of file to either 20mb or 20000 pages
                 if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {
                     $filename = sprintf('%s_%07d.xml', $resource, $count);
                     $this->streamXML($filename, $data);

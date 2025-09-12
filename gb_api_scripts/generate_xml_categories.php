@@ -61,7 +61,7 @@ This category is to add the edit with form tab on the credits page.
 MARKUP,
             ],
             [
-                'title' => 'Category:DLCs',
+                'title' => 'Category:DLC',
                 'namespace' => $this->namespaces['category'],
                 'description' => <<<MARKUP
 This category lists the different dlcs for video games.

@@ -92,6 +92,29 @@ trait BuildPageData
     }
 
     /**
+     * Gets dlcs for a game
+     *
+     * @param int $id
+     */
+    public function getDLCFromDB(int $id)
+    {
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.id','o.image_id','o.release_date','o.release_date_type','o.name','o.description','o.launch_price','o.deck','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a7.name as dlc_type'])
+                   ->from('wiki_game_dlc', 'o')
+                   ->leftJoin('wiki_game_dlc_to_developer','a1','o.id = a1.dlc_id')
+                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
+                   ->leftJoin('wiki_game_dlc_to_publisher','a3','o.id = a3.dlc_id')
+                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
+                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
+                   ->leftJoin('wiki_game_dlc_to_type', 'a6', 'o.id = a6.dlc_id')
+                   ->leftJoin('wiki_game_dlc_type', 'a7', 'a6.type_id = a7.id')
+                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
      * Creates the semantic table based on fields in the incoming $data array
      *
      * @param array $data
@@ -202,10 +225,11 @@ trait BuildPageData
             // key in resource.php
             // value in generate_xml_properties.php
             switch($data['release_date_type']) {
+                case '0': $releaseDateType = 'Full'; break;
                 case '1': $releaseDateType = 'Month'; break;
                 case '2': $releaseDateType = 'Quarter'; break;
                 case '3': $releaseDateType = 'Year'; break;
-                default: $releaseDateType = 'Full'; break;
+                default: $releaseDateType = 'None'; break;
             }
             $text .= "\n| ReleaseDateType={$releaseDateType}";
         }

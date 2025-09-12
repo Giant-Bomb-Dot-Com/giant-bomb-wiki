@@ -359,12 +359,14 @@ This template is used to create concept pages, set its display title and infobox
 MARKUP,
             ],
             [
-                'title' => 'Template:Credit',
+                'title' => 'Template:CreditSubobject',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<< MARKUP
-{{#subobject:
+{{#subobject: {{#invoke:Identifiers|getCreditIdentifier|Game={{{Game|}}}|Release={{{Release|}}}|Dlc={{{Dlc|}}}|Person={{{Person|}}}|Department={{{Department|}}}|Role={{{Role|}}}}} |
 |Has object type=Credit
-|Has superpage={{{ParentPage|}}}
+|Has games={{{Game|}}}
+|Has release={{{Release|}}}
+|Has dlc={{{Dlc|}}}
 |Has people={{{Person|}}}
 |Has companies={{{Company|}}}
 |Has department={{{Department|}}}
@@ -380,16 +382,22 @@ MARKUP,
  ParentPage (property=Has superpage)
 }}
 ==Documentation==
-This template is used to create the credits subpage for games or dlcs.
+This template is used to create the credits subpage for games.
 {| class="wikitable"
+|-
+! Field Name !! Description
 |-
 | ParentPage || The parent page the credits are for.
 |-
-| Credit || The people that worked on the game/dlc stored as subobjects.
+| Credit || The people that worked on the game stored as subobjects.
 |-
-| ↳ ParentPage || The game/dlc these credits are for.
+| ↳ Game || The game these credits are for.
 |-
-| ↳ Person || Person that worked on the game/dlc.
+| ↳ Release || The release these credits are for.
+|-
+| ↳ Dlc || The dlc these credits are for.
+|-
+| ↳ Person || Person that worked on the game.
 |-
 | ↳ Company || The company they worked for.
 |-
@@ -398,35 +406,50 @@ This template is used to create the credits subpage for games or dlcs.
 | ↳ Role || Their specific role.
 |}
 </noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
--->{{#ifeq: {{#titleparts:{{FULLPAGENAME}}||-1}}|Credits|[[Category:Credits]]}}<!--
+-->{{#ifeq:{{#titleparts:{{FULLPAGENAME}}||-1}}|Credits|[[Category:Credits]]}}<!--
 -->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Credit]]
+|?Has games=Game
+|?Has release=Release
+|?Has dlc=Dlc
 |?Has people=Person
 |?Has companies=Company
 |?Has department=Department
 |?Has role=Role
 |format=broadtable
 |link=none
-|mainlabel=-
 }}
 </includeonly>
+MARKUP,
+            ],
+            [
+                'title' => 'Template:DlcSubobject',
+                'namespace' => $this->namespaces['template'],
+                'description' => <<<MARKUP
+{{#subobject: {{#invoke:Identifiers|getDlcIdentifier|Name={{{Name|}}}|Platform={{{Platform|}}}}} |
+|Has object type=Dlc
+|Has games={{{Game|}}}
+|Has name={{{Name|}}}
+|Has guid={{{Guid|}}}
+|Has aliases={{{Aliases|}}}
+|Has image={{{Image|}}}
+|Has caption={{{Caption|}}}
+|Has deck={{{Deck|}}}
+|Has release date={{{ReleaseDate|}}}
+|Has release date type={{{ReleaseDateType|}}}
+|Has launch price={{{LaunchPrice|}}}
+|Has developers={{{Developers|}}}
+|Has publishers={{{Publishers|}}}
+|Has platforms={{{Platform|}}}
+|Has dlc types={{{DlcTypes|}}}
+}}
 MARKUP,
             ],
             [
                 'title' => 'Template:DLC',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-<noinclude>{{#template_params:
-  Name (property=Has name)
-| Guid (property=Has guid)
-| Aliases (property=Has aliases)
-| Image (property=Has image)
-| Caption (property=Has caption)
-| Deck (property=Has deck)
-| ReleaseDate (property=Has release date)
-| ReleaseDateType (property=Has release date type)
-| LaunchPrice (property=Has launch price)
-| Game (property=Has game)
-| Platform (property=Has platform)
+<<noinclude>{{#template_params:
+ ParentPage (property=Has superpage)
 }}
 ==Documentation==
 This template is used to create DLC pages, set its display title and infobox.
@@ -434,52 +457,50 @@ This template is used to create DLC pages, set its display title and infobox.
 |-
 ! Field Name !! Description
 |-
-| Name || The display name of the DLC.
+| ParentPage || The parent page to this subpage.
 |-
-| Guid || The identifier from Giant Bomb. 
+| Dlc || The subobject for a dlc.
 |-
-| Aliases || Alternative names.
+| ↳ Game || Game of release.
 |-
-| Image || The image filename of the DLC. Image appears in the infobox.
+| ↳ Name || The display name of the DLC.
 |-
-| Caption || The caption for the above image.
+| ↳ Guid || The identifier from Giant Bomb. 
 |-
-| Deck || The short description for the DLC.
+| ↳ Aliases || Alternative names.
 |-
-| ReleaseDate || The DLC's release date.
+| ↳ Image || The image filename of the DLC. Image appears in the infobox.
 |-
-| ReleaseDateType || The format of the release date.
+| ↳ Caption || The caption for the above image.
 |-
-| LaunchPrice || The price of the DLC at launch in USD.
+| ↳ Deck || The short description for the DLC.
 |-
-| Game || The game related to the DLC.
+| ↳ ReleaseDate || The DLC's release date.
 |-
-| Platform || The platform related to the DLC.
+| ↳ ReleaseDateType || The format of the release date.
+|-
+| ↳ LaunchPrice || The price of the DLC at launch in USD.
+|-
+| ↳ Platform || The platform related to the DLC.
+|-
+| ↳ DlcTypes || Type of DLC.
 |}
-</noinclude><includeonly
->{{#set:Has name={{{Name|}}}}}<!--
--->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
--->{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases|}}}}}}}<!--
--->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
--->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
--->{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck|}}}}}}}<!--
--->{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate|}}}}}}}<!--
--->{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}}}<!--
--->{{#if:{{{LaunchPrice|}}}|{{#set:Has launch price={{{LaunchPrice|}}}}}}}<!--
--->{{#arraymap:{{{Game|}}}|,|@@|{{SetPropertyPrefix|Has game|Game|@@}}| }}<!--
--->{{#arraymap:{{{Platform|}}}|,|@@|{{SetPropertyPrefix|Has platform|Platform|@@}}| }}<!--
--->{{Infobox
-| title={{{Name|}}}
-| italic title=no
-| image={{{Image|}}}
-| image size=40
-| caption={{{Caption|}}}
-| aliases={{{Aliases|}}}
-| deck={{{Deck|}}}
-| release date={{{ReleaseDate|}}}
-| release date type={{{ReleaseDateType|}}}
-}}<!--
--->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:DLCs|{{SUBPAGENAME}}]]
+</noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
+-->{{#ifeq:{{#titleparts:{{FULLPAGENAME}}||-1}}|DLC|[[Category:DLC]]}}<!--
+-->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Dlc]]
+|format=broadtable
+|link=none
+|?Has image=Image
+|?Has name=Name
+|?Has deck=Deck
+|?Has platforms=Platform
+|?Has developers=Developers
+|?Has publishers=Publishers
+|?Has release date=ReleaseDate
+|?Has release date type=ReleaseDateType
+|?Has launch price=LaunchPrice
+|?Has dlc types=DlcTypes
+}}
 </includeonly>
 MARKUP,
             ],
@@ -674,6 +695,16 @@ This template is used to create game pages, set its display title and infobox.
 {{#ifexist:{{PAGENAME}}/Releases
 |{{:{{PAGENAME}}/Releases}}
 }}
+== {{#ifexist:{{PAGENAME}}/DLC|[[{{PAGENAME}}/DLC|DLC]]|DLC}} ==
+{{#formlink:
+|form=DLC
+|link text={{#ifexist:{{PAGENAME}}/DLC|Add/Edit DLC|Create DLC Page}}
+|target={{PAGENAME}}/DLC
+|field-Game={{PAGENAME}}
+}}
+{{#ifexist:{{PAGENAME}}/DLC
+|{{:{{PAGENAME}}/DLC}}
+}}
 == {{#ifexist:{{PAGENAME}}/Credits|[[{{PAGENAME}}/Credits|Credits]]|Credits}} ==
 {{#formlink:
 |form=Credits
@@ -731,6 +762,11 @@ This template is used to create genre pages, set its display title and infobox.
 -->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Genres|{{SUBPAGENAME}}]]
 </includeonly>
 MARKUP,
+            ],
+            [
+                'title' => 'Template:ListSubobjectName',
+                'namespace' => $this->namespaces['template'],
+                'description' => '{{#show:{{{1}}}|?Has name}}',
             ],
             [
                 'title' => 'Template:Location',
@@ -1134,12 +1170,12 @@ This template is used to create rating pages, sets its display title and infobox
 MARKUP,
             ],
             [
-                'title' => 'Template:Release',
+                'title' => 'Template:ReleaseSubobject',
                 'namespace' => $this->namespaces['template'],
                 'description' => <<<MARKUP
-{{#subobject:
+{{#subobject: {{#invoke:Identifiers|getReleaseIdentifier|Name={{{Name|}}}|Region={{{Region|}}}|Platform={{{Platform|}}}}} |
 |Has object type=Release
-|Has superpage={{{ParentPage|}}}
+|Has games={{{Game|}}}
 |Has name={{{Name|}}}
 |Has guid={{{Guid|}}}
 |Has image={{{Image|}}}
@@ -1175,11 +1211,13 @@ MARKUP,
 This template is used to create release subobjects.
 {| class="wikitable"
 |-
+! Field Name !! Description
+|-
 | ParentPage || The parent page.
 |-
-| Release || The game/dlc releases stored as subobjects.
+| Release || The game releases stored as subobjects.
 |-
-| ↳ ParentPage || Parent page of release.
+| ↳ Game || Game of release.
 |-
 | ↳ Name || Name of release.
 |-

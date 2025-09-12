@@ -211,6 +211,14 @@ class Game extends Resource
      */
     public function getSubPageDataArray(stdClass $row): array
     {
+        $releaseDateTypeMap = [
+            0 => 'Full',
+            1 => 'Month',
+            2 => 'Quarter',
+            3 => 'Year',
+            5 => 'None',
+        ];
+
         $result = [];
         $credits = $this->getCreditsFromDB($row->id);
 
@@ -237,7 +245,7 @@ MARKUP;
             foreach ($credits as $credit) {
                 $department = (is_null($credit->role_id)) ? $roleMap[1] : $roleMap[$credit->role_id];
                 $description .= <<<MARKUP
-{{Credit
+{{CreditSubobject
 |ParentPage={$row->mw_page_name}
 |Person={$credit->mw_page_name}
 |Department={$department}
@@ -262,14 +270,6 @@ MARKUP;
                 2 => 'United Kingdom',
                 6 => 'Japan',
                 11 => 'Australia',
-            ];
-
-            $releaseDateTypeMap = [
-                0 => 'Full',
-                1 => 'Month',
-                2 => 'Quarter',
-                3 => 'Year',
-                5 => 'None',
             ];
 
             $ratingsMap = [
@@ -417,7 +417,7 @@ MARKUP;
                     }
 
                     $releaseObjects[$release->id] = [
-                        'ParentPage' => $row->mw_page_name,
+                        'Game' => $row->mw_page_name,
                         'Name' => htmlspecialchars($release->name, ENT_XML1, 'UTF-8'),
                         'Image' => $release->image_id, // join image table to replace with filename
                         'Region' => empty($release->region_id) ? '' : $regionMap[$release->region_id],
@@ -467,7 +467,7 @@ MARKUP;
                 }
             }
 
-            // convert db release object into mediawiki release objects
+            // convert db release objects into mediawiki release objects
             foreach ($releaseObjects as $releaseId => $obj) {
                 $developers = empty($obj['Developers']) ? '' : implode(',', array_keys($obj['Developers']));
                 $publishers = empty($obj['Publishers']) ? '' : implode(',', array_keys($obj['Publishers']));
@@ -477,8 +477,8 @@ MARKUP;
                 $mpFeatures = empty($obj['MultiplayerFeatures']) ? '' : implode(',', array_keys($obj['MultiplayerFeatures']));
 
                 $description .= <<<MARKUP
-{{Release
-|ParentPage={$obj['ParentPage']}
+{{ReleaseSubobject
+|Game={$obj['Game']}
 |Guid=3050-{$releaseId}
 |Name={$obj['Name']}
 |Image={$obj['Image']}
@@ -507,6 +507,98 @@ MARKUP;
 
             $result[] = [
                 'title' => $row->mw_page_name.'/Releases',
+                'namespace' => $this->namespaces['page'],
+                'description' => $description
+            ];
+        }
+
+
+        $description = <<<MARKUP
+        {{DLC
+        |ParentPage={$row->mw_page_name}
+        }}
+
+MARKUP;
+        $dlcs = $this->getDLCFromDB($row->id);
+
+        if ($dlcs->count() > 0) {
+            // hydrate dlc objects
+            $dlcObjects = [];
+            foreach ($dlcs as $dlc) {
+
+                if (!isset($dlcObjects[$dlc->id])) {
+
+                    $releaseDateType = $dlc->release_date_type;
+                    $releaseDate = $dlc->release_date;
+                    if (empty($releaseDate) || $releaseDate = '0000-00-00') {
+                        $releaseDate = '';
+                        $releaseDateType = $releaseDateTypeMap[5];
+                    }
+                    else {
+                        if (is_null($releaseDateType)) {
+                            $releaseDateType = $releaseDateTypeMap[0];
+                        }
+                        else {
+                            $releaseDateType = $releaseDateTypeMap[$releaseDateType];
+                        }
+                    }
+
+                    $dlcObjects[$dlc->id] = [
+                        'Game' => $row->mw_page_name,
+                        'Name' => htmlspecialchars($dlc->name, ENT_XML1, 'UTF-8'),
+                        'Deck' => empty($dlc->deck) ? '' : htmlspecialchars($dlc->deck, ENT_XML1, 'UTF-8'),
+                        'LaunchPrice' => $dlc->launch_price,
+                        'Image' => $dlc->image_id, // join image table to replace with filename
+                        'Platform' => $dlc->platform,
+                        'Developers' => empty($dlc->developer) ? [] : [$dlc->developer => 0],
+                        'Publishers' => empty($dlc->publisher) ? [] : [$dlc->publisher => 0],
+                        'DlcTypes' => empty($dlc->dlc_type) ? [] : [$dlc->dlc_type => 0],
+                        'ReleaseDate' => $releaseDate,
+                        'ReleaseDateType' => $releaseDateType,
+                    ];
+                }
+                else {
+                    if (!empty($dlc->developer)) {
+                        $dlcObjects[$dlc->id]['Developers'][$dlc->developer] = 0;
+                    }
+
+                    if (!empty($dlc->publisher)) {
+                        $dlcObjects[$dlc->id]['Publishers'][$dlc->publisher] = 0;
+                    }
+
+                    if (!empty($dlc->dlc_type)) {
+                        $dlcObjects[$dlc->id]['DlcTypes'][$dlc->dlc_type] = 0;
+                    }
+                }
+            }
+
+            // convert db dlc objects into mediawiki dlc objects
+            foreach ($dlcObjects as $dlcId => $obj) {
+                $developers = empty($obj['Developers']) ? '' : implode(',', array_keys($obj['Developers']));
+                $publishers = empty($obj['Publishers']) ? '' : implode(',', array_keys($obj['Publishers']));
+                $dlcTypes = empty($obj['DlcTypes']) ? '' : implode(',', array_keys($obj['DlcTypes']));
+
+                $description .= <<<MARKUP
+{{DlcSubobject
+|Game={$obj['Game']}
+|Guid=3020-{$dlcId}
+|Name={$obj['Name']}
+|Image={$obj['Image']}
+|Deck={$obj['Deck']}
+|LaunchPrice={$obj['LaunchPrice']}
+|Platform={$obj['Platform']}
+|Developers={$developers}
+|Publishers={$publishers}
+|ReleaseDate={$obj['ReleaseDate']}
+|ReleaseDateType={$obj['ReleaseDateType']}
+|DlcTypes={$dlcTypes}
+}}
+
+MARKUP;
+            }
+
+            $result[] = [
+                'title' => $row->mw_page_name.'/DLC',
                 'namespace' => $this->namespaces['page'],
                 'description' => $description
             ];

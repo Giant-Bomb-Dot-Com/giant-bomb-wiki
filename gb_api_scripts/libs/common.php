@@ -52,7 +52,8 @@ trait CommonVariablesAndMethods
         'template' => 10,
         'category' => 14,
         'property' => 102,
-        'form' => 106
+        'form' => 106,
+        'module' => 828,
     ];
 
     /**
@@ -175,7 +176,7 @@ trait CommonVariablesAndMethods
 
             $count = 0;
             foreach ($data as $page) {
-                if (empty(trim($page['title']))) {
+                if (empty($page['title'])) {
                     continue;
                 }
                 $xml->startElement('page');

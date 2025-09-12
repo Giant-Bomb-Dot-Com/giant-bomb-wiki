@@ -32,7 +32,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
@@ -70,7 +70,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid:
 | {{{field|Guid|property=Has guid}}}
@@ -144,7 +144,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid:
 | {{{field|Guid|property=Has guid}}}
@@ -230,7 +230,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid:
 | {{{field|Guid|property=Has guid}}}
@@ -285,34 +285,41 @@ To create a page with this form, enter the page name below;
 if a page with that name already exists, you will be sent to a form to edit that page.
 
 {{#forminput:form=Credits}}
-
+{{#time:U}}
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Credits}}}
 {| class="formtable"
-! {{ROOTPAGENAME}}:
-| {{{field|ParentPage|input type=tokens|property=Has superpage|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Game:
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
 |-
 ! Description:
 | {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-{{{for template|Credit|multiple|add button text=Add credit|label=Credits|displayed fields when minimized=Person,Department,Role}}}
+{{{for template|CreditSubobject|multiple|add button text=Add credit|label=Credits|displayed fields when minimized=Person,Department,Role}}}
 {| class="formtable"
-! {{ROOTPAGENAME}}: 
-| {{{field|ParentPage|input type=tokens|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+! Game: 
+| {{{field|Game|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+|- 
+! Release:
+| {{{field|Release|input type=tokens|max values=1|query=[[-Has subobject::{{BASEPAGENAME}}/Releases]] [[Has object type::Release]]|list template=ListSubobjectName}}}
+|-
+! Dlc:
+| {{{field|Dlc|input type=tokens|max values=1|query=[[-Has subobject::{{BASEPAGENAME}}/DLC]] [[Has object type::Dlc]]|list template=ListSubobjectName}}}
 |-
 ! Person: 
-| {{{field|Person|input type=tokens|max values=1|values from category=People}}}
+| {{{field|Person|mandatory|input type=tokens|max values=1|values from category=People}}}
 |-
 ! Company: 
 | {{{field|Company|input type=tokens|max values=1|values from category=Companies}}}
 |-
 ! Department: 
-| {{{field|Department|input type=dropdown|default=Unclassified}}}
+| {{{field|Department|input type=dropdown|property=Has department|default=Unclassified}}}
 |-
 ! Role: 
-| {{{field|Role}}}
+| {{{field|Role|property=Has role}}}
 |}
 {{{end template}}}
 </includeonly>
@@ -327,50 +334,63 @@ This is the "DLC" form.
 To create a page with this form, enter the page name below;
 if a page with that name already exists, you will be sent to a form to edit that page.
 
-{{#forminput:form=DLC|super_page=DLCs}}
+{{#forminput:form=DLC}}
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|DLC}}}
 {| class="formtable"
-! Name: 
-| {{{field|Name|property=Has name}}}
 |-
-! Platform: 
-| {{{field|Guid|property=Has platform}}}
-|-
-! Aliases: 
-| {{{field|Aliases|property=Has aliases}}}
-|-
-! Image: 
-| {{{field|Image|property=Has image}}}
-|-
-! Caption: 
-| {{{field|Caption|property=Has caption}}}
-|-
-! Deck: 
-| {{{field|Deck|property=Has deck}}}
-|-
-! ReleaseDate: 
-| {{{field|ReleaseDate|property=Has release date}}}
-|-
-! Release Date Type: 
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
-|-
-! Launch Price: 
-| {{{field|LaunchPrice|property=Has launch price}}}
-|-
-! Game: 
-| {{{field|Game|property=Has games|input type=tokens|max values=1|values from category=Games}}}
-|-
-! Platform: 
-| {{{field|Platform|property=Has platform|input type=tokens|values from category=Platforms}}}
+! Game}:
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
 |-
 ! Description:
 | {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-</includeonly>
+{{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}
+{| class="formtable"
+|-
+! Game: 
+| {{{field|Game|mandatory|property=Has games|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+|-
+! DLC Name:
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid:
+| {{{field|Guid|property=Has guid}}}
+|-
+! Image:
+| {{{field|Image|property=Has image}}}
+|-
+! Caption:
+| {{{field|Caption|property=Has caption}}}
+|-
+! Launch Price:
+| {{{field|LauncPrice|property=Has launch price}}}
+|-
+! Deck:
+| {{{field|Deck|property=Has deck}}}
+|-
+! Platform:
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+|-
+! Developers:
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+|-
+! Publishers:
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+|-
+! Release Date Type:
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! DLC Types:
+| {{{field|DlcTypes|property=Has dlc types|input type=listbox}}}
+|}
+{{{end template}}}
 MARKUP,
             ],
             [
@@ -390,7 +410,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid:
 | {{{field|Guid|property=Has guid}}}
@@ -447,8 +467,9 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Game}}}
 {| class="formtable"
+|-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
@@ -522,7 +543,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
@@ -561,8 +582,9 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Location}}}
 {| class="formtable"
+|-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
@@ -642,8 +664,9 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Object}}}
 {| class="formtable"
+|-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! People: 
 | {{{field|Guid|property=Has people}}}
@@ -703,8 +726,9 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Person}}}
 {| class="formtable"
+|-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! People: 
 | {{{field|Guid|property=Has people}}}
@@ -748,9 +772,6 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Franchises: 
 | {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
 |-
-! Games: 
-| {{{field|Games|property=Has games|input type=tokens|values from category=Games}}}
-|-
 ! Locations: 
 | {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
 |-
@@ -782,11 +803,12 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Platform}}}
 {| class="formtable"
-! Name: 
-| {{{field|Name|property=Has name}}}
 |-
-! Manufacturer: 
-| {{{field|Guid|property=Has manufacturer}}}
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
 |-
 ! Aliases: 
 | {{{field|Aliases|property=Has aliases}}}
@@ -807,7 +829,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|ReleaseDate|property=Has release date}}}
 |-
 ! Release Date Type: 
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
 |-
 ! Install Base: 
 | {{{field|InstallBase|property=Has install base}}}
@@ -881,21 +903,22 @@ if a page with that name already exists, you will be sent to a form to edit that
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
 {{{for template|Releases}}}
 {| class="formtable"
-! {{ROOTPAGENAME}}:
-| {{{field|ParentPage|input type=tokens|property=Has superpage|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+|-
+! Game:
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
 |-
 ! Description:
 | {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
-{{{for template|Release|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
+{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
 {| class="formtable"
 |-
-! {{ROOTPAGENAME}}: 
-| {{{field|ParentPage|input type=tokens|max values=1|values from category={{ROOTPAGENAME}}|default={{BASEPAGENAME}}}}}
+! Game: 
+| {{{field|Game|mandatory|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
 |-
 ! Release Name:
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid:
 | {{{field|Guid|property=Has guid}}}
@@ -904,13 +927,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Image|property=Has image}}}
 |-
 ! Region:
-| {{{field|Region|property=Has region}}}
+| {{{field|Region|mandatory|property=Has region}}}
 |-
 ! Rating:
 | {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
 |-
 ! Platform:
-| {{{field|Platform|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
 |-
 ! Developers:
 | {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
@@ -919,7 +942,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
 |-
 ! Release Date Type:
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown}}}
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
 |-
 ! Release Date:
 | {{{field|ReleaseDate|property=Has release date}}}
@@ -1064,7 +1087,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Name: 
-| {{{field|Name|property=Has name}}}
+| {{{field|Name|mandatory|property=Has name}}}
 |-
 ! Guid: 
 | {{{field|Guid|property=Has guid}}}
