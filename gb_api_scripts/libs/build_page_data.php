@@ -25,7 +25,7 @@ trait BuildPageData
 
         foreach (self::RELATION_TABLE_MAP as $key => $relation) {
 
-            $groupConcat = "GROUP_CONCAT(SUBSTRING_INDEX(o.mw_page_name, '/', -1) SEPARATOR ',')";
+            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
         	// join the relation table with the connector table to get the page names
             $qb = $this->getDb()->newSelectQueryBuilder()
                        ->select(['mw_page_name' => $groupConcat])
@@ -47,6 +47,71 @@ trait BuildPageData
         }
 
         return $relations;   	
+    }
+
+    /**
+     * Gets credits for a game
+     * 
+     * @param int $id
+     */
+    public function getCreditsFromDB(int $id)
+    {
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.person_id','o.description','o.role_id','p.mw_page_name'])
+                   ->from('wiki_assoc_game_person','o')
+                   ->join('wiki_person', 'p', 'o.person_id = p.id')
+                   ->where('o.game_id = '.$id)
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
+     * Gets releases for a game
+     *
+     * @param int $id
+     */
+    public function getReleasesFromDB(int $id)
+    {
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.id','o.region_id','o.product_code_type','o.company_code_type','o.rating_id','o.image_id','o.release_date','o.release_date_type','o.product_code','o.company_code','o.name','o.description','o.widescreen_support','o.minimum_players','o.maximum_players','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a6.feature_id AS mp_feature_id','a7.resolution_id','a8.feature_id AS sp_feature_id','a9.soundsystem_id'])
+                   ->from('wiki_game_release', 'o')
+                   ->leftJoin('wiki_game_release_to_developer','a1','o.id = a1.release_id')
+                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
+                   ->leftJoin('wiki_game_release_to_publisher','a3','o.id = a3.release_id')
+                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
+                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
+                   ->leftJoin('wiki_game_release_to_multiplayer_feature','a6','o.id = a6.release_id')
+                   ->leftJoin('wiki_game_release_to_resolution','a7','o.id = a7.release_id')
+                   ->leftJoin('wiki_game_release_to_singleplayer_feature','a8','o.id = a8.release_id')
+                   ->leftJoin('wiki_game_release_to_sound_system','a9','o.id = a9.release_id')
+                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
+     * Gets dlcs for a game
+     *
+     * @param int $id
+     */
+    public function getDLCFromDB(int $id)
+    {
+        $qb = $this->getDb()->newSelectQueryBuilder()
+                   ->select(['o.id','o.image_id','o.release_date','o.release_date_type','o.name','o.description','o.launch_price','o.deck','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a7.name as dlc_type'])
+                   ->from('wiki_game_dlc', 'o')
+                   ->leftJoin('wiki_game_dlc_to_developer','a1','o.id = a1.dlc_id')
+                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
+                   ->leftJoin('wiki_game_dlc_to_publisher','a3','o.id = a3.dlc_id')
+                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
+                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
+                   ->leftJoin('wiki_game_dlc_to_type', 'a6', 'o.id = a6.dlc_id')
+                   ->leftJoin('wiki_game_dlc_type', 'a7', 'a6.type_id = a7.id')
+                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
     }
 
     /**
@@ -81,6 +146,7 @@ trait BuildPageData
         if (!empty($data['infobox_image'])) {
             $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
             $infoboxImage = basename($imageFragment);
+            $infoboxImage = str_replace('%20', ' ', $infoboxImage);
             $text .= "\n| Image={$infoboxImage}";
             $text .= "\n| Caption=image of {$data['name']}";
         }
@@ -147,7 +213,8 @@ trait BuildPageData
         }
 
         if (!empty($data['website'])) {
-            $text .= "\n| Website={$data['website']}";
+            $website = trim(htmlspecialchars($data['website'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| Website={$website}";
         }
 
         if (!empty($data['release_date'])) {
@@ -155,7 +222,16 @@ trait BuildPageData
         }
 
         if (!empty($data['release_date_type'])) {
-            $text .= "\n| ReleaseDateType={$data['release_date_type']}";
+            // key in resource.php
+            // value in generate_xml_properties.php
+            switch($data['release_date_type']) {
+                case '0': $releaseDateType = 'Full'; break;
+                case '1': $releaseDateType = 'Month'; break;
+                case '2': $releaseDateType = 'Quarter'; break;
+                case '3': $releaseDateType = 'Year'; break;
+                default: $releaseDateType = 'None'; break;
+            }
+            $text .= "\n| ReleaseDateType={$releaseDateType}";
         }
 
         if (!empty($data['install_base'])) {

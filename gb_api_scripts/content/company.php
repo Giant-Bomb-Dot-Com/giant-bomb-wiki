@@ -12,6 +12,7 @@ class Company extends Resource
     const TYPE_ID = 3010;
     const RESOURCE_SINGULAR = "company";
     const RESOURCE_MULTIPLE = "companies";
+    const PAGE_NAMESPACE = "Companies/";
     const TABLE_NAME = "wiki_company";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website'];
     const RELATION_TABLE_MAP = [
@@ -130,7 +131,12 @@ class Company extends Resource
     {
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        if (empty($row->mw_formatted_description)) { 
+            $desc = (!empty($row->deck)) ? htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') : '';
+        }
+        else {
+            $desc = htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        }
         $relations = $this->getRelationsFromDB($row->id);
 
         $description = $this->formatSchematicData([

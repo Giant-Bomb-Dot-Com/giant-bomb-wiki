@@ -98,6 +98,10 @@ if ($wikiEnv == 'prod') {
     $wgUploadPath = $wgScriptPath.'/images';
 }
 
+# Allow external images
+$wgAddImgTagWhitelist = true;
+$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
+
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
 
@@ -175,10 +179,12 @@ wfLoadExtension( 'WikiEditor' );
 
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
+enableSemantics();
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
+$wgPageFormsUseDisplayTitle = false;
 
 # Turn on subpages
 $wgNamespacesWithSubpages[NS_MAIN] = true;

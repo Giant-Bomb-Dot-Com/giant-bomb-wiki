@@ -12,6 +12,11 @@ use Wikimedia\Rdbms\MysqliResultWrapper;
  */
 abstract class Resource 
 {
+    const RELEASE_DATE_TYPE_USE_DATE = 0;
+    const RELEASE_DATE_TYPE_MONTH_YEAR = 1;
+    const RELEASE_DATE_TYPE_QTR_YEAR = 2;
+    const RELEASE_DATE_TYPE_ONLY_YEAR = 3;
+
     private IDatabase $dbw;
     private bool $crawlRelations;
 
@@ -159,17 +164,54 @@ abstract class Resource
     }
 
     /**
-     * Get rows that have not been converted yet
+     * Get rows with descriptions that have not been converted yet
      * 
      * @param int|false $id
+     * @param bool $force
      * @return array
      */
-    public function getTextToConvert($id = false)
+    public function getTextToConvert($id = false, $force = false)
     {
-        $clause = ($id) ? 'id = '.$id : 'description != "" AND mw_formatted_description IS NULL';
+        if ($id) {
+            $clause = 'id = '.$id;
+        }
+        else {
+            $clause = 'description != ""';
+            if (!$force) {
+                $clause .= ' AND mw_formatted_description IS NULL';
+            }
+        }
 
         $qb = $this->dbw->newSelectQueryBuilder();
         $qb->select(['id', 'name', 'description'])
+             ->from(static::TABLE_NAME)
+             ->where($clause)
+             ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
+    /**
+     * Get rows with names that have not been converted yet
+     * 
+     * @param int|false $id
+     * @param bool $force
+     * @return array
+     */
+    public function getNamesToConvert($id = false, $force = false)
+    {
+        if ($id) {
+            $clause = 'id = '.$id;
+        }
+        else {
+            $clause = 'name != ""';
+            if (!$force) {
+                $clause .= ' AND mw_page_name IS NULL';
+            }
+        }
+
+        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb->select(['id', 'name'])
              ->from(static::TABLE_NAME)
              ->where($clause)
              ->caller(__METHOD__);
@@ -272,6 +314,23 @@ abstract class Resource
         $ub = $this->dbw->newUpdateQueryBuilder();
         $ub->update(static::TABLE_NAME)
              ->set(['mw_formatted_description' => $mwDescription])
+             ->where(['id' => $id])
+             ->caller(__METHOD__);
+
+        return $ub->execute();
+    }
+
+    /**
+     * Stores the media wiki page name in the mw_page_name field
+     * 
+     * @param int $id
+     * @param string $mwPageName
+     */
+    public function updateMediaWikiPageName(int $id, string $mwPageName)
+    {
+        $ub = $this->dbw->newUpdateQueryBuilder();
+        $ub->update(static::TABLE_NAME)
+             ->set(['mw_page_name' => $mwPageName])
              ->where(['id' => $id])
              ->caller(__METHOD__);
 

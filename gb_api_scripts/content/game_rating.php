@@ -7,6 +7,7 @@ class Game_rating extends Resource
     const TYPE_ID = 3065;
     const RESOURCE_SINGULAR = "game_rating";
     const RESOURCE_MULTIPLE = "game_ratings";
+    const PAGE_NAMESPACE = "Ratings/";
     const TABLE_NAME = "wiki_game_release_rating";
 
     /**

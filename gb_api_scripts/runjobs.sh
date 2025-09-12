@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAINT_DIR="/var/www/html/maintenance"
-NUM_WORKERS=4
+NUM_WORKERS=1
 MEM_LIMIT="2048M"
 
 echo "Starting $NUM_WORKERS parallel job queue workers..."

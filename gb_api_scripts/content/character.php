@@ -12,6 +12,7 @@ class Character extends Resource
     const TYPE_ID = 3005;
     const RESOURCE_SINGULAR = "character";
     const RESOURCE_MULTIPLE = "characters";
+    const PAGE_NAMESPACE = "Characters/";
     const TABLE_NAME = "wiki_character";
     const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
     const RELATION_TABLE_MAP = [
@@ -128,7 +129,12 @@ class Character extends Resource
     {
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        if (empty($row->mw_formatted_description)) { 
+            $desc = (!empty($row->deck)) ? htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') : '';
+        }
+        else {
+            $desc = htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        }
         $relations = $this->getRelationsFromDB($row->id);
 
         $description = $this->formatSchematicData([
