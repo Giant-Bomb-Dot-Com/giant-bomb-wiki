@@ -389,7 +389,7 @@ This template is used to create the credits subpage for games.
 |-
 | ParentPage || The parent page the credits are for.
 |-
-| Credit || The people that worked on the game stored as subobjects.
+| CreditSubobject || The people that worked on the game stored as subobjects.
 |-
 | ↳ Game || The game these credits are for.
 |-
@@ -459,7 +459,7 @@ This template is used to create DLC pages, set its display title and infobox.
 |-
 | ParentPage || The parent page to this subpage.
 |-
-| Dlc || The subobject for a dlc.
+| DlcSubobject || The subobject for a dlc.
 |-
 | ↳ Game || Game of release.
 |-
@@ -1215,7 +1215,7 @@ This template is used to create release subobjects.
 |-
 | ParentPage || The parent page.
 |-
-| Release || The game releases stored as subobjects.
+| ReleaseSubobject || The game releases stored as subobjects.
 |-
 | ↳ Game || Game of release.
 |-
@@ -1572,74 +1572,6 @@ MARKUP,
 }}{{#invoke:Check for unknown parameters|check|unknown={{main other|[[Category:Pages using infobox with unknown parameters|_VALUE_{{PAGENAME}}]]}}|ignoreblank=1|preview=Page using [[Template:Infobox]] with unknown parameter "_VALUE_"| abbreviation | address | alt | birthday | border | caption | characters | child | city | collapsible | commons | concepts | country | death | develoepd games | developers | embedded | enemies | founded date | franchises | friends | games | gender | genre | guid | hometown | image | image_size | image_upright | install base | italic title | last name | locations | manufacturer | noicon | objects | online support | onlysourced | manufacturer | people | phone | platform | platforms | published games | publishers | qid | refs | real name | released | release date | release date type | short name | stands for | state | subbox | suppressfields | themes | title | twitter | website }}<noinclude>
 {{documentation}}
 </noinclude>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:ReleaseRow',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-|-
-| [[File:{{{Image}}}]]
-| {{{Name}}}
-| {{{Region}}}
-| [[{{{Platform|}}}]]
-| [[{{{Rating}}}]]
-| {{#arraymap:{{{Developers}}}|,|val|[[val]]}}
-| {{#arraymap:{{{Publishers}}}|,|val|[[val]]}}
-| {{{ReleaseDate}}}
-| {{{ReleaseDateType}}}
-| {{{ProductCode}}}
-| {{{ProductCodeType}}}
-| {{{CompanyCode}}}
-| {{{CompanyCodeType}}}
-| {{{WidescreenSupport}}}
-| {{#arraymap:{{{Resolutions}}}|,|val|[[val]]}}
-| {{#arraymap:{{{SoundSystems}}}|,|val|[[val]]}}
-| {{#arraymap:{{{SinglePlayerFeatures}}}|,|val|[[val]]}}
-| {{#arraymap:{{{MultiplayerFeatures}}}|,|val|[[val]]}}
-| {{{MinimumPlayers}}}
-| {{{MaximumPlayers}}}
-</includeonly>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:ReleaseTableFooter',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-|}
-</includeonly>
-MARKUP,
-            ],
-            [
-                'title' => 'Template:ReleaseTableHeader',
-                'namespace' => $this->namespaces['template'],
-                'description' => <<<MARKUP
-<includeonly>
-{| class="wikitable"
-|-
-! Image
-! Name
-! Region
-! Platform
-! Rating
-! Developers
-! Publishers
-! Release Date
-! Release Date Type
-! Product Code
-! Product Code Type
-! Company Code
-! Company Code Type
-! Widescreen Support
-! Resolutions
-! Sound Systems
-! Single Player Features
-! Mutliplayer Features
-! Minimum Players
-! Maximum Players
-</includeonly>
 MARKUP,
             ],
             [

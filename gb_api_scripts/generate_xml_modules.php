@@ -18,11 +18,10 @@ class GenerateXMLModules extends Maintenance
             [
                 'title' => 'Module:Identifiers',
                 'namespace' => $this->namespaces['module'],
+                'model' => 'Scribunto',
+                'format' => 'x/-lua',
                 'description' => <<<MARKUP
--- Module:Idenfitiers
 local p = {}
-
--- Match one or more characters that are not alphanumeric or underscore
 local disallowed_pattern_run = "[^%w_]+"
 
 function p.sanitize(text)
@@ -43,16 +42,15 @@ function p.sanitize(text)
 end
 
 local function isNotEmpty(arg_value)
-    -- First check if it's not nil, then if it's not an empty string after trimming
     return arg_value ~= nil and arg_value ~= ''
 end
 
 function p.getReleaseIdentifier(frame)
     local args = frame.args
 
-    local name = args.Name or ""
-    local region = args.Region or ""
-    local platform = args.Platform or ""
+    local name = args.Name or "Unknown"
+    local region = args.Region or "Unknown"
+    local platform = args.Platform or "Unknown"
 
     local sanitized_name = p.sanitize(name)
     local sanitized_region = p.sanitize(region)
@@ -64,8 +62,8 @@ end
 function p.getDlcIdentifier(frame)
     local args = frame.args
 
-    local name = args.Name or ""
-    local platform = args.Platform or ""
+    local name = args.Name or "Unknown"
+    local platform = args.Platform or "Unknown"
 
     local sanitized_name = p.sanitize(name)
     local sanitized_platform = p.sanitize(mw.ustring.gsub(platform, ".*%/", ""))
@@ -106,18 +104,13 @@ function p.getCreditIdentifier(frame)
 
     local sanitized_person = p.sanitize(mw.ustring.gsub(args.Person, ".*%/", ""))
     
-    local santized_department = p.sanitize(args.Department)
+    local sanitized_department = p.sanitize(args.Department)
     
-    local sanitized_role
-    if isNotEmpty(args.Role) then
-        sanitized_role = p.sanitize(args.Role)
-    else
-        sanitized_role = "Unknown"
-    end
-
-    return "Credit_" .. main_id .. "_" .. sanitized_person .. "_" .. santized_department .. "_" .. sanitized_role
+    local sanitized_role = args.Role or "Unknown"
+    sanitized_role = p.sanitize(args.Role)
+    
+    return "Credit_" .. main_id .. "_" .. sanitized_person .. "_" .. sanitized_department .. "_" .. sanitized_role
 end
-
 return p
 MARKUP,
             ],
