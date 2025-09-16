@@ -427,6 +427,7 @@ MARKUP,
                 'description' => <<<MARKUP
 {{#subobject: {{#invoke:Identifiers|getDlcIdentifier|Name={{{Name|}}}|Platform={{{Platform|}}}}} |
 |Has object type=Dlc
+|Has composite name={{{Name|}}} ({{{Platform|}}})
 |Has games={{{Game|}}}
 |Has name={{{Name|}}}
 |Has guid={{{Guid|}}}
@@ -1175,6 +1176,7 @@ MARKUP,
                 'description' => <<<MARKUP
 {{#subobject: {{#invoke:Identifiers|getReleaseIdentifier|Name={{{Name|}}}|Region={{{Region|}}}|Platform={{{Platform|}}}}} |
 |Has object type=Release
+|Has composite name={{{Name|}}} ({{{Platform|}}}, {{{Region|}}})
 |Has games={{{Game|}}}
 |Has name={{{Name|}}}
 |Has guid={{{Guid|}}}

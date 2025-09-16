@@ -304,10 +304,44 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Game|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
 |- 
 ! Release:
-| {{{field|Release|input type=tokens|max values=1|query=[[-Has subobject::{{BASEPAGENAME}}/Releases]] [[Has object type::Release]]|list template=ListSubobjectName}}}
+| {{{field
+|Release
+|input type=tokens
+|mapping template=Release token
+|values={{#ask: [[Has games::{{BASEPAGENAME}}]][[Has object type::Release]]
+ |?Has composite name
+ |format=plainlist
+ |link=none
+ |order=asc
+ |headers=hide
+ |mainlabel=-
+ |searchlabel=-
+ |propsep=, 
+ |valuesep=, 
+ |sep=, 
+ |prefix=none
+}}
+}}}
 |-
 ! Dlc:
-| {{{field|Dlc|input type=tokens|max values=1|query=[[-Has subobject::{{BASEPAGENAME}}/DLC]] [[Has object type::Dlc]]|list template=ListSubobjectName}}}
+| {{{field
+|Dlc
+|input type=tokens
+|max values=1
+|values={{#ask: [[Has games::{{BASEPAGENAME}}]][[Has object type::Dlc]]
+ |?Has composite name
+ |format=plainlist
+ |link=none
+ |order=asc
+ |headers=hide
+ |mainlabel=-
+ |searchlabel=-
+ |propsep=, 
+ |valuesep=, 
+ |sep=, 
+ |prefix=none
+}}
+}}}
 |-
 ! Person: 
 | {{{field|Person|mandatory|input type=tokens|max values=1|values from category=People}}}

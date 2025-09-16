@@ -77,6 +77,11 @@ The allowed values for this property are:
 [[Has type::Page]]'
             ],
             [
+                'title' => 'Property:Has composite name',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
                 'title' => 'Property:Has concepts',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This property are for concepts found in games.
