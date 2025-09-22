@@ -14,7 +14,7 @@ class Person extends Resource
     const RESOURCE_MULTIPLE = "people";
     const PAGE_NAMESPACE = "People/";
     const TABLE_NAME = "wiki_person";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','last_name','birthday','country','death','gender','hometown','twitter','website'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','last_name','birthday','country','death','gender','hometown','twitter','website','image_id','background_image_id'];
     const RELATION_TABLE_MAP = [
         "characters" =>  [
             "table" => "wiki_assoc_character_person", 
@@ -138,8 +138,8 @@ class Person extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'last_name' => $row->last_name,
             'gender' => $row->gender,
             'hometown' => $row->hometown,

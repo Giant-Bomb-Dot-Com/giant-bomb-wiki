@@ -1,10 +1,14 @@
 <?php
 
 require_once(__DIR__.'/libs/common.php');
+require_once(__DIR__.'/libs/db_connection.php');
+require_once(__DIR__.'/libs/mw_db_wrapper.php');
+require_once(__DIR__.'/libs/pdo_db_wrapper.php');
 
 class GenerateXMLResource extends Maintenance
 {
     use CommonVariablesAndMethods;
+    use DBConnection;
 
     const CHUNK_SIZE = 20000000;
     const LIMIT_SIZE = 20000;
@@ -15,6 +19,8 @@ class GenerateXMLResource extends Maintenance
         $this->addDescription("Converts db content into xml");
         $this->addOption('resource', 'One of accessory, character, company, concept, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
+        $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
+        $this->addOption('start', 'Start at an id. Requires resource to be set.', false, true, 's');
     }
 
     /**
@@ -32,7 +38,8 @@ class GenerateXMLResource extends Maintenance
             }
         }
 
-        $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE'));
+        $db = ($this->getOption('external', false)) ? $this->getExtDb() : $this->getApiDb();
+        $start = $this->getOption('start', 0);
 
         foreach ($resources as $resource) {
 
@@ -49,9 +56,11 @@ class GenerateXMLResource extends Maintenance
 
             if ($this->getOption('resource', false) && $id = $this->getOption('id', false)) {
                 $result = $content->getById($id);
+                $totalItems = 1;
             }
             else {
-                $result = $content->getAll();
+                $result = $content->getAll($start);
+                $totalItems = is_array($result) ? count($result) : $result->count();
             }
 
             $data = [];
@@ -74,22 +83,35 @@ class GenerateXMLResource extends Maintenance
                 }
 
                 // limit size of file to either 20mb or 20000 pages
-                if ($size > self::CHUNK_SIZE || $count == self::LIMIT_SIZE) {
+                if ($size > self::CHUNK_SIZE || ($count % self::LIMIT_SIZE) == 0) {
                     $filename = sprintf('%s_%07d.xml', $resource, $count);
                     $this->streamXML($filename, $data);
                     $data = [];
                     $size = 0;
                 }
 
-                if ($count % 1000 == 0) {
-                    echo "$count...\n";
-                }
+                $this->showProgressBar($count, $totalItems);
             }
 
             if ($size != 0) {
-                $filename = sprintf('%s_%07d.xml', $resource, $count);
+                $filename = sprintf('%s_%d_%07d.xml', $resource, $start, $count);
                 $this->streamXML($filename, $data);
             }
+        }
+    }
+
+    public function showProgressBar(int $current, int $total, int $barWidth = 200): void
+    {
+        $percentage = ($total > 0) ? round(($current / $total) * 100) : 0;
+        $filledWidth = round($barWidth * ($percentage / 100));
+        $emptyWidth = $barWidth - $filledWidth;
+
+        $bar = '[' . str_repeat('=', $filledWidth) . str_repeat(' ', $emptyWidth) . ']';
+
+        echo "\r" . $bar . " " . $percentage . "%";
+        
+        if ($current === $total) {
+            echo PHP_EOL;
         }
     }
 }

@@ -16,6 +16,12 @@ services:
       context: .
       args:
         INSTALL_API: "true"
+    environment:
+      - EXTERNAL_DB_HOST=${EXTERNAL_DB_HOST}
+      - EXTERNAL_DB_PORT=${EXTERNAL_DB_PORT}
+      - EXTERNAL_DB_USER=${EXTERNAL_DB_USER}
+      - EXTERNAL_DB_PASSWORD=${EXTERNAL_DB_PASSWORD}
+      - EXTERNAL_DB_NAME=${EXTERNAL_DB_NAME}
     extends:
       service: wiki
       file: docker-compose.yml

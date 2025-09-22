@@ -17,7 +17,7 @@ abstract class Resource
     const RELEASE_DATE_TYPE_QTR_YEAR = 2;
     const RELEASE_DATE_TYPE_ONLY_YEAR = 3;
 
-    private IDatabase $dbw;
+    private $dbw;
     private bool $crawlRelations;
 
     /**
@@ -25,7 +25,7 @@ abstract class Resource
      *
      * @param IDatabase $dbw Primay db for writes
      */
-    public function __construct(IDatabase $dbw, bool $crawlRelations = false) 
+    public function __construct(DbInterface $dbw, bool $crawlRelations = false) 
     {
         $this->dbw = $dbw;
         $this->crawlRelations = $crawlRelations;
@@ -88,7 +88,7 @@ abstract class Resource
         // all fields in the table are used as a composite key
         // so we return its id if it exists
         if ($diffCount <= 1) {
-            $qb = $this->dbw->newSelectQueryBuilder();
+            $qb = $this->getDb()->newSelectQueryBuilder();
             $qb->select('*')
                ->from($tableName)
                ->where($data)
@@ -103,7 +103,7 @@ abstract class Resource
                 return (isset($set['id'])) ? $set['id'] : 0;
             }
             else {
-                $this->dbw->insert(
+                $this->getDb()->insert(
                     $tableName,
                     [$data],
                     __METHOD__
@@ -113,7 +113,7 @@ abstract class Resource
         else {
 
             // insert if new, update if exists
-            $this->dbw->upsert( 
+            $this->getDb()->upsert( 
                 $tableName, 
                 [$data],          
                 [$uniquePrimaryKeys],  
@@ -122,7 +122,7 @@ abstract class Resource
             );
         }
 
-        $insertId = (int)$this->dbw->insertId();
+        $insertId = (int)$this->getDb()->insertId();
 
         if ($insertId === 0) {
             if (isset($data['id'])) {
@@ -153,7 +153,7 @@ abstract class Resource
      */
     public function getIds(int $offset, int $limit)
     {
-        $qb = $this->dbw->newSelectQueryBuilder();
+        $qb = $this->getDb()->newSelectQueryBuilder();
         $qb->field('id')
             ->from(static::TABLE_NAME)
             ->offset($offset)
@@ -172,23 +172,7 @@ abstract class Resource
      */
     public function getTextToConvert($id = false, $force = false)
     {
-        if ($id) {
-            $clause = 'id = '.$id;
-        }
-        else {
-            $clause = 'description != ""';
-            if (!$force) {
-                $clause .= ' AND mw_formatted_description IS NULL';
-            }
-        }
-
-        $qb = $this->dbw->newSelectQueryBuilder();
-        $qb->select(['id', 'name', 'description'])
-             ->from(static::TABLE_NAME)
-             ->where($clause)
-             ->caller(__METHOD__);
-
-        return $qb->fetchResultSet();
+        return $this->dbw->getTextToConvert(static::TABLE_NAME, $id, $force);
     }
 
     /**
@@ -200,107 +184,51 @@ abstract class Resource
      */
     public function getNamesToConvert($id = false, $force = false)
     {
-        if ($id) {
-            $clause = 'id = '.$id;
-        }
-        else {
-            $clause = 'name != ""';
-            if (!$force) {
-                $clause .= ' AND mw_page_name IS NULL';
-            }
-        }
-
-        $qb = $this->dbw->newSelectQueryBuilder();
-        $qb->select(['id', 'name'])
-             ->from(static::TABLE_NAME)
-             ->where($clause)
-             ->caller(__METHOD__);
-
-        return $qb->fetchResultSet();
-    }
-
-    /**
-     * Get name
-     * 
-     * @return string|false
-     */
-    public function getName(int $id)
-    {
-        $qb = $this->dbw->newSelectQueryBuilder();
-        $qb->field('name')
-           ->from(static::TABLE_NAME)
-           ->where('id = '.$id);
-
-        return $qb->fetchField();
+        return $this->dbw->getNamesToConvert(static::TABLE_NAME, $id, $force);
     }
 
     /**
      * Get the page name
      * 
+     * @param int $id
+     * @param string|null $table
+     * 
      * @return string|false
      */
-    public function getPageName(int $id)
+    public function getPageName(int $id, string $table = null)
     {
-        $qb = $this->dbw->newSelectQueryBuilder();
-        $qb->field('mw_page_name')
-           ->from(static::TABLE_NAME)
-           ->where('id = '.$id);
-
-        return $qb->fetchField();
+        $table = (is_null($table)) ? static::TABLE_NAME : $table;
+        return $this->dbw->getPageName($table, $id);
     }
 
     /**
      * Get the wiki object by id
      * 
      * @param int $id
-     * @return MysqliResultWrapper
      */
-    public function getById(int $id): MysqliResultWrapper
-    {
-        $qb = $this->getAllFieldsQueryBuilder($this->dbw->newSelectQueryBuilder())->where(['o.id' => $id, 'o.deleted' => 0]);
-        $result = $qb->fetchResultSet();
-
-        return $result;
-    }
-
-    /**
-     * Get all the wiki objects
-     * 
-     * @return MysqliResultWrapper
-     */
-    public function getAll(): MysqliResultWrapper
-    {
-        $qb = $this->getAllFieldsQueryBuilder($this->dbw->newSelectQueryBuilder())->where(['o.deleted' => 0]);
-        $result = $qb->fetchResultSet();
-
-        return $result;
-    }
-
-    /**
-     * Creates the query builder to retrieve all fields and relationships
-     */
-    public function getAllFieldsQueryBuilder(SelectQueryBuilder $qb): SelectQueryBuilder
+    public function getById(int $id)
     {
         $prefix = function($element) { 
             return 'o.'.$element;
         };
 
-        $fields = array_merge(
-            array_map($prefix, static::TABLE_FIELDS),
-            [
-                'image1.image AS infobox_image',
-                'image2.image AS background_image'
-            ]
-        );
-        return $qb->select($fields)
-                ->from(static::TABLE_NAME, 'o')
-                ->leftJoin('image',
-                           'image1',
-                           'o.image_id = image1.id')
-                ->leftJoin('image',
-                           'image2',
-                           'o.background_image_id = image2.id')
-                ->caller( __METHOD__ );
+        $fields = array_map($prefix, static::TABLE_FIELDS);
+
+        return $this->dbw->getById(static::TABLE_NAME, $fields, $id);  
+    }
+
+    /**
+     * Get all the wiki objects
+     */
+    public function getAll(int $offset = 0)
+    {
+        $prefix = function($element) { 
+            return 'o.'.$element;
+        };
+
+        $fields = array_map($prefix, static::TABLE_FIELDS);
+
+        return $this->dbw->getAll(static::TABLE_NAME, $fields, $offset);  
     }
 
     /**
@@ -311,13 +239,7 @@ abstract class Resource
      */
     public function updateMediaWikiDescription(int $id, string $mwDescription)
     {
-        $ub = $this->dbw->newUpdateQueryBuilder();
-        $ub->update(static::TABLE_NAME)
-             ->set(['mw_formatted_description' => $mwDescription])
-             ->where(['id' => $id])
-             ->caller(__METHOD__);
-
-        return $ub->execute();
+        return $this->dbw->updateMediaWikiDescription(static::TABLE_NAME, $id, $mwDescription);
     }
 
     /**
@@ -328,13 +250,55 @@ abstract class Resource
      */
     public function updateMediaWikiPageName(int $id, string $mwPageName)
     {
-        $ub = $this->dbw->newUpdateQueryBuilder();
-        $ub->update(static::TABLE_NAME)
-             ->set(['mw_page_name' => $mwPageName])
-             ->where(['id' => $id])
-             ->caller(__METHOD__);
+        return $this->dbw->updateMediaWikiPageName(static::TABLE_NAME, $id, $mwPageName);
+    }
 
-        return $ub->execute();
+    /**
+     * Loops through the relation table map to obtain a comma delimited list of relation page names
+     * 
+     * @param int $id
+     * @return string
+     */
+    public function getRelationsFromDB(int $id): string
+    {
+        $result = $this->dbw->getRelatedPageNames(static::TABLE_NAME, static::RELATION_TABLE_MAP, $id);
+
+        $relations = [];
+        foreach (array_keys(static::RELATION_TABLE_MAP) as $key) {
+            $relations[] = sprintf("| %s=%s", ucwords($key), $result->$key);
+        }
+
+        return implode("\n", $relations);
+    }
+
+    /**
+     * Gets credits for a game
+     * 
+     * @param int $id
+     */
+    public function getCreditsFromDB(int $id)
+    {
+        return $this->dbw->getCreditsFromDB($id);
+    }
+
+    /**
+     * Gets releases for a game
+     *
+     * @param int $id
+     */
+    public function getReleasesFromDB(int $id)
+    {
+        return $this->dbw->getReleasesFromDB($id);
+    }
+
+    /**
+     * Gets dlcs for a game
+     *
+     * @param int $id
+     */
+    public function getDLCFromDB(int $id)
+    {
+        return $this->dbw->getDLCFromDB($id);
     }
 
     /**
@@ -390,7 +354,7 @@ abstract class Resource
     public function save(array $data): array
     {
         try {
-            $this->dbw->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__); 
+            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__); 
 
             // TODO: batch save?
 
@@ -404,7 +368,7 @@ abstract class Resource
             wfLogWarning("Error during ".__METHOD__." with disabled FK checks: " . $e->getMessage());
             throw $e;
         } finally {
-            $this->dbw->query("SET FOREIGN_KEY_CHECKS = 1;", __METHOD__); 
+            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 1;", __METHOD__); 
         }
 
         return $relations;

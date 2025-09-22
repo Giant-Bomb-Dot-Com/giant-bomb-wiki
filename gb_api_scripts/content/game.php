@@ -70,7 +70,7 @@ class Game extends Resource
             "relationTable" => "wiki_company",
             "relationField" => "company_id"
         ],
-        "similar_games" => [
+        "games" => [
             "table" => "wiki_assoc_game_similar", 
             "mainField" => "game_id",  
             "relationTable" => "wiki_game",
@@ -183,14 +183,13 @@ class Game extends Resource
         }
         $relations = $this->getRelationsFromDB($row->id);
 
-        // TODO: how to handle releases, dlcs, people
         $description = $this->formatSchematicData([
             'name' => $name,
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'release_date' => $row->release_date,
             'release_date_type' => $row->release_date_type,
             'relations' => $relations
@@ -204,7 +203,7 @@ class Game extends Resource
     }
 
     /**
-     * Converts release and credits
+     * Converts release, dlcs and credits
      * 
      * @param stdClass $row
      * @return array
@@ -222,7 +221,7 @@ class Game extends Resource
         $result = [];
         $credits = $this->getCreditsFromDB($row->id);
 
-        if ($credits->count() > 0) {
+        if ($this->getDb()->hasResults($credits)) {
             $roleMap = [
                 1 => 'Unclassified',
                 2 => 'Voice Actor',
@@ -244,12 +243,17 @@ class Game extends Resource
 MARKUP;
             foreach ($credits as $credit) {
                 $department = (is_null($credit->role_id)) ? $roleMap[1] : $roleMap[$credit->role_id];
+                $role = str_replace('&', ' and ', $credit->description);
+
                 $description .= <<<MARKUP
 {{CreditSubobject
-|ParentPage={$row->mw_page_name}
+|Game={$row->mw_page_name}
+|Release=
+|Dlc=
 |Person={$credit->mw_page_name}
+|Company=
 |Department={$department}
-|Role={$credit->description}
+|Role={$role}
 }}
 
 MARKUP;
@@ -264,7 +268,7 @@ MARKUP;
 
         $releases = $this->getReleasesFromDB($row->id);
 
-        if ($releases->count() > 0) {
+        if ($this->getDb()->hasResults($releases)) {
             $regionMap = [
                 1 => 'United States',
                 2 => 'United Kingdom',
@@ -387,17 +391,22 @@ MARKUP;
                         $widescreenSupport = 'Yes';
                     }
 
+                    $productCodeType = '';
                     $productCode = $release->product_code;
-                    $productCodeType = $release->product_code_type;
-                    if (!empty($release->product_code) && is_null($productCodeType)) {
-                        if (preg_match('/^(\d[ -]?){12}\d$/', trim($productCode))) { // EAN/13: 13 digits
-                            $productCodeType = $productCodeTypeMap[1];
+                    if (!empty($release->product_code)) {
+                        if (is_null($release->product_code_type)) {
+                            if (preg_match('/^(\d[ -]?){12}\d$/', trim($productCode))) { // EAN/13: 13 digits
+                                $productCodeType = $productCodeTypeMap[1];
+                            }
+                            else if (preg_match('/^(\d[ -]?){11}\d$/', trim($productCode))) { // UPC/A: 12 digits
+                                $productCodeType = $productCodeTypeMap[2];
+                            }
+                            else if (preg_match('/^(?:\d-?){9}[\dX]$/', trim($productCode))) { // ISBN-10: 10 digits
+                                $productCodeType = $productCodeTypeMap[3];
+                            }
                         }
-                        else if (preg_match('/^(\d[ -]?){11}\d$/', trim($productCode))) { // UPC/A: 12 digits
-                            $productCodeType = $productCodeTypeMap[2];
-                        }
-                        else if (preg_match('/^(?:\d-?){9}[\dX]$/', trim($productCode))) { // ISBN-10: 10 digits
-                            $productCodeType = $productCodeTypeMap[3];
+                        else {
+                            $productCodeType = $productCodeTypeMap[$release->product_code_type];
                         }
                     }
 
@@ -416,10 +425,18 @@ MARKUP;
                         }
                     }
 
+                    $imageName = $row->image_id;
+                    if (!empty($imageName)) {
+                        $imageName = $this->getDb()->getImageName($row->image_id);
+                        if (!empty($imageName)) {
+                            $imageName = str_replace('%20', ' ', $imageName);
+                        }
+                    }
+    
                     $releaseObjects[$release->id] = [
                         'Game' => $row->mw_page_name,
                         'Name' => htmlspecialchars($release->name, ENT_XML1, 'UTF-8'),
-                        'Image' => $release->image_id, // join image table to replace with filename
+                        'Image' => $imageName,
                         'Region' => empty($release->region_id) ? '' : $regionMap[$release->region_id],
                         'Platform' => $release->platform,
                         'Rating' => empty($release->rating_id) ? '' : $ratingsMap[$release->rating_id],
@@ -521,7 +538,7 @@ MARKUP;
 MARKUP;
         $dlcs = $this->getDLCFromDB($row->id);
 
-        if ($dlcs->count() > 0) {
+        if ($this->getDb()->hasResults($dlcs)) {
             // hydrate dlc objects
             $dlcObjects = [];
             foreach ($dlcs as $dlc) {
@@ -543,12 +560,20 @@ MARKUP;
                         }
                     }
 
+                    $imageName = $dlc->image_id;
+                    if (!empty($imageName)) {
+                        $imageName = $this->getDb()->getImageName($dlc->image_id);
+                        if (!empty($imageName)) {
+                            $imageName = str_replace('%20', ' ', $imageName);
+                        }
+                    }
+
                     $dlcObjects[$dlc->id] = [
                         'Game' => $row->mw_page_name,
                         'Name' => htmlspecialchars($dlc->name, ENT_XML1, 'UTF-8'),
                         'Deck' => empty($dlc->deck) ? '' : htmlspecialchars($dlc->deck, ENT_XML1, 'UTF-8'),
                         'LaunchPrice' => $dlc->launch_price,
-                        'Image' => $dlc->image_id, // join image table to replace with filename
+                        'Image' => $imageName,
                         'Platform' => $dlc->platform,
                         'Developers' => empty($dlc->developer) ? [] : [$dlc->developer => 0],
                         'Publishers' => empty($dlc->publisher) ? [] : [$dlc->publisher => 0],

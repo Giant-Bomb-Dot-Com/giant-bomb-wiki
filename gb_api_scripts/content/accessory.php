@@ -14,7 +14,7 @@ class Accessory extends Resource
     const RESOURCE_MULTIPLE = "accessories";
     const PAGE_NAMESPACE = "Accessories/";
     const TABLE_NAME = "wiki_accessory";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','image_id','background_image_id'];
 
     /**
      * Matching table fields to api response fields
@@ -73,8 +73,8 @@ class Accessory extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
         ]).$desc;
 
         return [

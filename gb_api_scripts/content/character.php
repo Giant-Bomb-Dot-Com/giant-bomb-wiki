@@ -14,7 +14,7 @@ class Character extends Resource
     const RESOURCE_MULTIPLE = "characters";
     const PAGE_NAMESPACE = "Characters/";
     const TABLE_NAME = "wiki_character";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','real_name','gender','birthday','deck','mw_formatted_description','death','image_id','background_image_id'];
     const RELATION_TABLE_MAP = [
         "concepts" => [
             "table" => "wiki_assoc_character_concept", 
@@ -142,8 +142,8 @@ class Character extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'real_name' => $row->real_name,
             'gender' => $row->gender,
             'birthday' => $row->birthday,

@@ -71,6 +71,20 @@ $wgExternalDataSources['gb_api_dump'] = [
     'password' => getenv("MARIADB_PASSWORD")
 ];
 
+$wgExternalDatabases['external_db'] = [ 
+    'class' => 'DatabaseLoadBalancer', 
+    'hosts' => [ 
+        [ 
+            'type' => 'mysql',
+            'host' => getenv( 'EXTERNAL_DB_HOST' ), 
+            'dbname' => getenv( 'EXTERNAL_DB_NAME' ),
+            'user' => getenv( 'EXTERNAL_DB_USER' ),
+            'password' => getenv( 'EXTERNAL_DB_PASSWORD' ) 
+        ] 
+    ] 
+];
+
+
 # MySQL specific settings
 $wgDBprefix = "";
 $wgDBssl = false;

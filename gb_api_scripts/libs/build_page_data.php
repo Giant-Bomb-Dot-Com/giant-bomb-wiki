@@ -7,112 +7,10 @@ trait BuildPageData
     /**
      * Converts result data into page data of [['title', 'namespace', 'description'],...]
      * 
-     * @param MysqliResultWrapper $data
+     * @param stdClass $data
      * @return array
      */
     abstract public function getPageDataArray(stdClass $data): array;
-
-    /**
-     * Loops through the relation table map to obtain a comma delimited list of relation page names
-     * 
-     * @param int $id
-     * @return string
-     */
-    public function getRelationsFromDB(int $id): string
-    {
-		$relations = '';
-		$lastKey = array_key_last(self::RELATION_TABLE_MAP);
-
-        foreach (self::RELATION_TABLE_MAP as $key => $relation) {
-
-            $groupConcat = "GROUP_CONCAT(o.mw_page_name SEPARATOR ',')";
-        	// join the relation table with the connector table to get the page names
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                       ->select(['mw_page_name' => $groupConcat])
-                       ->from($relation['table'], 'j')
-                       ->join($relation['relationTable'],'o','j.'.$relation['relationField'].' = o.id')
-                       ->where('j.'.$relation['mainField'].' = '.$id)
-                       ->groupBy('j.'.$relation['mainField'])
-                       ->caller(__METHOD__);
-
-            $result = $qb->fetchfield();
-
-            if (!empty($result)) {
-	            // craft the semantic table row for the relation
-	            $relations .= '| '.ucwords($key).'='.$result;
-	            if ($lastKey != $key) {
-	            	$relations .= "\n";
-	            }
-	        }
-        }
-
-        return $relations;   	
-    }
-
-    /**
-     * Gets credits for a game
-     * 
-     * @param int $id
-     */
-    public function getCreditsFromDB(int $id)
-    {
-        $qb = $this->getDb()->newSelectQueryBuilder()
-                   ->select(['o.person_id','o.description','o.role_id','p.mw_page_name'])
-                   ->from('wiki_assoc_game_person','o')
-                   ->join('wiki_person', 'p', 'o.person_id = p.id')
-                   ->where('o.game_id = '.$id)
-                   ->caller(__METHOD__);
-
-        return $qb->fetchResultSet();
-    }
-
-    /**
-     * Gets releases for a game
-     *
-     * @param int $id
-     */
-    public function getReleasesFromDB(int $id)
-    {
-        $qb = $this->getDb()->newSelectQueryBuilder()
-                   ->select(['o.id','o.region_id','o.product_code_type','o.company_code_type','o.rating_id','o.image_id','o.release_date','o.release_date_type','o.product_code','o.company_code','o.name','o.description','o.widescreen_support','o.minimum_players','o.maximum_players','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a6.feature_id AS mp_feature_id','a7.resolution_id','a8.feature_id AS sp_feature_id','a9.soundsystem_id'])
-                   ->from('wiki_game_release', 'o')
-                   ->leftJoin('wiki_game_release_to_developer','a1','o.id = a1.release_id')
-                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
-                   ->leftJoin('wiki_game_release_to_publisher','a3','o.id = a3.release_id')
-                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
-                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
-                   ->leftJoin('wiki_game_release_to_multiplayer_feature','a6','o.id = a6.release_id')
-                   ->leftJoin('wiki_game_release_to_resolution','a7','o.id = a7.release_id')
-                   ->leftJoin('wiki_game_release_to_singleplayer_feature','a8','o.id = a8.release_id')
-                   ->leftJoin('wiki_game_release_to_sound_system','a9','o.id = a9.release_id')
-                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
-                   ->caller(__METHOD__);
-
-        return $qb->fetchResultSet();
-    }
-
-    /**
-     * Gets dlcs for a game
-     *
-     * @param int $id
-     */
-    public function getDLCFromDB(int $id)
-    {
-        $qb = $this->getDb()->newSelectQueryBuilder()
-                   ->select(['o.id','o.image_id','o.release_date','o.release_date_type','o.name','o.description','o.launch_price','o.deck','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a7.name as dlc_type'])
-                   ->from('wiki_game_dlc', 'o')
-                   ->leftJoin('wiki_game_dlc_to_developer','a1','o.id = a1.dlc_id')
-                   ->leftJoin('wiki_company','a2','a1.company_id = a2.id')
-                   ->leftJoin('wiki_game_dlc_to_publisher','a3','o.id = a3.dlc_id')
-                   ->leftJoin('wiki_company','a4','a3.company_id = a4.id')
-                   ->leftJoin('wiki_platform','a5','o.platform_id = a5.id')
-                   ->leftJoin('wiki_game_dlc_to_type', 'a6', 'o.id = a6.dlc_id')
-                   ->leftJoin('wiki_game_dlc_type', 'a7', 'a6.type_id = a7.id')
-                   ->where('o.game_id = '.$id.' AND o.deleted = 0')
-                   ->caller(__METHOD__);
-
-        return $qb->fetchResultSet();
-    }
 
     /**
      * Creates the semantic table based on fields in the incoming $data array
@@ -144,18 +42,17 @@ trait BuildPageData
         }
 
         if (!empty($data['infobox_image'])) {
-            $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+            $infoboxImage = $this->getDb()->getImageName($data['infobox_image']);
             $infoboxImage = str_replace('%20', ' ', $infoboxImage);
             $text .= "\n| Image={$infoboxImage}";
             $text .= "\n| Caption=image of {$data['name']}";
         }
 
         if (!empty($data['background_image'])) {
-            $imageFragment = parse_url($data['background_image'], PHP_URL_PATH);
-            $backgroundImage = basename($imageFragment);
+            $backgroundImage = $this->getDb()->getImageName($data['background_image']);
+            $backgroundImage = str_replace('%20', ' ', $backgroundImage);
             $text .= "\n| BackgroundImage={$backgroundImage}";
-            $text .= "\n| Caption=background image used in Giant Bomb's game page for {$data['name']}";
+            $text .= "\n| BackgroundImageCaption=background image used in Giant Bomb's game page for {$data['name']}";
         }
 
         if (!empty($data['real_name'])) {
@@ -248,12 +145,7 @@ trait BuildPageData
         }
 
         if (!empty($data['manufacturer_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_company')
-                        ->where('id = '.$data['manufacturer_id'])
-                        ->caller(__METHOD__);
-            $manufacturer = $qb->fetchField();
+            $manufacturer = $this->getDb()->getPageName('wiki_company', $data['manufacturer_id']);
             $text .= "\n| Manufacturer={$manufacturer}";
         }
 
@@ -274,24 +166,12 @@ trait BuildPageData
         }
 
         if (!empty($data['game_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_game')
-                        ->where('id = '.$data['game_id'])
-                        ->caller(__METHOD__);
-            $game = $qb->fetchField();
-            $game = substr($game, strpos($game, '/') + 1);
+            $game = $this->getDb()->getPageName('wiki_game', $data['game_id']);
             $text .= "\n| Games={$game}";
         }
 
         if (!empty($data['platform_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_platform')
-                        ->where('id = '.$data['platform_id'])
-                        ->caller(__METHOD__);
-            $platform = $qb->fetchField();
-            $platform = substr($platform, strpos($platform, '/') + 1);
+            $platform = $this->getDb()->getPageName('wiki_platform', $data['platform_id']);
             $text .= "\n| Platforms={$platform}";
         }
 

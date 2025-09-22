@@ -14,7 +14,7 @@ class Company extends Resource
     const RESOURCE_MULTIPLE = "companies";
     const PAGE_NAMESPACE = "Companies/";
     const TABLE_NAME = "wiki_company";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','abbreviation','founded_date','address','city','country','state','phone','website','image_id','background_image_id'];
     const RELATION_TABLE_MAP = [
         "characters" => [
             "table" => "wiki_assoc_character_company", 
@@ -144,8 +144,8 @@ class Company extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'abbreviation' => $row->abbreviation,
             'founded_date' => $row->founded_date,
             'address' => $row->address,

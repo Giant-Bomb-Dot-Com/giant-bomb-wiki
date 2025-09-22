@@ -1,16 +1,22 @@
 <?php
 
 require_once(__DIR__.'/libs/converter.php');
+require_once(__DIR__.'/libs/db_connection.php');
+require_once(__DIR__.'/libs/mw_db_wrapper.php');
+require_once(__DIR__.'/libs/pdo_db_wrapper.php');
 
 class ConvertToMWPageNames extends Maintenance
 {
+    use DBConnection;
+
     public function __construct() 
     {
         parent::__construct();
         $this->addDescription("Converts names into MediaWiki page names");
-        $this->addOption('resource', 'One of accessory, character, company, concept, dlc, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
+        $this->addOption('resource', 'One of accessory, character, company, concept, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('force', 'Forces conversion without checking for an empty mw_formatted_description field.', false, false, 'f');
+        $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
     }
 
     /**
@@ -20,7 +26,7 @@ class ConvertToMWPageNames extends Maintenance
      */
     public function execute()
     {
-        $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','theme','thing'];
+        $resources = ['accessory','character','company','concept','franchise','game','genre','location','person','platform','theme','thing'];
         $seenNames = array_fill_keys($resources, []);
 
         if ($resourceOption = $this->getOption('resource', false)) {
@@ -29,7 +35,7 @@ class ConvertToMWPageNames extends Maintenance
             }
         }
 
-        $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE'));
+        $db = ($this->getOption('external', false)) ? $this->getExtDb() : $this->getApiDb();
         $converter = new HtmlToMediaWikiConverter($db);
 
         foreach ($resources as $resource) {
@@ -46,13 +52,27 @@ class ConvertToMWPageNames extends Maintenance
             $rows = $content->getNamesToConvert($this->getOption('id', false), $this->getOption('force', false));
             foreach ($rows as $row) {
 
-                // append id to duplicate names
                 if (!isset($seenNames[$resource][$row->name])) {
                     $name = $row->name;
                     $seenNames[$resource][$name] = 1;
                 }
                 else {
-                    $name = $row->name.'_'.$row->id;
+                    // append id to duplicate names
+                    $suffix = $row->id;
+
+                    // append release year to duplicate game names
+                    if (property_exists($row, "release_date")) {
+                        if (!is_null($row->release_date)) {
+                            $year = substr($row->release_date, 0, 4);
+                            $tempName = $row->name . '_' . $year;
+                            if (!isset($seenNames[$resource][$tempName])) {
+                                $seenNames[$resource][$tempName] = 1;
+                                $suffix = $year;
+                            }
+                        }
+                    }
+
+                    $name = $row->name . '_' . $suffix;
                 }
 
                 $convertedPageName = $content::PAGE_NAMESPACE.$converter->convertName($name);

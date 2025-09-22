@@ -14,7 +14,7 @@ class Franchise extends Resource
     const RESOURCE_MULTIPLE = "franchises";
     const PAGE_NAMESPACE = "Franchises/";
     const TABLE_NAME = "wiki_franchise";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','image_id','background_image_id'];
     const RELATION_TABLE_MAP = [
         "characters" =>  [
             "table" => "wiki_assoc_character_franchise", 
@@ -122,8 +122,8 @@ class Franchise extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'relations' => $relations
         ]).$desc;
 

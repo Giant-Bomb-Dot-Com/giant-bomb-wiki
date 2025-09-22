@@ -12,7 +12,7 @@ class HtmlToMediaWikiConverter
     private int $typeId;
     private int $id;
 
-    public function __construct(IDatabase $dbw) 
+    public function __construct(DbInterface $dbw) 
     {
         $this->dbw = $dbw;
         $this->dom = new DOMDocument('1.0', 'UTF-8');
@@ -30,8 +30,7 @@ class HtmlToMediaWikiConverter
     public function convert(string $description, int $typeId, int $id): string|false
     {
         if (empty($description)) {
-            echo sprintf("WARNING: description for %s-%s is empty.\n", $typeId, $id);
-            return false;
+            return '';
         }
 
         $this->typeId = $typeId;
@@ -340,6 +339,10 @@ class HtmlToMediaWikiConverter
         $mwLink = '';
         $contentGuid = $link->getAttribute('data-ref-id');
         $href = $link->getAttribute('href');
+        if (empty($href)) {
+            return $link->textContent;
+        }
+
         $displayText = trim($this->getInnerHtml($link));
         if (preg_match('/<img src="(.+)"\/?>/', $displayText, $matches)) {
             $displayText = $matches[1];
@@ -372,7 +375,6 @@ class HtmlToMediaWikiConverter
                 $contentTypeId = (int)$contentTypeId;
                 $contentId = (int)$contentId;
 
-                // what to do with releases?
                 if (isset($this->map[$contentTypeId]) && !is_null($this->map[$contentTypeId]['plural'])) {
 
                     // instantiate the content class to retrieve the name for the page
@@ -384,6 +386,7 @@ class HtmlToMediaWikiConverter
                     }
 
                     $name = $this->map[$contentTypeId]['content']->getPageName($contentId);
+
                     // convert the slug into the name if missing from the db
                     if ($name === false) {
                         $name = str_replace('-',' ',$name);

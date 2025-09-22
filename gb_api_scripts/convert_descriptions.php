@@ -1,9 +1,13 @@
 <?php
 
 require_once(__DIR__.'/libs/converter.php');
+require_once(__DIR__.'/libs/db_connection.php');
+require_once(__DIR__.'/libs/mw_db_wrapper.php');
+require_once(__DIR__.'/libs/pdo_db_wrapper.php');
 
 class ConvertToMWDescriptions extends Maintenance
 {
+    use DBConnection;
 
     public function __construct() 
     {
@@ -13,6 +17,7 @@ class ConvertToMWDescriptions extends Maintenance
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash. Requires resource set.', false, true, 'i');
         $this->addOption('force', 'Forces conversion without checking for an empty mw_formatted_description field.', false, false, 'f');
         $this->addOption('debug', 'Prints out debug statements, does not update', false, false, 'd');
+        $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
     }
 
     /**
@@ -30,7 +35,7 @@ class ConvertToMWDescriptions extends Maintenance
             }
         }
 
-        $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE'));
+        $db = ($this->getOption('external', false)) ? $this->getExtDb() : $this->getApiDb();
         $converter = new HtmlToMediaWikiConverter($db);
 
         foreach ($resources as $resource) {
@@ -42,14 +47,23 @@ class ConvertToMWDescriptions extends Maintenance
                 exit(1);
             }
 
+            $emptyDescriptionTally = 0;
             $classname = ucfirst($resource);
             $content = new $classname($db);
             $rows = $content->getTextToConvert($this->getOption('id', false), $this->getOption('force', false));
             foreach ($rows as $row) {
-                $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
-                $content->updateMediaWikiDescription($row->id, $convertedDescription);
-                echo sprintf("Converted %s description for %s::%s\n", $resource, $row->id, $row->name);
+                if (!empty($row->description)) {
+                    $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
+                    $content->updateMediaWikiDescription($row->id, $convertedDescription);
+                    echo sprintf("Converted %s description for %s::%s\n", $resource, $row->id, $row->name);
+                }
+                else {
+                    $emptyDescriptionTally++;
+                }
             }
+
+            $content->updateMediaWikiDescription(0, '');
+            echo sprintf("Updated %d of %s to an empty string\n", $emptyDescriptionTally, $resource);
         }
 
         echo "done\n";
