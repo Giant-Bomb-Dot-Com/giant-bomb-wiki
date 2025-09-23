@@ -44,6 +44,7 @@ trait BuildPageData
         if (!empty($data['infobox_image'])) {
             $infoboxImage = $this->getDb()->getImageName($data['infobox_image']);
             $infoboxImage = str_replace('%20', ' ', $infoboxImage);
+            $infoboxImage = str_replace('&', '&amp;', $infoboxImage);
             $text .= "\n| Image={$infoboxImage}";
             $text .= "\n| Caption=image of {$data['name']}";
         }
@@ -51,6 +52,7 @@ trait BuildPageData
         if (!empty($data['background_image'])) {
             $backgroundImage = $this->getDb()->getImageName($data['background_image']);
             $backgroundImage = str_replace('%20', ' ', $backgroundImage);
+            $backgroundImage = str_replace('&', '&amp;', $backgroundImage);
             $text .= "\n| BackgroundImage={$backgroundImage}";
             $text .= "\n| BackgroundImageCaption=background image used in Giant Bomb's game page for {$data['name']}";
         }

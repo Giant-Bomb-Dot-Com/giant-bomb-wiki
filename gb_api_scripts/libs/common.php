@@ -197,7 +197,7 @@ trait CommonVariablesAndMethods
                 $xml->endElement();
 
                 if ($count % 1000 == 0) {
-                    echo "$count pages blocks created...\n";
+                    echo "\n$count pages blocks created...";
                 }
                 $count++;
             }
@@ -207,7 +207,7 @@ trait CommonVariablesAndMethods
 
         $xml->flush();
 
-        echo "Generated $file!\n";
-        echo "Total pages generated: $count\n";
+        echo "\nGenerated $file!";
+        echo "\nTotal pages generated: $count";
     }
 }
