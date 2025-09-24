@@ -118,6 +118,18 @@ To open the cypress UI, run
 pnpm cypress open
 ```
 
+### Unit Testing
+
+Unit tests are written in typescript, and run with the [Vitest](https://vitest.dev) framework. It supports typescript natively and executes quickly.
+
+To run the test suite, run
+
+```sh
+pnpm test
+```
+
+For a quick development feedback loop, `pnpm vitest` will start the test watcher.
+
 ### Continuous Integration
 
 A Github Action workflow will be added to execute a subset of the `cypress` tests as part of the pull request pipeline.
