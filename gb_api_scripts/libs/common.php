@@ -2,6 +2,8 @@
 
 trait CommonVariablesAndMethods 
 {
+    protected $reservedCharacters = ['<','>','(',')','[',']','|',':','{','}','/','&','#','+','%20','%28','%26','%29','%'];
+
     /**
      * Maps wiki type ids to their info
      */

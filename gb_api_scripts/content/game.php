@@ -226,7 +226,7 @@ class Game extends Resource
                 1 => 'Unclassified',
                 2 => 'Voice Actor',
                 3 => 'Thanks',
-                4 => 'Produciton',
+                4 => 'Production',
                 5 => 'Visual Arts',
                 6 => 'Programming',
                 7 => 'Design',
@@ -244,6 +244,8 @@ MARKUP;
             foreach ($credits as $credit) {
                 $department = (is_null($credit->role_id)) ? $roleMap[1] : $roleMap[$credit->role_id];
                 $role = str_replace('&', ' and ', $credit->description);
+                $role = str_replace('<', '&lt;', $role);
+                $role = str_replace('>', '&gt;', $role);
 
                 $description .= <<<MARKUP
 {{CreditSubobject
@@ -430,7 +432,15 @@ MARKUP;
                         $imageName = $this->getDb()->getImageName($row->image_id);
                         if (!empty($imageName)) {
                             $imageName = str_replace('%20', ' ', $imageName);
+                            $imageName = str_replace('&', '%26', $imageName);
                         }
+                    }
+
+                    if (!empty($row->company_code)) {
+                        $companyCode = str_replace('&', '&amp;', $row->company_code);
+                    }
+                    else {
+                        $companyCode = '';
                     }
     
                     $releaseObjects[$release->id] = [
@@ -446,7 +456,7 @@ MARKUP;
                         'ReleaseDateType' => $releaseDateType,
                         'ProductCode' => $productCode,
                         'ProductCodeType' => $productCodeType,
-                        'CompanyCode' => $release->company_code,
+                        'CompanyCode' => $companyCode,
                         'CompanyCodeType' => empty($release->company_code_type) ? '' : $companyCodeTypeMap[$release->company_code_type],
                         'WidescreenSupport' => $widescreenSupport,
                         'Resolutions' => empty($release->resolution_id) ? [] : [$resolutionsMap[$release->resolution_id] => 0],

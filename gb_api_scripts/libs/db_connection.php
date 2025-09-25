@@ -22,6 +22,8 @@ trait DBConnection
             $this->output("Database connection or query failed: " . $e->getMessage(), true);
         }
 
+        echo "Using external db.\n";
+
         return $dbWrapper;
     }
 
@@ -29,6 +31,8 @@ trait DBConnection
     { 
         $db = $this->getDB(DB_PRIMARY, [], getenv('MARIADB_API_DUMP_DATABASE')); 
         $dbWrapper = new MWDbWrapper($db);
+
+        echo "Using api db.\n";
 
         return $dbWrapper;
     }

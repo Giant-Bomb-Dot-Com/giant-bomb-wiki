@@ -170,9 +170,9 @@ abstract class Resource
      * @param bool $force
      * @return array
      */
-    public function getTextToConvert($id = false, $force = false)
+    public function getTextToConvert($id = false, $force = false, $continue = 0)
     {
-        return $this->dbw->getTextToConvert(static::TABLE_NAME, $id, $force);
+        return $this->dbw->getTextToConvert(static::TABLE_NAME, $id, $force, $continue);
     }
 
     /**
@@ -182,9 +182,9 @@ abstract class Resource
      * @param bool $force
      * @return array
      */
-    public function getNamesToConvert($id = false, $force = false)
+    public function getNamesToConvert($id = false, $force = false, $continue = 0)
     {
-        return $this->dbw->getNamesToConvert(static::TABLE_NAME, $id, $force);
+        return $this->dbw->getNamesToConvert(static::TABLE_NAME, $id, $force, $continue);
     }
 
     /**
@@ -220,7 +220,7 @@ abstract class Resource
     /**
      * Get all the wiki objects
      */
-    public function getAll(int $offset = 0)
+    public function getAll(int $continue = 0)
     {
         $prefix = function($element) { 
             return 'o.'.$element;
@@ -228,7 +228,7 @@ abstract class Resource
 
         $fields = array_map($prefix, static::TABLE_FIELDS);
 
-        return $this->dbw->getAll(static::TABLE_NAME, $fields, $offset);  
+        return $this->dbw->getAll(static::TABLE_NAME, $fields, $continue);  
     }
 
     /**

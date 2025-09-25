@@ -31,12 +31,12 @@ class MWDbWrapper implements DbInterface
         return [$qb->fetchRow()];
     }
 
-    public function getAll(string $table, array $fields, int $start = 0)
+    public function getAll(string $table, array $fields, int $continue = 0)
     {
         $qb = $this->dbConnection->newSelectQueryBuilder();
         $qb->select($fields)
             ->from($table, 'o')
-            ->where(['o.deleted' => 0, $this->dbConnection->expr('id', '>', 0)])
+            ->where(['o.deleted' => 0, $this->dbConnection->expr('id', '>', $continue)])
             ->caller( __METHOD__ );
 
         return $qb->fetchResultSet();
@@ -143,7 +143,7 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchResultSet();
     }
 
-    public function getTextToConvert(string $table, $id = false, $force = false)
+    public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0)
     {
         if ($id) {
             $clause = 'id = '.$id;
@@ -154,6 +154,10 @@ class MWDbWrapper implements DbInterface
             }
             else {
                 $clause = 'mw_formatted_description IS NULL';
+            }
+
+            if ($continue > 0) {
+                $clause .= ' AND id > '.$continue;
             }
         }
 
@@ -187,7 +191,7 @@ class MWDbWrapper implements DbInterface
 
         if ($table == 'wiki_game') {
             $qb->select(['id', 'name', 'release_date']);
-            $qb->orderBy('release_date', 'ASC');
+            $qb->orderBy('id', 'ASC');
         }
         else {
             $qb->select(['id', 'name']);

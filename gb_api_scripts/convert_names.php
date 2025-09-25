@@ -17,6 +17,7 @@ class ConvertToMWPageNames extends Maintenance
         $this->addOption('id', 'Entity id. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('force', 'Forces conversion without checking for an empty mw_formatted_description field.', false, false, 'f');
         $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
+        $this->addOption('continue', 'Requires resource to be set. Will continue from that one onward.', false, false, 'c');
     }
 
     /**
@@ -27,10 +28,15 @@ class ConvertToMWPageNames extends Maintenance
     public function execute()
     {
         $resources = ['accessory','character','company','concept','franchise','game','genre','location','person','platform','theme','thing'];
-        $seenNames = array_fill_keys($resources, []);
 
         if ($resourceOption = $this->getOption('resource', false)) {
-            if (in_array($resourceOption, $resources)) {
+            if ($this->getOption('continue', false)) {
+                $index = array_search($resourceOption, $resources);
+                if ($index !== false) {
+                    $resources = array_slice($resources, $index);
+                }
+            } 
+            else if (in_array($resourceOption, $resources)) {
                 $resources = [$resourceOption];
             }
         }
@@ -50,11 +56,12 @@ class ConvertToMWPageNames extends Maintenance
             $classname = ucfirst($resource);
             $content = new $classname($db);
             $rows = $content->getNamesToConvert($this->getOption('id', false), $this->getOption('force', false));
+            $seenNames = [];
             foreach ($rows as $row) {
 
-                if (!isset($seenNames[$resource][$row->name])) {
+                if (!isset($seenNames[$row->name])) {
                     $name = $row->name;
-                    $seenNames[$resource][$name] = 1;
+                    $seenNames[$name] = 1;
                 }
                 else {
                     // append id to duplicate names
@@ -65,8 +72,8 @@ class ConvertToMWPageNames extends Maintenance
                         if (!is_null($row->release_date)) {
                             $year = substr($row->release_date, 0, 4);
                             $tempName = $row->name . '_' . $year;
-                            if (!isset($seenNames[$resource][$tempName])) {
-                                $seenNames[$resource][$tempName] = 1;
+                            if (!isset($seenNames[$tempName])) {
+                                $seenNames[$tempName] = 1;
                                 $suffix = $year;
                             }
                         }
@@ -79,8 +86,6 @@ class ConvertToMWPageNames extends Maintenance
                 $content->updateMediaWikiPageName($row->id, $convertedPageName);
                 echo sprintf("Converted %s name for %s::%s => %s\n", $resource, $row->id, $row->name, $convertedPageName);
             }
-
-            unset($seenNames[$resource]);
         }
 
         echo "done\n";

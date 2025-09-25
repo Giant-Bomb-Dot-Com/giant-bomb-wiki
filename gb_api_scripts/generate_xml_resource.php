@@ -20,7 +20,7 @@ class GenerateXMLResource extends Maintenance
         $this->addOption('resource', 'One of accessory, character, company, concept, franchise, game, genre, location, person, platform, theme, thing', false, true, 'r');
         $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
-        $this->addOption('start', 'Start at an id. Requires resource to be set.', false, true, 's');
+        $this->addOption('continue', 'Requires resource to be set and last id proccessed for that resource. Will proccess the rest of the resources afterwards.', false, true, 'c');
     }
 
     /**
@@ -31,15 +31,21 @@ class GenerateXMLResource extends Maintenance
     public function execute()
     {
         $resources = ['accessory','character','company','concept','franchise','game','genre','location','person','platform','theme','thing'];
+        $continue = $this->getOption('continue', 0);
 
         if ($resourceOption = $this->getOption('resource', false)) {
-            if (in_array($resourceOption, $resources)) {
+            if ($continue > 0) {
+                $index = array_search($resourceOption, $resources);
+                if ($index !== false) {
+                    $resources = array_slice($resources, $index);
+                }
+            } 
+            else if (in_array($resourceOption, $resources)) {
                 $resources = [$resourceOption];
             }
         }
 
         $db = ($this->getOption('external', false)) ? $this->getExtDb() : $this->getApiDb();
-        $start = $this->getOption('start', 0);
 
         foreach ($resources as $resource) {
 
@@ -59,7 +65,8 @@ class GenerateXMLResource extends Maintenance
                 $totalItems = 1;
             }
             else {
-                $result = $content->getAll($start);
+                $result = $content->getAll($continue);
+                $continue = 0;
                 $totalItems = is_array($result) ? count($result) : $result->count();
             }
 
@@ -94,7 +101,7 @@ class GenerateXMLResource extends Maintenance
             }
 
             if ($size != 0) {
-                $filename = sprintf('%s_%d_%07d.xml', $resource, $start, $count);
+                $filename = sprintf('%s_%d_%07d.xml', $resource, $continue, $count);
                 $this->streamXML($filename, $data);
             }
         }

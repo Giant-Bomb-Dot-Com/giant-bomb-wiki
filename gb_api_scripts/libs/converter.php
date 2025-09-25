@@ -69,7 +69,7 @@ class HtmlToMediaWikiConverter
             $parent->removeChild($figureTag);
         }
 
-        // followed by non-figure images
+        // followed by non-figure img tags
         $imagesToProcess = [];
         $images = $block->getElementsByTagName('img');
         foreach ($images as $imageNode) {
@@ -79,6 +79,27 @@ class HtmlToMediaWikiConverter
             if ($image->hasAttribute('style') && preg_match('/display/', $image->getAttribute('style')) === false) {
                 continue;
             }
+            $mwImage = $this->convertImg($image);
+            if ($mwImage === false) {
+                if ($image->parentNode) {
+                    $image->parentNode->removeChild($image);
+                }
+            }
+            else {
+                $textNode = $this->dom->createTextNode($mwImage);
+                if ($image->parentNode) {
+                    $image->parentNode->replaceChild($textNode, $image);
+                }
+            }
+        }
+
+        // followed by non-figure image tags
+        $imagesToProcess = [];
+        $images = $block->getElementsByTagName('image');
+        foreach ($images as $imageNode) {
+            $imagesToProcess[] = $imageNode;
+        }
+        foreach (array_reverse($imagesToProcess) as $image) {
             $mwImage = $this->convertImage($image);
             if ($mwImage === false) {
                 if ($image->parentNode) {
@@ -442,6 +463,7 @@ class HtmlToMediaWikiConverter
 
         $imageFragment = parse_url($src, PHP_URL_PATH);
         $imageFile = basename($imageFragment);
+        $imageFile = str_replace($this->reservedCharacters, ' ', $imageFile);
 
         $mwImage = "[[File:{$imageFile}|thumb|{$float}";
         if ($alt != 'No Caption Provided') {
@@ -455,19 +477,47 @@ class HtmlToMediaWikiConverter
     /**
      * Converts <img> to MediaWiki image syntax. External image links is just the url.
      *
-     * @param DOMElement  $image The <img> element to convert.
+     * @param DOMElement  $img The <img> element to convert.
      * @return string The MediaWiki formatted image string.
      */
-    public function convertImage(DOMElement $image): string|false
+    public function convertImg(DOMElement $img): string|false
     {
-        $src = $image->getAttribute('src');
-        $alt = $image->getAttribute('alt');
+        $src = $img->getAttribute('src');
 
         if (true === preg_match('/data:image\/png;base64/', $src)) {
             return false;
         }
 
         return $src;
+    }
+
+    /**
+     * Converts <image> to MediaWiki image syntax. External image links is just the url.
+     *
+     * @param DOMElement  $image The <image> element to convert.
+     * @return string The MediaWiki formatted image string.
+     */
+    public function convertImage(DOMElement $image): string|false
+    {
+        $src = $image->getAttribute('data-img-src');
+        $align = $image->getAttribute('data-align');
+        $imageFragment = parse_url($src, PHP_URL_PATH);
+        $imageFile = basename($imageFragment);
+        $imageFile = str_replace($this->reservedCharacters, ' ', $imageFile);
+
+        if ($align == 'right') {
+            $float = 'right';
+        }
+        else if ($align == 'left') {
+            $float = 'left';
+        }
+        else {
+            $float = 'none';
+        }
+
+        $mwImage = "[[File:{$imageFile}|thumb|{$float}]]";
+
+        return $mwImage;
     }
 
     /**

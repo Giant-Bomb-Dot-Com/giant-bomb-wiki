@@ -28,15 +28,15 @@ class PdoDbWrapper implements DbInterface
         return [$this->fetchObject($sql, ['id' => $id])];
     }
 
-    public function getAll(string $table, array $fields, int $start = 0)
+    public function getAll(string $table, array $fields, int $continue = 0)
     {
         $fieldString = implode(',',$fields);
 
         $sql = "SELECT {$fieldString}
                   FROM {$table} AS o
-                 WHERE o.deleted = 0 AND id > :start";
+                 WHERE o.deleted = 0 AND id > :continue";
 
-        return $this->fetchAllObjects($sql, ['start' => $start]);
+        return $this->fetchAllObjects($sql, ['continue' => $continue]);
     }
 
     public function getPageName(string $table, int $id)
@@ -126,7 +126,7 @@ class PdoDbWrapper implements DbInterface
         return $this->fetchAllObjects($sql, ['id' => $id]);
     }
 
-    public function getTextToConvert(string $table, $id = false, $force = false)
+    public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0)
     {
         $params = [];
         if ($id) {
@@ -139,6 +139,10 @@ class PdoDbWrapper implements DbInterface
             }
             else {
                 $clause = 'description <> "" AND mw_formatted_description IS NULL';
+            }
+
+            if ($continue > 0) {
+                $clause .= ' AND id > '.$continue;
             }
         }
 
@@ -167,7 +171,7 @@ class PdoDbWrapper implements DbInterface
         $order = '';
         if ($table == 'wiki_game') {
             $fields .= ', release_date';
-            $order = ' ORDER BY release_date ASC';
+            $order = ' ORDER BY id ASC';
         }
 
         $sql = "SELECT {$fields} FROM {$table} WHERE ".$clause.$order;
