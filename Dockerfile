@@ -6,6 +6,9 @@ ARG INSTALL_API="false"
 WORKDIR /var/www/html
 USER root
 
+# INSTALL DB EXTENSIONS
+RUN docker-php-ext-install pdo pdo_mysql
+
 # INSTALL SEMANTIC MEDIAWIKI
 RUN set -x; \
     apt-get update \

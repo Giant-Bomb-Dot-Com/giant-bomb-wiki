@@ -2,18 +2,17 @@
 
 require_once(__DIR__.'/../libs/resource.php');
 require_once(__DIR__.'/../libs/common.php');
-require_once(__DIR__.'/../libs/build_page_data.php');
 
 class Dlc extends Resource
 {
     use CommonVariablesAndMethods;
-    use BuildPageData;
 
     const TYPE_ID = 3020;
     const RESOURCE_SINGULAR = "dlc";
     const RESOURCE_MULTIPLE = "dlcs";
+    const PAGE_NAMESPACE = "DLCs/";
     const TABLE_NAME = "wiki_game_dlc";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','game_id','platform_id','release_date','release_date_type','launch_price'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','game_id','platform_id','release_date','release_date_type','launch_price','image_id','background_image_id'];
 
     /**
      * Matching table fields to api response fields
@@ -47,45 +46,13 @@ class Dlc extends Resource
             'game_id' => (is_null($data['game'])) ? null : $data['game']['id'],
             'platform_id' => (is_null($data['platform'])) ? null : $data['platform']['id'],
             'release_date' => $data['release_date'],
+            'release_date_type' => $data['release_date_type'],
             'date_created' => $data['date_added'],
             'date_updated' => $data['date_last_updated'],
             'name' => (is_null($data['name'])) ? '' : $data['name'],
             'deck' => $data['deck'],
             'description' => (is_null($data['description'])) ? '' : $data['description'],
         ], ['id']);
-    }
-
-    /**
-     * Converts result row into page data array of ['title', 'namespace', 'description']
-     * 
-     * @param stdClass $row
-     * @return array
-     */
-    public function getPageDataArray(stdClass $row): array
-    {
-        $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
-        $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
-
-        $description = $this->formatSchematicData([
-            'name' => $name,
-            'guid' => $guid,
-            'aliases' => $row->aliases,
-            'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
-            'game_id' => $row->game_id,
-            'platform_id' => $row->platform_id,
-            'release_date' => $row->release_date,
-            'release_date_type' => $row->release_date_type,
-            'launch_price' => $row->launch_price
-        ]).$desc;
-
-        return [
-            'title' => $row->mw_page_name,
-            'namespace' => $this->namespaces['page'],
-            'description' => $description
-        ];
     }
 }
 

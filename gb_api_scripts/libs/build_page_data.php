@@ -7,47 +7,10 @@ trait BuildPageData
     /**
      * Converts result data into page data of [['title', 'namespace', 'description'],...]
      * 
-     * @param MysqliResultWrapper $data
+     * @param stdClass $data
      * @return array
      */
     abstract public function getPageDataArray(stdClass $data): array;
-
-    /**
-     * Loops through the relation table map to obtain a comma delimited list of relation page names
-     * 
-     * @param int $id
-     * @return string
-     */
-    public function getRelationsFromDB(int $id): string
-    {
-		$relations = '';
-		$lastKey = array_key_last(self::RELATION_TABLE_MAP);
-
-        foreach (self::RELATION_TABLE_MAP as $key => $relation) {
-
-            $groupConcat = "GROUP_CONCAT(SUBSTRING_INDEX(o.mw_page_name, '/', -1) SEPARATOR ',')";
-        	// join the relation table with the connector table to get the page names
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                       ->select(['mw_page_name' => $groupConcat])
-                       ->from($relation['table'], 'j')
-                       ->join($relation['relationTable'],'o','j.'.$relation['relationField'].' = o.id')
-                       ->where('j.'.$relation['mainField'].' = '.$id)
-                       ->groupBy('j.'.$relation['mainField'])
-                       ->caller(__METHOD__);
-
-            $result = $qb->fetchfield();
-
-            if (!empty($result)) {
-	            // craft the semantic table row for the relation
-	            $relations .= '| '.ucwords($key).'='.$result;
-	            if ($lastKey != $key) {
-	            	$relations .= "\n";
-	            }
-	        }
-        }
-
-        return $relations;   	
-    }
 
     /**
      * Creates the semantic table based on fields in the incoming $data array
@@ -79,17 +42,19 @@ trait BuildPageData
         }
 
         if (!empty($data['infobox_image'])) {
-            $imageFragment = parse_url($data['infobox_image'], PHP_URL_PATH);
-            $infoboxImage = basename($imageFragment);
+            $infoboxImage = $this->getDb()->getImageName($data['infobox_image']);
+            $infoboxImage = str_replace('%20', ' ', $infoboxImage);
+            $infoboxImage = str_replace('&', '&amp;', $infoboxImage);
             $text .= "\n| Image={$infoboxImage}";
             $text .= "\n| Caption=image of {$data['name']}";
         }
 
         if (!empty($data['background_image'])) {
-            $imageFragment = parse_url($data['background_image'], PHP_URL_PATH);
-            $backgroundImage = basename($imageFragment);
+            $backgroundImage = $this->getDb()->getImageName($data['background_image']);
+            $backgroundImage = str_replace('%20', ' ', $backgroundImage);
+            $backgroundImage = str_replace('&', '&amp;', $backgroundImage);
             $text .= "\n| BackgroundImage={$backgroundImage}";
-            $text .= "\n| Caption=background image used in Giant Bomb's game page for {$data['name']}";
+            $text .= "\n| BackgroundImageCaption=background image used in Giant Bomb's game page for {$data['name']}";
         }
 
         if (!empty($data['real_name'])) {
@@ -147,7 +112,8 @@ trait BuildPageData
         }
 
         if (!empty($data['website'])) {
-            $text .= "\n| Website={$data['website']}";
+            $website = trim(htmlspecialchars($data['website'], ENT_XML1, 'UTF-8'));
+            $text .= "\n| Website={$website}";
         }
 
         if (!empty($data['release_date'])) {
@@ -155,7 +121,16 @@ trait BuildPageData
         }
 
         if (!empty($data['release_date_type'])) {
-            $text .= "\n| ReleaseDateType={$data['release_date_type']}";
+            // key in resource.php
+            // value in generate_xml_properties.php
+            switch($data['release_date_type']) {
+                case '0': $releaseDateType = 'Full'; break;
+                case '1': $releaseDateType = 'Month'; break;
+                case '2': $releaseDateType = 'Quarter'; break;
+                case '3': $releaseDateType = 'Year'; break;
+                default: $releaseDateType = 'None'; break;
+            }
+            $text .= "\n| ReleaseDateType={$releaseDateType}";
         }
 
         if (!empty($data['install_base'])) {
@@ -172,12 +147,7 @@ trait BuildPageData
         }
 
         if (!empty($data['manufacturer_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_company')
-                        ->where('id = '.$data['manufacturer_id'])
-                        ->caller(__METHOD__);
-            $manufacturer = $qb->fetchField();
+            $manufacturer = $this->getDb()->getPageName('wiki_company', $data['manufacturer_id']);
             $text .= "\n| Manufacturer={$manufacturer}";
         }
 
@@ -198,24 +168,12 @@ trait BuildPageData
         }
 
         if (!empty($data['game_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_game')
-                        ->where('id = '.$data['game_id'])
-                        ->caller(__METHOD__);
-            $game = $qb->fetchField();
-            $game = substr($game, strpos($game, '/') + 1);
+            $game = $this->getDb()->getPageName('wiki_game', $data['game_id']);
             $text .= "\n| Games={$game}";
         }
 
         if (!empty($data['platform_id'])) {
-            $qb = $this->getDb()->newSelectQueryBuilder()
-                        ->select(['mw_page_name'])
-                        ->from('wiki_platform')
-                        ->where('id = '.$data['platform_id'])
-                        ->caller(__METHOD__);
-            $platform = $qb->fetchField();
-            $platform = substr($platform, strpos($platform, '/') + 1);
+            $platform = $this->getDb()->getPageName('wiki_platform', $data['platform_id']);
             $text .= "\n| Platforms={$platform}";
         }
 

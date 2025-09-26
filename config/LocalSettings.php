@@ -71,6 +71,20 @@ $wgExternalDataSources['gb_api_dump'] = [
     'password' => getenv("MARIADB_PASSWORD")
 ];
 
+$wgExternalDatabases['external_db'] = [ 
+    'class' => 'DatabaseLoadBalancer', 
+    'hosts' => [ 
+        [ 
+            'type' => 'mysql',
+            'host' => getenv( 'EXTERNAL_DB_HOST' ), 
+            'dbname' => getenv( 'EXTERNAL_DB_NAME' ),
+            'user' => getenv( 'EXTERNAL_DB_USER' ),
+            'password' => getenv( 'EXTERNAL_DB_PASSWORD' ) 
+        ] 
+    ] 
+];
+
+
 # MySQL specific settings
 $wgDBprefix = "";
 $wgDBssl = false;
@@ -97,6 +111,10 @@ if ($wikiEnv == 'prod') {
     $wgUploadDirectory = '/var/www/html/images';
     $wgUploadPath = $wgScriptPath.'/images';
 }
+
+# Allow external images
+$wgAddImgTagWhitelist = true;
+$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
@@ -175,10 +193,12 @@ wfLoadExtension( 'WikiEditor' );
 
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
+enableSemantics();
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
+$wgPageFormsUseDisplayTitle = false;
 
 # Turn on subpages
 $wgNamespacesWithSubpages[NS_MAIN] = true;
