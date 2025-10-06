@@ -4,16 +4,19 @@
     "pnpm": ">=10.15"
   },
   "devDependencies": {
-    "cypress": "^14.5.2",
+    "cypress": "^14.5.4",
     "cypress-dotenv": "^3.0.1",
-    "dotenv": "^17.2.2",
+    "dotenv": "^17.2.3",
     "husky": "^9.1.7",
+    "jose": "^6.1.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "scripts": {
-    "format": "pnpm prettier --write --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{js,json,ts,yaml}|*.json|*.yaml'",
-    "format:check": "pnpm prettier --check --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{js,json,ts,yaml}|*.json|*.yaml'",
-    "test:e2e": "pnpm cypress run"
+    "format": "pnpm prettier --write --config .prettierrc 'README.md|*.json|*.yaml|*.ts|(skins|cypress|.github|src|tests)/**/*.{js,json,ts,yaml}'",
+    "format:check": "pnpm prettier --check --config .prettierrc 'README.md|*.json|*.yaml|*.ts|(skins|cypress|.github|src|tests)/**/*.{js,json,ts,yaml}'",
+    "test:e2e": "pnpm cypress run",
+    "test": "pnpm vitest run --config vitest.config.ts"
   }
 }
