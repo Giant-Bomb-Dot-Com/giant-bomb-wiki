@@ -33,8 +33,33 @@ $wgScriptPath = "";
 ## The protocol and server name to use in fully-qualified URLs
 $wgServer = "http://localhost:8080";
 
+# SMW config file directory
+$smwgConfigFileDir = getenv('SMW_CONFIG_DIR') ?: '/var/www/html/images/smw-config';
+
+# Load SMW upgrade key from the persisted setup file when available
+# This ensures the running service uses the same upgrade key that
+# `setupStore.php` wrote to the shared GCS location.
+$smwSetupInfoFile = rtrim( $smwgConfigFileDir, '/' ) . '/.smw.json';
+if ( is_readable( $smwSetupInfoFile ) ) {
+    $smwSetupInfo = json_decode( @file_get_contents( $smwSetupInfoFile ), true );
+    if ( is_array( $smwSetupInfo ) && isset( $smwSetupInfo['upgrade_key'] ) && $smwSetupInfo['upgrade_key'] ) {
+        $smwgUpgradeKey = $smwSetupInfo['upgrade_key'];
+    }
+}
+
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
+
+# Env-driven base origin/path for reverse-proxy hosting under a subpath
+$appBaseOrigin = getenv('APP_BASE_ORIGIN');
+$appBasePath = getenv('APP_BASE_PATH');
+if ( $appBaseOrigin ) {
+    $wgServer = $appBaseOrigin;
+}
+if ( $appBasePath !== false && $appBasePath !== null && $appBasePath !== '' ) {
+    $wgScriptPath = $appBasePath;
+    $wgResourceBasePath = $wgScriptPath;
+}
 
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
@@ -61,6 +86,62 @@ $wgDBserver = "db";
 $wgDBname = getenv("MARIADB_DATABASE");
 $wgDBuser = getenv("MARIADB_USER");
 $wgDBpassword = getenv("MARIADB_PASSWORD");
+
+# Cloud SQL connector (Unix socket) support via env CLOUDSQL_INSTANCE
+$cloudSqlInstance = getenv('CLOUDSQL_INSTANCE');
+if ( $cloudSqlInstance ) {
+    # Use Cloud SQL Unix socket. mysqli/PDO accept host:socket form.
+    $socketPath = '/cloudsql/' . $cloudSqlInstance;
+    $wgDBserver = 'localhost:' . $socketPath;
+    $wgDBsocket = $socketPath;
+}
+
+# Always allow DB env overrides (useful for socket-based connections)
+$dbNameEnvUnconditional = getenv('DB_NAME');
+if ( $dbNameEnvUnconditional ) {
+    $wgDBname = $dbNameEnvUnconditional;
+}
+$dbUserEnvUnconditional = getenv('DB_USER');
+if ( $dbUserEnvUnconditional ) {
+    $wgDBuser = $dbUserEnvUnconditional;
+}
+$dbPasswordEnvUnconditional = getenv('DB_PASSWORD');
+if ( $dbPasswordEnvUnconditional ) {
+    $wgDBpassword = $dbPasswordEnvUnconditional;
+}
+
+# Final guard to ensure database name is a non-empty string
+if ( !is_string( $wgDBname ) || trim( (string)$wgDBname ) === '' ) {
+    $fallbackDbName = getenv('DB_NAME');
+    if ( is_string( $fallbackDbName ) && trim( $fallbackDbName ) !== '' ) {
+        $wgDBname = $fallbackDbName;
+    } else {
+        # Last-resort default to avoid empty string (MediaWiki requires non-empty or null)
+        $wgDBname = 'mediawiki';
+    }
+}
+
+# Optional DB overrides for Cloud SQL / external DB via env
+$dbHost = getenv('DB_HOST');
+if ( $dbHost ) {
+    $wgDBserver = $dbHost;
+    $dbPortEnv = getenv('DB_PORT');
+    if ( $dbPortEnv ) {
+        $wgDBport = intval($dbPortEnv);
+    }
+    $dbNameEnv = getenv('DB_NAME');
+    if ( $dbNameEnv ) {
+        $wgDBname = $dbNameEnv;
+    }
+    $dbUserEnv = getenv('DB_USER');
+    if ( $dbUserEnv ) {
+        $wgDBuser = $dbUserEnv;
+    }
+    $dbPasswordEnv = getenv('DB_PASSWORD');
+    if ( $dbPasswordEnv ) {
+        $wgDBpassword = $dbPasswordEnv;
+    }
+}
 
 ## Database settings for gb_api_dump
 $wgExternalDataSources['gb_api_dump'] = [ 
@@ -108,8 +189,14 @@ $wgImageMagickConvertCommand = "/usr/bin/convert";
 
 if ($wikiEnv == 'prod') {
     # Mounted gcs bucket for images
-    $wgUploadDirectory = '/var/www/html/images';
-    $wgUploadPath = $wgScriptPath.'/images';
+    $uploadsSubdir = getenv('UPLOADS_SUBDIR');
+    if ( $uploadsSubdir ) {
+        $wgUploadDirectory = '/var/www/html/images/' . trim($uploadsSubdir, "/");
+        $wgUploadPath = $wgScriptPath . '/images/' . trim($uploadsSubdir, "/");
+    } else {
+        $wgUploadDirectory = '/var/www/html/images';
+        $wgUploadPath = $wgScriptPath.'/images';
+    }
 }
 
 # Allow external images
@@ -129,6 +216,20 @@ $wgLanguageCode = "en";
 
 # Time zone
 $wgLocaltimezone = "UTC";
+
+# Cookie scope configuration (env-driven)
+$cookieDomain = getenv('COOKIE_DOMAIN');
+if ( $cookieDomain ) {
+    $wgCookieDomain = $cookieDomain;
+}
+$cookiePath = getenv('COOKIE_PATH');
+if ( !$cookiePath ) {
+    $cookiePath = '/';
+}
+$wgCookiePath = $cookiePath;
+if ( $wikiEnv === 'prod' ) {
+    $wgCookieSecure = true;
+}
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
@@ -160,7 +261,7 @@ $wgGroupPermissions["*"]["edit"] = false;
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "vector";
+$wgDefaultSkin = "giantbomb";
 
 # Enabled skins.
 # The following skins were automatically enabled:

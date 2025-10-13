@@ -56,8 +56,15 @@ RUN cd /var/www/html \
         sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # So can be docker exec after build
-COPY --chmod=755 installwiki.sh /installwiki.sh
+COPY installwiki.sh /installwiki.sh
+RUN chmod 755 /installwiki.sh
 
 # START CONTAINER
+COPY ./config/LocalSettings.php /var/www/html/LocalSettings.php
+COPY ./skins/GiantBomb /var/www/html/skins/GiantBomb
+RUN chown -R www-data:www-data /var/www/html/LocalSettings.php /var/www/html/skins/GiantBomb
+
 COPY entrypoint.sh /entrypoint.sh
+COPY scripts/wiki-admin.sh /usr/local/bin/wiki-admin
+RUN chmod 755 /usr/local/bin/wiki-admin
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
