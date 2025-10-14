@@ -3,20 +3,20 @@
 - Add your api key to the .env file. The api key can be found at https://www.giantbomb.com/api when you're logged into the site
 - Run `docker ps` and grab the container name for the wiki and db
 
-# convert_description.php
+# convert_descriptions.php
 
 Pulls down descriptions from the db, converts it to MediaWiki format and updates the mw_formatted_description field
 
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php /var/www/html/maintenance/gb_api_scripts/convert_description.php`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php /var/www/html/maintenance/gb_api_scripts/convert_descriptions.php`
 - Options:
   - id: Targets a specified entity.
   - apikey: To use an apikey other than the one defined in your `.env` file.
 
-# convert_name.php
+# convert_names.php
 
 Pulls down names from the db, converts it to MediaWiki format and updates the mw_page_name field
 
-- Run `docker exec <container name> php /var/www/html/maintenance/run.php /var/www/html/maintenance/gb_api_scripts/convert_name.php`
+- Run `docker exec <container name> php /var/www/html/maintenance/run.php /var/www/html/maintenance/gb_api_scripts/convert_names.php`
 - Options:
   - id: Targets a specified entity.
   - apikey: To use an apikey other than the one defined in your `.env` file.

@@ -52,8 +52,8 @@ RUN cd /var/www/html \
  && cd /var/www/html/ \
  && composer update --no-dev
 
- RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
-        sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # So can be docker exec after build
 COPY installwiki.sh /installwiki.sh
