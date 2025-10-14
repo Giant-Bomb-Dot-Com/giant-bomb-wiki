@@ -64,6 +64,9 @@ COPY ./config/LocalSettings.php /var/www/html/LocalSettings.php
 COPY ./skins/GiantBomb /var/www/html/skins/GiantBomb
 RUN chown -R www-data:www-data /var/www/html/LocalSettings.php /var/www/html/skins/GiantBomb
 
+# Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
+COPY .htaccess /var/www/html/.htaccess
+
 COPY entrypoint.sh /entrypoint.sh
 COPY scripts/wiki-admin.sh /usr/local/bin/wiki-admin
 RUN chmod 755 /usr/local/bin/wiki-admin

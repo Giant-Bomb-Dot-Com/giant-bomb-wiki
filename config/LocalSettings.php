@@ -61,6 +61,11 @@ if ( $appBasePath !== false && $appBasePath !== null && $appBasePath !== '' ) {
     $wgResourceBasePath = $wgScriptPath;
 }
 
+# explicit for ResourceLoader and canonical URLs when running behind a proxy
+$wgCanonicalServer = $wgServer;
+$wgLoadScript = "$wgScriptPath/load.php";
+$wgStylePath = "$wgResourceBasePath/skins";
+
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
 $wgLogos = [
