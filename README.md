@@ -4,19 +4,22 @@ We should add stuff here.
 
 ## Running the wiki for the first time
 
-1. [Install Docker Desktop](https://www.docker.com/products/docker-desktop/) and run it
-2. Copy `.env.example` to `.env` and fill out the missing values accordingly
-   - (optional) If you need services that will use the Giant Bomb legacy API, the GB_API_KEY can be retrieved from the [GB API page](https://www.giantbomb.com/api) when logged into the site.
-3. From the terminal, run `docker compose up -d`
-   - This will download and install the database and the wiki and automatically start the wiki web service.
-4. Run `docker compose build --no-cache`
-   - This will go fetch every necessary Mediawiki extensions and prepare the next step to allow running the `installwiki.sh` script.
-   - `--no-cache` is important if new extensions/skins have been added since the last build
-5. Configure Mediawiki with `docker exec <container-name> /bin/bash /installwiki.sh`
-   - This is a one time action to configure Mediawiki and install the necessary Mediawiki extensions/skins as seen in `/config/LocalSettings.php`.
-   - It also performs some web-centric configurations.
-6. Visit the Special Version page http://localhost:8080/index.php/Special:Version to see the installed extensions/skins and their versions.
-7. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
+1. Prepare the environment by first installing [Docker Desktop](https://www.docker.com/products/docker-desktop/) and running it.
+2. Configure the wiki by copying `.env.example` to `.env` and filling out the missing values accordingly.
+   - (optional) If you need services that will use the Giant Bomb legacy API, see the readme for [gb_api_scripts](gb_api_scripts/README.md).
+3. Start the wiki services from the terminal, with
+   - `docker compose up -d`
+   - This will download, install, and start the database and the mediawiki services.
+   - (optional) Run `docker compose build --no-cache` if you can see the version of mediawiki is not the expected one (currently Mediawiki 1.43.1).
+4. Install the wiki in two steps
+   1. Find the wiki container with `docker ps`. By default it should be `giant-bomb-wiki-wiki-1`
+   2. Install with
+      - `docker exec <wiki-container-name> /bin/bash /installwiki.sh`
+      - This is a one time action to configure Mediawiki and install the necessary Mediawiki extensions/skins as seen in `/config/LocalSettings.php`.
+      - It also performs some web-centric configurations.
+5. Verify the Special Version page http://localhost:8080/index.php/Special:Version loads in a browser and see the installed extensions/skins and their versions.
+6. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
+7. (optional) Execute all end-to-end tests with `pnpm test:e2e`. See the [Tests](#Tests) section for the set-up.
 
 ## Skins
 
@@ -83,29 +86,7 @@ We should add stuff here.
   }}
   ```
 
-## TODO's
-
-### Core
-
-1. Update to use firebase for auth. ( https://github.com/Giant-Bomb-Dot-Com/giant-bomb-wiki/issues/15 )
-2. Add maintenance scripting / cron jobs to handle things like cache updates, popup text scraping, image refresh, link / semantic link refreshing.
-
-### Research
-
-1. Need to see if the templates and mustache in the skins can be used instead of the php templates for mediawiki, while keeping all of the interconnecting page functionality mediawiki has. While it looks like we can for sure replace the templates, we need everything to still function in the wiki core / syntax, so we don't have a bespoke system we have to maintain.
-2. Need to map out the schema from current GB to categories / pages / templates in mediawiki.
-3. See what is needed for full i18n support for multi-language
-
-### Templates
-
-1. The initial php template for infobox needs to be updated to match the GB games template in both data and actions.
-2. Templates will need to be made for every major page / category. i.e. Games, Publishers, People, etc.
-3. The templates will need to make sure they are tied into the semantic mediawiki tags so they can be called on later by other pages. The starcitizen.tools vehicle template works as a good analog for what the GB games template should be. Note: The top level vehicle template uses / requires 69 other templates / modules to function. The GB game page will be similar. https://starcitizen.tools/index.php?title=100i&action=edit
-
-### Skins
-
-1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
-2. We can use translatewiki.net and i18n to allow / help with multi-language support.
+## [Tests](#Tests)
 
 ### [Package Manager](#Package-Manager)
 
@@ -140,3 +121,31 @@ pnpm cypress open
 ### Continuous Integration
 
 A Github Action workflow will be added to execute a subset of the `cypress` tests as part of the pull request pipeline.
+
+### Git Pre-commit Hook
+
+A git commit will use [Husky](https://typicode.github.io/husky/) to execute hooks listed in [.husky](.husky). To skip them (if necessary), add the option `--no-verify` or `-n`.
+
+## TODO's
+
+### Core
+
+1. Update to use firebase for auth. ( https://github.com/Giant-Bomb-Dot-Com/giant-bomb-wiki/issues/15 )
+2. Add maintenance scripting / cron jobs to handle things like cache updates, popup text scraping, image refresh, link / semantic link refreshing.
+
+### Research
+
+1. Need to see if the templates and mustache in the skins can be used instead of the php templates for mediawiki, while keeping all of the interconnecting page functionality mediawiki has. While it looks like we can for sure replace the templates, we need everything to still function in the wiki core / syntax, so we don't have a bespoke system we have to maintain.
+2. Need to map out the schema from current GB to categories / pages / templates in mediawiki.
+3. See what is needed for full i18n support for multi-language
+
+### Templates
+
+1. The initial php template for infobox needs to be updated to match the GB games template in both data and actions.
+2. Templates will need to be made for every major page / category. i.e. Games, Publishers, People, etc.
+3. The templates will need to make sure they are tied into the semantic mediawiki tags so they can be called on later by other pages. The starcitizen.tools vehicle template works as a good analog for what the GB games template should be. Note: The top level vehicle template uses / requires 69 other templates / modules to function. The GB game page will be similar. https://starcitizen.tools/index.php?title=100i&action=edit
+
+### Skins
+
+1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
+2. We can use translatewiki.net and i18n to allow / help with multi-language support.

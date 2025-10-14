@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.1
+FROM mediawiki:1.43.5
 
 ARG INSTALL_GCSFUSE="false"
 ARG INSTALL_API="false"

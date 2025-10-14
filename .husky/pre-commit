@@ -1,0 +1,3 @@
+pnpm prettier --write --config .prettierrc --ignore-unknown \
+  $(git diff --staged --name-only --diff-filter=ACMR | sed 's| |\\ |g')
+git update-index --again
