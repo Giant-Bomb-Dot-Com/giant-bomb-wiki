@@ -16,11 +16,10 @@ document.querySelectorAll(".wiki-btn").forEach(function (btn) {
       }
       return;
     }
-    fetch(
-      `/skins/GiantBomb/includes/partials/results.php?title=${encodeURIComponent(
-        title,
-      )}`,
-    )
+    const scriptPath = (window.mw && mw.config && mw.config.get('wgScriptPath')) || '';
+    const basePath = `${scriptPath}/skins/GiantBomb`;
+    const url = `${basePath}/includes/partials/results.php?title=${encodeURIComponent(title)}`;
+    fetch(url)
       .then((response) => response.text())
       .then((html) => {
         document.getElementById("dynamic-content").innerHTML = html;

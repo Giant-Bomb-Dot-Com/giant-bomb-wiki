@@ -48,7 +48,8 @@ class GenerateXMLProperties extends Maintenance
             [
                 'title' => 'Property:Has characters',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for characters found in games. 
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has city',
@@ -70,9 +71,21 @@ The allowed values for this property are:
 * [[Allows value::Sony Company Code]]'
             ],
             [
+                'title' => 'Property:Has companies',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for companies in the game industry.
+[[Has type::Page]]'
+            ],
+            [
+                'title' => 'Property:Has composite name',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
                 'title' => 'Property:Has concepts',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for concepts found in games.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has country',
@@ -90,9 +103,64 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Date]].'
             ],
             [
+                'title' => 'Property:Has department',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].
+
+The allowed values for this property are:
+* [[Allows value::Unclassified]]
+* [[Allows value::Thanks]]
+* [[Allows value::Audio]]
+* [[Allows value::Business]]
+* [[Allows value::Design]]
+* [[Allows value::Production]]
+* [[Allows value::Programming]]
+* [[Allows value::Visual Arts]]
+* [[Allows value::Voice Actor]]
+* [[Allows value::Quality Assurance]]'
+            ],
+            [
                 'title' => 'Property:Has description',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
+                'title' => 'Property:Has developers',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for companies that developed games.
+[[Has type::Page]]
+[[Subproperty of::Has companies]]'
+            ],
+            [
+                'title' => 'Property:Has developed games',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for the games a company has developed. Use ask query to retrieve releases.
+[[Has type::Page]]
+[[Subproperty of::Has games]]'
+            ],
+            [
+                'title' => 'Property:Has display name',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
+                'title' => 'Property:Has dlc',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
+                'title' => 'Property:Has dlc types',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].
+
+The allowed values for this property are:
+* [[Allows value::Character]]
+* [[Allows value::Cheat]]
+* [[Allows value::Equipment/Clothing]]
+* [[Allows value::Multiplayer Add-On]]
+* [[Allows value::Single Player Add-On]]
+* [[Allows value::Song (Individual)]]
+* [[Allows value::Song (Pack)]]'
             ],
             [
                 'title' => 'Property:Has email',
@@ -100,9 +168,35 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Email]].'
             ],
             [
+                'title' => 'Property:Has enemies',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property connects a character to a character they are enemies with.
+[[Has type::Page]].
+[[Subproperty of::Has characters]]'
+            ],
+            [
                 'title' => 'Property:Has founded date',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Date]].'
+            ],
+            [
+                'title' => 'Property:Has franchises',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for franchise of games.
+[[Has type::Page]]'
+            ],
+            [
+                'title' => 'Property:Has friends',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property connects a character to a character they are friends with.
+[[Has type::Page]].
+[[Subproperty of::Has characters]]'
+            ],
+            [
+                'title' => 'Property:Has games',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for games.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has gender',
@@ -110,104 +204,20 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
+                'title' => 'Property:Has genres',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for game genres.
+[[Has type::Page]]'
+            ],
+            [
                 'title' => 'Property:Has guid',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
-                'title' => 'Property:Has concepts',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has developers',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has developed games',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has dlcs',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has enemies',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has franchises',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has friends',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has games',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has locations',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has objects',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has phone',
+                'title' => 'Property:Has hometown',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
-            ],
-            [
-                'title' => 'Property:Has publishers',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has published games',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has platforms',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has similar concepts',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has similar games',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has similar locations',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has similar objects',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
-            ],
-            [
-                'title' => 'Property:Has similar people',
-                'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has image',
@@ -230,9 +240,17 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Number]].'
             ],
             [
+                'title' => 'Property:Has locations',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for locations found in games.
+[[Has type::Page]]'
+            ],
+            [
                 'title' => 'Property:Has manufacturer',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for the companies that made the accessories.
+[[Has type::Page]]
+[[Subproperty of::Has companies]]'
             ],
             [
                 'title' => 'Property:Has maximum players',
@@ -247,19 +265,7 @@ The allowed values for this property are:
             [
                 'title' => 'Property:Has multiplayer features',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].
-
-The allowed values for this property are:
-* [[Allows value::Local co-op]]
-* [[Allows value::LAN co-op]]
-* [[Allows value::Online co-op]]
-* [[Allows value::Local competitive]]
-* [[Allows value::LAN competitive]]
-* [[Allows value::Online competitive]]
-* [[Allows value::Local splitscreen]]
-* [[Allows value::Online splitscreen]]
-* [[Allows value::Pass and play]]
-* [[Allows value::Voice chat]]'
+                'description' => 'This is a property of type [[Has type::Page]].'
             ],
             [
                 'title' => 'Property:Has name',
@@ -267,7 +273,7 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
-                'title' => 'Property:Has display name',
+                'title' => 'Property:Has note',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
             ],
@@ -282,14 +288,32 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Number]].'
             ],
             [
-                'title' => 'Property:Has person',
+                'title' => 'Property:Has objects',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for the objects found in game.
+[[Has type::Page]]'
+            ],
+            [
+                'title' => 'Property:Has object type',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
             ],
             [
                 'title' => 'Property:Has people',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for the people that worked on a game.
+[[Has type::Page]]'
+            ],
+            [
+                'title' => 'Property:Has phone',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
+                'title' => 'Property:Has platforms',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for the game platforms.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has product code',
@@ -307,14 +331,24 @@ The allowed values for this property are:
 * [[Allows value::ISBN-10]]'
             ],
             [
-                'title' => 'Property:Has rating',
+                'title' => 'Property:Has publishers',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for companies that published games.
+[[Has type::Page]]
+[[Subproperty of::Has companies]]'
             ],
             [
-                'title' => 'Property:Has rating board',
+                'title' => 'Property:Has published games',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Page]].'
+                'description' => 'This property are for the games a company has published. Use ask query to retrieve releases.
+[[Has type::Page]]
+[[Subproperty of::Has games]]'
+            ],
+            [
+                'title' => 'Property:Has rating',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for ratings for game content.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has real name',
@@ -333,6 +367,11 @@ The allowed values for this property are:
 * [[Allows value::United States]]'
             ],
             [
+                'title' => 'Property:Has release',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This is a property of type [[Has type::Page]].'
+            ],
+            [
                 'title' => 'Property:Has release date',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Date]].'
@@ -343,10 +382,11 @@ The allowed values for this property are:
                 'description' => 'This is a property of type [[Has type::Text]].
 
 The allowed values for this property are:
-* [[Allows value::Full Date]]
-* [[Allows value::Month/Year]]
-* [[Allows value::Only Year]]
-* [[Allows value::By Quarter]]'
+* [[Allows value::None]]
+* [[Allows value::Full]]
+* [[Allows value::Month]]
+* [[Allows value::Quarter]]
+* [[Allows value::Year]]'
             ],
             [
                 'title' => 'Property:Has short name',
@@ -356,34 +396,66 @@ The allowed values for this property are:
             [
                 'title' => 'Property:Has single player features',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].
-
-The allowed values for this property are:
-* [[Allows value::Camera support]]
-* [[Allows value::Voice control]]
-* [[Allows value::Motion control]]
-* [[Allows value::Driving wheel (native)]]
-* [[Allows value::Flightstick (native)]]
-* [[Allows value::PC gamepad (native)]]
-* [[Allows value::Head tracking (native)]]'
+                'description' => 'This property are for single player features available in a game.
+[[Has type::Page]]'
             ],
             [
-                'title' => 'Property:Has sound system',
+                'title' => 'Property:Has superpage',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Text]].
-
-The allowed values for this property are:
-* [[Allows value::5.1]]
-* [[Allows value::7.1]]
-* [[Allows value::Dolby Pro Logic II]]
-* [[Allows value::DTS]]
-* [[Allows value::Mono]]
-* [[Allows value::Stereo]]'
+                'description' => 'This property links a subpage back to its parent page.
+[[Has type::Page]]'
+            ],
+            [
+                'title' => 'Property:Has sound systems',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for the audio capability of games.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has state',
                 'namespace' => $this->namespaces['property'],
                 'description' => 'This is a property of type [[Has type::Text]].'
+            ],
+            [
+                'title' => 'Property:Has similar concepts',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for concepts similar to another concept.
+[[Has type::Page]]
+[[Subproperty of::Has concepts]]'
+            ],
+            [
+                'title' => 'Property:Has similar games',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for games similar to another game.
+[[Has type::Page]]
+[[Subproperty of::Has games]]'
+            ],
+            [
+                'title' => 'Property:Has similar locations',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for locations similar to another location.
+[[Has type::Page]]
+[[Subproperty of::Has locations]]'
+            ],
+            [
+                'title' => 'Property:Has similar objects',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for objects similar to another object.
+[[Has type::Page]]
+[[Subproperty of::Has objects]]'
+            ],
+            [
+                'title' => 'Property:Has similar people',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for people similar to another person.
+[[Has type::Page]]
+[[Subproperty of::Has people]]'
+            ],
+            [
+                'title' => 'Property:Has themes',
+                'namespace' => $this->namespaces['property'],
+                'description' => 'This property are for game themes
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has twitter',
@@ -405,25 +477,10 @@ The allowed values for this property are:
 * [[Allows value::No]]'
             ],
             [
-                'title' => 'Property:Has resolution',
+                'title' => 'Property:Has resolutions',
                 'namespace' => $this->namespaces['property'],
-                'description' => 'This is a property of type [[Has type::Number]].
-
-The allowed values for this property are:
-* [[Allows value::1080p]]
-* [[Allows value::1080i]]
-* [[Allows value::720p]]
-* [[Allows value::480p]]
-* [[Allows value::PC CGA 320x200]]
-* [[Allows value::PC EGA 640x350]]
-* [[Allows value::PC VGA 640x480]]
-* [[Allows value::PC WVGA 768x480]]
-* [[Allows value::PC SVGA 800x600]]
-* [[Allows value::PC 1024x768]]
-* [[Allows value::PC 1440x900]]
-* [[Allows value::PC 1600x1200]]
-* [[Allows value::PC 2560x1440]]
-* [[Allows value::PC 2560x1600]]'
+                'description' => 'This property are for supported game resolutions.
+[[Has type::Page]]'
             ],
             [
                 'title' => 'Property:Has zip',
@@ -444,20 +501,23 @@ You can [[Special:Search/{{PAGENAME}}|search for this page title]] in other page
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} search the related logs],
 or [{{fullurl:{{FULLPAGENAME}}|action=edit}} create this page]</span>.
 {{#switch: {{#explode:{{PAGENAME}}|/|0}}
-| Accessories = {{CreateWithForm|Accessory}}
-| Companies = {{CreateWithForm|Company}}
-| Concepts = {{CreateWithForm|Concept}}
-| Characters = {{CreateWithForm|Character}}
-| DLCs = {{CreateWithForm|DLC}}
-| Franchises = {{CreateWithForm|Franchise}}
-| Games = {{CreateWithForm|Game}}
-| Genres = {{CreateWithForm|Genre}}
-| Locations = {{CreateWithForm|Location}}
-| Objects = {{CreateWithForm|Object}}
-| People = {{CreateWithForm|Person}}
-| Platforms = {{CreateWithForm|Platform}}
-| Ratings = {{CreateWithForm|Rating}}
-| Themes = {{CreateWithForm|Theme}}
+| Accessories={{CreateWithForm|Accessory}}
+| Companies={{CreateWithForm|Company}}
+| Concepts={{CreateWithForm|Concept}}
+| Characters={{CreateWithForm|Character}}
+| Franchises={{CreateWithForm|Franchise}}
+| Games={{CreateWithForm|Game}}
+| Genres={{CreateWithForm|Genre}}
+| Locations={{CreateWithForm|Location}}
+| Multiplayer Features={{CreateWithForm|Multiplayer Feature}}
+| Objects={{CreateWithForm|Object}}
+| People={{CreateWithForm|Person}}
+| Platforms={{CreateWithForm|Platform}}
+| Ratings={{CreateWithForm|Rating}}
+| Resolutions={{CreateWithForm|Resolution}}
+| Single Player Features={{CreateWithForm|Single Player Feature}}
+| Sound Systems={{CreateWithForm|Sound System}}
+| Themes={{CreateWithForm|Theme}}
 }}
 MARKUP,
             ],

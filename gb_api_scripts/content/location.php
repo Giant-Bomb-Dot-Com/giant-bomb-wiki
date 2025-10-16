@@ -12,8 +12,9 @@ class Location extends Resource
     const TYPE_ID = 3035;
     const RESOURCE_SINGULAR = "location";
     const RESOURCE_MULTIPLE = "locations";
+    const PAGE_NAMESPACE = "Locations/";
     const TABLE_NAME = "wiki_location";
-    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description'];
+    const TABLE_FIELDS = ['id','name','mw_page_name','aliases','deck','mw_formatted_description','image_id','background_image_id'];
     const RELATION_TABLE_MAP = [
         "characters" =>  [
             "table" => "wiki_assoc_character_location", 
@@ -84,7 +85,12 @@ class Location extends Resource
     {
         $name = htmlspecialchars($row->name, ENT_XML1, 'UTF-8');
         $guid = self::TYPE_ID.'-'.$row->id;
-        $desc = (empty($row->mw_formatted_description)) ? '' : htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        if (empty($row->mw_formatted_description)) { 
+            $desc = (!empty($row->deck)) ? htmlspecialchars($row->deck, ENT_XML1, 'UTF-8') : '';
+        }
+        else {
+            $desc = htmlspecialchars($row->mw_formatted_description, ENT_XML1, 'UTF-8');
+        }
         $relations = $this->getRelationsFromDB($row->id);
 
         $description = $this->formatSchematicData([
@@ -92,8 +98,8 @@ class Location extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->infobox_image,
-            'background_image' => $row->background_image,
+            'infobox_image' => $row->image_id,
+            'background_image' => $row->background_image_id,
             'relations' => $relations
         ]).$desc;
 

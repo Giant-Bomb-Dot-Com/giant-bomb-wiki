@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Ensure the script path prefix (/wiki) routes to MediaWiki entry points
+  RewriteBase /
+
+  # Direct ResourceLoader and API under /wiki to the correct scripts
+  RewriteRule ^wiki/load\.php$ load.php [L,QSA]
+  RewriteRule ^wiki/api\.php$ api.php [L,QSA]
+
+  # Allow skin assets and partials to be requested with /wiki prefix
+  # e.g., /wiki/skins/... -> /skins/...
+  RewriteRule ^wiki/skins/(.*)$ skins/$1 [L,QSA]
+
+  # Short URL support under /wiki (optional; keeps index.php working too)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^wiki/(.*)$ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Allow correct MIME types to pass without being blocked by nosniff
+  Header unset X-Content-Type-Options
+</IfModule>
+
+

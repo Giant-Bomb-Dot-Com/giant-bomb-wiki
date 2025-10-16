@@ -52,7 +52,16 @@ This category lists the different concepts found in video games.
 MARKUP,
             ],
             [
-                'title' => 'Category:DLCs',
+                'title' => 'Category:Credits',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category is to add the edit with form tab on the credits page.
+
+{{#default_form:Credits}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:DLC',
                 'namespace' => $this->namespaces['category'],
                 'description' => <<<MARKUP
 This category lists the different dlcs for video games.
@@ -97,6 +106,15 @@ This category lists the different locations found in video games.
 MARKUP,
             ],
             [
+                'title' => 'Category:Multiplayer Features',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different multiplayer features for video games.
+
+{{#default_form:Multiplayer Feature}}
+MARKUP,
+            ],
+            [
                 'title' => 'Category:Objects',
                 'namespace' => $this->namespaces['category'],
                 'description' => <<<MARKUP
@@ -130,6 +148,42 @@ MARKUP,
 This category lists the different regional rating options for video games.
 
 {{#default_form:Rating}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Releases',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category is to add the edit with form tab on the releases page.
+
+{{#default_form:Releases}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Resolutions',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different resolutions for video games.
+
+{{#default_form:Resolution}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Single Player Features',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different single player features for video games.
+
+{{#default_form:Single Player Feature}}
+MARKUP,
+            ],
+            [
+                'title' => 'Category:Sound Systems',
+                'namespace' => $this->namespaces['category'],
+                'description' => <<<MARKUP
+This category lists the different sound systems for video games.
+
+{{#default_form:Sound System}}
 MARKUP,
             ],
             [

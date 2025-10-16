@@ -6,6 +6,9 @@ ARG INSTALL_API="false"
 WORKDIR /var/www/html
 USER root
 
+# INSTALL DB EXTENSIONS
+RUN docker-php-ext-install pdo pdo_mysql
+
 # INSTALL SEMANTIC MEDIAWIKI
 RUN set -x; \
     apt-get update \
@@ -49,12 +52,22 @@ RUN cd /var/www/html \
  && cd /var/www/html/ \
  && composer update --no-dev
 
- RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
-        sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # So can be docker exec after build
-COPY --chmod=755 installwiki.sh /installwiki.sh
+COPY installwiki.sh /installwiki.sh
+RUN chmod 755 /installwiki.sh
 
 # START CONTAINER
+COPY ./config/LocalSettings.php /var/www/html/LocalSettings.php
+COPY ./skins/GiantBomb /var/www/html/skins/GiantBomb
+RUN chown -R www-data:www-data /var/www/html/LocalSettings.php /var/www/html/skins/GiantBomb
+
+# Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
+COPY .htaccess /var/www/html/.htaccess
+
 COPY entrypoint.sh /entrypoint.sh
+COPY scripts/wiki-admin.sh /usr/local/bin/wiki-admin
+RUN chmod 755 /usr/local/bin/wiki-admin
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]

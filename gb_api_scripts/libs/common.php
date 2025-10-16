@@ -2,6 +2,8 @@
 
 trait CommonVariablesAndMethods 
 {
+    protected $reservedCharacters = ['<','>','(',')','[',']','|',':','{','}','/','&','#','+','%20','%28','%26','%29','%'];
+
     /**
      * Maps wiki type ids to their info
      */
@@ -26,6 +28,24 @@ trait CommonVariablesAndMethods
     ];
 
     /**
+     * Map pre-CBS GB type ids to current type ids
+     */
+    protected $typeIdMap = [
+        15 => 1300,
+        17 => 2300,
+        59 => 3000,
+        60 => 3045,
+        61 => 3030,
+        62 => 3025,
+        65 => 3010,
+        72 => 3040,
+        92 => 3015,
+        93 => 3055,
+        94 => 3005,
+        95 => 3035,
+    ];
+
+    /**
      * Mediawiki namespaces
      */
     protected $namespaces = [
@@ -34,7 +54,8 @@ trait CommonVariablesAndMethods
         'template' => 10,
         'category' => 14,
         'property' => 102,
-        'form' => 106
+        'form' => 106,
+        'module' => 828,
     ];
 
     /**
@@ -157,6 +178,9 @@ trait CommonVariablesAndMethods
 
             $count = 0;
             foreach ($data as $page) {
+                if (empty($page['title'])) {
+                    continue;
+                }
                 $xml->startElement('page');
                     $xml->writeElement('title', trim($page['title'], ' _'));
                     $xml->writeElement('ns', $page['namespace']);
@@ -175,7 +199,7 @@ trait CommonVariablesAndMethods
                 $xml->endElement();
 
                 if ($count % 1000 == 0) {
-                    echo "$count pages blocks created...\n";
+                    echo "\n$count pages blocks created...";
                 }
                 $count++;
             }
@@ -185,7 +209,7 @@ trait CommonVariablesAndMethods
 
         $xml->flush();
 
-        echo "Generated $file!\n";
-        echo "Total pages generated: $count\n";
+        echo "\nGenerated $file!";
+        echo "\nTotal pages generated: $count";
     }
 }
