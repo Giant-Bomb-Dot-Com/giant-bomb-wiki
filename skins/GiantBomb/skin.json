@@ -33,6 +33,10 @@
       "dependencies": ["mediawiki.util", "mediawiki.api"],
       "position": "bottom"
     },
+    "skins.giantbomb.externalheader": {
+      "scripts": ["resources/js/loadExternalHeader.js"],
+      "position": "top"
+    },
     "skins.giantbomb": {
       "packageFiles": [
         "resources/components/index.js",
