@@ -11,15 +11,14 @@
     }
   }
 
+  // Get header assets URL from MediaWiki config (set via environment variable)
+  const baseUrl = mw.config.get("wgHeaderAssetsUrl");
+
   // If no header URL is configured, hide the empty container
   if (!baseUrl) {
     hideEmptyContainer();
     return;
   }
-
-  // Get header assets URL from MediaWiki config (set via environment variable)
-  const baseUrl = mw.config.get("wgHeaderAssetsUrl");
-
   // Load the external header CSS
   const link = document.createElement("link");
   link.rel = "stylesheet";
