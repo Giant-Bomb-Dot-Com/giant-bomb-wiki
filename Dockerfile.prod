@@ -1,9 +1,5 @@
 FROM mediawiki:1.43.5
 
-# This Dockerfile is for development and CI environments where configuration
-# files are mounted as volumes. For production deployments, use Dockerfile.prod
-# which includes LocalSettings.php and the GiantBomb skin in the image.
-
 ARG INSTALL_GCSFUSE="false"
 ARG INSTALL_API="false"
 
@@ -63,7 +59,11 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 COPY installwiki.sh /installwiki.sh
 RUN chmod 755 /installwiki.sh
 
-# START CONTAINER
+# START CONTAINER - PRODUCTION: Copy config and skin into image
+COPY ./config/LocalSettings.php /var/www/html/LocalSettings.php
+COPY ./skins/GiantBomb /var/www/html/skins/GiantBomb
+RUN chown -R www-data:www-data /var/www/html/LocalSettings.php /var/www/html/skins/GiantBomb
+
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
 COPY .htaccess /var/www/html/.htaccess
 

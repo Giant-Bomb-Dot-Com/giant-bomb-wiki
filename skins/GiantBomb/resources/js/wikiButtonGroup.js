@@ -16,7 +16,8 @@ document.querySelectorAll(".wiki-btn").forEach(function (btn) {
       }
       return;
     }
-    const scriptPath = (window.mw && mw.config && mw.config.get('wgScriptPath')) || '';
+    const scriptPath =
+      (window.mw && mw.config && mw.config.get("wgScriptPath")) || "";
     const basePath = `${scriptPath}/skins/GiantBomb`;
     const url = `${basePath}/includes/partials/results.php?title=${encodeURIComponent(title)}`;
     fetch(url)
