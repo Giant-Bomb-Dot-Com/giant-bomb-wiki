@@ -12,7 +12,7 @@
   }
 
   // Get header assets URL from MediaWiki config (set via environment variable)
-  const baseUrl = mw.config.get("wgHeaderAssetsUrl") || "http://localhost:3000";
+  const baseUrl = mw.config.get("wgHeaderAssetsUrl");
 
   // Load the external header CSS
   const link = document.createElement("link");

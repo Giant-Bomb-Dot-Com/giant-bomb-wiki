@@ -9,7 +9,7 @@ class SkinGiantBomb extends SkinTemplate {
         parent::initPage( $out );
 
         // Pass header asset URL to JavaScript
-        $headerAssetsUrl = getenv('GB_SITE_SERVER') ?: 'http://localhost:3000';
+        $headerAssetsUrl = getenv('GB_SITE_SERVER');
         $out->addJsConfigVars( 'wgHeaderAssetsUrl', $headerAssetsUrl );
 
         $out->addModuleStyles( 'skins.giantbomb.styles' );
