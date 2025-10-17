@@ -1,6 +1,6 @@
 describe("Authentication", () => {
   it("should login", () => {
-    cy.visit("/", { qs: { title: "Special%3AUserLogin" } });
+    cy.visit("/", { qs: { title: "Special%3AUserLogin", useskin: "vector" } });
     cy.get("#pt-login > a > span").click();
     cy.get("#wpName1").type(Cypress.env("MW_DB_USER"));
     cy.get("#wpPassword1").type(Cypress.env("MW_PASS"));

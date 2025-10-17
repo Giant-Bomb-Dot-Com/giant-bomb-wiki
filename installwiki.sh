@@ -34,6 +34,14 @@ if [ ! -f /var/.installed ]; then
   echo "-> run update post install"
   cd /var/www/html/ && php maintenance/run.php update
 
+  echo "-> Ensuring SMW config directory is writable"
+  mkdir -p /var/www/html/images/smw-config
+  chown -R www-data:www-data /var/www/html/images/smw-config
+  chmod -R 775 /var/www/html/images/smw-config
+
+  echo "-> Setting up SemanticMediaWiki database tables"
+  cd /var/www/html/ && php extensions/SemanticMediaWiki/maintenance/setupStore.php
+
   # recover from an incomple migration
   echo "-> Starting wiki to patch system and db..."
   RESP=$(curl  --connect-timeout 5 \

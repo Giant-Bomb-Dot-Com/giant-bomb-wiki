@@ -2,6 +2,7 @@ services:
   wiki:
     build:
       context: .
+      dockerfile: Dockerfile.prod
       args:
         INSTALL_GCSFUSE: "true"
     privileged: true

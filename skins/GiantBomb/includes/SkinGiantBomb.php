@@ -8,7 +8,11 @@ class SkinGiantBomb extends SkinTemplate {
     public function initPage( OutputPage $out ) {
         parent::initPage( $out );
 
+        // Pass header asset URL to JavaScript
+        $headerAssetsUrl = getenv('GB_SITE_SERVER');
+        $out->addJsConfigVars( 'wgHeaderAssetsUrl', $headerAssetsUrl );
+
         $out->addModuleStyles( 'skins.giantbomb.styles' );
-        $out->addModules( [ 'skins.giantbomb', 'skins.giantbomb.js' ] );
+        $out->addModules( [ 'skins.giantbomb', 'skins.giantbomb.js', 'skins.giantbomb.externalheader' ] );
     }
 }
