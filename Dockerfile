@@ -3,7 +3,6 @@ FROM mediawiki:1.43.5
 # This Dockerfile is for development and CI environments where configuration
 # files are mounted as volumes. For production deployments, use Dockerfile.prod
 # which includes LocalSettings.php and the GiantBomb skin in the image.
-# Cache bust: 2025-10-17-v2
 
 ARG INSTALL_GCSFUSE="false"
 ARG INSTALL_API="false"
