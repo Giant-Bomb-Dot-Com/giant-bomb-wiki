@@ -149,3 +149,17 @@ A git commit will use [Husky](https://typicode.github.io/husky/) to execute hook
 
 1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
 2. We can use translatewiki.net and i18n to allow / help with multi-language support.
+
+### Games Page(s)
+
+1. Remote into the docker container `docker exec -it NAME /bin/bash` Note: the NAME will most likely be: giant-bomb-wiki-wiki-1
+2. run the following commands to import the games pages:
+  ```cd /data
+  unzip games_pages.zip
+  cd /var/www/html/maintenance/
+  php deleteBatch.php /data/wiki_del.txt
+  rm /data/wiki_del.txt
+  php importDump.php /data/gb-games.xml
+  rm /data/gb-games.xml```
+
+  Optionally you can run: `php rebuildrecentchanges.php` to rebuild the pages to update the pages and stats but it takes a long time to run.
