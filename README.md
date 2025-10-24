@@ -32,12 +32,14 @@ This uses a pre-built database snapshot with 5 wiki pages ready for development!
 ```
 
 **Requirements:**
+
 - `gb_wiki.sql.gz.data` in `docker/db-snapshot/` (included in repo)
 - `.env` file configured
 
 **Time:** ~30 seconds first run, ~5 seconds subsequent runs
 
 **What you get:**
+
 - 5 wiki pages for testing skins/templates
 - Full MediaWiki + Semantic MediaWiki setup
 - Perfect for frontend/UI development
@@ -47,6 +49,7 @@ This uses a pre-built database snapshot with 5 wiki pages ready for development!
 If you want to generate **new wiki pages** from the 86,147 games in the API:
 
 1. Uncomment this line in `docker/db-snapshot/.dockerignore`:
+
    ```
    # !gb_api_dump.sql.gz.data
    ```

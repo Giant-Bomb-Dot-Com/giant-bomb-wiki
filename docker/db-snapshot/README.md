@@ -13,6 +13,7 @@ This directory contains the database snapshot for quick setup.
 The SQL dump files are **not tracked in git** due to their size. Share them via:
 
 ### Option 1: Git LFS (Recommended for GitHub)
+
 ```bash
 # Install Git LFS
 git lfs install
@@ -27,7 +28,9 @@ git push
 ```
 
 ### Option 2: External Storage
+
 Upload to:
+
 - Google Drive / Dropbox
 - GitHub Releases (attach as binary)
 - Cloud storage (S3, GCS, etc.)
@@ -35,7 +38,9 @@ Upload to:
 Provide download instructions in main README.
 
 ### Option 3: Docker Registry
+
 Build and push the complete image:
+
 ```bash
 # Build image
 docker build -t yourusername/giant-bomb-wiki-db:latest .
@@ -45,6 +50,7 @@ docker push yourusername/giant-bomb-wiki-db:latest
 ```
 
 Then others can pull directly:
+
 ```yaml
 # docker-compose.snapshot.yml
 services:
@@ -56,6 +62,7 @@ services:
 ## Creating a New Snapshot
 
 From the project root:
+
 ```bash
 # Export databases
 docker exec giant-bomb-wiki-db-1 mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" \
@@ -79,6 +86,7 @@ docker compose -f docker-compose.snapshot.yml build db
 ## Image Size
 
 The built Docker image is approximately **500MB** including:
+
 - Base MariaDB image (~400MB)
 - Compressed SQL dumps (~93MB)
 - Additional layers (~7MB)
