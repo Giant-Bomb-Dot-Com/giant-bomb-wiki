@@ -66,7 +66,7 @@ echo "⏳ Subsequent runs are ~10 seconds (data persists in volume)"
 echo ""
 
 sleep 5
-until docker exec giant-bomb-wiki-db-1 mariadb -uroot -p${MARIADB_ROOT_PASSWORD} -e "SELECT 1 FROM gb_api_dump.wiki_game LIMIT 1" &> /dev/null; do
+until docker exec giant-bomb-wiki-db-1 mariadb -uroot -p${MARIADB_ROOT_PASSWORD} -e "SELECT 1 FROM gb_wiki.page LIMIT 1" &> /dev/null; do
     printf "."
     sleep 3
 done
@@ -76,7 +76,7 @@ echo ""
 
 # Wait for wiki container to be able to connect to database
 echo "Waiting for wiki container to connect to database..."
-until docker exec giant-bomb-wiki-wiki-1 php -r "new mysqli('db', 'root', '${MARIADB_ROOT_PASSWORD}', 'gb_api_dump');" &> /dev/null; do
+until docker exec giant-bomb-wiki-wiki-1 php -r "new mysqli('db', 'root', '${MARIADB_ROOT_PASSWORD}', 'gb_wiki');" &> /dev/null; do
     printf "."
     sleep 2
 done
