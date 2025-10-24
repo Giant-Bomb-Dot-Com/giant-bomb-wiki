@@ -1,8 +1,66 @@
 # The Giant Bomb Wiki
 
-We should add stuff here.
+A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki.
 
-## Running the wiki for the first time
+## Quick Start (Recommended)
+
+**Get started in ~30 seconds:**
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Copy `.env.example` to `.env` and configure it
+3. Run:
+   ```bash
+   ./setup.sh
+   ```
+4. Access at: **http://localhost:8080**
+
+This uses a pre-built database snapshot with 5 wiki pages ready for development!
+
+## What's Included
+
+- **5 wiki pages** ready for development (working on skins, templates, etc.)
+- **MediaWiki 1.43.5** with Semantic MediaWiki
+- **Custom GiantBomb skin** with game landing page
+- **Optional: 86,147 games** from Giant Bomb API (for generating new wiki pages)
+
+## Setup Methods
+
+### Method 1: Quick Setup (Recommended - Uses Snapshot)
+
+```bash
+./setup.sh
+```
+
+**Requirements:**
+- `gb_wiki.sql.gz.data` in `docker/db-snapshot/` (included in repo)
+- `.env` file configured
+
+**Time:** ~30 seconds first run, ~5 seconds subsequent runs
+
+**What you get:**
+- 5 wiki pages for testing skins/templates
+- Full MediaWiki + Semantic MediaWiki setup
+- Perfect for frontend/UI development
+
+### Method 2: Include API Database (Optional)
+
+If you want to generate **new wiki pages** from the 86,147 games in the API:
+
+1. Uncomment this line in `docker/db-snapshot/.dockerignore`:
+   ```
+   # !gb_api_dump.sql.gz.data
+   ```
+
+2. Make sure you have `gb_api_dump.sql.gz.data` (89MB) in `docker/db-snapshot/`
+
+3. Run `./setup.sh` as normal
+
+**Time:** First run takes 1-2 minutes to load the API database
+
+### Method 3: Manual Setup (Legacy)
+
+<details>
+<summary>Click to expand manual setup instructions</summary>
 
 1. Prepare the environment by first installing [Docker Desktop](https://www.docker.com/products/docker-desktop/) and running it.
 2. Configure the wiki by copying `.env.example` to `.env` and filling out the missing values accordingly.
@@ -10,7 +68,7 @@ We should add stuff here.
 3. Start the wiki services from the terminal, with
    - `docker compose up -d`
    - This will download, install, and start the database and the mediawiki services.
-   - (optional) Run `docker compose build --no-cache` if you can see the version of mediawiki is not the expected one (currently Mediawiki 1.43.1).
+   - (optional) Run `docker compose build --no-cache` if you can see the version of mediawiki is not the expected one (currently Mediawiki 1.43.5).
 4. Install the wiki in two steps
    1. Find the wiki container with `docker ps`. By default it should be `giant-bomb-wiki-wiki-1`
    2. Install with
@@ -20,6 +78,25 @@ We should add stuff here.
 5. Verify the Special Version page http://localhost:8080/index.php/Special:Version loads in a browser and see the installed extensions/skins and their versions.
 6. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
 7. (optional) Execute all end-to-end tests with `pnpm test:e2e`. See the [Tests](#Tests) section for the set-up.
+
+</details>
+
+## Common Commands
+
+```bash
+# Start wiki
+./setup.sh
+
+# Stop wiki
+docker compose -f docker-compose.snapshot.yml down
+
+# View logs
+docker compose -f docker-compose.snapshot.yml logs -f
+
+# Reset everything (delete all data)
+docker compose -f docker-compose.snapshot.yml down -v
+./setup.sh
+```
 
 ## Skins
 
