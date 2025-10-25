@@ -1,0 +1,8 @@
+# Only include necessary files for database setup
+*
+!00-setup-databases.sql
+!gb_wiki.sql.gz.data
+!01-import-api-dump.sh
+!02-import-wiki.sh
+# gb_api_dump is optional - uncomment the line below to include it
+# !gb_api_dump.sql.gz.data

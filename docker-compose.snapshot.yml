@@ -1,0 +1,33 @@
+# Docker Compose configuration using pre-loaded database snapshot
+# This provides instant startup with all data pre-loaded
+
+services:
+  db:
+    build:
+      context: ./docker/db-snapshot
+      dockerfile: Dockerfile
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "mariadb -uroot -p$MARIADB_ROOT_PASSWORD -e 'SELECT 1;'"
+      interval: 5s
+      retries: 10
+      start_period: 60s
+
+  wiki:
+    extends:
+      service: wiki
+      file: docker-compose.yml
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  wiki-data:
