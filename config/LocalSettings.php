@@ -208,6 +208,9 @@ if ($wikiEnv == 'prod') {
 $wgAddImgTagWhitelist = true;
 $wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
 
+# Allow external images from Giant Bomb in MediaWiki image syntax
+$wgAllowExternalImagesFrom = ['https://www.giantbomb.com/'];
+
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
 
