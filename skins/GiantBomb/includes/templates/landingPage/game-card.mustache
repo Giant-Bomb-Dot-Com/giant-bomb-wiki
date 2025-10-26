@@ -1,12 +1,12 @@
-<div 
-    class="game-card-base"
-    id="game-card-{{index}}"
-    style="background-image: url('{{img}}');"
->
-    <div class="info-container">
-        <div class="game-title-and-date">
-            <h2 class="highlight">{{title}}</h2>
-            <h4>{{date}}</h4>
-        </div>        
+<a href="{{url}}" class="game-card-link">
+    <div class="game-card-simple" id="game-card-{{index}}">
+        <div class="game-image">
+            <img src="{{img}}" alt="{{title}}" onerror="this.style.display='none'" />
+        </div>
+        <div class="game-info">
+            <h3 class="game-title">{{title}}</h3>
+            <p class="game-date">{{date}}</p>
+            <p class="game-desc">{{desc}}</p>
+        </div>
     </div>
-</div>
+</a>
