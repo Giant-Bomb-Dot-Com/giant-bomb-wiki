@@ -321,3 +321,6 @@ $wgShowExceptionDetails = true;
 $wgDevelopmentWarnings = true;
 error_reporting( -1 );
 ini_set( 'display_errors', 1 );
+
+#Allow more results with SMW query
+$smwgQMaxInlineLimit = 7500;
