@@ -7,9 +7,14 @@
     <div id="dynamic-content">
         <hr class="highlight" />
 
-        {{> whats-hot }}
-        {{> gaming-history }}
-        {{> random-games }}
-    
+        <div class="all-games-section">
+            <h2>All Games</h2>
+            <div class="game-grid">
+                {{#games}}
+                    {{> game-card }}
+                {{/games}}
+            </div>
+        </div>
+
     </div>
 </div>

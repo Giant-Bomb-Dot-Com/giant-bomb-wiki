@@ -1,20 +1,104 @@
 <?php
 use MediaWiki\Html\TemplateParser;
+use MediaWiki\MediaWikiServices;
 
-$gamesJson = __DIR__ . '/../../resources/data/sampleGames.json';
-$buttonsJson = __DIR__ . '/../../resources/data/categoryButtons.json';
+// Define available category buttons
+$buttons = [
+	'Home',
+	'Games',
+	'Characters',
+	'Companies',
+	'Concepts',
+	'Franchises',
+	'Locations',
+	'People',
+	'Platforms',
+	'Objects',
+	'Accessories'
+];
 
-// Get contents of JSON file
-$gamesContent = file_get_contents($gamesJson);
-$buttonsContent = file_get_contents($buttonsJson);
+// Query games from MediaWiki database directly
+$games = [];
+try {
+	// Check if we can access the database
+	$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection(DB_REPLICA);
 
-// Decode JSON into PHP array
-$games = json_decode($gamesContent, true);
-$buttons = json_decode($buttonsContent, true);
+	// Query pages in the Games namespace with semantic properties
+	// Get only main game pages (not subpages like /Credits or /Releases)
+	$res = $dbr->select(
+		'page',
+		['page_id', 'page_title'],
+		[
+			'page_namespace' => 0,
+			'page_title' . $dbr->buildLike('Games/', $dbr->anyString()),
+			// Exclude subpages by ensuring there's no second slash after Games/
+			'page_title NOT' . $dbr->buildLike($dbr->anyString(), '/', $dbr->anyString(), '/', $dbr->anyString())
+		],
+		__METHOD__,
+		[
+			'LIMIT' => 100,
+			'ORDER BY' => 'page_id ASC'
+		]
+	);
 
-$hotGames = array_slice($games, 0, 3);
-$tigGames = array_slice($games, 0, 6);
-$randomGames = [...$games, ...$games];
+	$index = 0;
+	foreach ($res as $row) {
+		// Get page data
+		$pageData = [];
+		$pageData['index'] = $index++;
+		$pageData['title'] = str_replace('Games/', '', str_replace('_', ' ', $row->page_title));
+		$pageData['url'] = '/index.php/' . $row->page_title;
+
+		// Get the page content directly and parse it
+		try {
+			$title = \Title::newFromID($row->page_id);
+			$wikiPageFactory = \MediaWiki\MediaWikiServices::getInstance()->getWikiPageFactory();
+			$page = $wikiPageFactory->newFromTitle($title);
+			$content = $page->getContent();
+
+			if ($content) {
+				$text = $content->getText();
+
+				// Parse the wikitext for Game template properties
+				if (preg_match('/\| Name=([^\n]+)/', $text, $matches)) {
+					$pageData['title'] = trim($matches[1]);
+				}
+				if (preg_match('/\| Deck=([^\n]+)/', $text, $matches)) {
+					$pageData['desc'] = trim($matches[1]);
+				}
+				if (preg_match('/\| Image=([^\n]+)/', $text, $matches)) {
+					$pageData['img'] = trim($matches[1]);
+				}
+				if (preg_match('/\| ReleaseDate=([^\n]+)/', $text, $matches)) {
+					$releaseDate = trim($matches[1]);
+					if ($releaseDate !== '0000-00-00' && !empty($releaseDate)) {
+						$pageData['date'] = $releaseDate;
+					}
+				}
+				if (preg_match('/\| Platforms=([^\n]+)/', $text, $matches)) {
+					$platformsStr = trim($matches[1]);
+					$platforms = explode(',', $platformsStr);
+					$pageData['platforms'] = array_map(function($p) {
+						return str_replace('Platforms/', '', trim($p));
+					}, $platforms);
+				}
+			}
+		} catch (Exception $e) {
+			// Continue with defaults
+		}
+
+		// Set defaults for missing data
+		if (!isset($pageData['desc'])) $pageData['desc'] = '';
+		if (!isset($pageData['img'])) $pageData['img'] = '';
+		if (!isset($pageData['date'])) $pageData['date'] = '';
+		if (!isset($pageData['platforms'])) $pageData['platforms'] = [];
+
+		$games[] = $pageData;
+	}
+} catch (Exception $e) {
+	// Log error but don't show sample data
+	error_log("Landing page error: " . $e->getMessage());
+}
 
 $buttonData = [];
 
@@ -26,12 +110,10 @@ foreach ($buttons as $button) {
     ];
 }
 
-// Set Mustache data
+// Set Mustache data - just show all games
 $data = [
     'buttons' => $buttonData,
-    'hotGames' => $hotGames,
-    'tigGames' => $tigGames,
-    'games' => $randomGames,
+    'games' => $games,
 ];
 
 // Path to Mustache templates
