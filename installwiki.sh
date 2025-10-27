@@ -64,6 +64,16 @@ if [ ! -f /var/.installed ]; then
     rm /data/wiki_init.xml
   fi
 
+  if [ -f /data/games_pages.zip ]; then
+    echo "-> Importing inital games category pages."
+    cd /data && unzip -o games_pages.zip
+    cd /var/www/html/maintenance
+    php deleteBatch.php /data/wiki_del.txt
+    rm /data/wiki_del.txt
+    php importDump.php /data/gb-games.xml
+    rm /data/gb-games.xml
+  fi
+
   # NOTE: previously an early failure after the Mediawiki CLI would exit and skip this
   echo "-> Creating .installed file"
   touch /var/.installed
