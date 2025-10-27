@@ -229,3 +229,7 @@ A git commit will use [Husky](https://typicode.github.io/husky/) to execute hook
 
 1. The skin needs to be updated to style mediawiki while using it's data syntax. The sctools has their skin public here: https://github.com/StarCitizenTools/mediawiki-skins-Citizen
 2. We can use translatewiki.net and i18n to allow / help with multi-language support.
+
+### Category Page(s)
+
+Go to /Games for the overall Games category page and then click on a letter / number to see the data being pulled from Semantic and how it gathers data.
