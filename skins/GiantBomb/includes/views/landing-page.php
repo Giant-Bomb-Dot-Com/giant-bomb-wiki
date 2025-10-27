@@ -117,7 +117,7 @@ $data = [
 ];
 
 // Path to Mustache templates
-$templateDir = realpath(__DIR__ . '/../templates/landingPage');
+$templateDir = realpath(__DIR__ . '/../templates');
 
 // Render Mustache template
 $templateParser = new TemplateParser($templateDir);
