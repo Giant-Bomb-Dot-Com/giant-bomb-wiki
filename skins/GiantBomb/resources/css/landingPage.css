@@ -115,7 +115,7 @@
   display: block;
 }
 
-.game-card-simple {
+.game-card {
   background: #1a1a1a;
   border-radius: 8px;
   overflow: hidden;
@@ -125,12 +125,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.game-card-simple:hover {
+.game-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
-.game-card-simple .game-image {
+.game-card .game-image {
   width: 100%;
   height: 300px;
   overflow: hidden;
@@ -140,30 +140,30 @@
   justify-content: center;
 }
 
-.game-card-simple .game-image img {
+.game-card .game-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.game-card-simple .game-info {
+.game-card .game-info {
   padding: 1rem;
 }
 
-.game-card-simple .game-title {
+.game-card .game-title {
   margin: 0 0 0.5rem 0;
   font-size: 1.25rem;
   color: #fff;
   font-weight: bold;
 }
 
-.game-card-simple .game-date {
+.game-card .game-date {
   margin: 0 0 0.5rem 0;
   font-size: 0.875rem;
   color: #888;
 }
 
-.game-card-simple .game-desc {
+.game-card .game-desc {
   margin: 0;
   font-size: 0.875rem;
   color: #ccc;
