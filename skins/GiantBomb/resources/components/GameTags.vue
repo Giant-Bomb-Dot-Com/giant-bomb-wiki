@@ -21,7 +21,7 @@
 <script>
 const { ref, toRefs } = require("vue");
 
-module.exports = {
+module.exports = exports = {
   name: "GameTags",
   props: {
     tags: {
@@ -64,6 +64,8 @@ module.exports = {
 
     return {
       tags: tagList,
+      tagType,
+      namespace,
       activeTag,
       getTagUrl,
       handleTagClick,

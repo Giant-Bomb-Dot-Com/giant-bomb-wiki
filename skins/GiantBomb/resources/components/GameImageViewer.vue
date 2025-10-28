@@ -33,7 +33,7 @@
 <script>
 const { ref, toRefs, onMounted, onUnmounted } = require("vue");
 
-module.exports = {
+module.exports = exports = {
   name: "GameImageViewer",
   props: {
     imageUrl: {
@@ -79,6 +79,8 @@ module.exports = {
     });
 
     return {
+      imageUrl,
+      altText,
       isFullscreen,
       toggleFullscreen,
       closeFullscreen,
