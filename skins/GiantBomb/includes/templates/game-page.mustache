@@ -1,0 +1,243 @@
+{{> header }}
+
+<div class="game-page">
+	{{! Hero Section with Game Image and Title }}
+	<div class="game-hero">
+		{{#game.image}}
+		<div class="game-hero__image" data-vue-component="GameImageViewer" data-image-url="{{game.image}}" data-alt-text="{{game.name}}">
+			<img src="{{game.image}}" alt="{{game.name}}" />
+		</div>
+		{{/game.image}}
+		<div class="game-hero__content">
+			<h1 class="game-hero__title">{{game.name}}</h1>
+			{{#game.releaseDate}}
+			<div class="game-hero__release">
+				<span class="game-hero__release-label">Released:</span>
+				<span class="game-hero__release-date">{{game.releaseDate}}</span>
+			</div>
+			{{/game.releaseDate}}
+			{{#game.deck}}
+			<p class="game-hero__deck">{{game.deck}}</p>
+			{{/game.deck}}
+		</div>
+	</div>
+
+	{{! Main Content Grid }}
+	<div class="game-content">
+		{{! Left Column - Main Info }}
+		<div class="game-main">
+			{{! Basic Information Section }}
+			{{#hasBasicInfo}}
+			<section class="game-section">
+				<h2 class="game-section__title">Basic Information</h2>
+				<div class="game-info-grid">
+					{{#game.aliases}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Also Known As:</span>
+						<span class="game-info-item__value">{{game.aliases}}</span>
+					</div>
+					{{/game.aliases}}
+					{{#game.guid}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Giant Bomb ID:</span>
+						<span class="game-info-item__value">{{game.guid}}</span>
+					</div>
+					{{/game.guid}}
+				</div>
+			</section>
+			{{/hasBasicInfo}}
+
+			{{! Companies Section }}
+			{{#hasCompanies}}
+			<section class="game-section">
+				<h2 class="game-section__title">Companies</h2>
+				<div class="game-info-grid">
+					{{#game.developers.0}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Developer{{#game.developers.1}}s{{/game.developers.1}}:</span>
+						<div class="game-info-item__value">
+							<div class="game-tags">
+								{{#game.developers}}
+								<span class="game-tag">{{.}}</span>
+								{{/game.developers}}
+							</div>
+						</div>
+					</div>
+					{{/game.developers.0}}
+					{{#game.publishers.0}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Publisher{{#game.publishers.1}}s{{/game.publishers.1}}:</span>
+						<div class="game-info-item__value">
+							<div class="game-tags">
+								{{#game.publishers}}
+								<span class="game-tag">{{.}}</span>
+								{{/game.publishers}}
+							</div>
+						</div>
+					</div>
+					{{/game.publishers.0}}
+				</div>
+			</section>
+			{{/hasCompanies}}
+
+			{{! Classification Section }}
+			{{#hasClassification}}
+			<section class="game-section">
+				<h2 class="game-section__title">Classification</h2>
+				<div class="game-info-grid">
+					{{#game.platforms.0}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Platform{{#game.platforms.1}}s{{/game.platforms.1}}:</span>
+						<div class="game-info-item__value">
+							<div class="game-tags" data-vue-component="GameTags" data-tags="{{vue.platformsStr}}" data-tag-type="platform" data-namespace="Platforms">
+								{{#game.platforms}}
+								<span class="game-tag game-tag--platform">{{.}}</span>
+								{{/game.platforms}}
+							</div>
+						</div>
+					</div>
+					{{/game.platforms.0}}
+					{{#game.genres.0}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Genre{{#game.genres.1}}s{{/game.genres.1}}:</span>
+						<div class="game-info-item__value">
+							<div class="game-tags">
+								{{#game.genres}}
+								<span class="game-tag game-tag--genre">{{.}}</span>
+								{{/game.genres}}
+							</div>
+						</div>
+					</div>
+					{{/game.genres.0}}
+					{{#game.themes.0}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Theme{{#game.themes.1}}s{{/game.themes.1}}:</span>
+						<div class="game-info-item__value">
+							<div class="game-tags">
+								{{#game.themes}}
+								<span class="game-tag game-tag--theme">{{.}}</span>
+								{{/game.themes}}
+							</div>
+						</div>
+					</div>
+					{{/game.themes.0}}
+					{{#game.franchise}}
+					<div class="game-info-item">
+						<span class="game-info-item__label">Franchise:</span>
+						<span class="game-info-item__value game-tag game-tag--franchise">{{game.franchise}}</span>
+					</div>
+					{{/game.franchise}}
+				</div>
+			</section>
+			{{/hasClassification}}
+
+			{{! Related Content Section }}
+			{{#hasRelatedContent}}
+			<section class="game-section">
+				<h2 class="game-section__title">Related Content</h2>
+				<div class="game-related">
+					{{#game.characters.0}}
+					<div class="game-related-group">
+						<h3 class="game-related-group__title">Characters</h3>
+						<div class="game-tags">
+							{{#game.characters}}
+							<span class="game-tag game-tag--character">{{.}}</span>
+							{{/game.characters}}
+						</div>
+					</div>
+					{{/game.characters.0}}
+					{{#game.concepts.0}}
+					<div class="game-related-group">
+						<h3 class="game-related-group__title">Concepts</h3>
+						<div class="game-tags">
+							{{#game.concepts}}
+							<span class="game-tag game-tag--concept">{{.}}</span>
+							{{/game.concepts}}
+						</div>
+					</div>
+					{{/game.concepts.0}}
+					{{#game.locations.0}}
+					<div class="game-related-group">
+						<h3 class="game-related-group__title">Locations</h3>
+						<div class="game-tags">
+							{{#game.locations}}
+							<span class="game-tag game-tag--location">{{.}}</span>
+							{{/game.locations}}
+						</div>
+					</div>
+					{{/game.locations.0}}
+					{{#game.objects.0}}
+					<div class="game-related-group">
+						<h3 class="game-related-group__title">Objects</h3>
+						<div class="game-tags">
+							{{#game.objects}}
+							<span class="game-tag game-tag--object">{{.}}</span>
+							{{/game.objects}}
+						</div>
+					</div>
+					{{/game.objects.0}}
+					{{#game.similarGames.0}}
+					<div class="game-related-group">
+						<h3 class="game-related-group__title">Similar Games</h3>
+						<div class="game-tags" data-vue-component="GameTags" data-tags="{{vue.similarGamesStr}}" data-tag-type="game" data-namespace="Games">
+							{{#game.similarGames}}
+							<span class="game-tag game-tag--game">{{.}}</span>
+							{{/game.similarGames}}
+						</div>
+					</div>
+					{{/game.similarGames.0}}
+				</div>
+			</section>
+			{{/hasRelatedContent}}
+		</div>
+
+		{{! Right Column - Sidebar }}
+		<aside class="game-sidebar">
+			{{! Sub-Pages Section }}
+			{{#hasSubPages}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Additional Information</h3>
+				<ul class="game-subpages">
+					{{#game.hasReleases}}
+					<li class="game-subpage">
+						<a href="{{game.url}}/Releases" class="game-subpage__link">
+							<span class="game-subpage__icon">📦</span>
+							<span class="game-subpage__name">Releases</span>
+						</a>
+					</li>
+					{{/game.hasReleases}}
+					{{#game.hasDLC}}
+					<li class="game-subpage">
+						<a href="{{game.url}}/DLC" class="game-subpage__link">
+							<span class="game-subpage__icon">🎮</span>
+							<span class="game-subpage__name">DLC</span>
+						</a>
+					</li>
+					{{/game.hasDLC}}
+					{{#game.hasCredits}}
+					<li class="game-subpage">
+						<a href="{{game.url}}/Credits" class="game-subpage__link">
+							<span class="game-subpage__icon">👥</span>
+							<span class="game-subpage__name">Credits</span>
+						</a>
+					</li>
+					{{/game.hasCredits}}
+				</ul>
+			</section>
+			{{/hasSubPages}}
+
+			{{! Quick Links - Placeholder for future features }}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Quick Links</h3>
+				<ul class="game-quick-links">
+					<li class="game-quick-link">
+						<a href="{{game.url}}?action=edit" class="game-quick-link__link">Edit Page</a>
+					</li>
+					<li class="game-quick-link">
+						<a href="{{game.url}}?action=history" class="game-quick-link__link">View History</a>
+					</li>
+				</ul>
+			</section>
+		</aside>
+	</div>
+</div>
