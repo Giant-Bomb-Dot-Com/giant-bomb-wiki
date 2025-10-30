@@ -4,6 +4,12 @@ class GiantBombTemplate extends BaseTemplate {
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
+        // Check if we're on a game page (in Games/ namespace but not a sub-page)
+        $title = $this->getSkin()->getTitle();
+        $pageTitle = $title->getText();
+        $isGamePage = strpos($pageTitle, 'Games/') === 0 &&
+                      substr_count($pageTitle, '/') === 1;
+
         if ($isMainPage) {
             // Show landing page for main page
 ?>
@@ -21,6 +27,11 @@ class GiantBombTemplate extends BaseTemplate {
              data-title="My First SFC">
         </div> -->
         <?php include __DIR__ . '/views/landing-page.php'; ?>
+<?php
+        } elseif ($isGamePage) {
+            // Show custom game page for game pages
+?>
+        <?php include __DIR__ . '/views/game-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages

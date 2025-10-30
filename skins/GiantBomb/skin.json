@@ -26,7 +26,11 @@
       "scripts": ["resources/components/VueExampleComponent.js"]
     },
     "skins.giantbomb.styles": {
-      "styles": ["resources/css/styles.css", "resources/css/landingPage.css"]
+      "styles": [
+        "resources/css/styles.css",
+        "resources/css/landingPage.css",
+        "resources/css/gamePage.css"
+      ]
     },
     "skins.giantbomb.js": {
       "scripts": ["resources/js/wikiButtonGroup.js"],
@@ -41,7 +45,9 @@
       "packageFiles": [
         "resources/components/index.js",
         "resources/components/VueSingleFileComponentExample.vue",
-        "resources/components/AnotherVueComponent.vue"
+        "resources/components/AnotherVueComponent.vue",
+        "resources/components/GameTags.vue",
+        "resources/components/GameImageViewer.vue"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }
