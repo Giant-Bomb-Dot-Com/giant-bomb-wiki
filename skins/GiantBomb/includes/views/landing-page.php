@@ -2,20 +2,54 @@
 use MediaWiki\Html\TemplateParser;
 use MediaWiki\MediaWikiServices;
 
-// Define available category buttons
-$buttons = [
-	'Home',
-	'Games',
-	'Characters',
-	'Companies',
-	'Concepts',
-	'Franchises',
-	'Locations',
-	'People',
-	'Platforms',
-	'Objects',
-	'Accessories'
+// Define default category buttons in case JSON fails or is missing,
+// or if specific properties are not set in the JSON.
+// These are structured as objects, aligning with the expected JSON format.
+$defaultCategoryButtons = [
+    ['name' => 'Home', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Games', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Characters', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Companies', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Concepts', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Franchises', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Locations', 'className' => '', 'iconClass' => ''],
+    ['name' => 'People', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Platforms', 'className' => '', 'iconClass' => ''],
+    ['name' => 'Objects', 'className' => '', 'iconClass' => ''],
+    // The Accessories button with new styling classes and an icon
+    ['name' => 'Accessories', 'className' => 'category-button-accessories', 'iconClass' => 'icon-shopping-bag']
 ];
+
+// File path to the category buttons JSON data
+$jsonFilePath = __DIR__ . '/../../resources/data/categoryButtons.json'; // Corrected relative path
+
+// Initialize with default buttons
+$categoryButtons = $defaultCategoryButtons;
+
+// Attempt to load and parse category buttons from JSON
+if (file_exists($jsonFilePath)) {
+    $jsonContent = file_get_contents($jsonFilePath);
+    if ($jsonContent !== false) {
+        $parsedData = json_decode($jsonContent, true);
+        // Check if JSON was decoded successfully and is an array
+        if (json_last_error() === JSON_ERROR_NONE && is_array($parsedData)) {
+            $categoryButtons = $parsedData;
+        } else {
+            // Log error if JSON parsing failed but file exists and was read
+            error_log("Landing page: Failed to decode categoryButtons.json. Error: " . json_last_error_msg());
+            // Fallback to default buttons
+        }
+    } else {
+        // Log error if file content could not be read
+        error_log("Landing page: Failed to read categoryButtons.json content.");
+        // Fallback to default buttons
+    }
+} else {
+    // Log error if file does not exist
+    error_log("Landing page: categoryButtons.json not found at " . $jsonFilePath);
+    // Fallback to default buttons
+}
+
 
 // Query games from MediaWiki database directly
 $games = [];
@@ -102,11 +136,15 @@ try {
 
 $buttonData = [];
 
-// Populate buttonData from buttons array
-foreach ($buttons as $button) {
+// Populate buttonData from the loaded category buttons
+// This loop extracts the 'name', 'className', and 'iconClass' from each category
+// and prepares them for the Mustache template.
+foreach ($categoryButtons as $category) {
     $buttonData[] = [
-        'title' => $button,
-        'label' => $button
+        'title'     => $category['name'] ?? '', // Use 'name' from JSON or default
+        'label'     => $category['name'] ?? '', // Label for display, typically same as name
+        'className' => $category['className'] ?? '', // Pass className for custom styling
+        'iconClass' => $category['iconClass'] ?? ''  // Pass iconClass for custom icons
     ];
 }
 
