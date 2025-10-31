@@ -1,14 +1,40 @@
 [
-  "Home",
-  "New Releases",
-  "Games",
-  "Franchises",
-  "Characters",
-  "Platforms",
-  "People",
-  "Companies",
-  "Objects",
-  "Concepts",
-  "Locations",
-  "Accessories"
+  {
+    "name": "Home"
+  },
+  {
+    "name": "New Releases"
+  },
+  {
+    "name": "Games"
+  },
+  {
+    "name": "Franchises"
+  },
+  {
+    "name": "Characters"
+  },
+  {
+    "name": "Platforms"
+  },
+  {
+    "name": "People"
+  },
+  {
+    "name": "Companies"
+  },
+  {
+    "name": "Objects"
+  },
+  {
+    "name": "Concepts"
+  },
+  {
+    "name": "Locations"
+  },
+  {
+    "name": "Accessories",
+    "className": "category-button-accessories",
+    "iconClass": "icon-shopping-bag"
+  }
 ]
