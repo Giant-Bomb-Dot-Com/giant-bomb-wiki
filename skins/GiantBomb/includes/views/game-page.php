@@ -14,7 +14,7 @@ $pageTitle = $title->getText();
 // Initialize game data structure
 $gameData = [
 	'name' => str_replace('Games/', '', str_replace('_', ' ', $pageTitle)),
-	'url' => '/index.php/' . $pageTitle,
+	'url' => '/' . $pageTitle,
 	'image' => '',
 	'deck' => '',
 	'releaseDate' => '',
