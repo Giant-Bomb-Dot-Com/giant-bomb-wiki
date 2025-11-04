@@ -50,10 +50,10 @@ module.exports = exports = {
       // If namespace is provided, create a proper wiki link
       if (namespace.value) {
         const encodedTag = tag.replace(/ /g, "_");
-        return `/index.php/${namespace.value}/${encodedTag}`;
+        return `/${namespace.value}/${encodedTag}`;
       }
       // Otherwise, search for the tag
-      return `/index.php/Special:Search?search=${encodeURIComponent(tag)}`;
+      return `/Special:Search?search=${encodeURIComponent(tag)}`;
     };
 
     const handleTagClick = (tag) => {
