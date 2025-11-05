@@ -17,6 +17,7 @@ $gameData = [
 	'url' => '/' . $pageTitle,
 	'image' => '',
 	'deck' => '',
+	'description' => '',
 	'releaseDate' => '',
 	'releaseDateType' => '',
 	'aliases' => '',
@@ -53,6 +54,36 @@ try {
 
 	if ($content) {
 		$text = $content->getText();
+
+		// Extract wikitext (content after the template closing}})
+		$wikitext = '';
+		if (preg_match('/\}\}(.+)$/s', $text, $matches)) {
+			$wikitext = trim($matches[1]);
+			error_log("Extracted wikitext length: " . strlen($wikitext));
+		} else {
+			error_log("No content found after template closing");
+		}
+
+		// Parse the wikitext to HTML
+		if (!empty($wikitext)) {
+			error_log("Parsing wikitext...");
+			try {
+				$services = MediaWikiServices::getInstance();
+				$parser = $services->getParser();
+				$parserOptions = \ParserOptions::newFromAnon();
+
+				$parserOutput = $parser->parse($wikitext, $title, $parserOptions);
+				$gameData['description'] = $parserOutput->getText([
+					'allowTOC' => false,
+					'enableSectionEditLinks' => false,
+					'wrapperDivClass' => ''
+				]);
+			} catch (Exception $e) {
+				error_log("Failed to parse wikitext: " . $e->getMessage());
+				// Fallback to raw wikitext if parsing fails
+				$gameData['description'] = $wikitext;
+			}
+		}
 
 		// Parse template parameters
 		if (preg_match('/\| Name=([^\n]+)/', $text, $matches)) {
@@ -125,6 +156,14 @@ try {
 	$gameData['hasReleases'] = \Title::newFromText($pageTitle . '/Releases')->exists();
 	$gameData['hasDLC'] = \Title::newFromText($pageTitle . '/DLC')->exists();
 	$gameData['hasCredits'] = \Title::newFromText($pageTitle . '/Credits')->exists();
+
+	// TODO: Get actual counts from database or page content
+	$gameData['imagesCount'] = 0;
+	$gameData['releasesCount'] = 0;
+
+	// Convert booleans to strings for Vue props
+	$gameData['hasReleasesStr'] = $gameData['hasReleases'] ? 'true' : 'false';
+	$gameData['hasDLCStr'] = $gameData['hasDLC'] ? 'true' : 'false';
 
 } catch (Exception $e) {
 	error_log("Game page error: " . $e->getMessage());
