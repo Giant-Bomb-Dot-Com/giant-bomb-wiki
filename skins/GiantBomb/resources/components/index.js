@@ -9,7 +9,6 @@ const Vue = require("vue");
 const components = {
   VueExampleComponent: require("skins.giantbomb.vueexamplecomponent"),
   VueSingleFileComponentExample: require("./VueSingleFileComponentExample.vue"),
-  GameTags: require("./GameTags.vue"),
   GameImageViewer: require("./GameImageViewer.vue"),
 };
 
