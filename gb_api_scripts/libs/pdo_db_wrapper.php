@@ -82,6 +82,16 @@ class PdoDbWrapper implements DbInterface
         return $this->fetchfield($sql, ['id' => $id]);
     }
 
+    public function getImagesForGame(int $gameId)
+    {
+        $sql = "SELECT id, image, caption
+                  FROM image
+                 WHERE assoc_type_id = 3030 AND assoc_id = :gameId
+              ORDER BY id ASC";
+
+        return $this->fetchAllObjects($sql, ['gameId' => $gameId]);
+    }
+
     public function getCreditsFromDB(int $id)
     {
         $sql = "SELECT o.person_id, o.description, o.role_id, p.mw_page_name

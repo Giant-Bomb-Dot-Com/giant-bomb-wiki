@@ -10,6 +10,7 @@ use MediaWiki\MediaWikiServices;
 // Get the current page title
 $title = $this->getSkin()->getTitle();
 $pageTitle = $title->getText();
+$pageTitleDB = $title->getDBkey(); // Database format with underscores
 
 // Initialize game data structure
 $gameData = [
@@ -157,8 +158,39 @@ try {
 	$gameData['hasDLC'] = \Title::newFromText($pageTitle . '/DLC')->exists();
 	$gameData['hasCredits'] = \Title::newFromText($pageTitle . '/Credits')->exists();
 
-	// TODO: Get actual counts from database or page content
-	$gameData['imagesCount'] = 0;
+	// Get images linked from this page
+	$gameData['images'] = [];
+	try {
+		$services = MediaWikiServices::getInstance();
+		$dbLoadBalancer = $services->getDBLoadBalancer();
+		$db = $dbLoadBalancer->getConnection(DB_REPLICA);
+
+		// Get page ID
+		$pageId = $title->getArticleID();
+
+		// Query imagelinks table for image references
+		$result = $db->select(
+			'imagelinks',
+			['il_to'],
+			['il_from' => $pageId],
+			__METHOD__
+		);
+
+		foreach ($result as $row) {
+			$gameData['images'][] = [
+				'url' => $row->il_to,
+				'caption' => basename($row->il_to),
+				'width' => 0,
+				'height' => 0
+			];
+		}
+	} catch (Exception $e) {
+		error_log("Failed to fetch game images: " . $e->getMessage());
+	}
+
+	$gameData['imagesCount'] = count($gameData['images']);
+
+	// TODO: Get actual release count from database
 	$gameData['releasesCount'] = 0;
 
 	// Convert booleans to strings for Vue props
