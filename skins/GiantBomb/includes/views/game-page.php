@@ -15,7 +15,7 @@ $pageTitleDB = $title->getDBkey(); // Database format with underscores
 // Initialize game data structure
 $gameData = [
 	'name' => str_replace('Games/', '', str_replace('_', ' ', $pageTitle)),
-	'url' => '/' . $pageTitle,
+	'url' => '/' . $pageTitleDB,
 	'image' => '',
 	'deck' => '',
 	'description' => '',
@@ -190,8 +190,25 @@ try {
 
 	$gameData['imagesCount'] = count($gameData['images']);
 
-	// TODO: Get actual release count from database
+	// Get release count from /Releases subpage
 	$gameData['releasesCount'] = 0;
+	if ($gameData['hasReleases']) {
+		try {
+			$releasesTitle = \Title::newFromText($pageTitle . '/Releases');
+			if ($releasesTitle && $releasesTitle->exists()) {
+				$releasesPage = $wikiPageFactory->newFromTitle($releasesTitle);
+				$releasesContent = $releasesPage->getContent();
+				if ($releasesContent) {
+					$releasesText = $releasesContent->getText();
+					// Count occurrences of {{ReleaseSubobject
+					preg_match_all('/\{\{ReleaseSubobject/i', $releasesText, $matches);
+					$gameData['releasesCount'] = count($matches[0]);
+				}
+			}
+		} catch (Exception $e) {
+			error_log("Failed to fetch release count: " . $e->getMessage());
+		}
+	}
 
 	// Convert booleans to strings for Vue props
 	$gameData['hasReleasesStr'] = $gameData['hasReleases'] ? 'true' : 'false';
