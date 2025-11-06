@@ -7,7 +7,11 @@
 			{{! Game Cover Image }}
 			{{#game.image}}
 			<div class="game-hero__cover">
-				<img src="{{game.image}}" alt="{{game.name}}" class="game-hero__cover-image" />
+				<div
+					data-vue-component="GameImageViewer"
+					data-image-url="{{game.image}}"
+					data-alt-text="{{game.name}} cover">
+				</div>
 			</div>
 			{{/game.image}}
 
@@ -81,26 +85,23 @@
 		{{! Right Column - Sidebar }}
 		<aside class="game-sidebar">
 			{{! Images Preview Section }}
+			{{#game.images.0}}
 			<section class="game-sidebar-section">
 				<h3 class="game-sidebar-section__title">Images</h3>
 				<div class="game-images-grid">
-					{{#game.image}}
+					{{#game.images}}
 					<div class="game-image-thumb">
-						<img src="{{game.image}}" alt="{{game.name}}" />
+						<div
+							data-vue-component="GameImageViewer"
+							data-image-url="{{url}}"
+							data-alt-text="{{caption}}">
+						</div>
 					</div>
-					<div class="game-image-thumb">
-						<img src="{{game.image}}" alt="{{game.name}}" />
-					</div>
-					<div class="game-image-thumb">
-						<img src="{{game.image}}" alt="{{game.name}}" />
-					</div>
-					<div class="game-image-thumb">
-						<img src="{{game.image}}" alt="{{game.name}}" />
-					</div>
-					{{/game.image}}
+					{{/game.images}}
 				</div>
-				<a href="{{game.url}}/Images" class="game-view-all-btn">View all (148) images</a>
+				<a href="{{game.url}}/Images" class="game-view-all-btn">View all ({{game.imagesCount}}) images</a>
 			</section>
+			{{/game.images.0}}
 
 			{{! Game Details Section }}
 			<section class="game-sidebar-section">
