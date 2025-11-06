@@ -22,7 +22,7 @@
 				{{! Metadata Line }}
 				<div class="game-hero__metadata">
 					<span class="game-hero__meta-item">
-						Game consists of <a href="{{game.url}}/Releases" class="game-hero__meta-link">15 releases</a>
+						Game consists of <a href="{{game.url}}/Releases" class="game-hero__meta-link">{{game.releasesCount}} release{{^game.releasesCount.1}}s{{/game.releasesCount.1}}</a>
 					</span>
 					{{#game.releaseDate}}
 					<span class="game-hero__meta-separator">|</span>
