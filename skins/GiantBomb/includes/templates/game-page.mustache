@@ -162,6 +162,21 @@
 				{{/game.releases.0}}
 			</section>
 			{{/game.hasReleases}}
+
+			{{! Features Section }}
+			{{#game.features.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Features</h3>
+				<div class="game-features">
+					{{#game.features}}
+					<div class="game-feature-item">
+						<div class="game-feature-checkbox{{#enabled}} game-feature-checkbox--enabled{{/enabled}}"></div>
+						<div class="game-feature-label{{^enabled}} game-feature-label--disabled{{/enabled}}">{{name}}</div>
+					</div>
+					{{/game.features}}
+				</div>
+			</section>
+			{{/game.features.0}}
 		</aside>
 	</div>
 </div>

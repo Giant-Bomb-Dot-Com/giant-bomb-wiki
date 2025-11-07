@@ -170,7 +170,7 @@
 /* Main Content Grid */
 .game-content {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 360px;
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -625,6 +625,59 @@
   background: #1a1a2e;
   color: #ffffff;
   transform: translateX(4px);
+}
+
+/* Features Section */
+.game-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.game-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.game-feature-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 2px solid #6b6bff;
+  background-color: #6b6bff;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+  opacity: 0.3;
+}
+
+.game-feature-checkbox--enabled {
+  background-color: #b9b9ff;
+  border-color: #b9b9ff;
+  opacity: 1;
+}
+
+.game-feature-checkbox--enabled::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #202020;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.game-feature-label {
+  color: #ffffff;
+  transition: color 0.2s;
+}
+
+.game-feature-label--disabled {
+  color: #666666;
 }
 
 /* Responsive Design */
