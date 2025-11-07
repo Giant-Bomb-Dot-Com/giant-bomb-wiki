@@ -15,7 +15,7 @@ $pageTitleDB = $title->getDBkey(); // Database format with underscores
 // Initialize game data structure
 $gameData = [
 	'name' => str_replace('Games/', '', str_replace('_', ' ', $pageTitle)),
-	'url' => '/' . $pageTitleDB,
+	'url' => '/wiki/' . $pageTitleDB,
 	'image' => '',
 	'deck' => '',
 	'description' => '',

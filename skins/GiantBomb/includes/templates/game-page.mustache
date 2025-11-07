@@ -34,7 +34,7 @@
 				{{#game.platforms.0}}
 				<div class="game-hero__platforms">
 					{{#game.platforms}}
-					<a href="/Platforms/{{.}}" class="game-hero__platform-link">{{.}}</a>{{^-last}}, {{/-last}}
+					<a href="/wiki/Platforms/{{.}}" class="game-hero__platform-link">{{.}}</a>{{^-last}}, {{/-last}}
 					{{/game.platforms}}
 					{{#vue.morePlatforms}}
 					<span class="game-hero__more-platforms">+ {{vue.morePlatforms}} more</span>
@@ -122,7 +122,7 @@
 						<div class="game-detail-label">Platform</div>
 						<div class="game-detail-value game-detail-links">
 							{{#game.platforms}}
-							<a href="/Platforms/{{.}}" class="game-detail-link">{{.}}</a>
+							<a href="/wiki/Platforms/{{.}}" class="game-detail-link">{{.}}</a>
 							{{/game.platforms}}
 						</div>
 					</div>
@@ -132,7 +132,7 @@
 						<div class="game-detail-label">Developer</div>
 						<div class="game-detail-value game-detail-links">
 							{{#game.developers}}
-							<a href="/Companies/{{.}}" class="game-detail-link">{{.}}</a>
+							<a href="/wiki/Companies/{{.}}" class="game-detail-link">{{.}}</a>
 							{{/game.developers}}
 						</div>
 					</div>
@@ -142,7 +142,7 @@
 						<div class="game-detail-label">Publisher</div>
 						<div class="game-detail-value game-detail-links">
 							{{#game.publishers}}
-							<a href="/Companies/{{.}}" class="game-detail-link">{{.}}</a>
+							<a href="/wiki/Companies/{{.}}" class="game-detail-link">{{.}}</a>
 							{{/game.publishers}}
 						</div>
 					</div>

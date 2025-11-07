@@ -47,7 +47,7 @@ try {
 		$pageData = [];
 		$pageData['index'] = $index++;
 		$pageData['title'] = str_replace('Games/', '', str_replace('_', ' ', $row->page_title));
-		$pageData['url'] = '/' . $row->page_title;
+		$pageData['url'] = '/wiki/' . $row->page_title;
 
 		// Get the page content directly and parse it
 		try {
