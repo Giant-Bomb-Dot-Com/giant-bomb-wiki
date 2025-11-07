@@ -45,6 +45,9 @@ $gameData = [
 	'hasReleases' => false,
 	'hasDLC' => false,
 	'hasCredits' => false,
+
+	// Features
+	'features' => [],
 ];
 
 try {
@@ -150,6 +153,34 @@ try {
 			// Replace underscores with spaces for better display
 			$franchise = str_replace('_', ' ', $franchise);
 			$gameData['franchise'] = $franchise;
+		}
+
+		// Parse features - all possible features with enabled status
+		$allFeatures = [
+			'Camera Support',
+			'Voice control',
+			'Motion control',
+			'Driving wheel (native)',
+			'Flightstick (native)',
+			'PC gamepad (native)',
+			'Head tracking (native)',
+		];
+
+		$enabledFeatures = [];
+		if (preg_match('/\| Features=([^\n]+)/', $text, $matches)) {
+			$featuresStr = trim($matches[1]);
+			$featuresArr = explode(',', $featuresStr);
+			$enabledFeatures = array_map(function($f) {
+				return trim(str_replace('_', ' ', $f));
+			}, $featuresArr);
+		}
+
+		// Build features array with enabled status
+		foreach ($allFeatures as $feature) {
+			$gameData['features'][] = [
+				'name' => $feature,
+				'enabled' => in_array($feature, $enabledFeatures),
+			];
 		}
 	}
 
