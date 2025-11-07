@@ -149,6 +149,19 @@
 					{{/game.publishers.0}}
 				</div>
 			</section>
+
+			{{! Release Details Section }}
+			{{#game.hasReleases}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Release details</h3>
+				{{#game.releases.0}}
+				<div
+					data-vue-component="ReleaseSelector"
+					data-releases="{{{vue.releasesJson}}}">
+				</div>
+				{{/game.releases.0}}
+			</section>
+			{{/game.hasReleases}}
 		</aside>
 	</div>
 </div>
