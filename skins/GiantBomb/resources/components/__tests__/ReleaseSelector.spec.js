@@ -96,7 +96,7 @@ describe("ReleaseSelector", () => {
 
       // Check Surround sound
       expect(details[3].find(".game-detail-label").text()).toBe(
-        "Surround sound"
+        "Surround sound",
       );
       expect(details[3].find(".game-detail-value").text()).toBe("Stereo");
 
@@ -184,7 +184,7 @@ describe("ReleaseSelector", () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to parse releases data:",
-        expect.any(Error)
+        expect.any(Error),
       );
 
       consoleSpy.mockRestore();
