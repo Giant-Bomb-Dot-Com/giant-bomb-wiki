@@ -627,6 +627,88 @@
   transform: translateX(4px);
 }
 
+/* Reviews Section */
+.game-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.game-review-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.game-review-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.game-review-star-label {
+  color: #ffffff;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.game-review-bar-container {
+  flex: 1;
+  height: 12px;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.game-review-bar-fill {
+  height: 100%;
+  background-color: #b9b9ff;
+  transition: width 0.3s ease;
+}
+
+.game-review-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.game-review-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.game-review-score-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.game-review-score-label {
+  font-size: 0.875rem;
+  color: #999999;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.game-review-stars {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.game-review-star {
+  color: #ffb800;
+  font-size: 1.25rem;
+}
+
+.game-review-star--empty {
+  color: #3a3a3a;
+}
+
 /* Features Section */
 .game-features {
   display: grid;

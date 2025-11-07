@@ -51,6 +51,17 @@ $gameData = [
 
 	// Multiplayer
 	'multiplayer' => [],
+
+	// Reviews
+	'reviewScore' => 0,
+	'reviewCount' => 0,
+	'reviewDistribution' => [
+		'5' => 0,
+		'4' => 0,
+		'3' => 0,
+		'2' => 0,
+		'1' => 0,
+	],
 ];
 
 try {
@@ -211,6 +222,35 @@ try {
 			$gameData['multiplayer'][] = [
 				'name' => $option,
 				'enabled' => in_array($option, $enabledMultiplayer),
+			];
+		}
+
+		// Hardcoded review data for testing
+		$gameData['reviewScore'] = number_format(4.0, 1, '.', '');
+		$gameData['reviewCount'] = 4;
+		$reviewCounts = [
+			'5' => 2,
+			'4' => 1,
+			'3' => 0,
+			'2' => 0,
+			'1' => 1,
+		];
+
+		// Calculate percentages for the bars
+		$gameData['reviewDistribution'] = [];
+		foreach ($reviewCounts as $star => $count) {
+			$percentage = $gameData['reviewCount'] > 0 ? ($count / $gameData['reviewCount']) * 100 : 0;
+			$gameData['reviewDistribution'][$star] = [
+				'count' => $count,
+				'percentage' => round($percentage, 1),
+			];
+		}
+
+		// Calculate filled stars (for display)
+		$gameData['reviewStars'] = [];
+		for ($i = 1; $i <= 5; $i++) {
+			$gameData['reviewStars'][] = [
+				'filled' => $i <= floor($gameData['reviewScore'])
 			];
 		}
 	}
