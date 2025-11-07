@@ -48,6 +48,9 @@ $gameData = [
 
 	// Features
 	'features' => [],
+
+	// Multiplayer
+	'multiplayer' => [],
 ];
 
 try {
@@ -180,6 +183,34 @@ try {
 			$gameData['features'][] = [
 				'name' => $feature,
 				'enabled' => in_array($feature, $enabledFeatures),
+			];
+		}
+
+		// Parse multiplayer options - all possible options with enabled status
+		$allMultiplayerOptions = [
+			'Local co-op',
+			'Online co-op',
+			'LAN competitive',
+			'Local split screen',
+			'Voice control',
+			'Driving wheel (native)',
+			'PC gameload (native)',
+		];
+
+		$enabledMultiplayer = [];
+		if (preg_match('/\| Multiplayer=([^\n]+)/', $text, $matches)) {
+			$multiplayerStr = trim($matches[1]);
+			$multiplayerArr = explode(',', $multiplayerStr);
+			$enabledMultiplayer = array_map(function($m) {
+				return trim(str_replace('_', ' ', $m));
+			}, $multiplayerArr);
+		}
+
+		// Build multiplayer array with enabled status
+		foreach ($allMultiplayerOptions as $option) {
+			$gameData['multiplayer'][] = [
+				'name' => $option,
+				'enabled' => in_array($option, $enabledMultiplayer),
 			];
 		}
 	}
