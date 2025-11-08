@@ -170,7 +170,7 @@
 /* Main Content Grid */
 .game-content {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 360px;
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -471,12 +471,57 @@
   gap: 1rem;
 }
 
-.game-detail-item {
+/* Release Selector */
+.release-selector {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.release-selector__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #999999;
+}
+
+.release-selector__dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #5a5a5a;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.release-selector__dropdown:hover {
+  border-color: #6a6a6a;
+  background-color: #333333;
+}
+
+.release-selector__dropdown:focus {
+  outline: none;
+  border-color: #4c9ed9;
+  background-color: #333333;
+}
+
+.release-selector__dropdown option {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  padding: 0.5rem;
+}
+
+.game-detail-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #3a3a3a;
+  align-items: start;
 }
 
 .game-detail-item:last-child {
@@ -485,11 +530,10 @@
 }
 
 .game-detail-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #999999;
+  text-align: left;
 }
 
 .game-detail-value {
@@ -581,6 +625,141 @@
   background: #1a1a2e;
   color: #ffffff;
   transform: translateX(4px);
+}
+
+/* Reviews Section */
+.game-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.game-review-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.game-review-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.game-review-star-label {
+  color: #ffffff;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.game-review-bar-container {
+  flex: 1;
+  height: 12px;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.game-review-bar-fill {
+  height: 100%;
+  background-color: #b9b9ff;
+  transition: width 0.3s ease;
+}
+
+.game-review-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.game-review-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.game-review-score-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.game-review-score-label {
+  font-size: 0.875rem;
+  color: #999999;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.game-review-stars {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.game-review-star {
+  color: #ffb800;
+  font-size: 1.25rem;
+}
+
+.game-review-star--empty {
+  color: #3a3a3a;
+}
+
+/* Features Section */
+.game-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.game-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.game-feature-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 2px solid #6b6bff;
+  background-color: #6b6bff;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+  opacity: 0.3;
+}
+
+.game-feature-checkbox--enabled {
+  background-color: #b9b9ff;
+  border-color: #b9b9ff;
+  opacity: 1;
+}
+
+.game-feature-checkbox--enabled::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #202020;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.game-feature-label {
+  color: #ffffff;
+  transition: color 0.2s;
+}
+
+.game-feature-label--disabled {
+  color: #666666;
 }
 
 /* Responsive Design */

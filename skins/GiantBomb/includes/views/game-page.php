@@ -45,6 +45,23 @@ $gameData = [
 	'hasReleases' => false,
 	'hasDLC' => false,
 	'hasCredits' => false,
+
+	// Features
+	'features' => [],
+
+	// Multiplayer
+	'multiplayer' => [],
+
+	// Reviews
+	'reviewScore' => 0,
+	'reviewCount' => 0,
+	'reviewDistribution' => [
+		'5' => 0,
+		'4' => 0,
+		'3' => 0,
+		'2' => 0,
+		'1' => 0,
+	],
 ];
 
 try {
@@ -151,6 +168,91 @@ try {
 			$franchise = str_replace('_', ' ', $franchise);
 			$gameData['franchise'] = $franchise;
 		}
+
+		// Parse features - all possible features with enabled status
+		$allFeatures = [
+			'Camera Support',
+			'Voice control',
+			'Motion control',
+			'Driving wheel (native)',
+			'Flightstick (native)',
+			'PC gamepad (native)',
+			'Head tracking (native)',
+		];
+
+		$enabledFeatures = [];
+		if (preg_match('/\| Features=([^\n]+)/', $text, $matches)) {
+			$featuresStr = trim($matches[1]);
+			$featuresArr = explode(',', $featuresStr);
+			$enabledFeatures = array_map(function($f) {
+				return trim(str_replace('_', ' ', $f));
+			}, $featuresArr);
+		}
+
+		// Build features array with enabled status
+		foreach ($allFeatures as $feature) {
+			$gameData['features'][] = [
+				'name' => $feature,
+				'enabled' => in_array($feature, $enabledFeatures),
+			];
+		}
+
+		// Parse multiplayer options - all possible options with enabled status
+		$allMultiplayerOptions = [
+			'Local co-op',
+			'Online co-op',
+			'LAN competitive',
+			'Local split screen',
+			'Voice control',
+			'Driving wheel (native)',
+			'PC gameload (native)',
+		];
+
+		$enabledMultiplayer = [];
+		if (preg_match('/\| Multiplayer=([^\n]+)/', $text, $matches)) {
+			$multiplayerStr = trim($matches[1]);
+			$multiplayerArr = explode(',', $multiplayerStr);
+			$enabledMultiplayer = array_map(function($m) {
+				return trim(str_replace('_', ' ', $m));
+			}, $multiplayerArr);
+		}
+
+		// Build multiplayer array with enabled status
+		foreach ($allMultiplayerOptions as $option) {
+			$gameData['multiplayer'][] = [
+				'name' => $option,
+				'enabled' => in_array($option, $enabledMultiplayer),
+			];
+		}
+
+		// Hardcoded review data for testing
+		$gameData['reviewScore'] = number_format(4.0, 1, '.', '');
+		$gameData['reviewCount'] = 4;
+		$reviewCounts = [
+			'5' => 2,
+			'4' => 1,
+			'3' => 0,
+			'2' => 0,
+			'1' => 1,
+		];
+
+		// Calculate percentages for the bars
+		$gameData['reviewDistribution'] = [];
+		foreach ($reviewCounts as $star => $count) {
+			$percentage = $gameData['reviewCount'] > 0 ? ($count / $gameData['reviewCount']) * 100 : 0;
+			$gameData['reviewDistribution'][$star] = [
+				'count' => $count,
+				'percentage' => round($percentage, 1),
+			];
+		}
+
+		// Calculate filled stars (for display)
+		$gameData['reviewStars'] = [];
+		for ($i = 1; $i <= 5; $i++) {
+			$gameData['reviewStars'][] = [
+				'filled' => $i <= floor($gameData['reviewScore'])
+			];
+		}
 	}
 
 	// Check for sub-pages
@@ -210,6 +312,108 @@ try {
 		}
 	}
 
+	// Get individual release details for dropdown
+	$gameData['releases'] = [];
+
+	if ($gameData['hasReleases']) {
+		try {
+			// Parse releases page content to extract release details
+			$releasesTitle = \Title::newFromText($pageTitle . '/Releases');
+			if ($releasesTitle && $releasesTitle->exists()) {
+				$releasesPage = $wikiPageFactory->newFromTitle($releasesTitle);
+				$releasesContent = $releasesPage->getContent();
+				if ($releasesContent) {
+					$releasesText = $releasesContent->getText();
+
+					// Parse each ReleaseSubobject
+					preg_match_all('/\{\{ReleaseSubobject([^}]+)\}\}/s', $releasesText, $releaseMatches);
+
+					foreach ($releaseMatches[1] as $index => $releaseContent) {
+						$release = [
+							'name' => '',
+							'platform' => '',
+							'region' => '',
+							'releaseDate' => 'N/A',
+							'rating' => 'N/A',
+							'resolutions' => 'N/A',
+							'soundSystems' => 'N/A',
+							'widescreenSupport' => 'N/A',
+						];
+
+						// Extract name
+						if (preg_match('/\|Name=([^\n|]+)/', $releaseContent, $match)) {
+							$release['name'] = trim($match[1]);
+						}
+
+						// Extract platform
+						if (preg_match('/\|Platform=([^\n|]+)/', $releaseContent, $match)) {
+							$platform = trim($match[1]);
+							$platform = str_replace('Platforms/', '', $platform);
+							$platform = str_replace('_', ' ', $platform);
+							$release['platform'] = $platform;
+						}
+
+						// Extract region
+						if (preg_match('/\|Region=([^\n|]+)/', $releaseContent, $match)) {
+							$release['region'] = trim($match[1]);
+						}
+
+						// Extract release date
+						if (preg_match('/\|ReleaseDate=([^\n|]+)/', $releaseContent, $match)) {
+							$date = trim($match[1]);
+							if (!empty($date) && $date !== 'None') {
+								$release['releaseDate'] = $date;
+							}
+						}
+
+						// Extract rating
+						if (preg_match('/\|Rating=([^\n|]+)/', $releaseContent, $match)) {
+							$rating = trim($match[1]);
+							$rating = str_replace('Ratings/', '', $rating);
+							$rating = str_replace('_', ' ', $rating);
+							if (!empty($rating)) {
+								$release['rating'] = $rating;
+							}
+						}
+
+						// Extract resolutions
+						if (preg_match('/\|Resolutions=([^\n|]+)/', $releaseContent, $match)) {
+							$resolution = trim($match[1]);
+							if (!empty($resolution)) {
+								$release['resolutions'] = $resolution;
+							}
+						}
+
+						// Extract sound systems
+						if (preg_match('/\|SoundSystems=([^\n|]+)/', $releaseContent, $match)) {
+							$soundSystem = trim($match[1]);
+							if (!empty($soundSystem)) {
+								$release['soundSystems'] = $soundSystem;
+							}
+						}
+
+						// Check widescreen support
+						if (preg_match('/\|WidescreenSupport=([^\n|]+)/', $releaseContent, $match)) {
+							$widescreen = trim($match[1]);
+							$release['widescreenSupport'] = ucfirst(strtolower($widescreen));
+						}
+
+						// Create display name for dropdown
+						$release['displayName'] = $release['platform'];
+						if (!empty($release['region'])) {
+							$release['displayName'] .= ' (' . $release['region'] . ')';
+						}
+
+						$gameData['releases'][] = $release;
+					}
+				}
+			}
+
+		} catch (Exception $e) {
+			error_log("Failed to fetch release details: " . $e->getMessage());
+		}
+	}
+
 	// Convert booleans to strings for Vue props
 	$gameData['hasReleasesStr'] = $gameData['hasReleases'] ? 'true' : 'false';
 	$gameData['hasDLCStr'] = $gameData['hasDLC'] ? 'true' : 'false';
@@ -228,6 +432,7 @@ $vueData = [
 	'locationsStr' => !empty($gameData['locations']) ? implode(',', $gameData['locations']) : '',
 	'objectsStr' => !empty($gameData['objects']) ? implode(',', $gameData['objects']) : '',
 	'similarGamesStr' => !empty($gameData['similarGames']) ? implode(',', $gameData['similarGames']) : '',
+	'releasesJson' => !empty($gameData['releases']) ? htmlspecialchars(json_encode($gameData['releases']), ENT_QUOTES, 'UTF-8') : '[]',
 ];
 
 // Format data for Mustache template

@@ -84,6 +84,59 @@
 
 		{{! Right Column - Sidebar }}
 		<aside class="game-sidebar">
+			{{! Reviews Section }}
+			{{#game.reviewCount}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Reviews</h3>
+				<div class="game-reviews">
+					<div class="game-review-summary">
+						<div class="game-review-bars">
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">5★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.5.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">4★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.4.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">3★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.3.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">2★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.2.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">1★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.1.percentage}}%;"></div>
+							</div>
+						</div>
+						</div>
+						<div class="game-review-score">
+							<div class="game-review-stars">
+								{{#game.reviewStars}}
+								<span class="game-review-star{{^filled}} game-review-star--empty{{/filled}}">★</span>
+								{{/game.reviewStars}}
+							</div>
+							<div class="game-review-score-number">{{game.reviewScore}} Star</div>
+							<div class="game-review-score-label">Based on a score of<br>{{game.reviewCount}} user reviews</div>
+						</div>
+					</div>
+					<button class="game-view-all-btn">Add new review</button>
+				</div>
+			</section>
+			{{/game.reviewCount}}
+
 			{{! Images Preview Section }}
 			{{#game.images.0}}
 			<section class="game-sidebar-section">
@@ -149,6 +202,49 @@
 					{{/game.publishers.0}}
 				</div>
 			</section>
+
+			{{! Release Details Section }}
+			{{#game.hasReleases}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Release details</h3>
+				{{#game.releases.0}}
+				<div
+					data-vue-component="ReleaseSelector"
+					data-releases="{{{vue.releasesJson}}}">
+				</div>
+				{{/game.releases.0}}
+			</section>
+			{{/game.hasReleases}}
+
+			{{! Features Section }}
+			{{#game.features.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Features</h3>
+				<div class="game-features">
+					{{#game.features}}
+					<div class="game-feature-item">
+						<div class="game-feature-checkbox{{#enabled}} game-feature-checkbox--enabled{{/enabled}}"></div>
+						<div class="game-feature-label{{^enabled}} game-feature-label--disabled{{/enabled}}">{{name}}</div>
+					</div>
+					{{/game.features}}
+				</div>
+			</section>
+			{{/game.features.0}}
+
+			{{! Multiplayer Section }}
+			{{#game.multiplayer.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Multiplayer</h3>
+				<div class="game-features">
+					{{#game.multiplayer}}
+					<div class="game-feature-item">
+						<div class="game-feature-checkbox{{#enabled}} game-feature-checkbox--enabled{{/enabled}}"></div>
+						<div class="game-feature-label{{^enabled}} game-feature-label--disabled{{/enabled}}">{{name}}</div>
+					</div>
+					{{/game.multiplayer}}
+				</div>
+			</section>
+			{{/game.multiplayer.0}}
 		</aside>
 	</div>
 </div>
