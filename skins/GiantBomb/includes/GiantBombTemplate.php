@@ -9,6 +9,9 @@ class GiantBombTemplate extends BaseTemplate {
         $pageTitle = $title->getText();
         $isGamePage = strpos($pageTitle, 'Games/') === 0 &&
                       substr_count($pageTitle, '/') === 1;
+        $isNewReleasesPage = strpos($pageTitle, 'New Releases/') === 0;
+        error_log("Current page title: " . $pageTitle);
+        
 
         if ($isMainPage) {
             // Show landing page for main page
@@ -32,6 +35,11 @@ class GiantBombTemplate extends BaseTemplate {
             // Show custom game page for game pages
 ?>
         <?php include __DIR__ . '/views/game-page.php'; ?>
+<?php
+        } elseif ($isNewReleasesPage) {
+            // Show new releases page
+?>
+        <?php include __DIR__ . '/views/new-releases-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages
