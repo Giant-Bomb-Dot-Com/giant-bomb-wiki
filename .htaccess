@@ -4,7 +4,17 @@
   # Redirect / to the main page
   RewriteRule ^/?$ /wiki/Main_Page [L,R=301]
 
-  # Rewrite /wiki/ URLs to index.php with query string
+  # If the app is served under a path prefix (/wiki), route script endpoints and assets to docroot
+  # so that generated links like /wiki/load.php still hit the actual /load.php file.
+  RewriteRule ^/?wiki/load\.php$ /load.php [L,QSA]
+  RewriteRule ^/?wiki/api\.php$ /api.php [L,QSA]
+  RewriteRule ^/?wiki/rest\.php$ /rest.php [L,QSA]
+  RewriteRule ^/?wiki/resources/(.*)$ /resources/$1 [L,QSA]
+  RewriteRule ^/?wiki/skins/(.*)$ /skins/$1 [L,QSA]
+  RewriteRule ^/?wiki/extensions/(.*)$ /extensions/$1 [L,QSA]
+  RewriteRule ^/?wiki/images/(.*)$ /images/$1 [L,QSA]
+
+  # Short URLs for pages: /wiki/Title -> index.php?title=Title
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^/?wiki/(.*)$ /index.php?title=$1 [L,QSA]
@@ -12,7 +22,7 @@
   # Redirect everything else to index.php
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^/*$ /index.php [L]
+  RewriteRule ^.*$ /index.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>
