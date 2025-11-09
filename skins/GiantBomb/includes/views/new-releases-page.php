@@ -4,63 +4,230 @@ use MediaWiki\MediaWikiServices;
 
 /**
  * New releases page View
- * Displays the latest game releases, grouped by week
+ * Displays the latest game releases, grouped by time period
+ * (week for specific dates, month for month-only dates, year for year-only dates)
  */
+
+/**
+ * Format a date based on the "Has release date type" property
+ * 
+ * @param string $rawDate The raw date from SMW (e.g., "1/1986", "10/2003", "12/31/2024")
+ * @param int $timestamp The timestamp of the date
+ * @param string $dateType The date type: "Year", "Month", "Quarter", "Full", or "None"
+ * @return string The formatted date string
+ */
+function formatDateByType($rawDate, $timestamp, $dateType) {
+    if (!$timestamp || $dateType === 'None') {
+        return $rawDate;
+    }
+    
+    switch ($dateType) {
+        case 'Year':
+            // For year-only dates, extract just the year
+            return date('Y', $timestamp);
+            
+        case 'Month':
+            // For month+year dates
+            return date('F Y', $timestamp);
+            
+        case 'Quarter':
+            // For quarter dates (Q1 2023, Q2 2023, etc.)
+            $quarter = ceil(date('n', $timestamp) / 3);
+            return 'Q' . $quarter . ' ' . date('Y', $timestamp);
+            
+        case 'Full':
+        default:
+            // For full dates
+            return date('F j, Y', $timestamp);
+    }
+}
+
+/**
+ * Group releases by time period based on date specificity
+ */
+function groupReleases($releases) {
+    $groups = [];
+    
+    foreach ($releases as $release) {
+        if (!isset($release['sortTimestamp']) || !isset($release['dateSpecificity'])) {
+            continue;
+        }
+        
+        $specificity = $release['dateSpecificity'];
+        $timestamp = $release['sortTimestamp'];
+        
+        // Group by specificity
+        if ($specificity === 'full') {
+            // Group by week (Sunday - Saturday) for full dates
+            $weekStart = strtotime('sunday this week', $timestamp);
+            if (date('w', $timestamp) == 0) {
+                $weekStart = $timestamp;
+            }
+            $weekEnd = strtotime('+6 days', $weekStart);
+            
+            $groupKey = date('Y-W', $weekStart);
+            $groupLabel = date('F j, Y', $weekStart) . ' - ' . date('F j, Y', $weekEnd);
+            $sortKey = date('Ymd', $weekStart);
+            
+        } elseif ($specificity === 'month') {
+            // Group by month
+            $groupKey = date('Y-m', $timestamp);
+            $groupLabel = date('F Y', $timestamp);
+            $sortKey = date('Ym', $timestamp) . '00';
+            
+        } elseif ($specificity === 'quarter') {
+            // Group by quarter
+            $quarter = ceil(date('n', $timestamp) / 3);
+            $groupKey = date('Y', $timestamp) . '-Q' . $quarter;
+            $groupLabel = 'Q' . $quarter . ' ' . date('Y', $timestamp);
+            $sortKey = date('Y', $timestamp) . '0' . $quarter;
+            
+        } else { // year or none
+            // Group by year
+            $groupKey = date('Y', $timestamp);
+            $groupLabel = date('Y', $timestamp);
+            $sortKey = date('Y', $timestamp) . '0000';
+        }
+        
+        if (!isset($groups[$groupKey])) {
+            $groups[$groupKey] = [
+                'label' => $groupLabel,
+                'releases' => [],
+                'sortKey' => $sortKey
+            ];
+        }
+        
+        $groups[$groupKey]['releases'][] = $release;
+    }
+    
+    // Sort groups by date (newest first)
+    uasort($groups, function($a, $b) {
+        return strcmp($b['sortKey'], $a['sortKey']);
+    });
+    
+    return array_values($groups);
+}
 
 $releases = [];
 
-$user = RequestContext::getMain()->getUser();
-$langFactory = MediaWikiServices::getInstance()->getLanguageFactory();
-$lang = $langFactory->getLanguage('en');
 try {
-    $query = '[[Category:Games]]';
+    // Query for ReleaseSubobjects - properties have "Has" prefix in SMW
+    // Filter to only Release type subobjects and sort by release date
+    $queryConditions = '[[Has object type::Release]][[Has release date::+]]';
+    $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
+    $params = '|sort=Has release date|order=desc|limit=500';
     
-    $parser = MediaWikiServices::getInstance()->getParser();
-    $options = new ParserOptions($user, $lang);
+    $fullQuery = $queryConditions . $printouts . $params;
     
-    $title = Title::newFromText('Dummy Title');
+    error_log("Ask query: " . $fullQuery);
     
-    $parsed = $parser->parse("{{#invoke:Common/SMW|run|query=$query}}", $title, $options, true);
-    $rawText = $parsed->getRawText();
-    $rawText = trim($rawText);
-    // Substring the text before first '[' and last ']'
-    $rawText = substr($rawText, strpos($rawText, '['));
-    $rawText = substr($rawText, 0, strrpos($rawText, ']') + 1);
-    
-    // Replace double quotes in <a> tags with single quotes
-    $rawText = preg_replace_callback(
-        '#<a href="([^"]+)" title="([^"]+)">([^<]+)</a>#',
-        function($matches) {
-            return '<a href=\'' . $matches[1] . '\' title=\'' . $matches[2] . '\'>' . $matches[3] . '</a>';
-        },
-        $rawText
+    // Use the API to execute the query
+    $api = new ApiMain(
+        new DerivativeRequest(
+            RequestContext::getMain()->getRequest(),
+            [
+                'action' => 'ask',
+                'query' => $fullQuery,
+                'format' => 'json',
+            ],
+            true
+        ),
+        true
     );
     
-    $rawData = json_decode($rawText, true);
+    $api->execute();
+    $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
     
-    if ($rawData === null) {
-        error_log("Error decoding JSON: " . json_last_error_msg());
-    }
+    error_log("API result: " . print_r($result, true));
     
-    foreach($rawData as $release) {
-        if (isset($release[0])) {
-            if (preg_match("#<a href='([^']+)' title='([^']+)'>([^<]+)</a>#", $release[0], $matches)) {
-                $release['url'] = $matches[1];
-                $release['title'] = $matches[2];
-                $release['text'] = $matches[3];
-                $releases[] = $release;
+    // Process the results
+    if (isset($result['query']['results']) && is_array($result['query']['results'])) {
+        foreach ($result['query']['results'] as $pageName => $pageData) {
+            $releaseData = [];
+            $printouts = $pageData['printouts'];
+            
+            if (isset($printouts['Has games']) && count($printouts['Has games']) > 0) {
+                $game = $printouts['Has games'][0];
+                // Default to title from game object
+                $releaseData['title'] = $game['fulltext'];
+                $releaseData['url'] = $game['fullurl'];
+                $releaseData['text'] = $game['displaytitle'] ?? $game['fulltext'];
             }
+            
+            if (isset($printouts['Has name']) && count($printouts['Has name']) > 0) {
+                $name = $printouts['Has name'][0];
+                // Override title with specific release name if exists
+                $releaseData['title'] = $name;
+            }
+            
+            if (isset($printouts['Has release date']) && count($printouts['Has release date']) > 0) {
+                $releaseDate = $printouts['Has release date'][0];
+                $rawDate = $releaseDate['raw'] ?? '';
+                $timestamp = $releaseDate['timestamp'] ?? strtotime($rawDate);
+                
+                $releaseData['releaseDate'] = $rawDate;
+                $releaseData['releaseDateTimestamp'] = $timestamp;
+                $releaseData['sortTimestamp'] = $timestamp;
+                
+                // Get the date type (specificity) from the property
+                $dateType = 'Full'; // Default
+                if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {
+                    $dateType = $printouts['Has release date type'][0];
+                }
+                
+                // Format date based on the date type property
+                $releaseData['dateSpecificity'] = strtolower($dateType);
+                $releaseData['releaseDateFormatted'] = formatDateByType($rawDate, $timestamp, $dateType);
+            }
+            
+            if (isset($printouts['Has platforms']) && count($printouts['Has platforms']) > 0) {
+                $platforms = [];
+                foreach($printouts['Has platforms'] as $platform) {
+                    $platformName = $platform['displaytitle'] ?? $platform['fulltext'];
+                    $abbrev = basename($platformName);
+                    $platforms[] = [
+                        'title' => $platformName,
+                        'url' => $platform['fullurl'],
+                        'abbrev' => $abbrev,
+                    ];
+                }
+                $releaseData['platforms'] = $platforms;
+            }
+            
+            if (isset($printouts['Has region']) && count($printouts['Has region']) > 0) {
+                $region = $printouts['Has region'][0];
+                $releaseData['region'] = $region;
+            }
+            
+            if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
+                $image = $printouts['Has image'][0];
+                $releaseData['image'] = $image['fullurl'] ?? '';
+                // Clean up local development URLs if present
+                // Only for temp local development with externally hosted images
+                $releaseData['image'] = str_replace('http://localhost:8080/index.php/', '', $releaseData['image']);
+            }
+            
+            error_log(print_r($releaseData, true));
+            
+            $releases[] = $releaseData;
         }
     }
+    
+    error_log("Total releases found: " . count($releases));
 }
 catch (Exception $e) {
     error_log("Error querying releases: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     $releases = [];
 }
 
+// Group releases by time period (week/month/year based on date specificity)
+$weekGroups = groupReleases($releases);
+
 // Format data for Mustache template
 $data = [
-    'releases' => $releases,
+    'weekGroups' => $weekGroups,
+    'hasReleases' => count($releases) > 0,
 ];
 
 // Path to Mustache templates

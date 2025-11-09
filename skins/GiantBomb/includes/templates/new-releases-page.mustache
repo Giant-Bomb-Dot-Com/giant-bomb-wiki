@@ -1,9 +1,73 @@
 {{> header }}
 
 <div class="new-releases-page">
-    <ul>
-    {{#releases}}
-        <li><a href="{{url}}">{{text}}</a></li>
-    {{/releases}}
-    </ul>
+    <div class="releases-header">
+        <h1>Latest Games</h1>
+        <div class="view-toggle">
+            <button class="view-btn view-list">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <rect y="2" width="16" height="2"></rect>
+                    <rect y="7" width="16" height="2"></rect>
+                    <rect y="12" width="16" height="2"></rect>
+                </svg>
+                List
+            </button>
+            <button class="view-btn view-grid active">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <rect width="7" height="7"></rect>
+                    <rect x="9" width="7" height="7"></rect>
+                    <rect y="9" width="7" height="7"></rect>
+                    <rect x="9" y="9" width="7" height="7"></rect>
+                </svg>
+                Grid
+            </button>
+        </div>
+    </div>
+
+    {{#hasReleases}}
+        {{#weekGroups}}
+        <div class="week-group">
+            <h2 class="week-label">{{label}}</h2>
+            <div class="releases-grid">
+                {{#releases}}
+                <div class="release-card">
+                    <a href="{{url}}" class="release-card-link">
+                        {{#image}}
+                        <div class="release-image">
+                            <img src="{{.}}" alt="{{title}}" loading="lazy">
+                        </div>
+                        {{/image}}
+                        {{^image}}
+                        <div class="release-image release-image-placeholder">
+                            <span>?</span>
+                        </div>
+                        {{/image}}
+                        
+                        <div class="release-info">
+                            <h3 class="release-title">{{title}}</h3>
+                            {{#releaseDateFormatted}}
+                            <div class="release-date">{{.}}</div>
+                            {{/releaseDateFormatted}}
+                            
+                            {{#platforms}}
+                            <div class="release-platforms">
+                                {{#platforms}}
+                                <span class="platform-badge" title="{{title}}">{{abbrev}}</span>
+                                {{/platforms}}
+                            </div>
+                            {{/platforms}}
+                        </div>
+                    </a>
+                </div>
+                {{/releases}}
+            </div>
+        </div>
+        {{/weekGroups}}
+    {{/hasReleases}}
+    
+    {{^hasReleases}}
+    <div class="no-releases">
+        <p>No upcoming releases found.</p>
+    </div>
+    {{/hasReleases}}
 </div>

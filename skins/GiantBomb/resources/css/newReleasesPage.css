@@ -1,0 +1,162 @@
+.new-releases-page {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.releases-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.releases-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.view-btn:hover {
+    background: #333;
+    border-color: #666;
+}
+
+.view-btn.active {
+    background: #e63946;
+    border-color: #e63946;
+    color: white;
+}
+
+.week-group {
+    margin-bottom: 40px;
+}
+
+.week-label {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #444;
+}
+
+.releases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.release-card {
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.release-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.release-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.release-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.release-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.release-image-placeholder {
+    font-size: 4rem;
+    color: #555;
+}
+
+.release-info {
+    padding: 15px;
+}
+
+.release-title {
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    min-height: 2.6em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.release-date {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.release-platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.platform-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #ccc;
+}
+
+.no-releases {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .releases-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .releases-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+}
+
