@@ -7,6 +7,7 @@ trait CommonVariablesAndMethods
     /**
      * Maps wiki type ids to their info
      */
+    // NOTE: keep in sync with docs/reference/wiki-assoc-types.json
 	protected $map = [
         3000 => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
         3005 => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],

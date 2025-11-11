@@ -301,6 +301,7 @@ wfLoadExtension( 'WikiEditor' );
 
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
+wfLoadExtension( 'GiantBombResolve' );
 enableSemantics();
 
 $wgPFEnableStringFunctions = true;

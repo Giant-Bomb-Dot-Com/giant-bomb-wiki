@@ -1,0 +1,38 @@
+{
+  "name": "GiantBombResolve",
+  "version": "0.1.0",
+  "author": "Giant Bomb Engineering",
+  "description": "Provides a REST endpoint for resolving wiki GUIDs.",
+  "type": "extension",
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler": "includes/Rest/ResolveHandler.php"
+  },
+  "HookHandlers": [],
+  "ManifestVersion": 2,
+  "requires": {
+    "MediaWiki": ">=1.40.0"
+  },
+  "config": {
+    "GiantBombResolveBatchLimit": 25,
+    "GiantBombResolveInternalToken": null,
+    "GiantBombResolveAllowPublic": false,
+    "GiantBombResolveTimeout": 3,
+    "GiantBombResolveCacheControl": "public, max-age=900, stale-while-revalidate=300, stale-if-error=86400",
+    "GiantBombResolveSurrogatePrefix": "wiki-guid:",
+    "GiantBombResolveFields": [
+      "displaytitle",
+      "fullurl",
+      "fulltext",
+      "pageid",
+      "namespace"
+    ]
+  },
+  "RestRoutes": [
+    {
+      "path": "/gb/v1/resolve",
+      "method": "GET",
+      "class": "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler"
+    }
+  ]
+}
+
