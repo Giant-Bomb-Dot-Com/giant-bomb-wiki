@@ -7,17 +7,17 @@
   # Direct ResourceLoader and API under /wiki to the correct scripts
   RewriteRule ^wiki/load\.php$ load.php [L,QSA]
   RewriteRule ^wiki/api\.php$ api.php [L,QSA]
-  RewriteRule ^wiki/rest\.php$ rest.php [L,QSA]
-  RewriteRule ^wiki/rest\.php/(.*)$ rest.php/$1 [L,QSA]
+  RewriteRule ^wiki/rest\.php(?:/(.*))?$ rest.php/$1 [L,QSA,PT]
 
   # Allow skin assets and partials to be requested with /wiki prefix
   # e.g., /wiki/skins/... -> /skins/...
   RewriteRule ^wiki/skins/(.*)$ skins/$1 [L,QSA]
 
   # Short URL support under /wiki (optional; keeps index.php working too)
+  RewriteCond %{REQUEST_URI} !^/wiki/rest\.php(/|$)
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^wiki/(.*)$ index.php [L,QSA]
+  RewriteRule ^wiki/(.*)$ index.php [L,QSA,PT]
 </IfModule>
 
 <IfModule mod_headers.c>

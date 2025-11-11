@@ -7,6 +7,7 @@ use FauxRequest;
 use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Rest\Handler;
 use MediaWiki\Rest\HttpException;
 use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
@@ -45,18 +46,7 @@ class ResolveHandler extends SimpleHandler {
 	}
 
 	public function getParamSettings() {
-		return [
-			'guids' => [
-				self::PARAM_SOURCE => self::SELECT_SOURCE_QUERY,
-				self::PARAM_TYPE => 'string',
-				self::PARAM_REQUIRED => true,
-			],
-			'fields' => [
-				self::PARAM_SOURCE => self::SELECT_SOURCE_QUERY,
-				self::PARAM_TYPE => 'string',
-				self::PARAM_REQUIRED => false,
-			],
-		];
+		return [];
 	}
 
 	public function needsWriteAccess() {
@@ -69,9 +59,12 @@ class ResolveHandler extends SimpleHandler {
 
 	public function execute() {
 		$request = $this->getRequest();
-		$guids = $this->parseGuids( $request->getQueryParam( 'guids' ) );
+		$queryParams = method_exists( $request, 'getQueryParams' )
+			? $request->getQueryParams()
+			: [];
+		$guids = $this->parseGuids( $queryParams['guids'] ?? null );
 		$this->enforceBatchLimit( count( $guids ) );
-		$fields = $this->parseFields( $request->getQueryParam( 'fields' ) );
+		$fields = $this->parseFields( $queryParams['fields'] ?? null );
 
 		$records = [];
 		$errors = 0;
@@ -216,13 +209,16 @@ class ResolveHandler extends SimpleHandler {
 		return $data['query']['results'] ?? [];
 	}
 
-	private function parseGuids( ?string $guids ): array {
-		if ( $guids === null || $guids === '' ) {
+	/**
+	 * @param string|string[]|null $guids
+	 */
+	private function parseGuids( $guids ): array {
+		$values = $this->normalizeQueryValues( $guids );
+		if ( !$values ) {
 			throw new HttpException( 'resolve-missing-guids', 400 );
 		}
-		$parts = preg_split( '/[,\s]+/', trim( $guids ) );
 		$out = [];
-		foreach ( $parts as $part ) {
+		foreach ( $values as $part ) {
 			if ( $part === '' ) {
 				continue;
 			}
@@ -237,12 +233,16 @@ class ResolveHandler extends SimpleHandler {
 		return array_values( array_unique( $out ) );
 	}
 
-	private function parseFields( ?string $fields ): array {
+	/**
+	 * @param string|string[]|null $fields
+	 */
+	private function parseFields( $fields ): array {
 		$allowed = $this->allowedFields ?: [ 'displaytitle', 'fullurl', 'fulltext', 'pageid', 'namespace' ];
-		if ( $fields === null || trim( $fields ) === '' ) {
+		$values = $this->normalizeQueryValues( $fields );
+		if ( !$values ) {
 			return $allowed;
 		}
-		$requested = array_filter( array_map( 'trim', explode( ',', $fields ) ) );
+		$requested = array_filter( array_map( 'trim', $values ) );
 		$filtered = [];
 		foreach ( $requested as $field ) {
 			if ( $field !== '' && in_array( $field, $allowed, true ) ) {
@@ -250,6 +250,28 @@ class ResolveHandler extends SimpleHandler {
 			}
 		}
 		return $filtered ?: $allowed;
+	}
+
+	/**
+	 * Normalize query params that may arrive as strings, csv strings, or arrays.
+	 *
+	 * @param string|string[]|null $value
+	 * @return array<int,string>
+	 */
+	private function normalizeQueryValues( $value ): array {
+		if ( $value === null ) {
+			return [];
+		}
+		if ( is_array( $value ) ) {
+			$parts = [];
+			foreach ( $value as $item ) {
+				$parts = array_merge( $parts, $this->normalizeQueryValues( $item ) );
+			}
+			return $parts;
+		}
+		// $value is a string; split on commas and whitespace.
+		$segments = preg_split( '/[,\s]+/', trim( (string)$value ) ) ?: [];
+		return array_values( array_filter( $segments, static fn ( $segment ) => $segment !== '' ) );
 	}
 
 	private function enforceBatchLimit( int $count ): void {
@@ -271,12 +293,19 @@ class ResolveHandler extends SimpleHandler {
 		if ( !$request->hasHeader( 'X-GB-Internal-Key' ) ) {
 			return false;
 		}
-		$expected = (string)$this->config->get( 'GiantBombResolveInternalToken' );
-		if ( $expected === '' ) {
-			return true;
+		$provided = trim( $request->getHeaderLine( 'X-GB-Internal-Key' ) );
+		if ( $provided === '' ) {
+			return false;
 		}
-		$provided = $request->getHeaderLine( 'X-GB-Internal-Key' );
-		return $provided !== '' && hash_equals( $expected, $provided );
+		$expectedRaw = $this->config->get( 'GiantBombResolveInternalToken' );
+		$expected = trim( is_string( $expectedRaw ) ? $expectedRaw : (string)$expectedRaw );
+		if ( $expected === '' ) {
+			$this->logger->warning(
+				'GiantBombResolveInternalToken is not configured; blocking request'
+			);
+			return false;
+		}
+		return hash_equals( $expected, $provided );
 	}
 
 	private function splitGuid( string $guid ): ?array {
