@@ -303,6 +303,15 @@ wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 
+$wgGiantBombResolveFields = [
+	'displaytitle',
+	'fullurl',
+	'fulltext',
+	'pageid',
+	'namespace',
+	'image',
+];
+
 $gbResolveToken = getenv( 'MW_GIANTBOMB_RESOLVE_INTERNAL_TOKEN' );
 if ( $gbResolveToken !== false && $gbResolveToken !== null && $gbResolveToken !== '' ) {
 	$wgGiantBombResolveInternalToken = $gbResolveToken;
