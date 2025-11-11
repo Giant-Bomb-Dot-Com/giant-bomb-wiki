@@ -7,6 +7,8 @@
   # Direct ResourceLoader and API under /wiki to the correct scripts
   RewriteRule ^wiki/load\.php$ load.php [L,QSA]
   RewriteRule ^wiki/api\.php$ api.php [L,QSA]
+  RewriteRule ^wiki/rest\.php$ rest.php [L,QSA]
+  RewriteRule ^wiki/rest\.php/(.*)$ rest.php/$1 [L,QSA]
 
   # Allow skin assets and partials to be requested with /wiki prefix
   # e.g., /wiki/skins/... -> /skins/...
