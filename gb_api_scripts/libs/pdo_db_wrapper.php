@@ -1,8 +1,10 @@
 <?php
 require_once(__DIR__.'/db_interface.php');
+require_once(__DIR__.'/common.php');
 
-class PdoDbWrapper implements DbInterface 
+class PdoDbWrapper implements DbInterface
 {
+    use CommonVariablesAndMethods;
     private PDO $dbConnection;
     private string $version;
 
@@ -80,6 +82,19 @@ class PdoDbWrapper implements DbInterface
         $sql = "SELECT name FROM image WHERE id = :id";
 
         return $this->fetchfield($sql, ['id' => $id]);
+    }
+
+    public function getImagesForGame(int $gameId)
+    {
+        $sql = "SELECT id, image, caption
+                  FROM image
+                 WHERE assoc_type_id = :assocTypeId AND assoc_id = :gameId
+              ORDER BY id ASC";
+
+        return $this->fetchAllObjects($sql, [
+            'assocTypeId' => self::ASSOC_TYPE_GAME,
+            'gameId' => $gameId
+        ]);
     }
 
     public function getCreditsFromDB(int $id)

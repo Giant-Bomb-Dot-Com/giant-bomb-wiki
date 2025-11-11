@@ -36,7 +36,7 @@ try {
 		],
 		__METHOD__,
 		[
-			'LIMIT' => 100,
+			'LIMIT' => 10,
 			'ORDER BY' => 'page_id ASC'
 		]
 	);
@@ -47,7 +47,7 @@ try {
 		$pageData = [];
 		$pageData['index'] = $index++;
 		$pageData['title'] = str_replace('Games/', '', str_replace('_', ' ', $row->page_title));
-		$pageData['url'] = '/index.php/' . $row->page_title;
+		$pageData['url'] = '/wiki/' . $row->page_title;
 
 		// Get the page content directly and parse it
 		try {

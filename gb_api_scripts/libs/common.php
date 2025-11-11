@@ -1,7 +1,26 @@
 <?php
 
-trait CommonVariablesAndMethods 
+trait CommonVariablesAndMethods
 {
+    // Giant Bomb API Association Type IDs
+    const ASSOC_TYPE_ACCESSORY = 3000;
+    const ASSOC_TYPE_CHARACTER = 3005;
+    const ASSOC_TYPE_COMPANY = 3010;
+    const ASSOC_TYPE_CONCEPT = 3015;
+    const ASSOC_TYPE_DLC = 3020;
+    const ASSOC_TYPE_FRANCHISE = 3025;
+    const ASSOC_TYPE_GAME = 3030;
+    const ASSOC_TYPE_THEME = 3032;
+    const ASSOC_TYPE_LOCATION = 3035;
+    const ASSOC_TYPE_RELEASE = 3050;
+    const ASSOC_TYPE_PERSON = 3040;
+    const ASSOC_TYPE_PLATFORM = 3045;
+    const ASSOC_TYPE_THING = 3055;
+    const ASSOC_TYPE_GENRE = 3060;
+    const ASSOC_TYPE_GAME_RATING = 3065;
+    const ASSOC_TYPE_RATING_BOARD = 3070;
+    const ASSOC_TYPE_REGION = 3075;
+
     protected $reservedCharacters = ['<','>','(',')','[',']','|',':','{','}','/','&','#','+','%20','%28','%26','%29','%'];
 
     /**
@@ -9,23 +28,23 @@ trait CommonVariablesAndMethods
      */
     // NOTE: keep in sync with docs/reference/wiki-assoc-types.json
 	protected $map = [
-        3000 => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
-        3005 => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
-        3010 => ['className' => 'company', 'plural' => 'companies', 'content' => null, 'count' => 0],
-        3015 => ['className' => 'concept', 'plural' => 'concepts', 'content' => null, 'count' => 0],
-        3020 => ['className' => 'dlc', 'plural' => 'dlc', 'content' => null, 'count' => 0],
-        3025 => ['className' => 'franchise', 'plural' => 'franchises', 'content' => null, 'count' => 0],
-        3030 => ['className' => 'game', 'plural' => 'games', 'content' => null, 'count' => 0],
-        3065 => ['className' => 'game_rating', 'content' => null, 'count' => 0],
-        3060 => ['className' => 'genre', 'plural' => 'genres', 'content' => null, 'count' => 0],
-        3035 => ['className' => 'location', 'plural' => 'locations', 'content' => null, 'count' => 0],
-        3040 => ['className' => 'person', 'plural' => 'people', 'content' => null, 'count' => 0],
-        3045 => ['className' => 'platform', 'plural' => 'platforms', 'content' => null, 'count' => 0],
-        3070 => ['className' => 'rating_board', 'plural' => null, 'content' => null, 'count' => 0],
-        3075 => ['className' => 'region', 'plural' => null, 'content' => null, 'count' => 0],
-        3050 => ['className' => 'release', 'plural' => null, 'content' => null, 'count' => 0],
-        3032 => ['className' => 'theme', 'plural' => 'themes', 'content' => null, 'count' => 0],
-        3055 => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_ACCESSORY => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_CHARACTER => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_COMPANY => ['className' => 'company', 'plural' => 'companies', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_CONCEPT => ['className' => 'concept', 'plural' => 'concepts', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_DLC => ['className' => 'dlc', 'plural' => 'dlc', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_FRANCHISE => ['className' => 'franchise', 'plural' => 'franchises', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_GAME => ['className' => 'game', 'plural' => 'games', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_GAME_RATING => ['className' => 'game_rating', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_GENRE => ['className' => 'genre', 'plural' => 'genres', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_LOCATION => ['className' => 'location', 'plural' => 'locations', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_PERSON => ['className' => 'person', 'plural' => 'people', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_PLATFORM => ['className' => 'platform', 'plural' => 'platforms', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_RATING_BOARD => ['className' => 'rating_board', 'plural' => null, 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_REGION => ['className' => 'region', 'plural' => null, 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_RELEASE => ['className' => 'release', 'plural' => null, 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_THEME => ['className' => 'theme', 'plural' => 'themes', 'content' => null, 'count' => 0],
+        self::ASSOC_TYPE_THING => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
     ];
 
     /**
@@ -34,16 +53,16 @@ trait CommonVariablesAndMethods
     protected $typeIdMap = [
         15 => 1300,
         17 => 2300,
-        59 => 3000,
-        60 => 3045,
-        61 => 3030,
-        62 => 3025,
-        65 => 3010,
-        72 => 3040,
-        92 => 3015,
-        93 => 3055,
-        94 => 3005,
-        95 => 3035,
+        59 => self::ASSOC_TYPE_ACCESSORY,
+        60 => self::ASSOC_TYPE_PLATFORM,
+        61 => self::ASSOC_TYPE_GAME,
+        62 => self::ASSOC_TYPE_FRANCHISE,
+        65 => self::ASSOC_TYPE_COMPANY,
+        72 => self::ASSOC_TYPE_PERSON,
+        92 => self::ASSOC_TYPE_CONCEPT,
+        93 => self::ASSOC_TYPE_THING,
+        94 => self::ASSOC_TYPE_CHARACTER,
+        95 => self::ASSOC_TYPE_LOCATION,
     ];
 
     /**

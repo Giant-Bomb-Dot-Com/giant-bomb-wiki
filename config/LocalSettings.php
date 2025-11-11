@@ -29,6 +29,8 @@ $wgMetaNamespace = "Gb";
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = "";
+$wgArticlePath = "/wiki/$1";
+$wgUsePathInfo = false;
 
 ## The protocol and server name to use in fully-qualified URLs
 $wgServer = "http://localhost:8080";
@@ -341,6 +343,13 @@ $wgShowExceptionDetails = true;
 $wgDevelopmentWarnings = true;
 error_reporting( -1 );
 ini_set( 'display_errors', 1 );
+
+# Development mode settings - skip SMW upgrade key check
+# This allows connecting to any database (local or production) without upgrade key issues
+if ( $wikiEnv === 'dev' ) {
+    // Skip SMW upgrade key check in dev to allow connecting to any database
+    $smwgIgnoreUpgradeKeyCheck = true;
+}
 
 #Allow more results with SMW query
 $smwgQMaxInlineLimit = 7500;
