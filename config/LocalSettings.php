@@ -302,6 +302,11 @@ wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
+
+$gbResolveToken = getenv( 'MW_GIANTBOMB_RESOLVE_INTERNAL_TOKEN' );
+if ( $gbResolveToken !== false && $gbResolveToken !== null && $gbResolveToken !== '' ) {
+	$wgGiantBombResolveInternalToken = $gbResolveToken;
+}
 enableSemantics();
 
 $wgPFEnableStringFunctions = true;
