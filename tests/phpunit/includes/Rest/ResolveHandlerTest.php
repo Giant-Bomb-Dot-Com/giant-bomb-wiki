@@ -30,6 +30,7 @@ class ResolveHandlerTest extends MediaWikiIntegrationTestCase {
 				'fulltext',
 				'namespace',
 				'pageid',
+				'image',
 			],
 		] );
 	}

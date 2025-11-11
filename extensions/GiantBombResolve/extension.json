@@ -47,7 +47,8 @@
         "fullurl",
         "fulltext",
         "pageid",
-        "namespace"
+        "namespace",
+        "image"
       ],
       "description": "Default list of MediaWiki fields returned for each resolved GUID."
     }

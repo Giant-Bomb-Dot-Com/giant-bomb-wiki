@@ -132,6 +132,9 @@ class ResolveHandler extends SimpleHandler {
 
 	private function fetchGuidData( string $guid, array $fields ): ?array {
 		$query = '[[Has guid::' . $guid . ']]';
+		if ( in_array( 'image', $fields, true ) || in_array( 'printouts', $fields, true ) ) {
+			$query .= '|?Has image=Primary image';
+		}
 		$timer = microtime( true );
 		$result = $this->runAskQuery( $query );
 		$elapsed = microtime( true ) - $timer;
@@ -176,6 +179,12 @@ class ResolveHandler extends SimpleHandler {
 					break;
 				case 'printouts':
 					$data['printouts'] = $first['printouts'] ?? [];
+					break;
+				case 'image':
+					$image = $this->extractPrimaryImageData( $first['printouts'] ?? [] );
+					if ( $image !== null ) {
+						$data['image'] = $image;
+					}
 					break;
 			}
 		}
@@ -379,6 +388,99 @@ class ResolveHandler extends SimpleHandler {
 			'status' => 'error',
 			'reason' => $reason,
 		];
+	}
+
+	/**
+	 * @param array<string,mixed> $printouts
+	 */
+	private function extractPrimaryImageData( array $printouts ): ?array {
+		if ( !$printouts ) {
+			return null;
+		}
+		$candidates = [ 'Primary image', 'Has image', 'Image' ];
+		foreach ( $candidates as $key ) {
+			if ( empty( $printouts[$key] ) ) {
+				continue;
+			}
+			$entry = $printouts[$key][0] ?? null;
+			if ( $entry === null ) {
+				continue;
+			}
+			$titleText = $this->extractFileTitleFromPrintout( $entry );
+			if ( !$titleText ) {
+				continue;
+			}
+			if ( stripos( $titleText, 'File:' ) !== 0 ) {
+				$titleText = 'File:' . $titleText;
+			}
+			$title = Title::newFromText( $titleText );
+			if ( !$title ) {
+				continue;
+			}
+			$services = MediaWikiServices::getInstance();
+			$file = $services->getRepoGroup()->findFile( $title );
+			if ( !$file ) {
+				continue;
+			}
+			$thumbOutput = $file->transform( [ 'width' => 640 ] );
+			$thumbUrl = null;
+			$thumbWidth = null;
+			$thumbHeight = null;
+			if ( $thumbOutput && !$thumbOutput->isError() ) {
+				$thumbUrl = $thumbOutput->getUrl();
+				if ( $thumbUrl !== null ) {
+					$thumbUrl = \wfExpandUrl( $thumbUrl, \PROTO_CANONICAL );
+				}
+				$thumbWidth = $thumbOutput->getWidth();
+				$thumbHeight = $thumbOutput->getHeight();
+			}
+			$url = $file->getFullUrl();
+			$descriptionUrl = null;
+			if ( is_array( $entry ) && isset( $entry['fullurl'] ) && is_string( $entry['fullurl'] ) ) {
+				$descriptionUrl = $entry['fullurl'];
+			} else {
+				$descriptionUrl = $file->getTitle()->getFullURL();
+			}
+
+			return [
+				'title' => $title->getPrefixedText(),
+				'descriptionUrl' => $descriptionUrl,
+				'url' => $url,
+				'width' => $file->getWidth(),
+				'height' => $file->getHeight(),
+				'thumbUrl' => $thumbUrl ?? $url,
+				'thumbWidth' => $thumbWidth ?? $file->getWidth(),
+				'thumbHeight' => $thumbHeight ?? $file->getHeight(),
+			];
+		}
+		return null;
+	}
+
+	/**
+	 * @param mixed $entry
+	 */
+	private function extractFileTitleFromPrintout( $entry ): ?string {
+		if ( is_array( $entry ) ) {
+			foreach ( [ 'fulltext', 'raw', 'title' ] as $key ) {
+				if ( isset( $entry[$key] ) && is_string( $entry[$key] ) && $entry[$key] !== '' ) {
+					return $entry[$key];
+				}
+			}
+			if ( isset( $entry['fullurl'] ) && is_string( $entry['fullurl'] ) ) {
+				$path = parse_url( $entry['fullurl'], PHP_URL_PATH );
+				if ( is_string( $path ) && $path !== '' ) {
+					$decoded = rawurldecode( $path );
+					$parts = explode( '/', trim( $decoded, '/' ) );
+					$last = end( $parts );
+					if ( $last !== false && $last !== '' ) {
+						return $last;
+					}
+				}
+			}
+		} elseif ( is_string( $entry ) && $entry !== '' ) {
+			return $entry;
+		}
+		return null;
 	}
 
 	private function createResponse( array $payload ): Response {
