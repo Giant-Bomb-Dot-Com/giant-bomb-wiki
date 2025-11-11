@@ -1,26 +1,32 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Ensure the script path prefix (/wiki) routes to MediaWiki entry points
-  RewriteBase /
+  # Redirect / to the main page
+  RewriteRule ^/?$ /wiki/Main_Page [L,R=301]
 
-  # Direct ResourceLoader and API under /wiki to the correct scripts
-  RewriteRule ^wiki/load\.php$ load.php [L,QSA]
-  RewriteRule ^wiki/api\.php$ api.php [L,QSA]
+  # If the app is served under a path prefix (/wiki), route script endpoints and assets to docroot
+  # so that generated links like /wiki/load.php still hit the actual /load.php file.
+  RewriteRule ^/?wiki/load\.php$ /load.php [L,QSA]
+  RewriteRule ^/?wiki/api\.php$ /api.php [L,QSA]
+  RewriteRule ^/?wiki/rest\.php$ /rest.php [L,QSA]
+  RewriteRule ^/?wiki/resources/(.*)$ /resources/$1 [L,QSA]
+  RewriteRule ^/?wiki/skins/(.*)$ /skins/$1 [L,QSA]
+  RewriteRule ^/?wiki/extensions/(.*)$ /extensions/$1 [L,QSA]
+  RewriteRule ^/?wiki/images/(.*)$ /images/$1 [L,QSA]
 
-  # Allow skin assets and partials to be requested with /wiki prefix
-  # e.g., /wiki/skins/... -> /skins/...
-  RewriteRule ^wiki/skins/(.*)$ skins/$1 [L,QSA]
-
-  # Short URL support under /wiki (optional; keeps index.php working too)
+  # Short URLs for pages: /wiki/Title -> index.php?title=Title
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^wiki/(.*)$ index.php [L,QSA]
+  RewriteRule ^/?wiki/(.*)$ /index.php?title=$1 [L,QSA]
+
+  # Redirect everything else to index.php
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^.*$ /index.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>
   # Allow correct MIME types to pass without being blocked by nosniff
   Header unset X-Content-Type-Options
 </IfModule>
-
 

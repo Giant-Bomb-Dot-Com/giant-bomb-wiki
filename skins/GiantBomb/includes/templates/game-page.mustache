@@ -1,243 +1,250 @@
 {{> header }}
 
 <div class="game-page">
-	{{! Hero Section with Game Image and Title }}
-	<div class="game-hero">
-		{{#game.image}}
-		<div class="game-hero__image" data-vue-component="GameImageViewer" data-image-url="{{game.image}}" data-alt-text="{{game.name}}">
-			<img src="{{game.image}}" alt="{{game.name}}" />
-		</div>
-		{{/game.image}}
-		<div class="game-hero__content">
-			<h1 class="game-hero__title">{{game.name}}</h1>
-			{{#game.releaseDate}}
-			<div class="game-hero__release">
-				<span class="game-hero__release-label">Released:</span>
-				<span class="game-hero__release-date">{{game.releaseDate}}</span>
+	{{! Hero Section with Game Cover and Background }}
+	<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#game.image}}, url('{{game.image}}'){{/game.image}};">
+		<div class="game-hero__container">
+			{{! Game Cover Image }}
+			{{#game.image}}
+			<div class="game-hero__cover">
+				<div
+					data-vue-component="GameImageViewer"
+					data-image-url="{{game.image}}"
+					data-alt-text="{{game.name}} cover">
+				</div>
 			</div>
-			{{/game.releaseDate}}
-			{{#game.deck}}
-			<p class="game-hero__deck">{{game.deck}}</p>
-			{{/game.deck}}
+			{{/game.image}}
+
+			{{! Game Info }}
+			<div class="game-hero__info">
+				<h1 class="game-hero__title">{{game.name}}</h1>
+
+				{{! Metadata Line }}
+				<div class="game-hero__metadata">
+					<span class="game-hero__meta-item">
+						Game consists of <a href="{{game.url}}/Releases" class="game-hero__meta-link">{{game.releasesCount}} release{{^game.releasesCount.1}}s{{/game.releasesCount.1}}</a>
+					</span>
+					{{#game.releaseDate}}
+					<span class="game-hero__meta-separator">|</span>
+					<span class="game-hero__meta-item">Released in {{game.releaseDate}}</span>
+					{{/game.releaseDate}}
+				</div>
+
+				{{! Platforms }}
+				{{#game.platforms.0}}
+				<div class="game-hero__platforms">
+					{{#game.platforms}}
+					<a href="/wiki/Platforms/{{.}}" class="game-hero__platform-link">{{.}}</a>{{^-last}}, {{/-last}}
+					{{/game.platforms}}
+					{{#vue.morePlatforms}}
+					<span class="game-hero__more-platforms">+ {{vue.morePlatforms}} more</span>
+					{{/vue.morePlatforms}}
+				</div>
+				{{/game.platforms.0}}
+
+				{{! Game Description }}
+				{{#game.deck}}
+				<p class="game-hero__description">{{game.deck}}</p>
+				{{/game.deck}}
+			</div>
+		</div>
+	</div>
+
+	{{! Tab Navigation }}
+	<div class="game-tabs">
+		<div class="game-tabs__container">
+			<nav class="game-tabs__nav">
+				<a href="{{game.url}}" class="game-tabs__tab game-tabs__tab--active">Game Wiki</a>
+				<a href="{{game.url}}/Images" class="game-tabs__tab">Images{{#game.imagesCount}} ({{game.imagesCount}}){{/game.imagesCount}}</a>
+				<a href="{{game.url}}/Forum" class="game-tabs__tab">Forum</a>
+				<a href="{{game.url}}/Guide" class="game-tabs__tab">Guide</a>
+				{{#game.hasReleases}}
+				<a href="{{game.url}}/Releases" class="game-tabs__tab">Releases{{#game.releasesCount}} ({{game.releasesCount}}){{/game.releasesCount}}</a>
+				{{/game.hasReleases}}
+				{{#game.hasDLC}}
+				<a href="{{game.url}}/DLC" class="game-tabs__tab">DLC</a>
+				{{/game.hasDLC}}
+				<a href="{{game.url}}/Reviews" class="game-tabs__tab">Reviews</a>
+				<a href="{{game.url}}/Related" class="game-tabs__tab">Related pages</a>
+			</nav>
 		</div>
 	</div>
 
 	{{! Main Content Grid }}
 	<div class="game-content">
-		{{! Left Column - Main Info }}
+		{{! Left Column - Main Content }}
 		<div class="game-main">
-			{{! Basic Information Section }}
-			{{#hasBasicInfo}}
-			<section class="game-section">
-				<h2 class="game-section__title">Basic Information</h2>
-				<div class="game-info-grid">
-					{{#game.aliases}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Also Known As:</span>
-						<span class="game-info-item__value">{{game.aliases}}</span>
+			{{! Wiki Content - parsed sections }}
+			{{#game.description}}
+			<div class="game-wiki-content">
+				{{{game.description}}}
+			</div>
+			{{/game.description}}
+		</div>
+
+		{{! Right Column - Sidebar }}
+		<aside class="game-sidebar">
+			{{! Reviews Section }}
+			{{#game.reviewCount}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Reviews</h3>
+				<div class="game-reviews">
+					<div class="game-review-summary">
+						<div class="game-review-bars">
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">5★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.5.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">4★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.4.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">3★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.3.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">2★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.2.percentage}}%;"></div>
+							</div>
+						</div>
+						<div class="game-review-bar-item">
+							<span class="game-review-star-label">1★</span>
+							<div class="game-review-bar-container">
+								<div class="game-review-bar-fill" style="width: {{game.reviewDistribution.1.percentage}}%;"></div>
+							</div>
+						</div>
+						</div>
+						<div class="game-review-score">
+							<div class="game-review-stars">
+								{{#game.reviewStars}}
+								<span class="game-review-star{{^filled}} game-review-star--empty{{/filled}}">★</span>
+								{{/game.reviewStars}}
+							</div>
+							<div class="game-review-score-number">{{game.reviewScore}} Star</div>
+							<div class="game-review-score-label">Based on a score of<br>{{game.reviewCount}} user reviews</div>
+						</div>
 					</div>
-					{{/game.aliases}}
-					{{#game.guid}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Giant Bomb ID:</span>
-						<span class="game-info-item__value">{{game.guid}}</span>
-					</div>
-					{{/game.guid}}
+					<button class="game-view-all-btn">Add new review</button>
 				</div>
 			</section>
-			{{/hasBasicInfo}}
+			{{/game.reviewCount}}
 
-			{{! Companies Section }}
-			{{#hasCompanies}}
-			<section class="game-section">
-				<h2 class="game-section__title">Companies</h2>
-				<div class="game-info-grid">
+			{{! Images Preview Section }}
+			{{#game.images.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Images</h3>
+				<div class="game-images-grid">
+					{{#game.images}}
+					<div class="game-image-thumb">
+						<div
+							data-vue-component="GameImageViewer"
+							data-image-url="{{url}}"
+							data-alt-text="{{caption}}">
+						</div>
+					</div>
+					{{/game.images}}
+				</div>
+				<a href="{{game.url}}/Images" class="game-view-all-btn">View all ({{game.imagesCount}}) images</a>
+			</section>
+			{{/game.images.0}}
+
+			{{! Game Details Section }}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Game details</h3>
+				<div class="game-details">
+					<div class="game-detail-item">
+						<div class="game-detail-label">Name</div>
+						<div class="game-detail-value">{{game.name}}</div>
+					</div>
+					{{#game.releaseDate}}
+					<div class="game-detail-item">
+						<div class="game-detail-label">Release date</div>
+						<div class="game-detail-value">{{game.releaseDate}}</div>
+					</div>
+					{{/game.releaseDate}}
+					{{#game.platforms.0}}
+					<div class="game-detail-item">
+						<div class="game-detail-label">Platform</div>
+						<div class="game-detail-value game-detail-links">
+							{{#game.platforms}}
+							<a href="/wiki/Platforms/{{.}}" class="game-detail-link">{{.}}</a>
+							{{/game.platforms}}
+						</div>
+					</div>
+					{{/game.platforms.0}}
 					{{#game.developers.0}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Developer{{#game.developers.1}}s{{/game.developers.1}}:</span>
-						<div class="game-info-item__value">
-							<div class="game-tags">
-								{{#game.developers}}
-								<span class="game-tag">{{.}}</span>
-								{{/game.developers}}
-							</div>
+					<div class="game-detail-item">
+						<div class="game-detail-label">Developer</div>
+						<div class="game-detail-value game-detail-links">
+							{{#game.developers}}
+							<a href="/wiki/Companies/{{.}}" class="game-detail-link">{{.}}</a>
+							{{/game.developers}}
 						</div>
 					</div>
 					{{/game.developers.0}}
 					{{#game.publishers.0}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Publisher{{#game.publishers.1}}s{{/game.publishers.1}}:</span>
-						<div class="game-info-item__value">
-							<div class="game-tags">
-								{{#game.publishers}}
-								<span class="game-tag">{{.}}</span>
-								{{/game.publishers}}
-							</div>
+					<div class="game-detail-item">
+						<div class="game-detail-label">Publisher</div>
+						<div class="game-detail-value game-detail-links">
+							{{#game.publishers}}
+							<a href="/wiki/Companies/{{.}}" class="game-detail-link">{{.}}</a>
+							{{/game.publishers}}
 						</div>
 					</div>
 					{{/game.publishers.0}}
 				</div>
 			</section>
-			{{/hasCompanies}}
 
-			{{! Classification Section }}
-			{{#hasClassification}}
-			<section class="game-section">
-				<h2 class="game-section__title">Classification</h2>
-				<div class="game-info-grid">
-					{{#game.platforms.0}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Platform{{#game.platforms.1}}s{{/game.platforms.1}}:</span>
-						<div class="game-info-item__value">
-							<div class="game-tags" data-vue-component="GameTags" data-tags="{{vue.platformsStr}}" data-tag-type="platform" data-namespace="Platforms">
-								{{#game.platforms}}
-								<span class="game-tag game-tag--platform">{{.}}</span>
-								{{/game.platforms}}
-							</div>
-						</div>
+			{{! Release Details Section }}
+			{{#game.hasReleases}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Release details</h3>
+				{{#game.releases.0}}
+				<div
+					data-vue-component="ReleaseSelector"
+					data-releases="{{{vue.releasesJson}}}">
+				</div>
+				{{/game.releases.0}}
+			</section>
+			{{/game.hasReleases}}
+
+			{{! Features Section }}
+			{{#game.features.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Features</h3>
+				<div class="game-features">
+					{{#game.features}}
+					<div class="game-feature-item">
+						<div class="game-feature-checkbox{{#enabled}} game-feature-checkbox--enabled{{/enabled}}"></div>
+						<div class="game-feature-label{{^enabled}} game-feature-label--disabled{{/enabled}}">{{name}}</div>
 					</div>
-					{{/game.platforms.0}}
-					{{#game.genres.0}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Genre{{#game.genres.1}}s{{/game.genres.1}}:</span>
-						<div class="game-info-item__value">
-							<div class="game-tags">
-								{{#game.genres}}
-								<span class="game-tag game-tag--genre">{{.}}</span>
-								{{/game.genres}}
-							</div>
-						</div>
-					</div>
-					{{/game.genres.0}}
-					{{#game.themes.0}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Theme{{#game.themes.1}}s{{/game.themes.1}}:</span>
-						<div class="game-info-item__value">
-							<div class="game-tags">
-								{{#game.themes}}
-								<span class="game-tag game-tag--theme">{{.}}</span>
-								{{/game.themes}}
-							</div>
-						</div>
-					</div>
-					{{/game.themes.0}}
-					{{#game.franchise}}
-					<div class="game-info-item">
-						<span class="game-info-item__label">Franchise:</span>
-						<span class="game-info-item__value game-tag game-tag--franchise">{{game.franchise}}</span>
-					</div>
-					{{/game.franchise}}
+					{{/game.features}}
 				</div>
 			</section>
-			{{/hasClassification}}
+			{{/game.features.0}}
 
-			{{! Related Content Section }}
-			{{#hasRelatedContent}}
-			<section class="game-section">
-				<h2 class="game-section__title">Related Content</h2>
-				<div class="game-related">
-					{{#game.characters.0}}
-					<div class="game-related-group">
-						<h3 class="game-related-group__title">Characters</h3>
-						<div class="game-tags">
-							{{#game.characters}}
-							<span class="game-tag game-tag--character">{{.}}</span>
-							{{/game.characters}}
-						</div>
+			{{! Multiplayer Section }}
+			{{#game.multiplayer.0}}
+			<section class="game-sidebar-section">
+				<h3 class="game-sidebar-section__title">Multiplayer</h3>
+				<div class="game-features">
+					{{#game.multiplayer}}
+					<div class="game-feature-item">
+						<div class="game-feature-checkbox{{#enabled}} game-feature-checkbox--enabled{{/enabled}}"></div>
+						<div class="game-feature-label{{^enabled}} game-feature-label--disabled{{/enabled}}">{{name}}</div>
 					</div>
-					{{/game.characters.0}}
-					{{#game.concepts.0}}
-					<div class="game-related-group">
-						<h3 class="game-related-group__title">Concepts</h3>
-						<div class="game-tags">
-							{{#game.concepts}}
-							<span class="game-tag game-tag--concept">{{.}}</span>
-							{{/game.concepts}}
-						</div>
-					</div>
-					{{/game.concepts.0}}
-					{{#game.locations.0}}
-					<div class="game-related-group">
-						<h3 class="game-related-group__title">Locations</h3>
-						<div class="game-tags">
-							{{#game.locations}}
-							<span class="game-tag game-tag--location">{{.}}</span>
-							{{/game.locations}}
-						</div>
-					</div>
-					{{/game.locations.0}}
-					{{#game.objects.0}}
-					<div class="game-related-group">
-						<h3 class="game-related-group__title">Objects</h3>
-						<div class="game-tags">
-							{{#game.objects}}
-							<span class="game-tag game-tag--object">{{.}}</span>
-							{{/game.objects}}
-						</div>
-					</div>
-					{{/game.objects.0}}
-					{{#game.similarGames.0}}
-					<div class="game-related-group">
-						<h3 class="game-related-group__title">Similar Games</h3>
-						<div class="game-tags" data-vue-component="GameTags" data-tags="{{vue.similarGamesStr}}" data-tag-type="game" data-namespace="Games">
-							{{#game.similarGames}}
-							<span class="game-tag game-tag--game">{{.}}</span>
-							{{/game.similarGames}}
-						</div>
-					</div>
-					{{/game.similarGames.0}}
+					{{/game.multiplayer}}
 				</div>
 			</section>
-			{{/hasRelatedContent}}
-		</div>
-
-		{{! Right Column - Sidebar }}
-		<aside class="game-sidebar">
-			{{! Sub-Pages Section }}
-			{{#hasSubPages}}
-			<section class="game-sidebar-section">
-				<h3 class="game-sidebar-section__title">Additional Information</h3>
-				<ul class="game-subpages">
-					{{#game.hasReleases}}
-					<li class="game-subpage">
-						<a href="{{game.url}}/Releases" class="game-subpage__link">
-							<span class="game-subpage__icon">📦</span>
-							<span class="game-subpage__name">Releases</span>
-						</a>
-					</li>
-					{{/game.hasReleases}}
-					{{#game.hasDLC}}
-					<li class="game-subpage">
-						<a href="{{game.url}}/DLC" class="game-subpage__link">
-							<span class="game-subpage__icon">🎮</span>
-							<span class="game-subpage__name">DLC</span>
-						</a>
-					</li>
-					{{/game.hasDLC}}
-					{{#game.hasCredits}}
-					<li class="game-subpage">
-						<a href="{{game.url}}/Credits" class="game-subpage__link">
-							<span class="game-subpage__icon">👥</span>
-							<span class="game-subpage__name">Credits</span>
-						</a>
-					</li>
-					{{/game.hasCredits}}
-				</ul>
-			</section>
-			{{/hasSubPages}}
-
-			{{! Quick Links - Placeholder for future features }}
-			<section class="game-sidebar-section">
-				<h3 class="game-sidebar-section__title">Quick Links</h3>
-				<ul class="game-quick-links">
-					<li class="game-quick-link">
-						<a href="{{game.url}}?action=edit" class="game-quick-link__link">Edit Page</a>
-					</li>
-					<li class="game-quick-link">
-						<a href="{{game.url}}?action=history" class="game-quick-link__link">View History</a>
-					</li>
-				</ul>
-			</section>
+			{{/game.multiplayer.0}}
 		</aside>
 	</div>
 </div>
