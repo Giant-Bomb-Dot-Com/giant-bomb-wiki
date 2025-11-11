@@ -150,13 +150,20 @@ class ResolveHandler extends SimpleHandler {
 		$titleText = $pageKey ?? ( $first['fulltext'] ?? null );
 
 		$data = [];
+		$baseOrigin = $this->getRewriteBaseOrigin();
+
 		foreach ( $fields as $field ) {
 			switch ( $field ) {
 				case 'displaytitle':
 					$data['displayTitle'] = $first['displaytitle'] ?? null;
 					break;
 				case 'fullurl':
-					$data['fullUrl'] = $first['fullurl'] ?? null;
+					$fullUrl = $first['fullurl'] ?? null;
+					if ( $fullUrl && $baseOrigin ) {
+						$data['fullUrl'] = $this->rewriteFullUrl( $fullUrl, $baseOrigin, $titleText );
+					} else {
+						$data['fullUrl'] = $fullUrl;
+					}
 					break;
 				case 'fulltext':
 					$data['fullText'] = $first['fulltext'] ?? $titleText;
@@ -182,6 +189,37 @@ class ResolveHandler extends SimpleHandler {
 		}
 
 		return $data;
+	}
+
+	private function rewriteFullUrl( string $wikiUrl, string $baseOrigin, ?string $titleText ): string {
+		$parsed = parse_url( $wikiUrl );
+		if ( $titleText ) {
+			$title = Title::newFromText( $titleText );
+			if ( $title ) {
+				return rtrim( $baseOrigin, '/' ) . '/' . $title->getPrefixedURL();
+			}
+		}
+		if ( $parsed && isset( $parsed['path'] ) ) {
+			return rtrim( $baseOrigin, '/' ) . '/' . ltrim( $parsed['path'], '/' );
+		}
+		return $wikiUrl;
+	}
+
+	private function getRewriteBaseOrigin(): ?string {
+		$baseOrigin = $this->config->get( 'GiantBombResolveBaseOrigin' );
+		if ( is_string( $baseOrigin ) ) {
+			$trimmed = trim( $baseOrigin );
+			if ( $trimmed !== '' ) {
+				return rtrim( $trimmed, '/' );
+			}
+		}
+
+		$canonical = $this->config->get( 'CanonicalServer' );
+		if ( is_string( $canonical ) && $canonical !== '' ) {
+			return rtrim( $canonical, '/' ) . '/wiki';
+		}
+
+		return null;
 	}
 
 	private function runAskQuery( string $query ): array {

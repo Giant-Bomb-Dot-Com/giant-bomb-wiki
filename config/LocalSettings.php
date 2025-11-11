@@ -307,6 +307,11 @@ $gbResolveToken = getenv( 'MW_GIANTBOMB_RESOLVE_INTERNAL_TOKEN' );
 if ( $gbResolveToken !== false && $gbResolveToken !== null && $gbResolveToken !== '' ) {
 	$wgGiantBombResolveInternalToken = $gbResolveToken;
 }
+
+$gbResolveBaseOrigin = getenv( 'MW_GIANTBOMB_RESOLVE_BASE_ORIGIN' );
+if ( $gbResolveBaseOrigin !== false && $gbResolveBaseOrigin !== null && trim( $gbResolveBaseOrigin ) !== '' ) {
+	$wgGiantBombResolveBaseOrigin = trim( $gbResolveBaseOrigin );
+}
 enableSemantics();
 
 $wgPFEnableStringFunctions = true;

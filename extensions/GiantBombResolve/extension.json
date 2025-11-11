@@ -37,6 +37,10 @@
       "value": "wiki-guid:",
       "description": "Prefix used for surrogate keys emitted with resolve responses."
     },
+    "GiantBombResolveBaseOrigin": {
+      "value": null,
+      "description": "Public base origin (e.g. https://enormousexplosive.com/wiki) used to rewrite fullUrl."
+    },
     "GiantBombResolveFields": {
       "value": [
         "displaytitle",
