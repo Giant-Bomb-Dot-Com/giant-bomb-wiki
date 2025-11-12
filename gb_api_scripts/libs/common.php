@@ -26,6 +26,7 @@ trait CommonVariablesAndMethods
     /**
      * Maps wiki type ids to their info
      */
+    // NOTE: keep in sync with docs/reference/wiki-assoc-types.json
 	protected $map = [
         self::ASSOC_TYPE_ACCESSORY => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
         self::ASSOC_TYPE_CHARACTER => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
