@@ -1,10 +1,12 @@
 <?php
 require_once(__DIR__.'/db_interface.php');
+require_once(__DIR__.'/common.php');
 
 use Wikimedia\Rdbms\IDatabase;
 
-class MWDbWrapper implements DbInterface 
+class MWDbWrapper implements DbInterface
 {
+    use CommonVariablesAndMethods;
     private IDatabase $dbConnection;
     private string $version;
 
@@ -91,6 +93,18 @@ class MWDbWrapper implements DbInterface
             ->caller( __METHOD__ );
 
         return $qb->fetchField();
+    }
+
+    public function getImagesForGame(int $gameId)
+    {
+        $qb = $this->dbConnection->newSelectQueryBuilder();
+        $qb->select(['id', 'image', 'caption'])
+            ->from('image')
+            ->where(['assoc_type_id' => self::ASSOC_TYPE_GAME, 'assoc_id' => $gameId])
+            ->orderBy('id', 'ASC')
+            ->caller( __METHOD__ );
+
+        return $qb->fetchResultSet();
     }
 
     public function getCreditsFromDB(int $id)

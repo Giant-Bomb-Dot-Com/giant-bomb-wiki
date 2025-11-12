@@ -47,8 +47,8 @@
         "resources/components/index.js",
         "resources/components/VueSingleFileComponentExample.vue",
         "resources/components/AnotherVueComponent.vue",
-        "resources/components/GameTags.vue",
-        "resources/components/GameImageViewer.vue"
+        "resources/components/GameImageViewer.vue",
+        "resources/components/ReleaseSelector.vue"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }
