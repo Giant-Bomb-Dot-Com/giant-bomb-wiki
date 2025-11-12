@@ -204,7 +204,7 @@ try {
                 $releaseData['image'] = $image['fullurl'] ?? '';
                 // Clean up local development URLs if present
                 // Only for temp local development with externally hosted images
-                $releaseData['image'] = str_replace('http://localhost:8080/index.php/', '', $releaseData['image']);
+                $releaseData['image'] = str_replace('http://localhost:8080/wiki/', '', $releaseData['image']);
             }
             
             error_log(print_r($releaseData, true));
