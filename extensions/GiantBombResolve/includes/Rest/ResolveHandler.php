@@ -18,7 +18,7 @@ use User;
 
 class ResolveHandler extends SimpleHandler {
 
-	private const GUID_PATTERN = '/^(\d{3,4})-(\d+)$/';
+	private const GUID_PATTERN = '/^(\d{3,4})-(\d{1,12})$/';
 
 	/** @var Config */
 	private $config;
