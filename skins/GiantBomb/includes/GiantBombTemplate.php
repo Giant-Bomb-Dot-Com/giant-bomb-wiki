@@ -9,7 +9,7 @@ class GiantBombTemplate extends BaseTemplate {
         $pageTitle = $title->getText();
         $isGamePage = strpos($pageTitle, 'Games/') === 0 &&
                       substr_count($pageTitle, '/') === 1;
-        $isNewReleasesPage = strpos($pageTitle, 'New Releases/') === 0;
+        $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         error_log("Current page title: " . $pageTitle);
         
 

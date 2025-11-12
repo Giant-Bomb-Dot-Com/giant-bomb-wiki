@@ -45,9 +45,9 @@
                         
                         <div class="release-info">
                             <h3 class="release-title">{{title}}</h3>
-                            {{#releaseDateFormatted}}
-                            <div class="release-date">{{.}}</div>
-                            {{/releaseDateFormatted}}
+                            <div class="release-date">{{#releaseDateFormatted}}
+                            {{.}}
+                            {{/releaseDateFormatted}} {{#region}}({{.}}){{/region}}</div>
                             
                             {{#platforms}}
                             <div class="release-platforms">
