@@ -2,6 +2,9 @@
 use MediaWiki\Html\TemplateParser;
 use MediaWiki\MediaWikiServices;
 
+// Load platform helper functions
+require_once __DIR__ . '/../helpers/PlatformHelper.php';
+
 /**
  * New releases page View
  * Displays the latest game releases, grouped by time period
@@ -110,10 +113,14 @@ function groupReleases($releases) {
 
 $releases = [];
 
+// Load platform mappings once with caching
+$platformMappings = loadPlatformMappings();
+
 try {
     // Query for ReleaseSubobjects - properties have "Has" prefix in SMW
-    // Filter to only Release type subobjects and sort by release date
-    $queryConditions = '[[Has object type::Release]][[Has release date::+]]';
+    // Filter to only Release type subobjects from /Releases pages and sort by release date
+    // The -Has subobject property links subobjects to their parent page
+    $queryConditions = '[[Has object type::Release]][[Has release date::+]][[-Has subobject::~*/Releases]]';
     $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
     $params = '|sort=Has release date|order=desc|limit=500';
     
@@ -140,7 +147,9 @@ try {
     
     error_log("API result: " . print_r($result, true));
     
-    // Process the results
+    // Process the results with deduplication
+    $seenReleases = []; // Track unique releases to prevent duplicates
+    
     if (isset($result['query']['results']) && is_array($result['query']['results'])) {
         foreach ($result['query']['results'] as $pageName => $pageData) {
             $releaseData = [];
@@ -184,7 +193,10 @@ try {
                 $platforms = [];
                 foreach($printouts['Has platforms'] as $platform) {
                     $platformName = $platform['displaytitle'] ?? $platform['fulltext'];
-                    $abbrev = basename($platformName);
+                    
+                    // Look up abbreviation from cached platform mappings
+                    $abbrev = $platformMappings[$platformName] ?? basename($platformName);
+                    
                     $platforms[] = [
                         'title' => $platformName,
                         'url' => $platform['fullurl'],
@@ -207,9 +219,27 @@ try {
                 $releaseData['image'] = str_replace('http://localhost:8080/wiki/', '', $releaseData['image']);
             }
             
-            error_log(print_r($releaseData, true));
+            // Create a unique key to detect duplicates
+            // Based on: game title + release date + region + platforms
+            $platformsKey = isset($releaseData['platforms']) 
+                ? implode(',', array_map(fn($p) => $p['title'], $releaseData['platforms']))
+                : '';
+            $uniqueKey = sprintf(
+                '%s|%s|%s|%s',
+                $releaseData['title'] ?? '',
+                $releaseData['releaseDate'] ?? '',
+                $releaseData['region'] ?? '',
+                $platformsKey
+            );
             
-            $releases[] = $releaseData;
+            // Only add if we haven't seen this exact release before
+            if (!isset($seenReleases[$uniqueKey])) {
+                $seenReleases[$uniqueKey] = true;
+                error_log("Adding release: " . $uniqueKey);
+                $releases[] = $releaseData;
+            } else {
+                error_log("Skipping duplicate release: " . $uniqueKey);
+            }
         }
     }
     
