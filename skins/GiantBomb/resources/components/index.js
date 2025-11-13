@@ -11,6 +11,7 @@ const components = {
   VueSingleFileComponentExample: require("./VueSingleFileComponentExample.vue"),
   GameImageViewer: require("./GameImageViewer.vue"),
   ReleaseSelector: require("./ReleaseSelector.vue"),
+  ViewToggle: require("./ViewToggle.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

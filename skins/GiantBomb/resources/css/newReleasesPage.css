@@ -16,35 +16,6 @@
     font-size: 2rem;
 }
 
-.view-toggle {
-    display: flex;
-    gap: 10px;
-}
-
-.view-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    color: #ccc;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-}
-
-.view-btn:hover {
-    background: #333;
-    border-color: #666;
-}
-
-.view-btn.active {
-    background: #e63946;
-    border-color: #e63946;
-    color: white;
-}
-
 .week-group {
     margin-bottom: 40px;
 }
@@ -56,6 +27,7 @@
     border-bottom: 2px solid #444;
 }
 
+/* Default Grid View */
 .releases-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -118,10 +90,6 @@
     font-size: 1rem;
     margin: 0 0 8px 0;
     line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .release-date {
@@ -155,6 +123,56 @@
     font-size: 1.2rem;
 }
 
+/* List View Styles */
+.new-releases-page.view-list .releases-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.new-releases-page.view-list .release-card {
+    display: flex;
+    flex-direction: row;
+}
+
+.new-releases-page.view-list .release-card-link {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 15px;
+}
+
+.new-releases-page.view-list .release-image {
+    width: 120px;
+    min-width: 120px;
+    aspect-ratio: 3/4;
+    flex-shrink: 0;
+}
+
+.new-releases-page.view-list .release-info {
+    flex: 1;
+    padding: 10px 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.new-releases-page.view-list .release-title {
+    font-size: 1rem;
+    margin: 0 0 6px 0;
+}
+
+.new-releases-page.view-list .release-date {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+
+.new-releases-page.view-list .platform-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
     .new-releases-page {
         padding: 10px;
@@ -171,15 +189,16 @@
         font-size: 1.5rem;
     }
     
+    /* Force list view on mobile */
     .releases-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 15px;
     }
     
     .release-card {
         display: flex;
         flex-direction: row;
-        border-radius: 8px;
     }
     
     .release-card-link {
