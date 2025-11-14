@@ -1,0 +1,63 @@
+{
+  "name": "GiantBombResolve",
+  "version": "0.1.0",
+  "author": "Giant Bomb Engineering",
+  "description": "Provides a REST endpoint for resolving wiki GUIDs.",
+  "type": "extension",
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler": "includes/Rest/ResolveHandler.php"
+  },
+  "HookHandlers": [],
+  "manifest_version": 2,
+  "requires": {
+    "MediaWiki": ">=1.40.0"
+  },
+  "config": {
+    "GiantBombResolveBatchLimit": {
+      "value": 25,
+      "description": "Maximum number of GUIDs that can be resolved per request."
+    },
+    "GiantBombResolveInternalToken": {
+      "value": null,
+      "description": "Optional shared secret for internal callers (sent via X-GB-Internal-Key)."
+    },
+    "GiantBombResolveAllowPublic": {
+      "value": false,
+      "description": "When true, allows unauthenticated access to the resolve endpoint."
+    },
+    "GiantBombResolveTimeout": {
+      "value": 3,
+      "description": "Threshold in seconds for logging slow resolve queries."
+    },
+    "GiantBombResolveCacheControl": {
+      "value": "public, max-age=900, stale-while-revalidate=300, stale-if-error=86400",
+      "description": "Cache-Control header applied to resolve responses."
+    },
+    "GiantBombResolveSurrogatePrefix": {
+      "value": "wiki-guid:",
+      "description": "Prefix used for surrogate keys emitted with resolve responses."
+    },
+    "GiantBombResolveBaseOrigin": {
+      "value": null,
+      "description": "Public base origin (e.g. https://enormousexplosive.com/wiki) used to rewrite fullUrl."
+    },
+    "GiantBombResolveFields": {
+      "value": [
+        "displaytitle",
+        "fullurl",
+        "fulltext",
+        "pageid",
+        "namespace",
+        "image"
+      ],
+      "description": "Default list of MediaWiki fields returned for each resolved GUID."
+    }
+  },
+  "RestRoutes": [
+    {
+      "path": "/gb/v1/resolve",
+      "method": "GET",
+      "class": "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler"
+    }
+  ]
+}

@@ -44,6 +44,16 @@ This uses a pre-built database snapshot with 5 wiki pages ready for development!
 - Full MediaWiki + Semantic MediaWiki setup
 - Perfect for frontend/UI development
 
+**Optional**
+
+- Requirements: Have finished running the ./setup.sh successfully and have docker containers running.
+
+```bash
+./setupdata.sh
+```
+
+- This will import a full data set. It will use all possible CPU cores avaiable and will take hours to run. There are ~426000 pages to import.
+
 ### Method 2: Include API Database (Optional)
 
 If you want to generate **new wiki pages** from the 86,147 games in the API:
