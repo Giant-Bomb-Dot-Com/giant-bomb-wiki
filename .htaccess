@@ -8,7 +8,7 @@
   # so that generated links like /wiki/load.php still hit the actual /load.php file.
   RewriteRule ^/?wiki/load\.php$ /load.php [L,QSA]
   RewriteRule ^/?wiki/api\.php$ /api.php [L,QSA]
-  RewriteRule ^/?wiki/rest\.php$ /rest.php [L,QSA]
+  RewriteRule ^/?wiki/rest\.php(?:/(.*))?$ /rest.php/$1 [L,QSA]
   RewriteRule ^/?wiki/resources/(.*)$ /resources/$1 [L,QSA]
   RewriteRule ^/?wiki/skins/(.*)$ /skins/$1 [L,QSA]
   RewriteRule ^/?wiki/extensions/(.*)$ /extensions/$1 [L,QSA]

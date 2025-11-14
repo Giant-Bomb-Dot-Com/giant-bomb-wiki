@@ -59,6 +59,10 @@ RUN cd /var/www/html \
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
+# Custom extensions packaged with the image
+COPY ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
+RUN chown -R www-data:www-data /var/www/html/extensions/GiantBombResolve
+
 # So can be docker exec after build
 COPY installwiki.sh /installwiki.sh
 RUN chmod 755 /installwiki.sh
