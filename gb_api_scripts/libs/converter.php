@@ -428,10 +428,10 @@ class HtmlToMediaWikiConverter
     }
 
     /**
-     * Converts <figure> to MediaWiki image syntax. External image links is just the url.
+     * Converts <figure> to MediaWiki image syntax using full URL.
      *
      * @param DOMElement  $figure The <figure> element to convert.
-     * @return string|false The MediaWiki formatted image string.
+     * @return string|false The MediaWiki formatted image string with full URL.
      */
     public function convertFigure(DOMElement $figure): string|false
     {
@@ -461,11 +461,8 @@ class HtmlToMediaWikiConverter
             $float = 'none';
         }
 
-        $imageFragment = parse_url($src, PHP_URL_PATH);
-        $imageFile = basename($imageFragment);
-        $imageFile = str_replace($this->reservedCharacters, ' ', $imageFile);
-
-        $mwImage = "[[File:{$imageFile}|thumb|{$float}";
+        // Use full URL in File syntax instead of just filename
+        $mwImage = "[[File:{$src}|thumb|{$float}";
         if ($alt != 'No Caption Provided') {
             $mwImage .= "|alt={$alt}|{$alt}";
         }
@@ -492,18 +489,15 @@ class HtmlToMediaWikiConverter
     }
 
     /**
-     * Converts <image> to MediaWiki image syntax. External image links is just the url.
+     * Converts <image> to MediaWiki image syntax using full URL.
      *
      * @param DOMElement  $image The <image> element to convert.
-     * @return string The MediaWiki formatted image string.
+     * @return string The MediaWiki formatted image string with full URL.
      */
     public function convertImage(DOMElement $image): string|false
     {
         $src = $image->getAttribute('data-img-src');
         $align = $image->getAttribute('data-align');
-        $imageFragment = parse_url($src, PHP_URL_PATH);
-        $imageFile = basename($imageFragment);
-        $imageFile = str_replace($this->reservedCharacters, ' ', $imageFile);
 
         if ($align == 'right') {
             $float = 'right';
@@ -515,7 +509,8 @@ class HtmlToMediaWikiConverter
             $float = 'none';
         }
 
-        $mwImage = "[[File:{$imageFile}|thumb|{$float}]]";
+        // Use full URL in File syntax instead of just filename
+        $mwImage = "[[File:{$src}|thumb|{$float}]]";
 
         return $mwImage;
     }

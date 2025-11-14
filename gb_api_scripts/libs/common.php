@@ -1,26 +1,9 @@
 <?php
 
+require_once(__DIR__.'/constants.php');
+
 trait CommonVariablesAndMethods
 {
-    // Giant Bomb API Association Type IDs
-    const ASSOC_TYPE_ACCESSORY = 3000;
-    const ASSOC_TYPE_CHARACTER = 3005;
-    const ASSOC_TYPE_COMPANY = 3010;
-    const ASSOC_TYPE_CONCEPT = 3015;
-    const ASSOC_TYPE_DLC = 3020;
-    const ASSOC_TYPE_FRANCHISE = 3025;
-    const ASSOC_TYPE_GAME = 3030;
-    const ASSOC_TYPE_THEME = 3032;
-    const ASSOC_TYPE_LOCATION = 3035;
-    const ASSOC_TYPE_RELEASE = 3050;
-    const ASSOC_TYPE_PERSON = 3040;
-    const ASSOC_TYPE_PLATFORM = 3045;
-    const ASSOC_TYPE_THING = 3055;
-    const ASSOC_TYPE_GENRE = 3060;
-    const ASSOC_TYPE_GAME_RATING = 3065;
-    const ASSOC_TYPE_RATING_BOARD = 3070;
-    const ASSOC_TYPE_REGION = 3075;
-
     protected $reservedCharacters = ['<','>','(',')','[',']','|',':','{','}','/','&','#','+','%20','%28','%26','%29','%'];
 
     /**
@@ -28,23 +11,23 @@ trait CommonVariablesAndMethods
      */
     // NOTE: keep in sync with docs/reference/wiki-assoc-types.json
 	protected $map = [
-        self::ASSOC_TYPE_ACCESSORY => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_CHARACTER => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_COMPANY => ['className' => 'company', 'plural' => 'companies', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_CONCEPT => ['className' => 'concept', 'plural' => 'concepts', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_DLC => ['className' => 'dlc', 'plural' => 'dlc', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_FRANCHISE => ['className' => 'franchise', 'plural' => 'franchises', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_GAME => ['className' => 'game', 'plural' => 'games', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_GAME_RATING => ['className' => 'game_rating', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_GENRE => ['className' => 'genre', 'plural' => 'genres', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_LOCATION => ['className' => 'location', 'plural' => 'locations', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_PERSON => ['className' => 'person', 'plural' => 'people', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_PLATFORM => ['className' => 'platform', 'plural' => 'platforms', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_RATING_BOARD => ['className' => 'rating_board', 'plural' => null, 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_REGION => ['className' => 'region', 'plural' => null, 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_RELEASE => ['className' => 'release', 'plural' => null, 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_THEME => ['className' => 'theme', 'plural' => 'themes', 'content' => null, 'count' => 0],
-        self::ASSOC_TYPE_THING => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_ACCESSORY => ['className' => 'accessory', 'plural' => 'accessories', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_CHARACTER => ['className' => 'character', 'plural' => 'characters', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_COMPANY => ['className' => 'company', 'plural' => 'companies', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_CONCEPT => ['className' => 'concept', 'plural' => 'concepts', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_DLC => ['className' => 'dlc', 'plural' => 'dlc', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_FRANCHISE => ['className' => 'franchise', 'plural' => 'franchises', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_GAME => ['className' => 'game', 'plural' => 'games', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_GAME_RATING => ['className' => 'game_rating', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_GENRE => ['className' => 'genre', 'plural' => 'genres', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_LOCATION => ['className' => 'location', 'plural' => 'locations', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_PERSON => ['className' => 'person', 'plural' => 'people', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_PLATFORM => ['className' => 'platform', 'plural' => 'platforms', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_RATING_BOARD => ['className' => 'rating_board', 'plural' => null, 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_REGION => ['className' => 'region', 'plural' => null, 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_RELEASE => ['className' => 'release', 'plural' => null, 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_THEME => ['className' => 'theme', 'plural' => 'themes', 'content' => null, 'count' => 0],
+        GiantBombConstants::ASSOC_TYPE_THING => ['className' => 'thing', 'plural' => 'objects', 'content' => null, 'count' => 0],
     ];
 
     /**
@@ -53,16 +36,16 @@ trait CommonVariablesAndMethods
     protected $typeIdMap = [
         15 => 1300,
         17 => 2300,
-        59 => self::ASSOC_TYPE_ACCESSORY,
-        60 => self::ASSOC_TYPE_PLATFORM,
-        61 => self::ASSOC_TYPE_GAME,
-        62 => self::ASSOC_TYPE_FRANCHISE,
-        65 => self::ASSOC_TYPE_COMPANY,
-        72 => self::ASSOC_TYPE_PERSON,
-        92 => self::ASSOC_TYPE_CONCEPT,
-        93 => self::ASSOC_TYPE_THING,
-        94 => self::ASSOC_TYPE_CHARACTER,
-        95 => self::ASSOC_TYPE_LOCATION,
+        59 => GiantBombConstants::ASSOC_TYPE_ACCESSORY,
+        60 => GiantBombConstants::ASSOC_TYPE_PLATFORM,
+        61 => GiantBombConstants::ASSOC_TYPE_GAME,
+        62 => GiantBombConstants::ASSOC_TYPE_FRANCHISE,
+        65 => GiantBombConstants::ASSOC_TYPE_COMPANY,
+        72 => GiantBombConstants::ASSOC_TYPE_PERSON,
+        92 => GiantBombConstants::ASSOC_TYPE_CONCEPT,
+        93 => GiantBombConstants::ASSOC_TYPE_THING,
+        94 => GiantBombConstants::ASSOC_TYPE_CHARACTER,
+        95 => GiantBombConstants::ASSOC_TYPE_LOCATION,
     ];
 
     /**
