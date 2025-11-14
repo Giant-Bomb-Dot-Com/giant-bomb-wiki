@@ -13,6 +13,7 @@ const components = {
   ReleaseSelector: require("./ReleaseSelector.vue"),
   ViewToggle: require("./ViewToggle.vue"),
   ReleaseFilter: require("./ReleaseFilter.vue"),
+  ReleaseList: require("./ReleaseList.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

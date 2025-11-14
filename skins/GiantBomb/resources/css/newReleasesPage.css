@@ -26,7 +26,7 @@
     order: 2;
 }
 
-.releases-main {
+.releases-main-wrapper {
     order: 1;
     min-width: 0; /* Prevents grid blowout */
 }
@@ -108,6 +108,7 @@
 }
 
 .release-date {
+    display: flex;
     font-size: 0.85rem;
     color: #999;
     margin-bottom: 10px;
@@ -213,7 +214,7 @@
         order: 1;
     }
     
-    .releases-main {
+    .releases-main-wrapper {
         order: 2;
     }
     

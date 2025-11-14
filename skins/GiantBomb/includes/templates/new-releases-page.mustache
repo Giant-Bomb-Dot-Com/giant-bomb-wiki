@@ -18,53 +18,9 @@
             </div>
         </aside>
 
-        <main class="releases-main">
-            {{#hasReleases}}
-                {{#weekGroups}}
-                <div class="week-group">
-                    <h2 class="week-label">{{label}}</h2>
-                    <div class="releases-grid">
-                        {{#releases}}
-                        <div class="release-card">
-                            <a href="{{url}}" class="release-card-link">
-                                {{#image}}
-                                <div class="release-image">
-                                    <img src="{{.}}" alt="{{title}}" loading="lazy">
-                                </div>
-                                {{/image}}
-                                {{^image}}
-                                <div class="release-image release-image-placeholder">
-                                    <span>?</span>
-                                </div>
-                                {{/image}}
-                                
-                                <div class="release-info">
-                                    <h3 class="release-title">{{title}}</h3>
-                                    <div class="release-date">{{#releaseDateFormatted}}
-                                    {{.}}
-                                    {{/releaseDateFormatted}} {{#region}}({{.}}){{/region}}</div>
-                                    
-                                    {{#platforms}}
-                                    <div class="release-platforms">
-                                        {{#platforms}}
-                                        <span class="platform-badge" title="{{title}}">{{abbrev}}</span>
-                                        {{/platforms}}
-                                    </div>
-                                    {{/platforms}}
-                                </div>
-                            </a>
-                        </div>
-                        {{/releases}}
-                    </div>
-                </div>
-                {{/weekGroups}}
-            {{/hasReleases}}
-            
-            {{^hasReleases}}
-            <div class="no-releases">
-                <p>No upcoming releases found.</p>
-            </div>
-            {{/hasReleases}}
-        </main>
+        <div class="releases-main-wrapper"
+            data-vue-component="ReleaseList"
+            data-initial-data="{{{vue.weekGroupsJson}}}">
+        </div>
     </div>
 </div>
