@@ -95,18 +95,6 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchField();
     }
 
-    public function getImagesForGame(int $gameId)
-    {
-        $qb = $this->dbConnection->newSelectQueryBuilder();
-        $qb->select(['id', 'image', 'caption'])
-            ->from('image')
-            ->where(['assoc_type_id' => self::ASSOC_TYPE_GAME, 'assoc_id' => $gameId])
-            ->orderBy('id', 'ASC')
-            ->caller( __METHOD__ );
-
-        return $qb->fetchResultSet();
-    }
-
     public function getCreditsFromDB(int $id)
     {
         $qb = $this->dbConnection->newSelectQueryBuilder()
