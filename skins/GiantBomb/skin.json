@@ -49,7 +49,8 @@
         "resources/components/AnotherVueComponent.vue",
         "resources/components/GameImageViewer.vue",
         "resources/components/ReleaseSelector.vue",
-        "resources/components/ViewToggle.vue"
+        "resources/components/ViewToggle.vue",
+        "resources/components/ReleaseFilter.vue"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }

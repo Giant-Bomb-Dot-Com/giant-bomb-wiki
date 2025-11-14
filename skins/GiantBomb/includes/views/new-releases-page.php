@@ -116,11 +116,29 @@ $releases = [];
 // Load platform mappings once with caching
 $platformMappings = loadPlatformMappings();
 
+// Get filter parameters from URL
+$request = RequestContext::getMain()->getRequest();
+$filterRegion = $request->getText('region', '');
+$filterPlatform = $request->getText('platform', '');
+
 try {
     // Query for ReleaseSubobjects - properties have "Has" prefix in SMW
     // Filter to only Release type subobjects from /Releases pages and sort by release date
     // The -Has subobject property links subobjects to their parent page
     $queryConditions = '[[Has object type::Release]][[Has release date::+]][[-Has subobject::~*/Releases]]';
+    
+    // Add region filter if specified
+    if (!empty($filterRegion)) {
+        $queryConditions .= '[[Has region::' . $filterRegion . ']]';
+        error_log("Filtering by region: " . $filterRegion);
+    }
+    
+    // Add platform filter if specified
+    if (!empty($filterPlatform)) {
+        $queryConditions .= '[[Has platforms::Platforms/' . $filterPlatform . ']]';
+        error_log("Filtering by platform: " . $filterPlatform);
+    }
+    
     $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
     $params = '|sort=Has release date|order=desc|limit=500';
     
@@ -254,10 +272,16 @@ catch (Exception $e) {
 // Group releases by time period (week/month/year based on date specificity)
 $weekGroups = groupReleases($releases);
 
+// Get all platforms for filter dropdown using helper function (cached)
+$platforms = getAllPlatforms();
+
 // Format data for Mustache template
 $data = [
     'weekGroups' => $weekGroups,
     'hasReleases' => count($releases) > 0,
+    'vue' => [
+        'platformsJson' => htmlspecialchars(json_encode($platforms), ENT_QUOTES, 'UTF-8'),
+    ],
 ];
 
 // Path to Mustache templates

@@ -16,6 +16,21 @@
     font-size: 2rem;
 }
 
+.releases-content {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 30px;
+}
+
+.releases-sidebar {
+    order: 2;
+}
+
+.releases-main {
+    order: 1;
+    min-width: 0; /* Prevents grid blowout */
+}
+
 .week-group {
     margin-bottom: 40px;
 }
@@ -187,6 +202,19 @@
     
     .releases-header h1 {
         font-size: 1.5rem;
+    }
+    
+    .releases-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .releases-sidebar {
+        order: 1;
+    }
+    
+    .releases-main {
+        order: 2;
     }
     
     /* Force list view on mobile */

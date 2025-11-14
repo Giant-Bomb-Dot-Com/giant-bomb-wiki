@@ -12,6 +12,7 @@ const components = {
   GameImageViewer: require("./GameImageViewer.vue"),
   ReleaseSelector: require("./ReleaseSelector.vue"),
   ViewToggle: require("./ViewToggle.vue"),
+  ReleaseFilter: require("./ReleaseFilter.vue"),
 };
 
 // Wait for DOM to be ready before mounting components
