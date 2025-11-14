@@ -50,7 +50,10 @@
         "resources/components/GameImageViewer.vue",
         "resources/components/ReleaseSelector.vue",
         "resources/components/ViewToggle.vue",
-        "resources/components/ReleaseFilter.vue"
+        "resources/components/ReleaseFilter.vue",
+        "resources/components/ReleaseList.vue",
+        "resources/helpers/countryFlags.js",
+        "resources/data/countryFlags.json"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }

@@ -91,18 +91,34 @@ module.exports = exports = {
         params.delete('platform');
       }
       
-      // Reload page with new parameters
+      // Update URL without reloading (for bookmarking/sharing)
       const newUrl = `${url.pathname}?${params.toString()}`;
-      window.location.href = newUrl;
+      window.history.pushState({}, '', newUrl);
+      
+      // Emit event for ReleaseList to listen to
+      window.dispatchEvent(new CustomEvent('releases-filter-changed', {
+        detail: {
+          region: selectedRegion.value,
+          platform: selectedPlatform.value
+        }
+      }));
     };
 
     const clearFilters = () => {
       selectedRegion.value = '';
       selectedPlatform.value = '';
       
-      // Reload page without filter parameters
+      // Update URL without reloading
       const url = new URL(window.location.href);
-      window.location.href = url.pathname;
+      window.history.pushState({}, '', url.pathname);
+      
+      // Emit event to reload all releases
+      window.dispatchEvent(new CustomEvent('releases-filter-changed', {
+        detail: {
+          region: '',
+          platform: ''
+        }
+      }));
     };
 
     // Helper function to decode HTML entities
@@ -117,10 +133,8 @@ module.exports = exports = {
       try {
         const decodedJson = decodeHtmlEntities(platformsData.value);
         platforms.value = JSON.parse(decodedJson);
-        console.log('Loaded platforms:', platforms.value.length);
       } catch (e) {
         console.error('Failed to parse platforms data:', e);
-        console.error('Data received:', platformsData.value);
         platforms.value = [];
       }
 

@@ -1,6 +1,15 @@
 <?php
 class GiantBombTemplate extends BaseTemplate {
     public function execute() {
+        // Handle API requests first
+        $request = RequestContext::getMain()->getRequest();
+        $action = $request->getText('action', '');
+        
+        if ($action === 'get-releases') {
+            require_once __DIR__ . '/api/releases-api.php';
+            return;
+        }
+        
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
