@@ -54,6 +54,12 @@ This uses a pre-built database snapshot with 5 wiki pages ready for development!
 
 - This will import a full data set. It will use all possible CPU cores avaiable and will take hours to run. There are ~426000 pages to import.
 
+- You can also run the following to rebuild all of the Semantic data so SMW queries can be run. You can use the site while this is running, it will take many hours to run.
+
+```bash
+./setupdata.sh --smw
+```
+
 ### Method 2: Include API Database (Optional)
 
 If you want to generate **new wiki pages** from the 86,147 games in the API:
