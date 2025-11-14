@@ -56,10 +56,9 @@ function groupReleasesByPeriod($releases) {
         $timestamp = $release['sortTimestamp'];
         
         if ($specificity === 'full') {
-            $weekStart = strtotime('sunday this week', $timestamp);
-            if (date('w', $timestamp) == 0) {
-                $weekStart = $timestamp;
-            }
+            // Calculate the Sunday that starts the week containing this date
+            $dayOfWeek = date('w', $timestamp); // 0 (Sunday) through 6 (Saturday)
+            $weekStart = strtotime('-' . $dayOfWeek . ' days', $timestamp);
             $weekEnd = strtotime('+6 days', $weekStart);
             
             $groupKey = date('Y-W', $weekStart);
@@ -95,7 +94,7 @@ function groupReleasesByPeriod($releases) {
     }
     
     uasort($groups, function($a, $b) {
-        return strcmp($b['sortKey'], $a['sortKey']);
+        return strcmp($a['sortKey'], $b['sortKey']);
     });
     
     return array_values($groups);
@@ -113,7 +112,11 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
     $platformMappings = loadPlatformMappings();
     
     try {
-        $queryConditions = '[[Has object type::Release]][[Has release date::+]][[-Has subobject::~*/Releases]]';
+        // Calculate date range: today to one month in the future
+        $today = date('Y-m-d');
+        $oneMonthFromNow = date('Y-m-d', strtotime('+1 month'));
+        
+        $queryConditions = '[[Has object type::Release]][[Has release date::>' . $today . ']][[Has release date::<' . $oneMonthFromNow . ']][[-Has subobject::~*/Releases]]';
         
         if (!empty($filterRegion)) {
             $queryConditions .= '[[Has region::' . $filterRegion . ']]';
@@ -124,7 +127,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
         }
         
         $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
-        $params = '|sort=Has release date|order=desc|limit=500';
+        $params = '|sort=Has release date|order=asc|limit=50';
         
         $fullQuery = $queryConditions . $printouts . $params;
         
