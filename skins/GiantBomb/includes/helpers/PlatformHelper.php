@@ -156,3 +156,94 @@ function getPlatformData($platformName) {
     return null;
 }
 
+/**
+ * Get all platforms
+ * 
+ * Returns an array of platforms with name, displayName, and abbreviation.
+ * Results are cached along with the platform mappings.
+ * 
+ * @return array Array of platform objects with 'name', 'displayName', and 'abbreviation' keys
+ * 
+ * @example
+ * $platforms = getAllPlatforms();
+ * foreach ($platforms as $platform) {
+ *     echo $platform['displayName']; // "PlayStation 5"
+ * }
+ */
+function getAllPlatforms() {
+    $cache = MediaWiki\MediaWikiServices::getInstance()->getMainWANObjectCache();
+    $cacheKey = $cache->makeKey('platforms', 'list-all', 'v1');
+    
+    // Check if we have cached data
+    $cachedData = $cache->get($cacheKey);
+    if ($cachedData !== false) {
+        error_log("✓ Platform list: CACHE HIT (using cached data)");
+        return $cachedData;
+    }
+    
+    error_log("⚠ Platform list: CACHE MISS (querying database)");
+    
+    return $cache->getWithSetCallback(
+        $cacheKey,
+        $cache::TTL_DAY,
+        function() {
+            $platforms = [];
+            
+            // Query SMW for all platforms
+            $queryConditions = '[[Category:Platforms]]';
+            $printouts = '|?Has name|?Has short name';
+            $params = '|sort=Has name|order=asc|limit=500';
+            $fullQuery = $queryConditions . $printouts . $params;
+            
+            try {
+                $api = new ApiMain(
+                    new DerivativeRequest(
+                        RequestContext::getMain()->getRequest(),
+                        [
+                            'action' => 'ask',
+                            'query' => $fullQuery,
+                            'format' => 'json',
+                        ],
+                        true
+                    ),
+                    true
+                );
+                
+                $api->execute();
+                $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+                
+                if (isset($result['query']['results'])) {
+                    foreach ($result['query']['results'] as $pageName => $data) {
+                        $printouts = $data['printouts'];
+                        $cleanName = str_replace('Platforms/', '', $pageName);
+                        
+                        // Get display name or fall back to clean name
+                        $displayName = $cleanName;
+                        if (isset($printouts['Has name'][0]) && !empty($printouts['Has name'][0])) {
+                            $displayName = $printouts['Has name'][0];
+                        }
+                        
+                        // Get abbreviation
+                        $abbrev = '';
+                        if (isset($printouts['Has short name'][0])) {
+                            $abbrev = $printouts['Has short name'][0];
+                        }
+                        
+                        $platforms[] = [
+                            'name' => $cleanName,
+                            'displayName' => $displayName,
+                            'abbreviation' => $abbrev ?: $cleanName,
+                        ];
+                    }
+                }
+                
+                error_log("✓ Platform dropdown list: Loaded " . count($platforms) . " platforms (now cached for 24 hours)");
+            } catch (Exception $e) {
+                error_log("✗ Platform dropdown query failed: " . $e->getMessage());
+            }
+            
+            return $platforms;
+        }
+    );
+}
+
