@@ -15,6 +15,7 @@ Loads all platform name to abbreviation mappings from SMW with 24-hour caching.
 **Returns:** `array` - Mapping of platform names to their abbreviations
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/PlatformHelper.php';
 
@@ -28,11 +29,13 @@ echo $platforms['PlayStation 5']; // "PS5" (works with or without namespace)
 Convenience function to get a single platform's abbreviation.
 
 **Parameters:**
+
 - `$platformName` (string) - The platform name (with or without "Platforms/" prefix)
 
 **Returns:** `string` - The platform abbreviation, or basename if not found
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/PlatformHelper.php';
 
@@ -46,11 +49,13 @@ echo getPlatformAbbreviation('Unknown Platform'); // "Unknown Platform" (fallbac
 Get full platform data (extensible for future properties).
 
 **Parameters:**
+
 - `$platformName` (string) - The platform name
 
 **Returns:** `array|null` - Platform data array or null if not found
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/PlatformHelper.php';
 
@@ -104,6 +109,7 @@ Get all platforms formatted for dropdown/select use with 24-hour caching.
 **Returns:** `array` - Array of platform objects with 'name', 'displayName', and 'abbreviation' keys
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/PlatformHelper.php';
 
@@ -133,6 +139,7 @@ Provides utility functions for querying and formatting release data from Semanti
 Formats a release date based on its specificity level.
 
 **Parameters:**
+
 - `$rawDate` (string) - The raw date from SMW (e.g., "1/1986", "10/2003", "12/31/2024")
 - `$timestamp` (int) - The Unix timestamp of the date
 - `$dateType` (string) - The date type: "Year", "Month", "Quarter", "Full", or "None"
@@ -140,6 +147,7 @@ Formats a release date based on its specificity level.
 **Returns:** `string` - The formatted date string
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/ReleasesHelper.php';
 
@@ -159,11 +167,13 @@ Groups releases by time period based on their date specificity.
 - **Year dates** → Grouped by year
 
 **Parameters:**
+
 - `$releases` (array) - Array of release data with 'sortTimestamp' and 'dateSpecificity' keys
 
 **Returns:** `array` - Array of grouped releases with 'label', 'releases', and 'sortKey'
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/ReleasesHelper.php';
 
@@ -181,12 +191,14 @@ foreach ($weekGroups as $group) {
 Queries release data from Semantic MediaWiki with optional filters.
 
 **Parameters:**
+
 - `$filterRegion` (string, optional) - Filter by region (e.g., "United States", "Japan")
 - `$filterPlatform` (string, optional) - Filter by platform name without "Platforms/" prefix
 
 **Returns:** `array` - Array of release data with deduplication
 
 **Example:**
+
 ```php
 require_once __DIR__ . '/helpers/ReleasesHelper.php';
 
@@ -220,6 +232,7 @@ ReleasesHelper automatically loads PlatformHelper for platform abbreviation look
 ### Deduplication
 
 The `queryReleasesFromSMW()` function automatically deduplicates releases based on:
+
 - Game title
 - Release date
 - Region
@@ -230,6 +243,7 @@ This prevents the same release from appearing multiple times.
 ### Usage in Views and API
 
 **In a view file:**
+
 ```php
 <?php
 require_once __DIR__ . '/../helpers/ReleasesHelper.php';
@@ -245,6 +259,7 @@ $data = ['weekGroups' => $weekGroups];
 ```
 
 **In an API endpoint:**
+
 ```php
 <?php
 require_once __DIR__ . '/../helpers/ReleasesHelper.php';
@@ -264,4 +279,3 @@ echo json_encode(['weekGroups' => $weekGroups]);
 - `views/new-releases-page.php` - Example view implementation
 - `api/releases-api.php` - Example API endpoint implementation
 - `PlatformHelper.php` - Used for platform abbreviations
-
