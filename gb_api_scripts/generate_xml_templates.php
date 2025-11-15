@@ -1182,7 +1182,7 @@ MARKUP,
 |Has guid={{{Guid|}}}
 |Has image={{{Image|}}}
 |Has region={{{Region|}}}
-|Has platforms={{{Platform|}}}
+|Has platforms={{#arraymap:{{{Platform|}}}|,|@@|@@|;}}|+sep=;
 |Has rating={{{Rating|}}}
 |Has developers={{{Developers|}}}
 |Has publishers={{{Publishers|}}}
