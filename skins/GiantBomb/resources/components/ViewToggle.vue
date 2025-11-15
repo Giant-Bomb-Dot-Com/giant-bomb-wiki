@@ -1,7 +1,7 @@
 <template>
   <div class="view-toggle">
-    <button 
-      @click="setView('list')" 
+    <button
+      @click="setView('list')"
       :class="['view-btn', 'view-list', { active: currentView === 'list' }]"
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -11,8 +11,8 @@
       </svg>
       List
     </button>
-    <button 
-      @click="setView('grid')" 
+    <button
+      @click="setView('grid')"
       :class="['view-btn', 'view-grid', { active: currentView === 'grid' }]"
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -32,7 +32,7 @@ const { ref, toRefs, onMounted } = require("vue");
 /**
  * ViewToggle Component
  * Handles switching between grid and list view
- * 
+ *
  * @prop {String} targetContainer - CSS selector for the container to toggle views on
  * @prop {String} storageKey - localStorage key to save the view preference (default: 'viewPreference')
  */
@@ -45,43 +45,43 @@ module.exports = exports = {
     },
     storageKey: {
       type: String,
-      default: 'viewPreference',
+      default: "viewPreference",
     },
   },
   setup(props) {
     const { targetContainer, storageKey } = toRefs(props);
-    const currentView = ref('grid');
+    const currentView = ref("grid");
 
     const setView = (view) => {
       currentView.value = view;
-      
+
       // Find the page container and update its class
       const pageContainer = document.querySelector(targetContainer.value);
       if (pageContainer) {
-        pageContainer.classList.remove('view-list', 'view-grid');
+        pageContainer.classList.remove("view-list", "view-grid");
         pageContainer.classList.add(`view-${view}`);
       }
-      
+
       // Store preference in localStorage
       try {
         localStorage.setItem(storageKey.value, view);
       } catch (e) {
-        console.warn('Could not save view preference:', e);
+        console.warn("Could not save view preference:", e);
       }
     };
 
     onMounted(() => {
       // Load saved preference from localStorage
-      let savedView = 'grid';
+      let savedView = "grid";
       try {
         const stored = localStorage.getItem(storageKey.value);
-        if (stored === 'list' || stored === 'grid') {
+        if (stored === "list" || stored === "grid") {
           savedView = stored;
         }
       } catch (e) {
-        console.warn('Could not load view preference:', e);
+        console.warn("Could not load view preference:", e);
       }
-      
+
       // Apply the saved view
       currentView.value = savedView;
       const pageContainer = document.querySelector(targetContainer.value);
@@ -134,4 +134,3 @@ module.exports = exports = {
   }
 }
 </style>
-
