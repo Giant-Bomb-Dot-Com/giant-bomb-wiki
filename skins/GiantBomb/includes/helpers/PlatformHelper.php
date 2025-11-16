@@ -6,6 +6,9 @@
  * with caching support for performance.
  */
 
+ // Load date helper functions
+ require_once __DIR__ . '/DateHelper.php';
+ 
 /**
  * Load platform name to abbreviation mappings from SMW with caching
  * 
@@ -247,3 +250,171 @@ function getAllPlatforms() {
     );
 }
 
+
+/**
+ * Query platforms from Semantic MediaWiki with optional filters
+ * 
+ * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
+ * @param string $filterGameTitle Optional game title filter
+ * @param string $sort Sort method ('alphabetical' or 'release_date')
+ * @param int $page Current page number (1-based)
+ * @param int $limit Results per page
+ * @return array Array with 'platforms', 'totalCount', 'currentPage', 'totalPages'
+ */
+function queryPlatformsFromSMW($filterLetter = '', $filterGameTitle = '', $sort = 'alphabetical', $page = 1, $limit = 50) {
+    $platforms = [];
+    $totalCount = 0;
+    
+    try {
+        // First, get total count for pagination
+        $countQuery = '[[Category:Platforms]]';
+        
+        if (!empty($filterLetter)) {
+            if ($filterLetter === '#') {
+                // Match platforms starting with numbers
+                $countQuery .= '[[Has name::~0*||~1*||~2*||~3*||~4*||~5*||~6*||~7*||~8*||~9*]]';
+            } else {
+                $countQuery .= '[[Has name::' . $filterLetter . '*]]';
+            }
+        }
+        
+        if (!empty($filterGameTitle)) {
+            $countQuery .= '[[Has games::*' . $filterGameTitle . '*]]';
+        }
+        
+        // Get count
+        $countQueryFull = $countQuery . '|limit=5000';
+        
+        $countApi = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $countQueryFull,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $countApi->execute();
+        $countResult = $countApi->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($countResult['query']['results'])) {
+            $totalCount = count($countResult['query']['results']);
+        }
+        
+        // Calculate pagination
+        $totalPages = max(1, ceil($totalCount / $limit));
+        $page = max(1, min($page, $totalPages));
+        $offset = ($page - 1) * $limit;
+        
+        // Now get the actual data
+        $queryConditions = '[[Category:Platforms]]';
+        
+        if (!empty($filterLetter)) {
+            if ($filterLetter === '#') {
+                $queryConditions .= '[[Has name::~0*||~1*||~2*||~3*||~4*||~5*||~6*||~7*||~8*||~9*]]';
+            } else {
+                $queryConditions .= '[[Has name::' . $filterLetter . '*]]';
+            }
+        }
+        
+        if (!empty($filterGameTitle)) {
+            $queryConditions .= '[[Has games::*' . $filterGameTitle . '*]]';
+        }
+        
+        $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
+        
+        // Set sort order
+        if ($sort === 'release_date') {
+            $params = '|sort=Has release date|order=desc';
+        } else {
+            $params = '|sort=Has name|order=asc';
+        }
+        
+        $params .= '|limit=' . $limit . '|offset=' . $offset;
+        
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        $api = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $fullQuery,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $api->execute();
+        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($result['query']['results']) && is_array($result['query']['results'])) {
+            foreach ($result['query']['results'] as $pageName => $pageData) {
+                $platformData = [];
+                $printouts = $pageData['printouts'];
+                
+                // Add URL for the platform
+                $platformData['url'] = $pageData['fullurl'] ?? '';
+                
+                if (isset($printouts['Has name']) && count($printouts['Has name']) > 0) {
+                    $name = $printouts['Has name'][0];
+                    $platformData['title'] = $name;
+                } else {
+                    // Fallback to page name without namespace
+                    $platformData['title'] = str_replace('Platforms/', '', $pageName);
+                }
+                
+                if (isset($printouts['Has short name']) && count($printouts['Has short name']) > 0) {
+                    $shortName = $printouts['Has short name'][0];
+                    $platformData['shortName'] = $shortName;
+                }
+                
+                if (isset($printouts['Has deck']) && count($printouts['Has deck']) > 0) {
+                    $deck = $printouts['Has deck'][0];
+                    $platformData['deck'] = $deck;
+                }
+                
+                if (isset($printouts['Has release date']) && count($printouts['Has release date']) > 0) {
+                    $releaseDate = $printouts['Has release date'][0];
+                    $rawDate = $releaseDate['raw'] ?? '';
+                    $timestamp = $releaseDate['timestamp'] ?? strtotime($rawDate);
+                    $platformData['releaseDate'] = $rawDate;
+                    $platformData['releaseDateTimestamp'] = $timestamp;
+                    $platformData['sortTimestamp'] = $timestamp;
+                    
+                    $dateType = 'Full';
+                    if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {
+                        $dateType = $printouts['Has release date type'][0];
+                    }
+                    
+                    $platformData['dateSpecificity'] = strtolower($dateType);
+                    $platformData['releaseDateFormatted'] = formatReleaseDate($rawDate, $timestamp, $dateType);
+                }
+                
+                if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
+                    $image = $printouts['Has image'][0];
+                    $platformData['image'] = $image['fullurl'] ?? '';
+                    $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $platformData['image']);
+                }
+                
+                $platforms[] = $platformData;
+            }
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error querying platforms: " . $e->getMessage());
+    }
+    
+    return [
+        'platforms' => $platforms,
+        'totalCount' => $totalCount,
+        'currentPage' => $page,
+        'totalPages' => max(1, ceil($totalCount / $limit)),
+    ];
+}

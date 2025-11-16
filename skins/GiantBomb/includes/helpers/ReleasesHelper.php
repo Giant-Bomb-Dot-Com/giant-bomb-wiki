@@ -11,32 +11,8 @@ use MediaWiki\MediaWikiServices;
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
 
-/**
- * Format a date based on the "Has release date type" property
- * 
- * @param string $rawDate The raw date from SMW (e.g., "1/1986", "10/2003", "12/31/2024")
- * @param int $timestamp The timestamp of the date
- * @param string $dateType The date type: "Year", "Month", "Quarter", "Full", or "None"
- * @return string The formatted date string
- */
-function formatReleaseDate($rawDate, $timestamp, $dateType) {
-    if (!$timestamp || $dateType === 'None') {
-        return $rawDate;
-    }
-    
-    switch ($dateType) {
-        case 'Year':
-            return date('Y', $timestamp);
-        case 'Month':
-            return date('F Y', $timestamp);
-        case 'Quarter':
-            $quarter = ceil(date('n', $timestamp) / 3);
-            return 'Q' . $quarter . ' ' . date('Y', $timestamp);
-        case 'Full':
-        default:
-            return date('F j, Y', $timestamp);
-    }
-}
+// Load date helper functions
+require_once __DIR__ . '/DateHelper.php';
 
 /**
  * Group releases by time period based on date specificity
@@ -127,7 +103,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
         }
         
         $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
-        $params = '|sort=Has release date|order=asc|limit=50';
+        $params = '|sort=Has release date|order=desc|limit=50';
         
         $fullQuery = $queryConditions . $printouts . $params;
         
