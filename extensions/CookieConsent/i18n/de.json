@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"cookieconsent-desc": "DSGVO-konformer Cookie-Hinweis für MediaWiki",
+	"cookieconsent-manage-preferences": "Cookie-Einstellungen verwalten",
+	"cookieconsent-manage-preferences-short": "Einstellungen verwalten",
+	"cookieconsent-accept-all": "Alle Cookies akzeptieren",
+	"cookieconsent-simple-dialog-title": "Cookies",
+	"cookieconsent-detailed-dialog-title": "Cookie Einstellungen",
+	"cookieconsent-save-preferences": "Speichern",
+	"cookieconsent-category-name-strictly-necessary": "Unbedingt erforderliche Cookies",
+	"cookieconsent-category-name-preference": "Einstellungs-Cookies",
+	"cookieconsent-category-name-statistics": "Analytische Cookies",
+	"cookieconsent-category-name-marketing": "Werbe-Cookies",
+	"cookieconsent-category-desc-strictly-necessary": "Diese Cookies sind wichtig, damit du auf der Website surfen und ihre Funktionen nutzen kannst, z. B. um auf sichere Bereiche der Website zuzugreifen. Deine Cookie-Einstellungen fallen ebenfalls unter diese Kategorie.",
+	"cookieconsent-category-desc-preference": "Diese Cookies werden auch als „Funktionscookies“ bezeichnet und ermöglichen es der Website, sich an deine früheren Entscheidungen zu erinnern, beispielsweise an deine bevorzugte Sprache oder deinen Benutzernamen und dein Kennwort, damit du dich automatisch anmelden kannst.",
+	"cookieconsent-category-desc-statistics": "Diese Cookies werden auch als „Performance-Cookies“ bezeichnet und sammeln Informationen darüber, wie du die Website nutzt, etwa welche Seiten du besuchst und auf welche Links du geklickt hast. Keine dieser Informationen kann dazu verwendet werden, dich zu identifizieren. Ihr einziger Zweck ist die Verbesserung der Website-Funktionen.",
+	"cookieconsent-category-desc-marketing": "Diese Cookies verfolgen deine Online-Aktivitäten, um Werbetreibenden dabei zu helfen, dir relevantere Werbung anzuzeigen oder die Häufigkeit der Anzeige einer Anzeige zu begrenzen. Diese Cookies können diese Informationen an andere Organisationen oder Werbetreibende weitergeben.",
+	"cookieconsent-detailed-dialog-intro": "<p>Wir verwenden Cookies (und ähnliche Technologien), um Inhalte zu personalisieren, die Website zu verbessern und den Datenverkehr zu analysieren.</p><p>Mit diesen Cookies sammeln wir und unsere Partner Informationen über dich und verfolgen din Internetverhalten innerhalb und möglicherweise auch außerhalb unserer Website. Auf diese Weise erstellen wir dein persönliches Profil. Damit passen wir unsere Website und Kommunikation an deine Präferenzen an. Wir können auch gezielte Werbung basierend auf deinem aktuellen Internetverhalten anzeigen. Weitere Informationen hierzu findest du in unserer [[privacy policy|Datenschutzrichtlinie]].</p><p> Durch das Aktualisieren deiner Cookie-Einstellungen wird die Seite neu geladen.</p>",
+	"cookieconsent-detailed-dialog-outro": "<p>Deine Cookie-Einstellungen werden ein Jahr lang gespeichert. Wenn du deine Cookie-Einstellungen zwischenzeitlich ändern möchtest, kannst du dies über den Link in der Fußzeile der Website tun. Deine aktualisierten Cookie-Einstellungen werden erneut ein Jahr lang gespeichert.</p>",
+	"cookieconsent-simple-dialog-content": "<p>Wir verwenden Cookies (und ähnliche Technologien), um Inhalte zu personalisieren, die Website zu verbessern und den Datenverkehr zu analysieren.</p><p>Mit diesen Cookies sammeln wir und unsere Partner Informationen über dich und verfolgen dein Internetverhalten innerhalb und möglicherweise auch außerhalb unserer Website. Auf diese Weise erstellen wir dein persönliches Profil. Damit passen wir unsere Website und Kommunikation an deine Präferenzen an. Wir können auch gezielte Werbung basierend auf deinem aktuellen Internetverhalten anzeigen. Weitere Informationen hierzu findest du in unserer [[privacy policy|Datenschutzrichtlinie]].</p><p> Wenn du deine Cookie-Einstellungen verwalten möchtest, klicke auf <b>Einstellungen verwalten</b>. Indem du auf <b>Alle akzeptieren</b> klickst, stimmst du der Verwendung sämtlicher Cookies zu. Du kannst deine Zustimmung jederzeit ändern oder widerrufen.</p>"
+}

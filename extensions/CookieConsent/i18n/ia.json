@@ -1,0 +1,25 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"cookieconsent-desc": "Notitia de cookies conforme al RGPD pro MediaWiki",
+	"cookieconsent-manage-preferences": "Gerer preferentias de cookies",
+	"cookieconsent-manage-preferences-short": "Gerer preferentias",
+	"cookieconsent-accept-all": "Acceptar tote le cookies",
+	"cookieconsent-simple-dialog-title": "Cookies",
+	"cookieconsent-detailed-dialog-title": "Preferentias de cookies",
+	"cookieconsent-save-preferences": "Salveguardar",
+	"cookieconsent-category-name-strictly-necessary": "Cookies indispensabile",
+	"cookieconsent-category-name-preference": "Cookies de preferentias",
+	"cookieconsent-category-name-statistics": "Cookies de analyse",
+	"cookieconsent-category-name-marketing": "Cookies de publicitate",
+	"cookieconsent-category-desc-strictly-necessary": "Iste cookies es essential pro poter navigar per le sito web e usar su functiones, tales como acceder a areas secur del sito. Tu preferentias de cookies cade etiam sub iste categoria.",
+	"cookieconsent-category-desc-preference": "Equalmente cognoscite como “cookies de functionalitate”, iste cookies permitte al sito web memorar le selectiones que tu ha facite in le passato, como le lingua de tu preferentia o tu nomine de usator e contrasigno, de maniera que tu pote aperir session automaticamente.",
+	"cookieconsent-category-desc-statistics": "Equalmente cognoscite como “cookies de prestation”, iste cookies collige informationes sur tu uso del sito web, como le paginas que tu ha visitate e le ligamines sur le quales tu ha cliccate. Necun de iste informationes pote esser usate pro identificar te. Lor unic proposito es meliorar le functiones del sito web.",
+	"cookieconsent-category-desc-marketing": "Iste cookies tracia tu activitate in linea pro adjutar le annunciatores a fornir publicitate plus relevante o pro limitar le numero de vices que tu vide un annuncio. Iste cookies pote condivider tal informationes con altere organisationes o annunciatores.",
+	"cookieconsent-detailed-dialog-intro": "<p>Nos usa cookies (e technologias similar) pro personalisar contento, meliorar le sito web e analysar le traffico.</p><p>Con iste cookies nos e nostre socios collige informationes sur te e tracia tu comportamento in internet sur nostre sito web, e possibilemente etiam foras de illo. In iste maniera nos construe tu profilo personal. Con isto nos adapta nostre sito web e communication a tu preferentias. Nos pote etiam monstrar annuncios a base de tu recente comportamento in internet. Tu pote leger plus sur isto in nostre [[privacy policy|politica de confidentialitate]].</p><p>Actualisar tu preferentias de cookies recargara le pagina.</p>",
+	"cookieconsent-detailed-dialog-outro": "<p>Tu preferentias de cookies se immagazina durante un anno. Si tu vole cambiar tu preferentias de cookies intertanto, tu pote usar le ligamine in le pede del sito web. Tu preferentias de cookies actualisate essera de novo immagazinate pro un anno.</p>",
+	"cookieconsent-simple-dialog-content": "<p>Nos usa cookies (e technologias similar) pro personalisar contento, meliorar le sito web e analysar le traffico.</p><p>Con iste cookies nos e nostre socios collige informationes sur te e tracia tu comportamento in internet sur nostre sito web, e possibilemente etiam foras de illo. In iste maniera nos construe tu profilo personal. Con isto nos adapta nostre sito web e communication a tu preferentias. Nos pote etiam monstrar annuncios a base de tu recente comportamento in internet. Tu pote leger plus sur isto in nostre [[privacy policy|politica de confidentialitate]].</p><p>Si tu vole gerer tu preferentias de cookies, clicca sur <b>Gerer preferentias</b>. Si tu clicca sur <b>Acceptar totes</b>, tu consenti al uso de tote le cookies. Tu pote cambiar o retirar tu consentimento in omne momento.</p>"
+}

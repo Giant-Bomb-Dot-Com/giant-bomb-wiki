@@ -304,6 +304,7 @@ wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
+wfLoadExtension( 'CookieConsent' );
 
 $wgGiantBombResolveFields = [
 	'displaytitle',

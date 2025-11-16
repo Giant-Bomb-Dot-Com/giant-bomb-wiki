@@ -29,7 +29,8 @@
       "styles": [
         "resources/css/styles.css",
         "resources/css/landingPage.css",
-        "resources/css/gamePage.css"
+        "resources/css/gamePage.css",
+        "resources/css/cookieConsent.css"
       ]
     },
     "skins.giantbomb.js": {
