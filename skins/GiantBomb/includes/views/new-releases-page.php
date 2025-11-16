@@ -14,9 +14,10 @@ require_once __DIR__ . '/../helpers/ReleasesHelper.php';
 $request = RequestContext::getMain()->getRequest();
 $filterRegion = $request->getText('region', '');
 $filterPlatform = $request->getText('platform', '');
+$sort = $request->getText('sort', 'release_date');
 
 // Query releases using helper function
-$releases = queryReleasesFromSMW($filterRegion, $filterPlatform);
+$releases = queryReleasesFromSMW($filterRegion, $filterPlatform, $sort);
 
 // Group releases by time period
 $weekGroups = groupReleasesByPeriod($releases);

@@ -10,6 +10,11 @@ class GiantBombTemplate extends BaseTemplate {
             return;
         }
         
+        if ($action === 'get-platforms') {
+            require_once __DIR__ . '/api/platforms-api.php';
+            return;
+        }
+        
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
@@ -19,6 +24,7 @@ class GiantBombTemplate extends BaseTemplate {
         $isGamePage = strpos($pageTitle, 'Games/') === 0 &&
                       substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
+        $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
         error_log("Current page title: " . $pageTitle);
         
 
@@ -49,6 +55,11 @@ class GiantBombTemplate extends BaseTemplate {
             // Show new releases page
 ?>
         <?php include __DIR__ . '/views/new-releases-page.php'; ?>
+<?php
+        } elseif ($isPlatformsPage) {
+            // Show platforms page
+?>
+        <?php include __DIR__ . '/views/platforms-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages
