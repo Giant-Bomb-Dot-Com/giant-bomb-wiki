@@ -1,0 +1,36 @@
+composer.phar
+composer.lock
+
+vendor/
+node_modules/
+
+.idea/
+
+.DS_Store
+.eslintcache
+.api-testing.config.json
+.phpunit.result.cache
+
+# Editors
+*.kate-swp
+*~
+\#*#
+.#*
+.*.swp
+.project
+.buildpath
+.classpath
+.settings
+cscope.files
+cscope.out
+*.orig
+## NetBeans
+nbproject*
+project.index
+## Sublime
+sublime-*
+sftp-config.json
+
+# federated properties VM
+build/federated-properties/vagrant/.vagrant
+.vscode

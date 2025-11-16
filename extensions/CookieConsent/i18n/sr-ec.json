@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Milicevic01"
+		]
+	},
+	"cookieconsent-accept-all": "Прихватам све",
+	"cookieconsent-simple-dialog-title": "Колачићи",
+	"cookieconsent-detailed-dialog-title": "Подешавање колачића",
+	"cookieconsent-save-preferences": "Сачувај",
+	"cookieconsent-category-name-strictly-necessary": "Само неопходни колачићи",
+	"cookieconsent-category-name-statistics": "Аналитички колачићи",
+	"cookieconsent-category-name-marketing": "Рекламни колачићи"
+}

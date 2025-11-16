@@ -1,0 +1,54 @@
+{
+	"root": true,
+	"globals": {
+		"dataTypes": false,
+		"dataValues": false,
+		"util": false,
+		"valueFormatters": false,
+		"valueParsers": false
+	},
+	"rules": {
+		"compat/compat": "error",
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1,
+				"MemberExpression": "off"
+			}
+		],
+		"jsdoc/require-param": "off",
+		"max-len": "off",
+		"mediawiki/valid-package-file-require": "error",
+		"new-cap": "off",
+		"no-underscore-dangle": "off",
+		"no-use-before-define": [
+			"error",
+			"nofunc"
+		],
+		"no-unused-vars": [
+			"error",
+			{
+				"args": "none"
+			}
+		],
+		"no-useless-concat": "off",
+		"one-var": "off",
+		"operator-linebreak": "off",
+		"valid-jsdoc": "off",
+		"vars-on-top": "off",
+		"mediawiki/class-doc": "off",
+		"no-jquery/no-class-state": "off",
+		"no-jquery/no-global-selector": "off",
+		"no-shadow": "warn"
+	},
+	"settings": {
+		"no-jquery": {
+			"variablePattern": "^_?\\$.|^element$"
+		}
+	},
+	"plugins": [
+		"compat",
+		"mediawiki"
+	]
+}

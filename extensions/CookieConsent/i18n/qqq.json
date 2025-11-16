@@ -1,0 +1,27 @@
+{
+	"@metadata": {
+		"authors": [
+			"Marijn van Wezel"
+		]
+	},
+	"cookieconsent-desc": "{{desc|name=CookieConsent|url=https://www.mediawiki.org/wiki/Extension:CookieConsent}}",
+	"cookieconsent-extensionname": "{{name}}",
+	"cookieconsent-manage-preferences": "Text for the button shown in the footer of each page that opens the detailed dialog for managing cookie consent.",
+	"cookieconsent-manage-preferences-short": "Button shown on the right of the dialog for managing cookie consent that opens a new dialog with more detailed consent preferences.",
+	"cookieconsent-accept-all": "Button shown on the left of the dialog for managing cookie consent that accepts all cookies immediately.",
+	"cookieconsent-simple-dialog-title": "Title shown in the simple initial dialog for managing cookie consent.",
+	"cookieconsent-detailed-dialog-title": "Title shown in the detailed dialog for managing cookie consent.",
+	"cookieconsent-save-preferences": "Button to save the preferences.",
+	"cookieconsent-category-name-strictly-necessary": "Name of the 'strictly-necessary' cookie category as shown to the user.",
+	"cookieconsent-category-name-preference": "Name of the 'preference' cookie category as shown to the user.",
+	"cookieconsent-category-name-statistics": "Name of the 'statistics' cookie category as shown to the user.",
+	"cookieconsent-category-name-marketing": "Name of the 'marketing' cookie category as shown to the user.",
+	"cookieconsent-category-desc-strictly-necessary": "Description of the 'strictly-necessary' cookie category as shown to the user.",
+	"cookieconsent-category-desc-preference": "Description of the 'preference' cookie category as shown to the user.",
+	"cookieconsent-category-desc-statistics": "Description of the 'statistics' cookie category as shown to the user.",
+	"cookieconsent-category-desc-marketing": "Description of the 'marketing' cookie category as shown to the user.",
+	"cookieconsent-detailed-dialog-intro": "Text shown at the top of the detailed consent dialog.",
+	"cookieconsent-detailed-dialog-outro": "Text shown at the bottom of the detailed consent dialog.",
+	"cookieconsent-simple-dialog-content": "Content of the simple cookie consent dialog as shown when the user first opens the wiki."
+
+}

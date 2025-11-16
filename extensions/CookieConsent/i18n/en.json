@@ -1,0 +1,26 @@
+{
+	"@metadata": {
+		"authors": [
+			"Marijn van Wezel"
+		]
+	},
+	"cookieconsent-desc": "GDPR-compliant cookie notice for MediaWiki",
+	"cookieconsent-extensionname": "CookieConsent",
+	"cookieconsent-manage-preferences": "Manage cookie preferences",
+	"cookieconsent-manage-preferences-short": "Manage preferences",
+	"cookieconsent-accept-all": "Accept all cookies",
+	"cookieconsent-simple-dialog-title": "Cookies",
+	"cookieconsent-detailed-dialog-title": "Cookie preferences",
+	"cookieconsent-save-preferences": "Save",
+	"cookieconsent-category-name-strictly-necessary": "Strictly necessary cookies",
+	"cookieconsent-category-name-preference": "Preference cookies",
+	"cookieconsent-category-name-statistics": "Analytical cookies",
+	"cookieconsent-category-name-marketing": "Advertising cookies",
+	"cookieconsent-category-desc-strictly-necessary": "These cookies are essential for you to browse the website and use its features, such as accessing secure areas of the site. Your cookie preferences also fall under this category.",
+	"cookieconsent-category-desc-preference": "Also known as \"functionality cookies\", these cookies allows the website to remember choices you have made in the past, like what language you prefer or what your user name and password are so you can automatically log in.",
+	"cookieconsent-category-desc-statistics": "Also known as \"performance cookies\", these cookies collect information about how you use the website, like which pages you visited and which links you clicked on. None of this information can be used to identify you. Their sole purpose is to improve website functions.",
+	"cookieconsent-category-desc-marketing": "These cookies track your online activity to help advertisers deliver more relevant advertising or to limit how many times you see an ad. These cookies can share that information with other organizations or advertisers.",
+	"cookieconsent-detailed-dialog-intro": "<p>We use cookies (and similar technologies) to personalise content, improve the website and analyse traffic.</p><p>With these cookies we and our partners collect information about you and track your internet behavior within, and possibly also outside our website. In this way we build your personal profile. With this we adapt our website and communication to your preferences. We can also show targeted advertisements based on your recent internet behavior. You can read more about it in our [[privacy policy]].</p><p>Updating your cookie preferences will reload the page.</p>",
+	"cookieconsent-detailed-dialog-outro": "<p>Your cookie preferences will be stored for one year. If you want to change your cookie preferences in the meantime, you can use the link in the footer of the website. Your updated cookie preferences will again be stored for one year.</p>",
+	"cookieconsent-simple-dialog-content": "<p>We use cookies (and similar technologies) to personalise content, improve the website and analyse traffic.</p><p>With these cookies we and our partners collect information about you and track your internet behavior within, and possibly also outside our website. In this way we build your personal profile. With this we adapt our website and communication to your preferences. We can also show targeted advertisements based on your recent internet behavior. You can read more about it in our [[privacy policy]].</p><p>If you want to manage your cookie preferences, click on <b>Manage preferences</b>. By clicking on <b>Accept all</b>, you agree to the use of all cookies. You can change or withdraw your consent at any time.</p>"
+}

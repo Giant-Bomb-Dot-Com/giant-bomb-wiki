@@ -1,0 +1,99 @@
+{
+  "name": "CookieConsent",
+  "type": "other",
+  "version": "0.2.0",
+  "author": [
+    "Marijn van Wezel ([https://wikibase-solutions.com Wikibase Solutions])"
+  ],
+  "url": "https://www.mediawiki.org/wiki/Extension:CookieConsent",
+  "descriptionmsg": "cookieconsent-desc",
+  "license-name": "GPL-2.0-or-later",
+  "requires": {
+    "MediaWiki": ">= 1.35.3",
+    "platform": {
+      "php": ">= 7.4.3"
+    }
+  },
+  "MessagesDirs": {
+    "CookieConsent": [
+      "i18n"
+    ]
+  },
+  "AutoloadNamespaces": {
+    "MediaWiki\\Extension\\CookieConsent\\": "src/"
+  },
+  "config": {
+	"CookieConsentCategories": {
+	  "value": {
+		"preference": {
+		  "namemsg": "cookieconsent-category-name-preference",
+		  "descriptionmsg": "cookieconsent-category-desc-preference"
+		},
+		"statistics": {
+		  "namemsg": "cookieconsent-category-name-statistics",
+		  "descriptionmsg": "cookieconsent-category-desc-statistics"
+		},
+		"marketing": {
+		  "namemsg": "cookieconsent-category-name-marketing",
+		  "descriptionmsg": "cookieconsent-category-desc-marketing"
+		}
+	  },
+	  "merge_strategy": "provide_default"
+	}
+  },
+  "HookHandlers": {
+	"main": {
+	  "class": "MediaWiki\\Extension\\CookieConsent\\Hooks"
+	}
+  },
+  "Hooks": {
+	"BeforePageDisplay": "main",
+	"ResourceLoaderGetConfigVars": "main",
+	"SkinAddFooterLinks": "main"
+  },
+  "ResourceModules": {
+	"ext.CookieConsent": {
+	  "localBasePath": "resources/ext.CookieConsent",
+      "remoteExtPath": "CookieConsent/resources/ext.CookieConsent",
+	  "scripts": [
+		"ext.CookieConsent.js",
+		"ext.CookieConsent.init.js"
+	  ],
+	  "styles": [
+		"ext.CookieConsent.css"
+	  ],
+	  "messages": [
+		"back",
+		"cancel",
+		"cookieconsent-detailed-dialog-title",
+		"cookieconsent-simple-dialog-title",
+		"cookieconsent-manage-preferences",
+		"cookieconsent-manage-preferences-short",
+		"cookieconsent-save-preferences",
+		"cookieconsent-accept-all",
+		"cookieconsent-category-name-strictly-necessary",
+		"cookieconsent-category-name-preference",
+		"cookieconsent-category-name-statistics",
+		"cookieconsent-category-name-marketing",
+		"cookieconsent-category-desc-strictly-necessary",
+		"cookieconsent-category-desc-preference",
+		"cookieconsent-category-desc-statistics",
+		"cookieconsent-category-desc-marketing",
+		"cookieconsent-detailed-dialog-intro",
+		"cookieconsent-detailed-dialog-outro",
+		"cookieconsent-simple-dialog-content"
+	  ],
+      "dependencies": [
+		"mediawiki.cookie",
+		"oojs-ui-core",
+		"oojs-ui-widgets",
+		"oojs-ui-windows"
+	  ]
+	}
+  },
+  "ServiceWiringFiles": [
+    "src/CookieConsent.wiring.php"
+  ],
+  "load_composer_autoloader": true,
+  "manifest_version": 2
+}
