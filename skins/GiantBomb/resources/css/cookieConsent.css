@@ -2,7 +2,9 @@
   color: #000;
 }
 
-.oo-ui-processDialog .oo-ui-actionWidget.oo-ui-labelElement > .oo-ui-buttonElement-button {
+.oo-ui-processDialog
+  .oo-ui-actionWidget.oo-ui-labelElement
+  > .oo-ui-buttonElement-button {
   padding: 10px 12px !important;
 }
 

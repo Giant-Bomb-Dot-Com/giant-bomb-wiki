@@ -1,19 +1,19 @@
 // Copied with modification from CheckUser extension's Gruntfile.js
-'use strict';
-module.exports = function ( grunt ) {
-	var conf = grunt.file.readJSON( 'extension.json' );
-	grunt.loadNpmTasks( 'grunt-eslint' );
-	grunt.loadNpmTasks( 'grunt-banana-checker' );
+"use strict";
+module.exports = function (grunt) {
+	var conf = grunt.file.readJSON("extension.json");
+	grunt.loadNpmTasks("grunt-eslint");
+	grunt.loadNpmTasks("grunt-banana-checker");
 
-	grunt.initConfig( {
+	grunt.initConfig({
 		eslint: {
 			options: {
-				cache: true
+				cache: true,
 			},
-			all: '.'
+			all: ".",
 		},
-		banana: conf.MessagesDirs
-	} );
+		banana: conf.MessagesDirs,
+	});
 
-	grunt.registerTask( 'test', [ 'eslint', 'banana' ] );
+	grunt.registerTask("test", ["eslint", "banana"]);
 };

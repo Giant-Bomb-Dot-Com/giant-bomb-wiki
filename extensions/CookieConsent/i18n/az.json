@@ -1,8 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Nemoralis"
-		]
+		"authors": ["Nemoralis"]
 	},
 	"cookieconsent-desc": "MediaWiki üçün GDPR-a uyğun kuki bildirişi",
 	"cookieconsent-manage-preferences": "Kuki seçimlərini idarə et",

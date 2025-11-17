@@ -1,9 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Marijn van Wezel",
-			"McDutchie"
-		]
+		"authors": ["Marijn van Wezel", "McDutchie"]
 	},
 	"cookieconsent-desc": "AVG-conforme cookiemelding voor MediaWiki",
 	"cookieconsent-extensionname": "CookieConsent",

@@ -1,8 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Mohammed Qays"
-		]
+		"authors": ["Mohammed Qays"]
 	},
 	"cookieconsent-desc": "إشعار ملفات تعريف الارتباط المتوافق مع اللائحة العامة لحماية البيانات لميدياويكي",
 	"cookieconsent-manage-preferences-short": "إدارة التفضيلات",

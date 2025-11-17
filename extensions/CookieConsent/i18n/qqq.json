@@ -1,8 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Marijn van Wezel"
-		]
+		"authors": ["Marijn van Wezel"]
 	},
 	"cookieconsent-desc": "{{desc|name=CookieConsent|url=https://www.mediawiki.org/wiki/Extension:CookieConsent}}",
 	"cookieconsent-extensionname": "{{name}}",
@@ -23,5 +21,4 @@
 	"cookieconsent-detailed-dialog-intro": "Text shown at the top of the detailed consent dialog.",
 	"cookieconsent-detailed-dialog-outro": "Text shown at the bottom of the detailed consent dialog.",
 	"cookieconsent-simple-dialog-content": "Content of the simple cookie consent dialog as shown when the user first opens the wiki."
-
 }

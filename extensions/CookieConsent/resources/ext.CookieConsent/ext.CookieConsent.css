@@ -10,6 +10,8 @@
 	width: 100%;
 }
 
-.cookie-consent-simple-dialog .oo-ui-processDialog-actions-other > span:nth-child(2) {
+.cookie-consent-simple-dialog
+	.oo-ui-processDialog-actions-other
+	> span:nth-child(2) {
 	border-top: 1px solid #c8ccd1 !important;
 }

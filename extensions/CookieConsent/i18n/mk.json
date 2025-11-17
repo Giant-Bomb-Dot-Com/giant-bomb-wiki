@@ -1,8 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Bjankuloski06"
-		]
+		"authors": ["Bjankuloski06"]
 	},
 	"cookieconsent-desc": "Известување за колачиња за МедијаВики во согласност со GDPR",
 	"cookieconsent-manage-preferences": "Управувај со нагодувања за колачиња",

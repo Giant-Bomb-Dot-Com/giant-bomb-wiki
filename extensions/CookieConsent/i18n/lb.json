@@ -1,8 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Volvox"
-		]
+		"authors": ["Volvox"]
 	},
 	"cookieconsent-manage-preferences": "Cookie-Astellunge geréieren",
 	"cookieconsent-manage-preferences-short": "Astellunge geréieren",

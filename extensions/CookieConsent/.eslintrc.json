@@ -22,10 +22,7 @@
 		"mediawiki/valid-package-file-require": "error",
 		"new-cap": "off",
 		"no-underscore-dangle": "off",
-		"no-use-before-define": [
-			"error",
-			"nofunc"
-		],
+		"no-use-before-define": ["error", "nofunc"],
 		"no-unused-vars": [
 			"error",
 			{
@@ -47,8 +44,5 @@
 			"variablePattern": "^_?\\$.|^element$"
 		}
 	},
-	"plugins": [
-		"compat",
-		"mediawiki"
-	]
+	"plugins": ["compat", "mediawiki"]
 }
