@@ -14,11 +14,7 @@
         >
           <a :href="platform.url" class="platform-card-link">
             <div v-if="platform.image" class="platform-image">
-              <img
-                :src="platform.image"
-                :alt="platform.title"
-                loading="lazy"
-              />
+              <img :src="platform.image" :alt="platform.title" loading="lazy" />
             </div>
             <div v-else class="platform-image platform-image-placeholder">
               <img
@@ -114,7 +110,11 @@ module.exports = exports = {
       return textarea.value;
     };
 
-    const fetchPlatforms = async (letter = "", sort = "alphabetical", pageNum = 1) => {
+    const fetchPlatforms = async (
+      letter = "",
+      sort = "alphabetical",
+      pageNum = 1,
+    ) => {
       loading.value = true;
 
       try {
@@ -206,7 +206,10 @@ module.exports = exports = {
     });
 
     onUnmounted(() => {
-      window.removeEventListener("platforms-filter-changed", handleFilterChange);
+      window.removeEventListener(
+        "platforms-filter-changed",
+        handleFilterChange,
+      );
     });
 
     return {
@@ -301,4 +304,3 @@ module.exports = exports = {
   margin-left: 5px;
 }
 </style>
-
