@@ -1,6 +1,15 @@
 <?php
 class GiantBombTemplate extends BaseTemplate {
     public function execute() {
+        // Handle API requests first
+        $request = RequestContext::getMain()->getRequest();
+        $action = $request->getText('action', '');
+        
+        if ($action === 'get-releases') {
+            require_once __DIR__ . '/api/releases-api.php';
+            return;
+        }
+        
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
@@ -9,6 +18,9 @@ class GiantBombTemplate extends BaseTemplate {
         $pageTitle = $title->getText();
         $isGamePage = strpos($pageTitle, 'Games/') === 0 &&
                       substr_count($pageTitle, '/') === 1;
+        $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
+        error_log("Current page title: " . $pageTitle);
+        
 
         if ($isMainPage) {
             // Show landing page for main page
@@ -32,6 +44,11 @@ class GiantBombTemplate extends BaseTemplate {
             // Show custom game page for game pages
 ?>
         <?php include __DIR__ . '/views/game-page.php'; ?>
+<?php
+        } elseif ($isNewReleasesPage) {
+            // Show new releases page
+?>
+        <?php include __DIR__ . '/views/new-releases-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages

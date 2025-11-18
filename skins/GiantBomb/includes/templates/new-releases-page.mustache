@@ -1,0 +1,26 @@
+{{> header }}
+
+<div class="new-releases-page">
+    <div class="releases-header">
+        <h1>Latest Games</h1>
+        <div
+            data-vue-component="ViewToggle"
+            data-target-container=".new-releases-page"
+            data-storage-key="releaseViewPreference">
+        </div>
+    </div>
+
+    <div class="releases-content">
+        <aside class="releases-sidebar">
+            <div
+                data-vue-component="ReleaseFilter"
+                data-platforms-data="{{{vue.platformsJson}}}">
+            </div>
+        </aside>
+
+        <div class="releases-main-wrapper"
+            data-vue-component="ReleaseList"
+            data-initial-data="{{{vue.weekGroupsJson}}}">
+        </div>
+    </div>
+</div>

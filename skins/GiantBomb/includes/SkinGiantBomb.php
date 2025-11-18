@@ -7,6 +7,8 @@ class SkinGiantBomb extends SkinTemplate {
 
     public function initPage( OutputPage $out ) {
         parent::initPage( $out );
+        
+        $out->addMeta( 'viewport', 'width=device-width, initial-scale=1.0' );
 
         // Pass header asset URL to JavaScript
         $headerAssetsUrl = getenv('GB_SITE_SERVER');
