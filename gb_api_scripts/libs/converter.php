@@ -409,7 +409,9 @@ class HtmlToMediaWikiConverter
                     $name = $this->map[$contentTypeId]['content']->getPageName($contentId);
 
                     // convert the slug into the name if missing from the db
-                    if ($name === false) {
+                    if ($name === false || empty($name)) {
+                        // Try to extract name from display text or href
+                        $name = !empty($displayText) ? $displayText : basename($href);
                         $name = str_replace('-',' ',$name);
                         $name = ucwords($name);
                     }
