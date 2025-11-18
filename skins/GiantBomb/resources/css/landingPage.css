@@ -123,6 +123,9 @@
     transform 0.2s,
     box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-card:hover {
@@ -138,6 +141,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .game-card .game-image img {
@@ -148,6 +152,10 @@
 
 .game-card .game-info {
   padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .game-card .game-title {
@@ -155,6 +163,9 @@
   font-size: 1.25rem;
   color: #fff;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .game-card .game-date {
