@@ -48,6 +48,7 @@ RUN cd /var/www/html \
  && docker-php-ext-install zip \
  && cd /var/www/html/extensions/ \
  && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git \
+ && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/CookieConsent \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \
@@ -60,8 +61,8 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # Custom extensions packaged with the image
-COPY ./extensions /var/www/html/extensions
-RUN chown -R www-data:www-data /var/www/html/extensions
+COPY ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
+RUN chown -R www-data:www-data /var/www/html/extensions/GiantBombResolve
 
 # So can be docker exec after build
 COPY installwiki.sh /installwiki.sh
