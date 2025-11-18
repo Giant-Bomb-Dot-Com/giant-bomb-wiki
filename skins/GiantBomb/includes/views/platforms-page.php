@@ -7,16 +7,16 @@ use MediaWiki\MediaWikiServices;
  * Displays a list of all platforms with filtering and pagination
  */
 
-// Load API endpoint for AJAX requests
-require_once __DIR__ . '/../api/platforms-api.php';
-
 require_once __DIR__ . '/../helpers/PlatformHelper.php';
+
+// Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
+http_response_code(200);
 
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $filterLetter = $request->getText('letter', '');
 $filterGameTitle = $request->getText('game_title', '');
-$sort = $request->getText('sort', 'alphabetical');
+$sort = $request->getText('sort', 'release_date');
 $page = $request->getInt('page', 1);
 
 // Query platforms using helper function

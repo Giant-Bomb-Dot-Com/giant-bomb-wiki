@@ -26,8 +26,8 @@
         @change="applyFilters"
         class="filter-select"
       >
-        <option value="alphabetical">Alphabetical</option>
         <option value="release_date">Release Date</option>
+        <option value="alphabetical">Alphabetical</option>
       </select>
     </div>
 
@@ -72,19 +72,19 @@ module.exports = exports = {
     },
     currentSort: {
       type: String,
-      default: "alphabetical",
+      default: "release_date",
     },
   },
   setup(props) {
     const { currentLetter, currentSort } = toRefs(props);
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const selectedLetter = ref("");
-    const selectedSort = ref("alphabetical");
+    const selectedSort = ref("release_date");
     const searchText = ref("");
 
     const hasActiveFilters = computed(() => {
       return (
-        selectedLetter.value !== "" || selectedSort.value !== "alphabetical"
+        selectedLetter.value !== "" || selectedSort.value !== "release_date"
       );
     });
 
@@ -100,7 +100,7 @@ module.exports = exports = {
       }
 
       // Update or remove sort parameter
-      if (selectedSort.value !== "alphabetical") {
+      if (selectedSort.value !== "release_date") {
         params.set("sort", selectedSort.value);
       } else {
         params.delete("sort");
@@ -127,7 +127,7 @@ module.exports = exports = {
 
     const clearFilters = () => {
       selectedLetter.value = "";
-      selectedSort.value = "alphabetical";
+      selectedSort.value = "release_date";
 
       // Update URL without reloading
       const url = new URL(window.location.href);
@@ -138,7 +138,7 @@ module.exports = exports = {
         new CustomEvent("platforms-filter-changed", {
           detail: {
             letter: "",
-            sort: "alphabetical",
+            sort: "release_date",
             page: 1,
           },
         }),

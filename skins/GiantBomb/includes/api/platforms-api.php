@@ -17,7 +17,7 @@ if ($action === 'get-platforms') {
     
     $filterLetter = $request->getText('letter', '');
     $filterGameTitle = $request->getText('game_title', '');
-    $sort = $request->getText('sort', 'alphabetical');
+    $sort = $request->getText('sort', 'release_date');
     $page = $request->getInt('page', 1);
     
     $result = queryPlatformsFromSMW($filterLetter, $filterGameTitle, $sort, $page);

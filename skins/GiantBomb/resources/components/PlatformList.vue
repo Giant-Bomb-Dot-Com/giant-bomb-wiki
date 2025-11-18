@@ -30,7 +30,7 @@
                 {{ platform.deck }}
               </div>
               <div v-if="platform.releaseDateFormatted" class="platform-date">
-                Released: {{ platform.releaseDateFormatted }}
+                Launched on {{ platform.releaseDateFormatted }}
               </div>
             </div>
           </a>
@@ -112,7 +112,7 @@ module.exports = exports = {
 
     const fetchPlatforms = async (
       letter = "",
-      sort = "alphabetical",
+      sort = "release_date",
       pageNum = 1,
     ) => {
       loading.value = true;
@@ -122,7 +122,7 @@ module.exports = exports = {
         const params = new URLSearchParams();
         params.set("action", "get-platforms");
         if (letter) params.set("letter", letter);
-        if (sort !== "alphabetical") params.set("sort", sort);
+        if (sort !== "release_date") params.set("sort", sort);
         params.set("page", pageNum.toString());
 
         const url = `${window.location.pathname}?${params.toString()}`;
@@ -179,7 +179,7 @@ module.exports = exports = {
 
       // Get current filters
       const letter = params.get("letter") || "";
-      const sort = params.get("sort") || "alphabetical";
+      const sort = params.get("sort") || "release_date";
 
       // Fetch new page
       fetchPlatforms(letter, sort, pageNum);

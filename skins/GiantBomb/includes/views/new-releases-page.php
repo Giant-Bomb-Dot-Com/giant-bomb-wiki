@@ -10,6 +10,9 @@ use MediaWiki\MediaWikiServices;
 // Load helper functions
 require_once __DIR__ . '/../helpers/ReleasesHelper.php';
 
+// Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
+http_response_code(200);
+
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $filterRegion = $request->getText('region', '');
