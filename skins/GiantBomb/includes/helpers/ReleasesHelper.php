@@ -107,8 +107,6 @@ function groupReleasesByPeriod($releases) {
  */
 function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
     $releases = [];
-    $platformMappings = loadPlatformMappings();
-    
     try {
         // Calculate date range: today to one month in the future
         $today = date('Y-m-d');
@@ -164,6 +162,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
 function processReleaseQueryResults($results) {
     $releases = [];
     $seenReleases = [];
+    $platformMappings = loadPlatformMappings();
     
     if (isset($results) && is_array($results)) {
         foreach ($results as $pageName => $pageData) {

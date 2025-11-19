@@ -32,6 +32,9 @@
               <div v-if="platform.releaseDateFormatted" class="platform-date">
                 Launched on {{ platform.releaseDateFormatted }}
               </div>
+              <div v-if="platform.gameCount" class="platform-game-count">
+                Games: {{ platform.gameCount }}
+              </div>
             </div>
           </a>
         </div>
