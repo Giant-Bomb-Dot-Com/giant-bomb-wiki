@@ -55,11 +55,11 @@
 		<div class="game-tabs__container">
 			<nav class="game-tabs__nav">
 				<a href="{{game.url}}" class="game-tabs__tab game-tabs__tab--active">Game Wiki</a>
-				<a href="{{game.url}}/Images" class="game-tabs__tab">Images{{#game.imagesCount}} ({{game.imagesCount}}){{/game.imagesCount}}</a>
+				<a href="{{game.url}}/Images" class="game-tabs__tab">Images ({{game.imagesCount}})</a>
 				<a href="{{game.url}}/Forum" class="game-tabs__tab">Forum</a>
 				<a href="{{game.url}}/Guide" class="game-tabs__tab">Guide</a>
 				{{#game.hasReleases}}
-				<a href="{{game.url}}/Releases" class="game-tabs__tab">Releases{{#game.releasesCount}} ({{game.releasesCount}}){{/game.releasesCount}}</a>
+				<a href="{{game.url}}/Releases" class="game-tabs__tab">Releases ({{game.releasesCount}})</a>
 				{{/game.hasReleases}}
 				{{#game.hasDLC}}
 				<a href="{{game.url}}/DLC" class="game-tabs__tab">DLC</a>

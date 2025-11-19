@@ -79,22 +79,15 @@ class PdoDbWrapper implements DbInterface
 
     public function getImageName(int $id)
     {
-        $sql = "SELECT name FROM image WHERE id = :id";
+        $sql = "SELECT path, name FROM image WHERE id = :id";
+        $result = $this->fetchObject($sql, ['id' => $id]);
 
-        return $this->fetchfield($sql, ['id' => $id]);
-    }
+        if (!$result) {
+            return null;
+        }
 
-    public function getImagesForGame(int $gameId)
-    {
-        $sql = "SELECT id, image, caption
-                  FROM image
-                 WHERE assoc_type_id = :assocTypeId AND assoc_id = :gameId
-              ORDER BY id ASC";
-
-        return $this->fetchAllObjects($sql, [
-            'assocTypeId' => self::ASSOC_TYPE_GAME,
-            'gameId' => $gameId
-        ]);
+        // Construct full URL: https://giantbomb.com/a/uploads/original/{path}{name}
+        return 'https://giantbomb.com/a/uploads/original/' . $result->path . $result->name;
     }
 
     public function getCreditsFromDB(int $id)

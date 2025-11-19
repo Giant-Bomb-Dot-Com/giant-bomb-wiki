@@ -2,6 +2,8 @@ services:
   db:
     image: mariadb:11
     command: --skip-name-resolve=0
+    ports:
+      - "3306:3306"
     env_file:
       - .env
     volumes:
