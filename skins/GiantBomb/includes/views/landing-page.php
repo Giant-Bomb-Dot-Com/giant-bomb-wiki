@@ -36,7 +36,7 @@ try {
 		],
 		__METHOD__,
 		[
-			'LIMIT' => 10,
+			'LIMIT' => 150,
 			'ORDER BY' => 'page_id ASC'
 		]
 	);
@@ -100,6 +100,19 @@ try {
 	error_log("Landing page error: " . $e->getMessage());
 }
 
+// Extract unique platforms from all games
+$allPlatforms = [];
+foreach ($games as $game) {
+	if (isset($game['platforms']) && is_array($game['platforms'])) {
+		foreach ($game['platforms'] as $platform) {
+			if (!in_array($platform, $allPlatforms)) {
+				$allPlatforms[] = $platform;
+			}
+		}
+	}
+}
+sort($allPlatforms);
+
 $buttonData = [];
 
 // Populate buttonData from buttons array
@@ -110,10 +123,14 @@ foreach ($buttons as $button) {
     ];
 }
 
-// Set Mustache data - just show all games
+// Set Mustache data - pass games and platforms as JSON for Vue components
 $data = [
     'buttons' => $buttonData,
     'games' => $games,
+    'vue' => [
+        'gamesJson' => htmlspecialchars(json_encode($games), ENT_QUOTES, 'UTF-8'),
+        'platformsJson' => htmlspecialchars(json_encode($allPlatforms), ENT_QUOTES, 'UTF-8'),
+    ],
 ];
 
 // Path to Mustache templates

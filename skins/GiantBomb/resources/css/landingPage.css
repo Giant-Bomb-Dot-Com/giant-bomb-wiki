@@ -29,6 +29,37 @@
   width: 100%;
 }
 
+/* Header with view toggle */
+.landing-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.landing-page-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #fff;
+}
+
+/* Two-column layout: main content + sidebar */
+.landing-page-content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 30px;
+  width: 100%;
+}
+
+.landing-sidebar {
+  order: 2;
+}
+
+.landing-main-wrapper {
+  order: 1;
+  min-width: 0; /* Prevents grid blowout */
+}
+
 #wiki-buttons {
   text-align: center;
   button {
@@ -100,13 +131,12 @@
     margin: 0 3rem 0 1rem;
   }
 }
-/* New simple game card styling */
+/* Enhanced game card styling */
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
   width: 100%;
-  margin-top: 2rem;
 }
 
 .game-card-link {
@@ -116,71 +146,103 @@
 }
 
 .game-card {
-  background: #1a1a1a;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
   border-radius: 8px;
   overflow: hidden;
   transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .game-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(230, 57, 70, 0.3);
+  border-color: #e63946;
 }
 
 .game-card .game-image {
   width: 100%;
-  height: 300px;
+  aspect-ratio: 3/4;
   overflow: hidden;
-  background: #000;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
+}
+
+.game-card .game-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
 }
 
 .game-card .game-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover .game-image img {
+  transform: scale(1.05);
 }
 
 .game-card .game-info {
-  padding: 1rem;
+  padding: 1.25rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  background: #2a2a2a;
 }
 
 .game-card .game-title {
   margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: #fff;
-  font-weight: bold;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.game-card:hover .game-title {
+  color: #e63946;
 }
 
 .game-card .game-date {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.875rem;
-  color: #888;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: #999;
+  font-weight: 500;
 }
 
 .game-card .game-desc {
-  margin: 0;
-  font-size: 0.875rem;
-  color: #ccc;
-  line-height: 1.4;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #bbb;
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -191,7 +253,30 @@
   color: #fff;
 }
 
-/* Responsive design example */
+/* List View Styles - now in viewToggle.css */
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .landing-page-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .landing-sidebar {
+    order: 1;
+  }
+
+  .landing-main-wrapper {
+    order: 2;
+  }
+
+  .landing-page-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 900px) {
   .games-container,
   .random-games-container {
@@ -200,7 +285,32 @@
   }
 
   .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  #landing-page-container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
+  }
+
+  #landing-page-container {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+
+  .game-card .game-info {
+    padding: 1rem;
+  }
+
+  .game-card .game-title {
+    font-size: 1rem;
   }
 }

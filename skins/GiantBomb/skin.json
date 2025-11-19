@@ -30,7 +30,10 @@
         "resources/css/styles.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
-        "resources/css/newReleasesPage.css"
+        "resources/css/newReleasesPage.css",
+        "resources/css/filters.css",
+        "resources/css/itemGrid.css",
+        "resources/css/viewToggle.css"
       ]
     },
     "skins.giantbomb.js": {
@@ -52,6 +55,8 @@
         "resources/components/ViewToggle.vue",
         "resources/components/ReleaseFilter.vue",
         "resources/components/ReleaseList.vue",
+        "resources/components/GameFilter.vue",
+        "resources/components/GameList.vue",
         "resources/helpers/countryFlags.js",
         "resources/data/countryFlags.json"
       ],

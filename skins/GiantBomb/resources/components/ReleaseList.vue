@@ -179,36 +179,9 @@ module.exports = exports = {
 </script>
 
 <style>
-.releases-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #999;
-}
+/* Shared grid/list styles are in itemGrid.css */
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #333;
-  border-top-color: #e63946;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.releases-loading p {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
+/* Component-specific styles */
 .region-flag {
   margin-left: 6px;
   height: 14px;
