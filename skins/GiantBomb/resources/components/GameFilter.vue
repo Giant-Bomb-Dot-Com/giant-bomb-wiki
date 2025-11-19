@@ -1,21 +1,17 @@
 <template>
-  <div class="release-filter">
-    <h3 class="filter-title">Filter</h3>
+  <div class="game-filter">
+    <h3 class="filter-title">Filter Games</h3>
 
     <div class="filter-group">
-      <label for="region-filter" class="filter-label">Region</label>
-      <select
-        id="region-filter"
-        v-model="selectedRegion"
-        @change="applyFilters"
-        class="filter-select"
-      >
-        <option value="">All Regions</option>
-        <option value="United States">United States</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="Japan">Japan</option>
-        <option value="Australia">Australia</option>
-      </select>
+      <label for="search-filter" class="filter-label">Search</label>
+      <input
+        id="search-filter"
+        v-model="searchQuery"
+        @input="applyFilters"
+        type="text"
+        placeholder="Search games..."
+        class="filter-input"
+      />
     </div>
 
     <div class="filter-group">
@@ -29,11 +25,26 @@
         <option value="">All Platforms</option>
         <option
           v-for="platform in platforms"
-          :key="platform.name"
-          :value="platform.name"
+          :key="platform"
+          :value="platform"
         >
-          {{ platform.displayName }}
+          {{ platform }}
         </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sort-filter" class="filter-label">Sort By</label>
+      <select
+        id="sort-filter"
+        v-model="selectedSort"
+        @change="applyFilters"
+        class="filter-select"
+      >
+        <option value="title-asc">Title (A-Z)</option>
+        <option value="title-desc">Title (Z-A)</option>
+        <option value="date-desc">Newest First</option>
+        <option value="date-asc">Oldest First</option>
       </select>
     </div>
 
@@ -51,12 +62,12 @@
 const { ref, computed, toRefs, onMounted } = require("vue");
 
 /**
- * ReleaseFilter Component
- * Handles filtering of releases by region and platform
- * Updates URL query parameters and refreshes the page
+ * GameFilter Component
+ * Handles filtering of games by search query, platform, and sort order
+ * Updates URL query parameters and emits filter events
  */
 module.exports = exports = {
-  name: "ReleaseFilter",
+  name: "GameFilter",
   props: {
     platformsData: {
       type: String,
@@ -66,22 +77,27 @@ module.exports = exports = {
   setup(props) {
     const { platformsData } = toRefs(props);
     const platforms = ref([]);
-    const selectedRegion = ref("");
+    const searchQuery = ref("");
     const selectedPlatform = ref("");
+    const selectedSort = ref("title-asc");
 
     const hasActiveFilters = computed(() => {
-      return selectedRegion.value !== "" || selectedPlatform.value !== "";
+      return (
+        searchQuery.value !== "" ||
+        selectedPlatform.value !== "" ||
+        selectedSort.value !== "title-asc"
+      );
     });
 
     const applyFilters = () => {
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
 
-      // Update or remove region parameter
-      if (selectedRegion.value) {
-        params.set("region", selectedRegion.value);
+      // Update or remove search parameter
+      if (searchQuery.value) {
+        params.set("search", searchQuery.value);
       } else {
-        params.delete("region");
+        params.delete("search");
       }
 
       // Update or remove platform parameter
@@ -91,35 +107,45 @@ module.exports = exports = {
         params.delete("platform");
       }
 
+      // Update or remove sort parameter
+      if (selectedSort.value && selectedSort.value !== "title-asc") {
+        params.set("sort", selectedSort.value);
+      } else {
+        params.delete("sort");
+      }
+
       // Update URL without reloading (for bookmarking/sharing)
       const newUrl = `${url.pathname}?${params.toString()}`;
       window.history.pushState({}, "", newUrl);
 
-      // Emit event for ReleaseList to listen to
+      // Emit event for GameList to listen to
       window.dispatchEvent(
-        new CustomEvent("releases-filter-changed", {
+        new CustomEvent("games-filter-changed", {
           detail: {
-            region: selectedRegion.value,
+            search: searchQuery.value,
             platform: selectedPlatform.value,
+            sort: selectedSort.value,
           },
         }),
       );
     };
 
     const clearFilters = () => {
-      selectedRegion.value = "";
+      searchQuery.value = "";
       selectedPlatform.value = "";
+      selectedSort.value = "title-asc";
 
       // Update URL without reloading
       const url = new URL(window.location.href);
       window.history.pushState({}, "", url.pathname);
 
-      // Emit event to reload all releases
+      // Emit event to reload all games
       window.dispatchEvent(
-        new CustomEvent("releases-filter-changed", {
+        new CustomEvent("games-filter-changed", {
           detail: {
-            region: "",
+            search: "",
             platform: "",
+            sort: "title-asc",
           },
         }),
       );
@@ -144,14 +170,16 @@ module.exports = exports = {
 
       // Read current filter values from URL
       const urlParams = new URLSearchParams(window.location.search);
-      selectedRegion.value = urlParams.get("region") || "";
+      searchQuery.value = urlParams.get("search") || "";
       selectedPlatform.value = urlParams.get("platform") || "";
+      selectedSort.value = urlParams.get("sort") || "title-asc";
     });
 
     return {
       platforms,
-      selectedRegion,
+      searchQuery,
       selectedPlatform,
+      selectedSort,
       hasActiveFilters,
       applyFilters,
       clearFilters,
