@@ -341,6 +341,48 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitle = '', $sort 
 }
 
 /**
+ * Get the number of games for a given platform from Semantic MediaWiki
+ * 
+ * @param string $platformName The platform name (e.g. PC or Platforms/PC)
+ * @return int The number of games associated with the platform
+ */
+function getGameCountForPlatformFromSMW($platformName) {
+    $gameCount = 0;
+    try {
+        $platformName = str_replace('Platforms/', '', $platformName);
+        $queryConditions = '[[Category:Games]][[Has platforms::Platforms/' . $platformName . ']]';
+        $printouts = '|?Has platforms';
+        $params = '|limit=5000';
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        $api = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $fullQuery,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $api->execute();
+        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        error_log("Query: " . $fullQuery);
+        
+        if (isset($result['query']['results'])) {
+            $gameCount = count($result['query']['results']);
+        }
+    } catch (Exception $e) {
+        error_log("Error getting game count for platform: " . $e->getMessage());
+    }
+    return $gameCount;
+}
+
+/**
  * Process the results of the platform query from Semantic MediaWiki and returns an array of platform data
  * 
  * @param array $results The results of the platform query from Semantic MediaWiki
@@ -398,6 +440,8 @@ function processPlatformQueryResults($results) {
                 $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $platformData['image']);
             }
             
+            $platformData['gameCount'] = getGameCountForPlatformFromSMW($pageName);
+            
             $platforms[] = $platformData;
         }
     }
@@ -448,8 +492,6 @@ function getPlatformCountFromSMW($filterLetter = '', $filterGameTitle = '') {
         
         $countApi->execute();
         $countResult = $countApi->getResult()->getResultData(null, ['Strip' => 'all']);
-        
-        error_log("Query: " . $countQueryFull);
         
         if (isset($countResult['query']['results'])) {
             $totalCount = count($countResult['query']['results']);

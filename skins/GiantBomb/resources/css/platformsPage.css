@@ -110,6 +110,14 @@
 .platform-date {
   font-size: 0.8rem;
   color: #999;
+  font-style: italic;
+}
+
+.platform-game-count {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 8px;
 }
 
 /* List View Styles */
