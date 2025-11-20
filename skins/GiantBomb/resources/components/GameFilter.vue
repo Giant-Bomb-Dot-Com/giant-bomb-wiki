@@ -7,7 +7,7 @@
       <input
         id="search-filter"
         v-model="searchQuery"
-        @input="applyFilters"
+        @input="handleSearchInput"
         type="text"
         placeholder="Search games..."
         class="filter-input"
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted } = require("vue");
+const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
 
 /**
  * GameFilter Component
@@ -80,6 +80,7 @@ module.exports = exports = {
     const searchQuery = ref("");
     const selectedPlatform = ref("");
     const selectedSort = ref("title-asc");
+    let searchTimeout = null;
 
     const hasActiveFilters = computed(() => {
       return (
@@ -88,6 +89,18 @@ module.exports = exports = {
         selectedSort.value !== "title-asc"
       );
     });
+
+    const handleSearchInput = () => {
+      // Clear existing timeout
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+
+      // Wait 800ms after user stops typing before applying filters
+      searchTimeout = setTimeout(() => {
+        applyFilters();
+      }, 800);
+    };
 
     const applyFilters = () => {
       const url = new URL(window.location.href);
@@ -114,41 +127,17 @@ module.exports = exports = {
         params.delete("sort");
       }
 
-      // Update URL without reloading (for bookmarking/sharing)
-      const newUrl = `${url.pathname}?${params.toString()}`;
-      window.history.pushState({}, "", newUrl);
+      // Reset to page 1 when filters change
+      params.delete("page");
 
-      // Emit event for GameList to listen to
-      window.dispatchEvent(
-        new CustomEvent("games-filter-changed", {
-          detail: {
-            search: searchQuery.value,
-            platform: selectedPlatform.value,
-            sort: selectedSort.value,
-          },
-        }),
-      );
+      // Reload page with new filters (server-side filtering)
+      window.location.href = `${url.pathname}?${params.toString()}`;
     };
 
     const clearFilters = () => {
-      searchQuery.value = "";
-      selectedPlatform.value = "";
-      selectedSort.value = "title-asc";
-
-      // Update URL without reloading
+      // Reload page without any filter parameters (server-side reset)
       const url = new URL(window.location.href);
-      window.history.pushState({}, "", url.pathname);
-
-      // Emit event to reload all games
-      window.dispatchEvent(
-        new CustomEvent("games-filter-changed", {
-          detail: {
-            search: "",
-            platform: "",
-            sort: "title-asc",
-          },
-        }),
-      );
+      window.location.href = url.pathname;
     };
 
     // Helper function to decode HTML entities
@@ -175,12 +164,20 @@ module.exports = exports = {
       selectedSort.value = urlParams.get("sort") || "title-asc";
     });
 
+    onUnmounted(() => {
+      // Clear any pending search timeout
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    });
+
     return {
       platforms,
       searchQuery,
       selectedPlatform,
       selectedSort,
       hasActiveFilters,
+      handleSearchInput,
       applyFilters,
       clearFilters,
     };

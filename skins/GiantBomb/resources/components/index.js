@@ -16,6 +16,7 @@ const components = {
   ReleaseList: require("./ReleaseList.vue"),
   GameFilter: require("./GameFilter.vue"),
   GameList: require("./GameList.vue"),
+  Pagination: require("./Pagination.vue"),
 };
 
 // Wait for DOM to be ready before mounting components
