@@ -23,8 +23,11 @@ if ($action === 'get-games') {
     
     $response = [
         'success' => true,
-        'games' => $games,
-        'count' => count($games),
+        'games' => $gamesData['games'] ?? [],
+        'totalCount' => $gamesData['totalCount'] ?? 0,
+        'totalPages' => $gamesData['totalPages'] ?? 1,
+        'currentPage' => $gamesData['currentPage'] ?? 1,
+        'hasMore' => ($gamesData['currentPage'] ?? 1) < ($gamesData['totalPages'] ?? 1),
         'filters' => [
             'name' => $filterText
         ]

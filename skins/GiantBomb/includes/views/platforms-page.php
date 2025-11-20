@@ -15,12 +15,12 @@ http_response_code(200);
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $filterLetter = $request->getText('letter', '');
-$filterGameTitle = $request->getText('game_title', '');
+$filterGameTitles = $request->getArray('game_title');
 $sort = $request->getText('sort', 'release_date');
 $page = $request->getInt('page', 1);
 
 // Query platforms using helper function
-$result = queryPlatformsFromSMW($filterLetter, $filterGameTitle, $sort, $page);
+$result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page);
 
 // Format data for Mustache template
 $data = [

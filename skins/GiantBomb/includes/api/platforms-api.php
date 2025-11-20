@@ -16,11 +16,11 @@ if ($action === 'get-platforms') {
     header('Content-Type: application/json');
     
     $filterLetter = $request->getText('letter', '');
-    $filterGameTitle = $request->getText('game_title', '');
+    $filterGameTitles = $request->getArray('game_title');
     $sort = $request->getText('sort', 'release_date');
     $page = $request->getInt('page', 1);
     
-    $result = queryPlatformsFromSMW($filterLetter, $filterGameTitle, $sort, $page);
+    $result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page);
     
     $response = [
         'success' => true,
@@ -30,7 +30,7 @@ if ($action === 'get-platforms') {
         'totalPages' => $result['totalPages'],
         'filters' => [
             'letter' => $filterLetter,
-            'game_title' => $filterGameTitle,
+            'game_titles' => $filterGameTitles,
             'sort' => $sort,
             'page' => $page
         ]
