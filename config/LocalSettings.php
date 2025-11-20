@@ -353,3 +353,6 @@ if ( $wikiEnv === 'dev' ) {
 
 #Allow more results with SMW query
 $smwgQMaxInlineLimit = 7500;
+
+#Allow custom favicon location 
+$wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
