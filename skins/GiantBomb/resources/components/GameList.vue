@@ -5,10 +5,10 @@
       <p>Loading games...</p>
     </div>
 
-    <div v-else-if="filteredGames.length > 0">
+    <div v-else-if="games.length > 0">
       <div class="game-grid">
         <a
-          v-for="(game, index) in filteredGames"
+          v-for="(game, index) in games"
           :key="index"
           :href="game.url"
           class="game-card-link"
@@ -53,6 +53,104 @@
           </div>
         </a>
       </div>
+
+      <!-- Server-side Pagination Controls -->
+      <div class="pagination" v-if="paginationData.totalPages > 1">
+        <div class="pagination-info">
+          Showing {{ paginationData.startItem }}-{{ paginationData.endItem }}
+          of {{ paginationData.totalItems }} items
+        </div>
+
+        <div class="pagination-controls">
+          <a
+            :href="buildPageUrl(1)"
+            :class="[
+              'pagination-btn',
+              'pagination-first',
+              { disabled: paginationData.currentPage === 1 },
+            ]"
+            :aria-disabled="paginationData.currentPage === 1"
+            aria-label="First page"
+          >
+            ««
+          </a>
+
+          <a
+            :href="buildPageUrl(paginationData.currentPage - 1)"
+            :class="[
+              'pagination-btn',
+              'pagination-prev',
+              { disabled: paginationData.currentPage === 1 },
+            ]"
+            :aria-disabled="paginationData.currentPage === 1"
+            aria-label="Previous page"
+          >
+            ‹
+          </a>
+
+          <a
+            v-for="page in visiblePages"
+            :key="page"
+            :href="buildPageUrl(page)"
+            :class="[
+              'pagination-btn',
+              'pagination-page',
+              { active: page === paginationData.currentPage },
+            ]"
+            :aria-label="`Page ${page}`"
+            :aria-current="
+              page === paginationData.currentPage ? 'page' : undefined
+            "
+          >
+            {{ page }}
+          </a>
+
+          <a
+            :href="buildPageUrl(paginationData.currentPage + 1)"
+            :class="[
+              'pagination-btn',
+              'pagination-next',
+              { disabled: paginationData.currentPage === paginationData.totalPages },
+            ]"
+            :aria-disabled="
+              paginationData.currentPage === paginationData.totalPages
+            "
+            aria-label="Next page"
+          >
+            ›
+          </a>
+
+          <a
+            :href="buildPageUrl(paginationData.totalPages)"
+            :class="[
+              'pagination-btn',
+              'pagination-last',
+              { disabled: paginationData.currentPage === paginationData.totalPages },
+            ]"
+            :aria-disabled="
+              paginationData.currentPage === paginationData.totalPages
+            "
+            aria-label="Last page"
+          >
+            »»
+          </a>
+        </div>
+
+        <div class="pagination-size">
+          <label for="items-per-page-games">Items per page:</label>
+          <select
+            id="items-per-page-games"
+            :value="paginationData.itemsPerPage"
+            @change="changeItemsPerPage"
+            class="pagination-select"
+          >
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+            <option :value="75">75</option>
+            <option :value="100">100</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div v-else class="no-games">
@@ -63,11 +161,11 @@
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
+const { ref, computed, toRefs, onMounted } = require("vue");
 
 /**
  * GameList Component
- * Displays games and handles filtering
+ * Displays games with server-side pagination
  */
 module.exports = exports = {
   name: "GameList",
@@ -76,15 +174,23 @@ module.exports = exports = {
       type: String,
       required: true,
     },
+    paginationInfo: {
+      type: String,
+      required: false,
+      default: "{}",
+    },
   },
   setup(props) {
-    const { initialData } = toRefs(props);
-    const allGames = ref([]);
+    const { initialData, paginationInfo } = toRefs(props);
+    const games = ref([]);
     const loading = ref(false);
-    const currentFilters = ref({
-      search: "",
-      platform: "",
-      sort: "title-asc",
+    const paginationData = ref({
+      currentPage: 1,
+      totalPages: 1,
+      itemsPerPage: 25,
+      totalItems: 0,
+      startItem: 0,
+      endItem: 0,
     });
 
     // Helper function to decode HTML entities
@@ -94,90 +200,103 @@ module.exports = exports = {
       return textarea.value;
     };
 
-    // Compute filtered and sorted games based on current filters
-    const filteredGames = computed(() => {
-      let games = [...allGames.value];
+    // Calculate visible pages for pagination
+    const visiblePages = computed(() => {
+      const total = paginationData.value.totalPages;
+      const current = paginationData.value.currentPage;
+      const maxVisible = 5;
 
-      // Filter by search query
-      if (currentFilters.value.search) {
-        const searchLower = currentFilters.value.search.toLowerCase();
-        games = games.filter((game) =>
-          game.title.toLowerCase().includes(searchLower),
-        );
+      if (total <= maxVisible) {
+        return Array.from({ length: total }, (_, i) => i + 1);
       }
 
-      // Filter by platform
-      if (currentFilters.value.platform) {
-        games = games.filter((game) => {
-          if (!game.platforms || game.platforms.length === 0) return false;
-          return game.platforms.some((p) =>
-            p.includes(currentFilters.value.platform),
-          );
-        });
+      const halfVisible = Math.floor(maxVisible / 2);
+      let start = Math.max(1, current - halfVisible);
+      let end = Math.min(total, start + maxVisible - 1);
+
+      if (end - start < maxVisible - 1) {
+        start = Math.max(1, end - maxVisible + 1);
       }
 
-      // Sort games
-      const sortBy = currentFilters.value.sort || "title-asc";
-      games.sort((a, b) => {
-        switch (sortBy) {
-          case "title-asc":
-            return a.title.localeCompare(b.title);
-          case "title-desc":
-            return b.title.localeCompare(a.title);
-          case "date-desc":
-            // Newest first - treat empty dates as oldest
-            if (!a.date && !b.date) return 0;
-            if (!a.date) return 1;
-            if (!b.date) return -1;
-            return b.date.localeCompare(a.date);
-          case "date-asc":
-            // Oldest first - treat empty dates as newest
-            if (!a.date && !b.date) return 0;
-            if (!a.date) return -1;
-            if (!b.date) return 1;
-            return a.date.localeCompare(b.date);
-          default:
-            return 0;
-        }
-      });
-
-      return games;
+      return Array.from({ length: end - start + 1 }, (_, i) => start + i);
     });
 
-    const handleFilterChange = (event) => {
-      const { search, platform, sort } = event.detail;
-      currentFilters.value = { search, platform, sort };
+    // Build URL for page navigation
+    const buildPageUrl = (page) => {
+      if (page < 1 || page > paginationData.value.totalPages) {
+        return "#";
+      }
+
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+
+      if (page === 1) {
+        params.delete("page");
+      } else {
+        params.set("page", page);
+      }
+
+      return `${url.pathname}?${params.toString()}`;
+    };
+
+    // Change items per page (reloads with new perPage parameter)
+    const changeItemsPerPage = (event) => {
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+
+      const newPerPage = parseInt(event.target.value);
+      if (newPerPage === 25) {
+        params.delete("perPage");
+      } else {
+        params.set("perPage", newPerPage);
+      }
+
+      // Reset to page 1 when changing items per page
+      params.delete("page");
+
+      window.location.href = `${url.pathname}?${params.toString()}`;
     };
 
     onMounted(() => {
       // Parse initial server-rendered data
       try {
         const decoded = decodeHtmlEntities(initialData.value);
-        allGames.value = JSON.parse(decoded);
+        games.value = JSON.parse(decoded);
       } catch (e) {
         console.error("Failed to parse initial data:", e);
-        allGames.value = [];
+        games.value = [];
       }
 
-      // Read initial filters from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      currentFilters.value = {
-        search: urlParams.get("search") || "",
-        platform: urlParams.get("platform") || "",
-        sort: urlParams.get("sort") || "title-asc",
-      };
-
-      // Listen for filter changes
-      window.addEventListener("games-filter-changed", handleFilterChange);
-    });
-
-    onUnmounted(() => {
-      window.removeEventListener("games-filter-changed", handleFilterChange);
+      // Parse pagination info
+      try {
+        const decodedPagination = decodeHtmlEntities(paginationInfo.value);
+        const parsedPagination = JSON.parse(decodedPagination);
+        paginationData.value = {
+          currentPage: parsedPagination.currentPage || 1,
+          totalPages: parsedPagination.totalPages || 1,
+          itemsPerPage: parsedPagination.itemsPerPage || 20,
+          totalItems: parsedPagination.totalItems || 0,
+          startItem:
+            (parsedPagination.currentPage - 1) *
+              parsedPagination.itemsPerPage +
+            1,
+          endItem: Math.min(
+            parsedPagination.currentPage * parsedPagination.itemsPerPage,
+            parsedPagination.totalItems,
+          ),
+        };
+      } catch (e) {
+        console.error("Failed to parse pagination info:", e);
+      }
     });
 
     return {
-      filteredGames,
+      games,
       loading,
+      paginationData,
+      visiblePages,
+      buildPageUrl,
+      changeItemsPerPage,
     };
   },
 };
@@ -205,5 +324,126 @@ module.exports = exports = {
 .game-placeholder-icon {
   font-size: 4rem;
   opacity: 0.3;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0 20px 0;
+  gap: 20px;
+  flex-wrap: wrap;
+  border-top: 1px solid #333;
+  margin-top: 30px;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.pagination-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover:not(.disabled) {
+  background: #3a3a3a;
+  border-color: #e63946;
+  color: #fff;
+}
+
+.pagination-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination-btn.active {
+  background: #e63946;
+  border-color: #e63946;
+  color: #fff;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.pagination-first,
+.pagination-last {
+  font-weight: bold;
+}
+
+.pagination-prev,
+.pagination-next {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.pagination-select {
+  padding: 6px 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.pagination-select:hover {
+  border-color: #e63946;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .pagination-info {
+    text-align: center;
+  }
+
+  .pagination-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pagination-size {
+    justify-content: center;
+  }
+
+  .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
 }
 </style>

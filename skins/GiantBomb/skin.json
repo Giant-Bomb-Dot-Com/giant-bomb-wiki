@@ -57,6 +57,7 @@
         "resources/components/ReleaseList.vue",
         "resources/components/GameFilter.vue",
         "resources/components/GameList.vue",
+        "resources/components/Pagination.vue",
         "resources/helpers/countryFlags.js",
         "resources/data/countryFlags.json"
       ],
