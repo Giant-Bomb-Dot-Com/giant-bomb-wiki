@@ -40,7 +40,7 @@
 .view-list .game-card .game-info,
 .view-list .release-card .release-info {
   flex: 1;
-  padding: 10px 10px 10px 0;
+  padding: 10px 10px 10px 15px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
