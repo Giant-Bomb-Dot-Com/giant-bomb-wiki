@@ -57,6 +57,7 @@ function queryGamesFromSMW($filterText = '', $page = 1, $returnLimit = 10) {
                 'returnLimit' => $returnLimit,
             ];
         }
+        
     } catch (Exception $e) {
         error_log("Error querying games: " . $e->getMessage());
     }

@@ -116,19 +116,30 @@ module.exports = exports = {
     const fetchPlatforms = async (
       letter = "",
       sort = "release_date",
+      gameTitles = [],
       pageNum = 1,
     ) => {
       loading.value = true;
 
       try {
-        // Build API URL
-        const params = new URLSearchParams();
-        params.set("action", "get-platforms");
-        if (letter) params.set("letter", letter);
-        if (sort !== "release_date") params.set("sort", sort);
-        params.set("page", pageNum.toString());
+        // Build query string manually to preserve [] notation for PHP arrays
+        const queryParts = [];
+        queryParts.push("action=get-platforms");
 
-        const url = `${window.location.pathname}?${params.toString()}`;
+        if (letter) {
+          queryParts.push(`letter=${encodeURIComponent(letter)}`);
+        }
+        if (sort !== "release_date") {
+          queryParts.push(`sort=${encodeURIComponent(sort)}`);
+        }
+        if (gameTitles && gameTitles.length > 0) {
+          gameTitles.forEach((gameTitle) => {
+            queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
+          });
+        }
+        queryParts.push(`page=${pageNum}`);
+
+        const url = `${window.location.pathname}?${queryParts.join("&")}`;
 
         const response = await fetch(url, {
           method: "GET",
@@ -164,8 +175,8 @@ module.exports = exports = {
     };
 
     const handleFilterChange = (event) => {
-      const { letter, sort, page: pageNum } = event.detail;
-      fetchPlatforms(letter, sort, pageNum || 1);
+      const { letter, sort, gameTitles, page: pageNum } = event.detail;
+      fetchPlatforms(letter, sort, gameTitles, pageNum || 1);
     };
 
     const goToPage = (pageNum) => {
@@ -173,19 +184,35 @@ module.exports = exports = {
         return;
       }
 
-      // Update URL
+      // Get current filters from URL
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
-      params.set("page", pageNum.toString());
-      const newUrl = `${url.pathname}?${params.toString()}`;
-      window.history.pushState({}, "", newUrl);
-
-      // Get current filters
       const letter = params.get("letter") || "";
       const sort = params.get("sort") || "release_date";
+      const gameTitles = params.getAll("game_title[]") || [];
+
+      // Build query string manually to preserve [] notation
+      const queryParts = [];
+      if (letter) {
+        queryParts.push(`letter=${encodeURIComponent(letter)}`);
+      }
+      if (sort !== "release_date") {
+        queryParts.push(`sort=${encodeURIComponent(sort)}`);
+      }
+      if (gameTitles.length > 0) {
+        gameTitles.forEach((gameTitle) => {
+          queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
+        });
+      }
+      queryParts.push(`page=${pageNum}`);
+
+      const queryString =
+        queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+      const newUrl = `${url.pathname}${queryString}`;
+      window.history.pushState({}, "", newUrl);
 
       // Fetch new page
-      fetchPlatforms(letter, sort, pageNum);
+      fetchPlatforms(letter, sort, gameTitles, pageNum);
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });

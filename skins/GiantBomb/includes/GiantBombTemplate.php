@@ -15,6 +15,11 @@ class GiantBombTemplate extends BaseTemplate {
             return;
         }
         
+        if ($action === 'get-games') {
+            require_once __DIR__ . '/api/games-api.php';
+            return;
+        }
+        
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
