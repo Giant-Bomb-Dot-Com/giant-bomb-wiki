@@ -57,8 +57,8 @@
       <!-- Server-side Pagination Controls -->
       <div class="pagination" v-if="paginationData.totalPages > 1">
         <div class="pagination-info">
-          Showing {{ paginationData.startItem }}-{{ paginationData.endItem }}
-          of {{ paginationData.totalItems }} items
+          Showing {{ paginationData.startItem }}-{{ paginationData.endItem }} of
+          {{ paginationData.totalItems }} items
         </div>
 
         <div class="pagination-controls">
@@ -110,7 +110,10 @@
             :class="[
               'pagination-btn',
               'pagination-next',
-              { disabled: paginationData.currentPage === paginationData.totalPages },
+              {
+                disabled:
+                  paginationData.currentPage === paginationData.totalPages,
+              },
             ]"
             :aria-disabled="
               paginationData.currentPage === paginationData.totalPages
@@ -125,7 +128,10 @@
             :class="[
               'pagination-btn',
               'pagination-last',
-              { disabled: paginationData.currentPage === paginationData.totalPages },
+              {
+                disabled:
+                  paginationData.currentPage === paginationData.totalPages,
+              },
             ]"
             :aria-disabled="
               paginationData.currentPage === paginationData.totalPages
@@ -277,8 +283,7 @@ module.exports = exports = {
           itemsPerPage: parsedPagination.itemsPerPage || 20,
           totalItems: parsedPagination.totalItems || 0,
           startItem:
-            (parsedPagination.currentPage - 1) *
-              parsedPagination.itemsPerPage +
+            (parsedPagination.currentPage - 1) * parsedPagination.itemsPerPage +
             1,
           endItem: Math.min(
             parsedPagination.currentPage * parsedPagination.itemsPerPage,
