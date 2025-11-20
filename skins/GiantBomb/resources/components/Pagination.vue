@@ -27,7 +27,11 @@
         v-for="page in visiblePages"
         :key="page"
         @click="goToPage(page)"
-        :class="['pagination-btn', 'pagination-page', { active: page === currentPage }]"
+        :class="[
+          'pagination-btn',
+          'pagination-page',
+          { active: page === currentPage },
+        ]"
         :aria-label="`Page ${page}`"
         :aria-current="page === currentPage ? 'page' : undefined"
       >
