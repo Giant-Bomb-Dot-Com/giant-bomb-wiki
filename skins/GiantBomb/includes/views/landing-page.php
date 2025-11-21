@@ -25,150 +25,164 @@ $searchQuery = trim($request->getText('search', ''));
 $platformFilter = trim($request->getText('platform', ''));
 $sortOrder = $request->getText('sort', 'title-asc');
 
-// Query games from MediaWiki database directly
+// Query games using SemanticMediaWiki API for efficient server-side sorting
 $games = [];
 $totalGames = 0;
 
 try {
-	// Check if we can access the database
-	$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection(DB_REPLICA);
+	$store = \SMW\StoreFactory::getStore();
 
-	// Base conditions for game pages
-	$conditions = [
-		'page_namespace' => 0,
-		'page_title' . $dbr->buildLike('Games/', $dbr->anyString()),
-		// Exclude subpages by ensuring there's no second slash after Games/
-		'page_title NOT' . $dbr->buildLike($dbr->anyString(), '/', $dbr->anyString(), '/', $dbr->anyString())
-	];
+	// Build SMW query conditions
+	$queryConditions = '[[Category:Games]]';
 
-	// Add search filter if provided
+	// Add search filter if provided (search in page title)
 	if (!empty($searchQuery)) {
-		$conditions[] = 'page_title ' . $dbr->buildLike($dbr->anyString(), $searchQuery, $dbr->anyString());
+		$queryConditions .= '[[~*' . str_replace(['[', ']', '|'], '', $searchQuery) . '*]]';
 	}
 
-	// First, get total count for pagination
-	$totalGames = $dbr->selectField(
-		'page',
-		'COUNT(*)',
-		$conditions,
-		__METHOD__
-	);
+	// Add platform filter if provided
+	if (!empty($platformFilter)) {
+		$queryConditions .= '[[Has platforms::~*' . str_replace(['[', ']', '|'], '', $platformFilter) . '*]]';
+	}
 
-	// Determine sort order
-	$orderBy = 'page_title ASC';
+	// Determine sort property and order
+	$smwSort = '';
+	$smwOrder = 'asc';
 	switch ($sortOrder) {
 		case 'title-desc':
-			$orderBy = 'page_title DESC';
+			$smwSort = '';  // Empty means sort by page title
+			$smwOrder = 'desc';
 			break;
 		case 'date-desc':
+			$smwSort = 'Has release date';
+			$smwOrder = 'desc';
+			break;
 		case 'date-asc':
-			// For date sorting, we'll need to sort after fetching since dates are in page content
-			$orderBy = 'page_id ASC';
+			$smwSort = 'Has release date';
+			$smwOrder = 'asc';
 			break;
 		default:
-			$orderBy = 'page_title ASC';
+			$smwSort = '';
+			$smwOrder = 'asc';
 	}
 
 	// Calculate offset
 	$offset = ($currentPage - 1) * $itemsPerPage;
 
-	// Query pages with pagination
-	$res = $dbr->select(
-		'page',
-		['page_id', 'page_title'],
-		$conditions,
-		__METHOD__,
-		[
-			'LIMIT' => $itemsPerPage,
-			'OFFSET' => $offset,
-			'ORDER BY' => $orderBy
-		]
+	// Build raw params array for SMW query
+	$rawParams = [
+		$queryConditions,
+		'limit=' . $itemsPerPage,
+		'offset=' . $offset,
+		'order=' . $smwOrder,
+		'?Has name',
+		'?Has deck',
+		'?Has image',
+		'?Has release date',
+		'?Has platforms'
+	];
+
+	if (!empty($smwSort)) {
+		$rawParams[] = 'sort=' . $smwSort;
+	}
+
+	// Parse query components
+	list($queryString, $params, $printouts) = \SMWQueryProcessor::getComponentsFromFunctionParams(
+		$rawParams,
+		false
 	);
 
+	// Create and execute query
+	$query = \SMWQueryProcessor::createQuery(
+		$queryString,
+		\SMWQueryProcessor::getProcessedParams($params),
+		\SMWQueryProcessor::INLINE_QUERY,
+		'',
+		$printouts
+	);
+
+	$result = $store->getQueryResult($query);
+
+	// Get total count with a separate count query using format=count
+	$countParams = [
+		$queryConditions,
+		'format=count'
+	];
+	list($countQueryString, $countParamsProcessed, $countPrintouts) = \SMWQueryProcessor::getComponentsFromFunctionParams(
+		$countParams,
+		false
+	);
+	$countQuery = \SMWQueryProcessor::createQuery(
+		$countQueryString,
+		\SMWQueryProcessor::getProcessedParams($countParamsProcessed),
+		\SMWQueryProcessor::INLINE_QUERY,
+		'count',
+		$countPrintouts
+	);
+	$countResult = $store->getQueryResult($countQuery);
+	$totalGames = $countResult->getCountValue() ?: 0;
+
+	// Process results
 	$index = 0;
-	foreach ($res as $row) {
-		// Get page data
+	while ($row = $result->getNext()) {
+		$subject = $row[0]->getResultSubject();
+		$title = $subject->getTitle();
+
 		$pageData = [];
 		$pageData['index'] = $index++;
-		$pageData['title'] = str_replace('Games/', '', str_replace('_', ' ', $row->page_title));
-		$pageData['url'] = '/wiki/' . $row->page_title;
+		$pageData['url'] = '/wiki/' . $title->getPrefixedDBkey();
 
-		// Get the page content directly and parse it
-		try {
-			$title = \Title::newFromID($row->page_id);
-			$wikiPageFactory = \MediaWiki\MediaWikiServices::getInstance()->getWikiPageFactory();
-			$page = $wikiPageFactory->newFromTitle($title);
-			$content = $page->getContent();
+		// Default title from page name
+		$pageData['title'] = str_replace('_', ' ', str_replace('Games/', '', $title->getText()));
+		$pageData['desc'] = '';
+		$pageData['img'] = '';
+		$pageData['date'] = '';
+		$pageData['platforms'] = [];
 
-			if ($content) {
-				$text = $content->getText();
+		// Extract property values from printouts
+		for ($i = 1; $i < count($row); $i++) {
+			$field = $row[$i];
+			$pr = $field->getPrintRequest();
+			$label = $pr->getLabel();
 
-				// Parse the wikitext for Game template properties
-				if (preg_match('/\| Name=([^\n]+)/', $text, $matches)) {
-					$pageData['title'] = trim($matches[1]);
-				}
-				if (preg_match('/\| Deck=([^\n]+)/', $text, $matches)) {
-					$pageData['desc'] = trim($matches[1]);
-				}
-				if (preg_match('/\| Image=([^\n]+)/', $text, $matches)) {
-					$pageData['img'] = trim($matches[1]);
-				}
-				if (preg_match('/\| ReleaseDate=([^\n]+)/', $text, $matches)) {
-					$releaseDate = trim($matches[1]);
-					if ($releaseDate !== '0000-00-00' && !empty($releaseDate)) {
-						$pageData['date'] = $releaseDate;
+			$values = [];
+			while ($dv = $field->getNextDataValue()) {
+				$values[] = $dv->getShortWikiText();
+			}
+
+			switch ($label) {
+				case 'Has name':
+					if (!empty($values[0])) {
+						$pageData['title'] = $values[0];
 					}
-				}
-				if (preg_match('/\| Platforms=([^\n]+)/', $text, $matches)) {
-					$platformsStr = trim($matches[1]);
-					$platforms = explode(',', $platformsStr);
+					break;
+				case 'Has deck':
+					$pageData['desc'] = $values[0] ?? '';
+					break;
+				case 'Has image':
+					$pageData['img'] = $values[0] ?? '';
+					break;
+				case 'Has release date':
+					if (!empty($values[0])) {
+						// SMW returns formatted date like "15 March 1993"
+						// Convert to YYYY-MM-DD format
+						$timestamp = strtotime($values[0]);
+						if ($timestamp !== false) {
+							$pageData['date'] = date('Y-m-d', $timestamp);
+						}
+					}
+					break;
+				case 'Has platforms':
 					$pageData['platforms'] = array_map(function($p) {
-						return str_replace('Platforms/', '', trim($p));
-					}, $platforms);
-				}
-			}
-		} catch (Exception $e) {
-			// Continue with defaults
-		}
-
-		// Set defaults for missing data
-		if (!isset($pageData['desc'])) $pageData['desc'] = '';
-		if (!isset($pageData['img'])) $pageData['img'] = '';
-		if (!isset($pageData['date'])) $pageData['date'] = '';
-		if (!isset($pageData['platforms'])) $pageData['platforms'] = [];
-
-		// Apply platform filter if needed
-		if (!empty($platformFilter)) {
-			$matchesPlatform = false;
-			if (isset($pageData['platforms']) && is_array($pageData['platforms'])) {
-				foreach ($pageData['platforms'] as $platform) {
-					if (stripos($platform, $platformFilter) !== false) {
-						$matchesPlatform = true;
-						break;
-					}
-				}
-			}
-			if (!$matchesPlatform) {
-				continue; // Skip this game
+						return str_replace('_', ' ', str_replace('Platforms/', '', $p));
+					}, $values);
+					break;
 			}
 		}
 
 		$games[] = $pageData;
 	}
 
-	// Handle date sorting in PHP since dates are in page content
-	if ($sortOrder === 'date-desc' || $sortOrder === 'date-asc') {
-		usort($games, function($a, $b) use ($sortOrder) {
-			$dateA = $a['date'] ?? '';
-			$dateB = $b['date'] ?? '';
-
-			if ($sortOrder === 'date-desc') {
-				return strcmp($dateB, $dateA);
-			} else {
-				return strcmp($dateA, $dateB);
-			}
-		});
-	}
 } catch (Exception $e) {
 	// Log error but don't show sample data
 	error_log("Landing page error: " . $e->getMessage());
