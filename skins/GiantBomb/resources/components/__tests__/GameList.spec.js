@@ -77,7 +77,7 @@ describe("GameList", () => {
       expect(firstCard.find(".item-platforms").exists()).toBe(true);
     });
 
-    it("renders game titles correctly (sorted A-Z by default)", async () => {
+    it("renders game titles correctly in provided order", async () => {
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -87,9 +87,11 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const titles = wrapper.findAll(".game-title");
-      // Default sort is title-asc (A-Z)
-      expect(titles[0].text()).toBe("Elden Ring");
-      expect(titles[1].text()).toBe("God of War");
+      // Games are displayed in the order provided by initialData
+      expect(titles[0].text()).toBe("The Legend of Zelda: Breath of the Wild");
+      expect(titles[1].text()).toBe("Super Mario Odyssey");
+      expect(titles[2].text()).toBe("God of War");
+      expect(titles[3].text()).toBe("Elden Ring");
     });
 
     it("renders game images", async () => {
@@ -158,6 +160,27 @@ describe("GameList", () => {
 
   describe("Search Filtering", () => {
     it("filters games by search query (case-insensitive)", async () => {
+      const filteredGames = [mockGames[0]]; // Only Zelda
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: filteredGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 1,
+                startItem: 1,
+                endItem: 1,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -168,10 +191,12 @@ describe("GameList", () => {
 
       // Trigger filter event
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "zelda", platform: "", sort: "title-asc" },
+        detail: { search: "zelda", platform: "", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const gameCards = wrapper.findAll(".game-card");
@@ -182,6 +207,25 @@ describe("GameList", () => {
     });
 
     it("shows no results message when search yields no matches", async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: [],
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 0,
+                startItem: 0,
+                endItem: 0,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -191,10 +235,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "nonexistent", platform: "", sort: "title-asc" },
+        detail: { search: "nonexistent", platform: "", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       expect(wrapper.find(".empty-state").exists()).toBe(true);
@@ -204,6 +250,27 @@ describe("GameList", () => {
 
   describe("Platform Filtering", () => {
     it("filters games by platform", async () => {
+      const filteredGames = [mockGames[2]]; // Only God of War
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: filteredGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 1,
+                startItem: 1,
+                endItem: 1,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -213,10 +280,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "PlayStation 4", sort: "title-asc" },
+        detail: { search: "", platform: "PlayStation 4", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const gameCards = wrapper.findAll(".game-card");
@@ -225,6 +294,27 @@ describe("GameList", () => {
     });
 
     it("shows games with multiple platforms when one matches", async () => {
+      const filteredGames = [mockGames[0], mockGames[1]]; // Zelda and Mario
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: filteredGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 2,
+                startItem: 1,
+                endItem: 2,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -234,10 +324,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "Nintendo Switch", sort: "title-asc" },
+        detail: { search: "", platform: "Nintendo Switch", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const gameCards = wrapper.findAll(".game-card");
@@ -245,6 +337,27 @@ describe("GameList", () => {
     });
 
     it("handles platform filter with partial matches", async () => {
+      const filteredGames = [mockGames[2], mockGames[3]]; // God of War (PS4) and Elden Ring (PS5)
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: filteredGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 2,
+                startItem: 1,
+                endItem: 2,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -254,10 +367,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "PlayStation", sort: "title-asc" },
+        detail: { search: "", platform: "PlayStation", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const gameCards = wrapper.findAll(".game-card");
@@ -267,6 +382,27 @@ describe("GameList", () => {
 
   describe("Combined Filtering", () => {
     it("filters by both search and platform", async () => {
+      const filteredGames = [mockGames[0]]; // Only Zelda
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: filteredGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 1,
+                startItem: 1,
+                endItem: 1,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -280,10 +416,13 @@ describe("GameList", () => {
           search: "zelda",
           platform: "Nintendo Switch",
           sort: "title-asc",
+          page: 1,
         },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const gameCards = wrapper.findAll(".game-card");
@@ -294,6 +433,25 @@ describe("GameList", () => {
     });
 
     it("returns no results when filters do not match", async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: [],
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 0,
+                startItem: 0,
+                endItem: 0,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -307,10 +465,13 @@ describe("GameList", () => {
           search: "zelda",
           platform: "PlayStation 4",
           sort: "title-asc",
+          page: 1,
         },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       expect(wrapper.find(".empty-state").exists()).toBe(true);
@@ -319,6 +480,28 @@ describe("GameList", () => {
 
   describe("Sorting", () => {
     it("sorts by title ascending (A-Z)", async () => {
+      // Sorted A-Z
+      const sortedGames = [mockGames[3], mockGames[2], mockGames[1], mockGames[0]];
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: sortedGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 4,
+                startItem: 1,
+                endItem: 4,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -328,10 +511,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "title-asc" },
+        detail: { search: "", platform: "", sort: "title-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const titles = wrapper.findAll(".game-title");
@@ -342,6 +527,28 @@ describe("GameList", () => {
     });
 
     it("sorts by title descending (Z-A)", async () => {
+      // Sorted Z-A (reverse of A-Z)
+      const sortedGames = [mockGames[0], mockGames[1], mockGames[2], mockGames[3]];
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: sortedGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 4,
+                startItem: 1,
+                endItem: 4,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -351,10 +558,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "title-desc" },
+        detail: { search: "", platform: "", sort: "title-desc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const titles = wrapper.findAll(".game-title");
@@ -365,6 +574,28 @@ describe("GameList", () => {
     });
 
     it("sorts by date descending (newest first)", async () => {
+      // Sorted by date newest first: Elden (2022), GoW (2018), Mario (2017-10), Zelda (2017-03)
+      const sortedGames = [mockGames[3], mockGames[2], mockGames[1], mockGames[0]];
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: sortedGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 4,
+                startItem: 1,
+                endItem: 4,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -374,10 +605,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "date-desc" },
+        detail: { search: "", platform: "", sort: "date-desc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const titles = wrapper.findAll(".game-title");
@@ -388,6 +621,28 @@ describe("GameList", () => {
     });
 
     it("sorts by date ascending (oldest first)", async () => {
+      // Already in date ascending order in mockGames
+      const sortedGames = [mockGames[0], mockGames[1], mockGames[2], mockGames[3]];
+
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: sortedGames,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 4,
+                startItem: 1,
+                endItem: 4,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(mockGames),
@@ -397,10 +652,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "date-asc" },
+        detail: { search: "", platform: "", sort: "date-asc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       const titles = wrapper.findAll(".game-title");
@@ -529,6 +786,26 @@ describe("GameList", () => {
         },
       ];
 
+      // Mock API response with sorted games
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              games: gamesWithMixedDates,
+              pagination: {
+                currentPage: 1,
+                totalPages: 1,
+                itemsPerPage: 25,
+                totalItems: 2,
+                startItem: 1,
+                endItem: 2,
+              },
+            }),
+        }),
+      );
+
       wrapper = mount(GameList, {
         props: {
           initialData: JSON.stringify(gamesWithMixedDates),
@@ -538,10 +815,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "date-desc" },
+        detail: { search: "", platform: "", sort: "date-desc", page: 1 },
       });
       window.dispatchEvent(filterEvent);
 
+      // Wait for async fetch
+      await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
       // Should not crash
