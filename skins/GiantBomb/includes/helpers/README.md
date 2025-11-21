@@ -168,7 +168,7 @@ Groups releases by time period based on their date specificity.
 
 **Parameters:**
 
-- `$releases` (array) - Array of release data with 'sortTimestamp' and 'dateSpecificity' keys
+- `$releases` (array) - Array of release data with 'releaseDateTimestamp' and 'dateSpecificity' keys
 
 **Returns:** `array` - Array of grouped releases with 'label', 'releases', and 'sortKey'
 
