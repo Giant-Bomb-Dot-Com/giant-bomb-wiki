@@ -74,7 +74,7 @@ describe("GameList", () => {
       expect(firstCard.find(".game-info").exists()).toBe(true);
       expect(firstCard.find(".game-title").exists()).toBe(true);
       expect(firstCard.find(".game-date").exists()).toBe(true);
-      expect(firstCard.find(".game-platforms").exists()).toBe(true);
+      expect(firstCard.find(".item-platforms").exists()).toBe(true);
     });
 
     it("renders game titles correctly (sorted A-Z by default)", async () => {
@@ -197,8 +197,8 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.find(".no-games").exists()).toBe(true);
-      expect(wrapper.find(".no-games").text()).toContain("No games found");
+      expect(wrapper.find(".empty-state").exists()).toBe(true);
+      expect(wrapper.find(".empty-state").text()).toContain("No games found");
     });
   });
 
@@ -313,7 +313,7 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.find(".no-games").exists()).toBe(true);
+      expect(wrapper.find(".empty-state").exists()).toBe(true);
     });
   });
 
@@ -421,7 +421,7 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.find(".no-games").exists()).toBe(true);
+      expect(wrapper.find(".empty-state").exists()).toBe(true);
       expect(wrapper.findAll(".game-card")).toHaveLength(0);
     });
 
