@@ -1,6 +1,6 @@
 <template>
   <main class="games-main">
-    <div v-if="loading" class="games-loading">
+    <div v-if="loading" class="item-loading">
       <div class="loading-spinner"></div>
       <p>Loading games...</p>
     </div>
@@ -30,7 +30,7 @@
               <p v-if="game.date" class="game-date">{{ game.date }}</p>
               <div
                 v-if="game.platforms && game.platforms.length > 0"
-                class="game-platforms"
+                class="item-platforms"
               >
                 <span
                   v-for="(platform, idx) in game.platforms.slice(0, 3)"
@@ -159,9 +159,9 @@
       </div>
     </div>
 
-    <div v-else class="no-games">
+    <div v-else class="empty-state">
       <p>No games found matching your filters.</p>
-      <p class="no-games-hint">Try adjusting your filters or clearing them.</p>
+      <p class="empty-state-hint">Try adjusting your filters or clearing them.</p>
     </div>
   </main>
 </template>

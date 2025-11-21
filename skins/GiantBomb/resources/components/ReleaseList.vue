@@ -1,6 +1,6 @@
 <template>
   <main class="releases-main">
-    <div v-if="loading" class="releases-loading">
+    <div v-if="loading" class="item-loading">
       <div class="loading-spinner"></div>
       <p>Loading new releases...</p>
     </div>
@@ -51,7 +51,7 @@
 
                 <div
                   v-if="release.platforms && release.platforms.length > 0"
-                  class="release-platforms"
+                  class="item-platforms"
                 >
                   <span
                     v-for="(platform, idx) in release.platforms"
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div v-else class="no-releases">
+    <div v-else class="empty-state">
       <p>No releases found for the selected filters.</p>
     </div>
   </main>
