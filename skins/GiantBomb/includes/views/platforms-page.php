@@ -16,11 +16,14 @@ http_response_code(200);
 $request = RequestContext::getMain()->getRequest();
 $filterLetter = $request->getText('letter', '');
 $filterGameTitles = $request->getArray('game_title');
+$requireAllGames = $request->getBool('require_all_games', false);
 $sort = $request->getText('sort', 'release_date');
 $page = $request->getInt('page', 1);
 
 // Query platforms using helper function
-$result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page);
+$result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, 48, $requireAllGames);
+
+$filterGameTitlesString = $filterGameTitles ? implode("||", array_map(function($game) { return htmlspecialchars($game, ENT_QUOTES, 'UTF-8'); }, $filterGameTitles)) : "";
 
 // Format data for Mustache template
 $data = [
@@ -30,6 +33,8 @@ $data = [
     'totalPages' => $result['totalPages'],
     'currentLetter' => htmlspecialchars($filterLetter, ENT_QUOTES, 'UTF-8'),
     'currentSort' => htmlspecialchars($sort, ENT_QUOTES, 'UTF-8'),
+    'currentRequireAllGames' => $requireAllGames ? "true" : "false",
+    'currentGames' => $filterGameTitlesString,
     'vue' => [
         'platformsJson' => htmlspecialchars(json_encode($result['platforms']), ENT_QUOTES, 'UTF-8'),
     ],

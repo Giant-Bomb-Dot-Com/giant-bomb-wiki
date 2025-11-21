@@ -17,10 +17,11 @@ if ($action === 'get-platforms') {
     
     $filterLetter = $request->getText('letter', '');
     $filterGameTitles = $request->getArray('game_title');
+    $requireAllGames = $request->getBool('require_all_games', false);
     $sort = $request->getText('sort', 'release_date');
     $page = $request->getInt('page', 1);
     
-    $result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page);
+    $result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, 48, $requireAllGames);
     
     $response = [
         'success' => true,
@@ -31,6 +32,7 @@ if ($action === 'get-platforms') {
         'filters' => [
             'letter' => $filterLetter,
             'game_titles' => $filterGameTitles,
+            'require_all_games' => $requireAllGames,
             'sort' => $sort,
             'page' => $page
         ]

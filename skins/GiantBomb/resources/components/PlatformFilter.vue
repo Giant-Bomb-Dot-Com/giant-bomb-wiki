@@ -64,6 +64,19 @@
         @blur="onSearchBlur"
       />
 
+      <!-- Match All Games Checkbox -->
+      <div v-if="selectedGames.length > 1" class="filter-checkbox-group">
+        <label class="filter-checkbox-label">
+          <input
+            type="checkbox"
+            v-model="requireAllGames"
+            @change="applyFilters"
+            class="filter-checkbox"
+          />
+          <span>Only return results if linked to all games</span>
+        </label>
+      </div>
+
       <div v-if="showSearchResults" class="search-results">
         <div v-if="isSearching" class="search-loading">Searching...</div>
 
@@ -147,14 +160,27 @@ module.exports = exports = {
       type: String,
       default: "release_date",
     },
+    currentRequireAllGames: {
+      type: Boolean,
+      default: false,
+    },
+    currentGames: {
+      type: String,
+      default: "",
+    },
   },
   setup(props) {
-    const { currentLetter, currentSort } = toRefs(props);
+    const { currentLetter, currentSort, currentGames, currentRequireAllGames } =
+      toRefs(props);
+    const currentGamesArray = currentGames.value
+      ? currentGames.value.split("||")
+      : [];
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const selectedLetter = ref("");
     const selectedSort = ref("release_date");
     const selectedGames = ref([]);
     const searchText = ref("");
+    const requireAllGames = ref(false);
 
     // Search state
     const searchResults = ref([]);
@@ -199,6 +225,11 @@ module.exports = exports = {
         });
       }
 
+      // Add require_all_games parameter (only if multiple games selected)
+      if (selectedGames.value.length > 1 && requireAllGames.value) {
+        queryParts.push(`require_all_games=1`);
+      }
+
       // Build the final URL
       const queryString =
         queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
@@ -214,6 +245,7 @@ module.exports = exports = {
             letter: selectedLetter.value,
             sort: selectedSort.value,
             gameTitles: selectedGames.value.map((g) => g.searchName),
+            requireAllGames: requireAllGames.value,
             page: 1,
           },
         }),
@@ -224,6 +256,7 @@ module.exports = exports = {
       selectedLetter.value = "";
       selectedSort.value = "release_date";
       selectedGames.value = [];
+      requireAllGames.value = false;
 
       // Update URL without reloading
       const url = new URL(window.location.href);
@@ -236,6 +269,7 @@ module.exports = exports = {
             letter: "",
             sort: "release_date",
             gameTitles: [],
+            requireAllGames: false,
             page: 1,
           },
         }),
@@ -275,7 +309,7 @@ module.exports = exports = {
 
           currentSearchPage.value = data.currentPage;
           totalPages.value = data.totalPages;
-          hasMoreResults.value = data.currentPage < data.totalPages;
+          hasMoreResults.value = data.hasMore;
         }
       } catch (error) {
         console.error("Error searching games:", error);
@@ -382,13 +416,22 @@ module.exports = exports = {
       const urlParams = new URLSearchParams(window.location.search);
       selectedLetter.value = urlParams.get("letter") || currentLetter.value;
       selectedSort.value = urlParams.get("sort") || currentSort.value;
+      requireAllGames.value =
+        urlParams.get("require_all_games") === "1" ||
+        currentRequireAllGames.value === "true";
 
       // Read multiple game_title parameters from URL
       const gameTitles = urlParams.getAll("game_title[]");
       if (gameTitles.length > 0) {
         selectedGames.value = gameTitles.map((searchName) => ({
           searchName: searchName,
-          title: searchName, // Use searchName as title for now
+          title: searchName.replace("Games/", " "), // Use searchName as title for now
+        }));
+      } else {
+        // Fallback to props if no game titles in URL
+        selectedGames.value = currentGamesArray.map((game) => ({
+          searchName: game,
+          title: game,
         }));
       }
     });
@@ -404,6 +447,7 @@ module.exports = exports = {
       isSearching,
       hasMoreResults,
       isLoadingMore,
+      requireAllGames,
       hasActiveFilters,
       applyFilters,
       clearFilters,
@@ -522,6 +566,28 @@ module.exports = exports = {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 10px;
+}
+
+/* Filter checkbox styling */
+.filter-checkbox-group {
+  margin-top: 10px;
+}
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #e63946;
 }
 
 .game-chip {

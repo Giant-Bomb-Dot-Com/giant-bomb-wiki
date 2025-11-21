@@ -24,12 +24,12 @@ function groupReleasesByPeriod($releases) {
     $groups = [];
     
     foreach ($releases as $release) {
-        if (!isset($release['sortTimestamp']) || !isset($release['dateSpecificity'])) {
+        if (!isset($release['releaseDateTimestamp']) || !isset($release['dateSpecificity'])) {
             continue;
         }
         
         $specificity = $release['dateSpecificity'];
-        $timestamp = $release['sortTimestamp'];
+        $timestamp = $release['releaseDateTimestamp'];
         
         $groupData = processDateForGrouping($timestamp, $specificity);
         $groupKey = $groupData['groupKey'];
@@ -188,7 +188,6 @@ function processReleaseQueryResults($results) {
                 
                 $releaseData['releaseDate'] = $rawDate;
                 $releaseData['releaseDateTimestamp'] = $timestamp;
-                $releaseData['sortTimestamp'] = $timestamp;
                 
                 $dateType = 'Full';
                 if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {

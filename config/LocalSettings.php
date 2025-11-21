@@ -338,6 +338,9 @@ $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
+# Enable full-text search
+$smwgEnabledFulltextSearch = true;
+
 # Remove before prod push
 $wgShowExceptionDetails = true;
 $wgDevelopmentWarnings = true;

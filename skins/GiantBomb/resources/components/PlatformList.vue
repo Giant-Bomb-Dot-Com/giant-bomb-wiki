@@ -117,6 +117,7 @@ module.exports = exports = {
       letter = "",
       sort = "release_date",
       gameTitles = [],
+      requireAllGames = false,
       pageNum = 1,
     ) => {
       loading.value = true;
@@ -136,6 +137,9 @@ module.exports = exports = {
           gameTitles.forEach((gameTitle) => {
             queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
           });
+        }
+        if (gameTitles && gameTitles.length > 1 && requireAllGames) {
+          queryParts.push(`require_all_games=1`);
         }
         queryParts.push(`page=${pageNum}`);
 
@@ -175,8 +179,20 @@ module.exports = exports = {
     };
 
     const handleFilterChange = (event) => {
-      const { letter, sort, gameTitles, page: pageNum } = event.detail;
-      fetchPlatforms(letter, sort, gameTitles, pageNum || 1);
+      const {
+        letter,
+        sort,
+        gameTitles,
+        requireAllGames,
+        page: pageNum,
+      } = event.detail;
+      fetchPlatforms(
+        letter,
+        sort,
+        gameTitles,
+        requireAllGames || false,
+        pageNum || 1,
+      );
     };
 
     const goToPage = (pageNum) => {
@@ -190,6 +206,7 @@ module.exports = exports = {
       const letter = params.get("letter") || "";
       const sort = params.get("sort") || "release_date";
       const gameTitles = params.getAll("game_title[]") || [];
+      const requireAllGames = params.get("require_all_games") === "1";
 
       // Build query string manually to preserve [] notation
       const queryParts = [];
@@ -204,6 +221,9 @@ module.exports = exports = {
           queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
         });
       }
+      if (gameTitles.length > 1 && requireAllGames) {
+        queryParts.push(`require_all_games=1`);
+      }
       queryParts.push(`page=${pageNum}`);
 
       const queryString =
@@ -212,7 +232,7 @@ module.exports = exports = {
       window.history.pushState({}, "", newUrl);
 
       // Fetch new page
-      fetchPlatforms(letter, sort, gameTitles, pageNum);
+      fetchPlatforms(letter, sort, gameTitles, requireAllGames, pageNum);
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });

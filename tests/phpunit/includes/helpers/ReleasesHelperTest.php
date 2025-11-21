@@ -153,7 +153,6 @@ class ReleasesHelperTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame('Ratchet and Clank: Rift Apart', $release['text']);
 		$this->assertSame('1/2021/6/11', $release['releaseDate']);
 		$this->assertSame(1623333600, $release['releaseDateTimestamp']);
-        $this->assertSame(1623333600, $release['sortTimestamp']);
 		$this->assertSame('full', $release['dateSpecificity']);
 		$this->assertSame('United States', $release['region']);
 		$this->assertCount(1, $release['platforms']);
