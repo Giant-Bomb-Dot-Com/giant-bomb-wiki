@@ -9,35 +9,17 @@ describe("GameFilter", () => {
     "PC",
     "Nintendo Switch",
   ];
-  let hrefSetterMock;
+  let eventListenerSpy;
 
   beforeEach(() => {
     // Use fake timers for debounce testing
     jest.useFakeTimers();
     // Clear URL parameters before each test
     window.history.replaceState({}, "", "http://localhost/");
-    // Mock window.location.href setter - simply track assignments
-    hrefSetterMock = jest.fn();
-    const realLocation = window.location;
-    const location = {
-      get href() {
-        return realLocation.href;
-      },
-      set href(value) {
-        hrefSetterMock(value);
-      },
-      get search() {
-        return realLocation.search;
-      },
-      get pathname() {
-        return realLocation.pathname;
-      },
-      toString() {
-        return realLocation.href;
-      },
-    };
-    delete window.location;
-    window.location = location;
+    // Mock window.history.pushState
+    jest.spyOn(window.history, "pushState").mockImplementation(() => {});
+    // Spy on window.dispatchEvent to track CustomEvents
+    eventListenerSpy = jest.spyOn(window, "dispatchEvent");
   });
 
   afterEach(() => {
@@ -45,6 +27,7 @@ describe("GameFilter", () => {
       wrapper.unmount();
     }
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   describe("Initial Render", () => {
@@ -221,10 +204,115 @@ describe("GameFilter", () => {
       expect(wrapper.vm.selectedPlatform).toBe("PC");
       expect(wrapper.vm.selectedSort).toBe("date-desc");
 
-      // Note: Full navigation testing is difficult in jsdom
-      // This tests that the button exists and can be clicked
       const clearButton = wrapper.find(".clear-filters-btn");
       expect(clearButton.exists()).toBe(true);
+
+      // Click the clear button
+      await clearButton.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      // Verify filters are cleared
+      expect(wrapper.vm.searchQuery).toBe("");
+      expect(wrapper.vm.selectedPlatform).toBe("");
+      expect(wrapper.vm.selectedSort).toBe("title-asc");
+    });
+  });
+
+  describe("Async Filter Application", () => {
+    it("emits games-filter-changed event when platform changes", async () => {
+      wrapper = mount(GameFilter, {
+        props: {
+          platformsData: JSON.stringify(mockPlatforms),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const platformSelect = wrapper.find("#platform-filter");
+      await platformSelect.setValue("PC");
+      await platformSelect.trigger("change");
+
+      // Verify CustomEvent was dispatched
+      expect(eventListenerSpy).toHaveBeenCalled();
+      const event = eventListenerSpy.mock.calls[0][0];
+      expect(event.type).toBe("games-filter-changed");
+      expect(event.detail).toEqual({
+        search: "",
+        platform: "PC",
+        sort: "title-asc",
+        page: 1,
+      });
+    });
+
+    it("emits games-filter-changed event when sort changes", async () => {
+      wrapper = mount(GameFilter, {
+        props: {
+          platformsData: JSON.stringify(mockPlatforms),
+        },
+      });
+
+      const sortSelect = wrapper.find("#sort-filter");
+      await sortSelect.setValue("date-desc");
+      await sortSelect.trigger("change");
+
+      // Verify CustomEvent was dispatched
+      expect(eventListenerSpy).toHaveBeenCalled();
+      const event = eventListenerSpy.mock.calls[0][0];
+      expect(event.type).toBe("games-filter-changed");
+      expect(event.detail).toEqual({
+        search: "",
+        platform: "",
+        sort: "date-desc",
+        page: 1,
+      });
+    });
+
+    it("updates URL using pushState when filters change", async () => {
+      wrapper = mount(GameFilter, {
+        props: {
+          platformsData: JSON.stringify(mockPlatforms),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const platformSelect = wrapper.find("#platform-filter");
+      await platformSelect.setValue("PC");
+      await platformSelect.trigger("change");
+
+      // Verify pushState was called
+      expect(window.history.pushState).toHaveBeenCalled();
+    });
+
+    it("emits games-filter-changed event when clear button is clicked", async () => {
+      // Set URL parameters first
+      window.history.replaceState(
+        {},
+        "",
+        "?search=test&platform=PC&sort=date-desc",
+      );
+
+      wrapper = mount(GameFilter, {
+        props: {
+          platformsData: JSON.stringify(mockPlatforms),
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      await clearButton.trigger("click");
+
+      // Verify CustomEvent was dispatched with empty filters
+      expect(eventListenerSpy).toHaveBeenCalled();
+      const event = eventListenerSpy.mock.calls[0][0];
+      expect(event.type).toBe("games-filter-changed");
+      expect(event.detail).toEqual({
+        search: "",
+        platform: "",
+        sort: "title-asc",
+        page: 1,
+      });
     });
   });
 

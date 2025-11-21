@@ -126,14 +126,43 @@ module.exports = exports = {
       // Reset to page 1 when filters change
       params.delete("page");
 
-      // Reload page with new filters (server-side filtering)
-      window.location.href = `${url.pathname}?${params.toString()}`;
+      // Update URL without reloading (for bookmarking/sharing)
+      const newUrl = `${url.pathname}?${params.toString()}`;
+      window.history.pushState({}, "", newUrl);
+
+      // Emit event for GameList to listen to
+      window.dispatchEvent(
+        new CustomEvent("games-filter-changed", {
+          detail: {
+            search: searchQuery.value,
+            platform: selectedPlatform.value,
+            sort: selectedSort.value,
+            page: 1
+          },
+        }),
+      );
     };
 
     const clearFilters = () => {
-      // Reload page without any filter parameters (server-side reset)
+      searchQuery.value = "";
+      selectedPlatform.value = "";
+      selectedSort.value = "title-asc";
+
+      // Update URL without reloading
       const url = new URL(window.location.href);
-      window.location.href = url.pathname;
+      window.history.pushState({}, "", url.pathname);
+
+      // Emit event to reload all games
+      window.dispatchEvent(
+        new CustomEvent("games-filter-changed", {
+          detail: {
+            search: "",
+            platform: "",
+            sort: "title-asc",
+            page: 1
+          },
+        }),
+      );
     };
 
     // Helper function to decode HTML entities
