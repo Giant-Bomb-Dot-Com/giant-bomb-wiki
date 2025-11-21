@@ -54,7 +54,7 @@
         </a>
       </div>
 
-      <!-- Server-side Pagination Controls -->
+      <!-- Async Pagination Controls -->
       <div class="pagination" v-if="paginationData.totalPages > 1">
         <div class="pagination-info">
           Showing {{ paginationData.startItem }}-{{ paginationData.endItem }} of
@@ -62,36 +62,36 @@
         </div>
 
         <div class="pagination-controls">
-          <a
-            :href="buildPageUrl(1)"
+          <button
+            @click.prevent="goToPage(1)"
             :class="[
               'pagination-btn',
               'pagination-first',
               { disabled: paginationData.currentPage === 1 },
             ]"
-            :aria-disabled="paginationData.currentPage === 1"
+            :disabled="paginationData.currentPage === 1"
             aria-label="First page"
           >
             ««
-          </a>
+          </button>
 
-          <a
-            :href="buildPageUrl(paginationData.currentPage - 1)"
+          <button
+            @click.prevent="goToPage(paginationData.currentPage - 1)"
             :class="[
               'pagination-btn',
               'pagination-prev',
               { disabled: paginationData.currentPage === 1 },
             ]"
-            :aria-disabled="paginationData.currentPage === 1"
+            :disabled="paginationData.currentPage === 1"
             aria-label="Previous page"
           >
             ‹
-          </a>
+          </button>
 
-          <a
+          <button
             v-for="page in visiblePages"
             :key="page"
-            :href="buildPageUrl(page)"
+            @click.prevent="goToPage(page)"
             :class="[
               'pagination-btn',
               'pagination-page',
@@ -103,10 +103,10 @@
             "
           >
             {{ page }}
-          </a>
+          </button>
 
-          <a
-            :href="buildPageUrl(paginationData.currentPage + 1)"
+          <button
+            @click.prevent="goToPage(paginationData.currentPage + 1)"
             :class="[
               'pagination-btn',
               'pagination-next',
@@ -115,16 +115,16 @@
                   paginationData.currentPage === paginationData.totalPages,
               },
             ]"
-            :aria-disabled="
+            :disabled="
               paginationData.currentPage === paginationData.totalPages
             "
             aria-label="Next page"
           >
             ›
-          </a>
+          </button>
 
-          <a
-            :href="buildPageUrl(paginationData.totalPages)"
+          <button
+            @click.prevent="goToPage(paginationData.totalPages)"
             :class="[
               'pagination-btn',
               'pagination-last',
@@ -133,13 +133,13 @@
                   paginationData.currentPage === paginationData.totalPages,
               },
             ]"
-            :aria-disabled="
+            :disabled="
               paginationData.currentPage === paginationData.totalPages
             "
             aria-label="Last page"
           >
             »»
-          </a>
+          </button>
         </div>
 
         <div class="pagination-size">
@@ -167,11 +167,11 @@
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted } = require("vue");
+const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
 
 /**
  * GameList Component
- * Displays games with server-side pagination
+ * Displays games and handles async filtering
  */
 module.exports = exports = {
   name: "GameList",
@@ -227,7 +227,32 @@ module.exports = exports = {
       return Array.from({ length: end - start + 1 }, (_, i) => start + i);
     });
 
-    // Build URL for page navigation
+    // Navigate to a specific page
+    const goToPage = (page) => {
+      if (page < 1 || page > paginationData.value.totalPages) {
+        return;
+      }
+
+      // Update URL
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+
+      if (page === 1) {
+        params.delete("page");
+      } else {
+        params.set("page", page);
+      }
+
+      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
+
+      // Fetch games for the new page
+      const search = params.get("search") || "";
+      const platform = params.get("platform") || "";
+      const sort = params.get("sort") || "title-asc";
+      fetchGames(search, platform, sort, page);
+    };
+
+    // Build URL for page navigation (kept for compatibility)
     const buildPageUrl = (page) => {
       if (page < 1 || page > paginationData.value.totalPages) {
         return "#";
@@ -245,22 +270,89 @@ module.exports = exports = {
       return `${url.pathname}?${params.toString()}`;
     };
 
-    // Change items per page (reloads with new perPage parameter)
+    // Fetch games from API
+    const fetchGames = async (search = "", platform = "", sort = "title-asc", page = 1) => {
+      loading.value = true;
+
+      try {
+        // Build API URL
+        const params = new URLSearchParams();
+        params.set("action", "get-games");
+        if (search) params.set("search", search);
+        if (platform) params.set("platform", platform);
+        if (sort && sort !== "title-asc") params.set("sort", sort);
+        if (page > 1) params.set("page", page);
+        params.set("perPage", paginationData.value.itemsPerPage);
+
+        const url = `${window.location.pathname}?${params.toString()}`;
+
+        const response = await fetch(url, {
+          method: "GET",
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Response body:", text);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          games.value = data.games || [];
+          paginationData.value = data.pagination || {
+            currentPage: 1,
+            totalPages: 1,
+            itemsPerPage: 25,
+            totalItems: 0,
+            startItem: 0,
+            endItem: 0,
+          };
+        } else {
+          console.error("API returned error:", data);
+          games.value = [];
+        }
+      } catch (error) {
+        console.error("Failed to fetch games:", error);
+        // Keep existing data on error
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    // Handle filter change events
+    const handleFilterChange = (event) => {
+      const { search, platform, sort, page } = event.detail;
+      fetchGames(search, platform, sort, page);
+    };
+
+    // Change items per page (now uses async fetch)
     const changeItemsPerPage = (event) => {
+      const newPerPage = parseInt(event.target.value);
+      paginationData.value.itemsPerPage = newPerPage;
+
+      // Update URL
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
 
-      const newPerPage = parseInt(event.target.value);
       if (newPerPage === 25) {
         params.delete("perPage");
       } else {
         params.set("perPage", newPerPage);
       }
-
-      // Reset to page 1 when changing items per page
       params.delete("page");
 
-      window.location.href = `${url.pathname}?${params.toString()}`;
+      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
+
+      // Fetch with new page size
+      const search = params.get("search") || "";
+      const platform = params.get("platform") || "";
+      const sort = params.get("sort") || "title-asc";
+      fetchGames(search, platform, sort, 1);
     };
 
     onMounted(() => {
@@ -293,6 +385,13 @@ module.exports = exports = {
       } catch (e) {
         console.error("Failed to parse pagination info:", e);
       }
+
+      // Listen for filter changes
+      window.addEventListener("games-filter-changed", handleFilterChange);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener("games-filter-changed", handleFilterChange);
     });
 
     return {
@@ -301,6 +400,7 @@ module.exports = exports = {
       paginationData,
       visiblePages,
       buildPageUrl,
+      goToPage,
       changeItemsPerPage,
     };
   },
