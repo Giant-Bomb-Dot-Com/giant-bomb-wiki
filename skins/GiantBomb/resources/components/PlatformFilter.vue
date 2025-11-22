@@ -28,6 +28,8 @@
       >
         <option value="release_date">Release Date</option>
         <option value="alphabetical">Alphabetical</option>
+        <option value="last_edited">Last Edited</option>
+        <option value="last_created">Last Created</option>
       </select>
     </div>
 
@@ -425,13 +427,13 @@ module.exports = exports = {
       if (gameTitles.length > 0) {
         selectedGames.value = gameTitles.map((searchName) => ({
           searchName: searchName,
-          title: searchName.replace("Games/", " "), // Use searchName as title for now
+          title: searchName.replace("Games/", " "),
         }));
       } else {
         // Fallback to props if no game titles in URL
         selectedGames.value = currentGamesArray.map((game) => ({
           searchName: game,
-          title: game,
+          title: game.replace("Games/", " "),
         }));
       }
     });

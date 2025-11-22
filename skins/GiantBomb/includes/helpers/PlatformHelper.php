@@ -347,6 +347,12 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
             case 'alphabetical':
                 $params = '|sort=Has name|order=asc';
                 break;
+            case 'last_edited':
+                $params = '|sort=Modification date|order=desc';
+                break;
+            case 'last_created':
+                $params = '|sort=Creation date|order=desc';
+                break;
             default:
                 $params = '|sort=Has release date|order=desc';
                 break;
