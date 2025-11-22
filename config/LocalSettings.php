@@ -341,6 +341,9 @@ $wgRestrictDisplayTitle = false;
 # Enable full-text search
 $smwgEnabledFulltextSearch = true;
 
+# Enable creation date property
+$smwgPageSpecialProperties[] = '_CDAT';
+
 # Remove before prod push
 $wgShowExceptionDetails = true;
 $wgDevelopmentWarnings = true;

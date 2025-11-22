@@ -47,7 +47,7 @@
           :disabled="currentPage <= 1"
           class="pagination-btn"
         >
-          Previous
+          &lt;&nbsp;Previous
         </button>
 
         <div class="pagination-info">
@@ -60,7 +60,7 @@
           :disabled="currentPage >= totalPages"
           class="pagination-btn"
         >
-          Next
+          Next&nbsp;&gt;
         </button>
       </div>
     </div>
@@ -323,27 +323,30 @@ module.exports = exports = {
 }
 
 .pagination-btn {
+  background: transparent;
+  border: none;
   padding: 10px 20px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 4px;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #333;
-  border-color: #666;
+  background: hsl(217.2 32.6% 17.5%);
+  border-radius: 0.375rem;
 }
 
 .pagination-btn:disabled {
-  opacity: 0.4;
   cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .pagination-info {
+  align-items: center;
+  display: flex;
+  gap: 5px;
   font-size: 0.95rem;
   color: #ccc;
 }
@@ -351,6 +354,22 @@ module.exports = exports = {
 .pagination-total {
   color: #888;
   font-size: 0.85rem;
-  margin-left: 5px;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: row;
+    gap: 0px;
+  }
+  .pagination-btn {
+    width: fit-content;
+  }
+  .pagination-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  .pagination-total {
+    margin-left: 0px;
+  }
 }
 </style>
