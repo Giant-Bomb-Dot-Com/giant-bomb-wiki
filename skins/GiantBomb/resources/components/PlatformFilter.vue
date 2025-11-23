@@ -34,7 +34,7 @@
     </div>
 
     <div class="filter-group search-group">
-      <label for="search-filter" class="filter-label">Search Game</label>
+      <label for="search-filter" class="filter-label">Has Games</label>
 
       <!-- Selected games chips -->
       <div v-if="selectedGames.length > 0" class="selected-games">

@@ -7,6 +7,7 @@ use MediaWikiIntegrationTestCase;
 /**
  * @covers ::processDateForGrouping
  * @covers ::processReleaseQueryResults
+ * @covers ::groupReleasesByPeriod
  *
  * @group Database
  */
@@ -387,6 +388,257 @@ class ReleasesHelperTest extends MediaWikiIntegrationTestCase {
 		$this->assertCount(1, $releases);
 		$release = $releases[0];
 		$this->assertSame('quarter', $release['dateSpecificity']);
+	}
+
+	// Tests for groupReleasesByPeriod
+
+	public function testGroupReleasesByPeriodWithSingleWeek(): void {
+		$releases = [
+			[
+				'title' => 'Game A',
+				'releaseDateTimestamp' => strtotime('2024-12-25'), // Wednesday
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Game B',
+				'releaseDateTimestamp' => strtotime('2024-12-23'), // Monday, same week
+				'dateSpecificity' => 'full',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Both releases should be in the same week group
+		$this->assertCount(1, $groups);
+		$this->assertSame('December 22, 2024 - December 28, 2024', $groups[0]['label']);
+		$this->assertCount(2, $groups[0]['releases']);
+	}
+
+	public function testGroupReleasesByPeriodWithMultipleWeeks(): void {
+		$releases = [
+			[
+				'title' => 'Game A',
+				'releaseDateTimestamp' => strtotime('2024-12-25'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Game B',
+				'releaseDateTimestamp' => strtotime('2025-01-05'),
+				'dateSpecificity' => 'full',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should create two separate week groups
+		$this->assertCount(2, $groups);
+		$this->assertCount(1, $groups[0]['releases']);
+		$this->assertCount(1, $groups[1]['releases']);
+	}
+
+	public function testGroupReleasesByPeriodWithMonthSpecificity(): void {
+		$releases = [
+			[
+				'title' => 'Game A',
+				'releaseDateTimestamp' => strtotime('2024-11-01'),
+				'dateSpecificity' => 'month',
+			],
+			[
+				'title' => 'Game B',
+				'releaseDateTimestamp' => strtotime('2024-11-15'),
+				'dateSpecificity' => 'month',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Both should be grouped in November 2024
+		$this->assertCount(1, $groups);
+		$this->assertSame('November 2024', $groups[0]['label']);
+		$this->assertCount(2, $groups[0]['releases']);
+	}
+
+	public function testGroupReleasesByPeriodWithQuarterSpecificity(): void {
+		$releases = [
+			[
+				'title' => 'Game A',
+				'releaseDateTimestamp' => strtotime('2024-01-15'),
+				'dateSpecificity' => 'quarter',
+			],
+			[
+				'title' => 'Game B',
+				'releaseDateTimestamp' => strtotime('2024-03-15'),
+				'dateSpecificity' => 'quarter',
+			],
+			[
+				'title' => 'Game C',
+				'releaseDateTimestamp' => strtotime('2024-04-15'),
+				'dateSpecificity' => 'quarter',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should create two groups: Q1 2024 and Q2 2024
+		$this->assertCount(2, $groups);
+		$this->assertSame('Q1 2024', $groups[0]['label']);
+		$this->assertCount(2, $groups[0]['releases']);
+		$this->assertSame('Q2 2024', $groups[1]['label']);
+		$this->assertCount(1, $groups[1]['releases']);
+	}
+
+	public function testGroupReleasesByPeriodWithYearSpecificity(): void {
+		$releases = [
+			[
+				'title' => 'Game A',
+				'releaseDateTimestamp' => strtotime('2024-01-01'),
+				'dateSpecificity' => 'year',
+			],
+			[
+				'title' => 'Game B',
+				'releaseDateTimestamp' => strtotime('2024-12-31'),
+				'dateSpecificity' => 'year',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Both should be grouped in 2024
+		$this->assertCount(1, $groups);
+		$this->assertSame('2024', $groups[0]['label']);
+		$this->assertCount(2, $groups[0]['releases']);
+	}
+
+	public function testGroupReleasesByPeriodSortsChronologically(): void {
+		$releases = [
+			[
+				'title' => 'Future Game',
+				'releaseDateTimestamp' => strtotime('2025-06-15'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Past Game',
+				'releaseDateTimestamp' => strtotime('2024-01-15'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Recent Game',
+				'releaseDateTimestamp' => strtotime('2024-12-15'),
+				'dateSpecificity' => 'full',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should be sorted chronologically
+		$this->assertCount(3, $groups);
+		$this->assertStringContainsString('January', $groups[0]['label']); // Past Game
+		$this->assertStringContainsString('December', $groups[1]['label']); // Recent Game
+		$this->assertStringContainsString('June', $groups[2]['label']); // Future Game
+	}
+
+	public function testGroupReleasesByPeriodIgnoresReleasesWithoutTimestamp(): void {
+		$releases = [
+			[
+				'title' => 'Valid Game',
+				'releaseDateTimestamp' => strtotime('2024-12-25'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Invalid Game',
+				// Missing releaseDateTimestamp
+				'dateSpecificity' => 'full',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should only include the valid release
+		$this->assertCount(1, $groups);
+		$this->assertCount(1, $groups[0]['releases']);
+		$this->assertSame('Valid Game', $groups[0]['releases'][0]['title']);
+	}
+
+	public function testGroupReleasesByPeriodIgnoresReleasesWithoutSpecificity(): void {
+		$releases = [
+			[
+				'title' => 'Valid Game',
+				'releaseDateTimestamp' => strtotime('2024-12-25'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Invalid Game',
+				'releaseDateTimestamp' => strtotime('2024-12-26'),
+				// Missing dateSpecificity
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should only include the valid release
+		$this->assertCount(1, $groups);
+		$this->assertCount(1, $groups[0]['releases']);
+		$this->assertSame('Valid Game', $groups[0]['releases'][0]['title']);
+	}
+
+	public function testGroupReleasesByPeriodWithEmptyArray(): void {
+		$releases = [];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		$this->assertCount(0, $groups);
+	}
+
+	public function testGroupReleasesByPeriodMixedSpecificities(): void {
+		$releases = [
+			[
+				'title' => 'Full Date Game',
+				'releaseDateTimestamp' => strtotime('2024-11-15'),
+				'dateSpecificity' => 'full',
+			],
+			[
+				'title' => 'Month Game',
+				'releaseDateTimestamp' => strtotime('2024-11-01'),
+				'dateSpecificity' => 'month',
+			],
+			[
+				'title' => 'Year Game',
+				'releaseDateTimestamp' => strtotime('2024-01-01'),
+				'dateSpecificity' => 'year',
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Should create three separate groups (different specificities create different groups)
+		$this->assertCount(3, $groups);
+		
+		// Verify sorting (year, then month, then week)
+		$this->assertSame('2024', $groups[0]['label']);
+		$this->assertSame('November 2024', $groups[1]['label']);
+		$this->assertStringContainsString('November', $groups[2]['label']);
+	}
+
+	public function testGroupReleasesByPeriodPreservesReleaseData(): void {
+		$releases = [
+			[
+				'title' => 'Test Game',
+				'url' => '/wiki/Test_Game',
+				'image' => 'test.jpg',
+				'releaseDateTimestamp' => strtotime('2024-12-25'),
+				'dateSpecificity' => 'full',
+				'platforms' => ['PS5', 'Xbox'],
+			],
+		];
+
+		$groups = groupReleasesByPeriod($releases);
+
+		// Verify all release data is preserved
+		$release = $groups[0]['releases'][0];
+		$this->assertSame('Test Game', $release['title']);
+		$this->assertSame('/wiki/Test_Game', $release['url']);
+		$this->assertSame('test.jpg', $release['image']);
+		$this->assertSame(['PS5', 'Xbox'], $release['platforms']);
 	}
 }
 

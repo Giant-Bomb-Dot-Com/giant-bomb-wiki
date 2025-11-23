@@ -13,19 +13,19 @@
  * @return string The formatted date string
  */
 function formatReleaseDate($rawDate, $timestamp, $dateType) {
-    if (!$timestamp || $dateType === 'None') {
+    if (!$timestamp || strtolower($dateType) === 'none') {
         return $rawDate;
     }
     
-    switch ($dateType) {
-        case 'Year':
+    switch (strtolower($dateType)) {
+        case 'year':
             return date('Y', $timestamp);
-        case 'Month':
+        case 'month':
             return date('F Y', $timestamp);
-        case 'Quarter':
+        case 'quarter':
             $quarter = ceil(date('n', $timestamp) / 3);
             return 'Q' . $quarter . ' ' . date('Y', $timestamp);
-        case 'Full':
+        case 'full':
         default:
             return date('F j, Y', $timestamp);
     }
