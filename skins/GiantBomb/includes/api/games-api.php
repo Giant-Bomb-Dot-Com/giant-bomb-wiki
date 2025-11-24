@@ -16,20 +16,24 @@ if ($action === 'get-games') {
     header('Content-Type: application/json');
     
     $filterText = $request->getText('name', '');
-    $page = $request->getInt('page', 1);
-    $returnLimit = $request->getInt('returnLimit', 10);
+    $platformFilter = $request->getText('platform', '');
+    $sortOrder = $request->getText('sort', 'title-asc');
+    $currentPage = $request->getInt('page', 1);
+    $itemsPerPage = $request->getInt('itemsPerPage', 25);
     
-    $gamesData = queryGamesFromSMW($filterText, $page, $returnLimit);
+    $gamesData = queryGamesFromSMW($filterText, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
     
     $response = [
         'success' => true,
         'games' => $gamesData['games'] ?? [],
-        'totalCount' => $gamesData['totalCount'] ?? 0,
+        'totalGames' => $gamesData['totalGames'] ?? 0,
         'totalPages' => $gamesData['totalPages'] ?? 1,
         'currentPage' => $gamesData['currentPage'] ?? 1,
         'hasMore' => ($gamesData['currentPage'] ?? 1) < ($gamesData['totalPages'] ?? 1),
         'filters' => [
-            'name' => $filterText
+            'name' => $filterText,
+            'platform' => $platformFilter,
+            'sort' => $sortOrder,
         ]
     ];
     

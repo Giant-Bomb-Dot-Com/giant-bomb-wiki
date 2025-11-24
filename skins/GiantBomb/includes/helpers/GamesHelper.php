@@ -14,14 +14,63 @@ require_once __DIR__ . '/PlatformHelper.php';
  * @param string $filterText Optional text filter
  * @return array Array of game data
  */
-function queryGamesFromSMW($filterText = '', $page = 1, $returnLimit = 10) {
-    $gamesData = [];
+function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
+    $games = [];
+	$totalGames = 0;
+    
     try {
-        $queryConditions = '[[Category:Games]][[Has name::~*' . $filterText . '*]]';
+        $queryConditions = '[[Category:Games]][[Has name::~*' . $searchQuery . '*]]';
+        
+        if (!empty($platformFilter)) {
+            $queryConditions .= '[[Has platforms::Platforms/' . str_replace('Platforms/', '', $platformFilter) . ']]';
+        }
+        
+        switch ($sortOrder) {
+            case 'title-asc':
+                $queryConditions .= '|sort=Has name|order=asc';
+                break;
+            case 'title-desc':
+                $queryConditions .= '|sort=Has name|order=desc';
+                break;
+            case 'release-date-asc':
+                $queryConditions .= '|sort=Has release date|order=asc';
+                break;
+            case 'release-date-desc':
+                $queryConditions .= '|sort=Has release date|order=desc';
+                break;
+            default:
+                $queryConditions .= '|sort=Has name|order=asc';
+                break;
+        }
         
         $printouts = '|?Has name|?Has image|?Has platforms|?Has release date';
-        $params = '|limit=1000';
+        $params = '|limit=' . $itemsPerPage;
         
+        $countQuery = $queryConditions . $printouts;
+        
+        $api = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $countQuery,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $api->execute();
+        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($result['query']['results']) && is_array($result['query']['results'])) {
+            $totalGames = count($result['query']['results']);
+            $totalPages = max(1, ceil($totalGames / $itemsPerPage));
+            $page = max(1, min($currentPage, $totalPages));
+            $offset = ($page - 1) * $itemsPerPage;
+        }
+            
         $fullQuery = $queryConditions . $printouts . $params;
         
         $api = new ApiMain(
@@ -41,20 +90,14 @@ function queryGamesFromSMW($filterText = '', $page = 1, $returnLimit = 10) {
         $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
         
         if (isset($result['query']['results']) && is_array($result['query']['results'])) {
-            $totalCount = count($result['query']['results']);
-            $totalPages = max(1, ceil($totalCount / $returnLimit));
-            $page = max(1, min($page, $totalPages));
-            $offset = ($page - 1) * $returnLimit;
-            $pageGames = array_slice($result['query']['results'], $offset, $offset + $returnLimit);
-            
-            $games = processGameQueryResults($pageGames);
+            $games = processGameQueryResults($result['query']['results']);
             $gamesData = [
                 'games' => $games,
-                'totalCount' => $totalCount,
+                'totalGames' => $totalGames,
                 'totalPages' => $totalPages,
                 'currentPage' => $page,
                 'offset' => $offset,
-                'returnLimit' => $returnLimit,
+                'itemsPerPage' => $itemsPerPage,
             ];
         }
         

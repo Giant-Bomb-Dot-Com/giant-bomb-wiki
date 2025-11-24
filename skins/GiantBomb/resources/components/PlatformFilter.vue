@@ -297,7 +297,7 @@ module.exports = exports = {
         url.searchParams.set("action", "get-games");
         url.searchParams.set("name", query);
         url.searchParams.set("page", page);
-        url.searchParams.set("returnLimit", "10");
+        url.searchParams.set("itemsPerPage", "10");
 
         const response = await fetch(url.toString());
         const data = await response.json();
