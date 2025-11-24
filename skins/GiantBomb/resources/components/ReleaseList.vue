@@ -78,6 +78,7 @@
 <script>
 const { ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { getCountryCode, getFlagUrl } = require("../helpers/countryFlags.js");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * ReleaseList Component
@@ -95,13 +96,6 @@ module.exports = exports = {
     const { initialData } = toRefs(props);
     const weekGroups = ref([]);
     const loading = ref(false);
-
-    // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
 
     const fetchReleases = async (region = "", platform = "") => {
       loading.value = true;

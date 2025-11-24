@@ -49,6 +49,7 @@
 
 <script>
 const { ref, computed, toRefs, onMounted } = require("vue");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * ReleaseFilter Component
@@ -123,13 +124,6 @@ module.exports = exports = {
           },
         }),
       );
-    };
-
-    // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
     };
 
     onMounted(() => {
