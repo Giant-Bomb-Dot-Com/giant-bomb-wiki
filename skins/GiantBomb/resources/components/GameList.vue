@@ -168,6 +168,7 @@
 
 <script>
 const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * GameList Component
@@ -198,13 +199,6 @@ module.exports = exports = {
       startItem: 0,
       endItem: 0,
     });
-
-    // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
 
     // Calculate visible pages for pagination
     const visiblePages = computed(() => {

@@ -56,6 +56,7 @@
 
 <script>
 const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * GameFilter Component
@@ -163,13 +164,6 @@ module.exports = exports = {
           },
         }),
       );
-    };
-
-    // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
     };
 
     onMounted(() => {
