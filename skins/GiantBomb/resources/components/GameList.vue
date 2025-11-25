@@ -115,9 +115,7 @@
                   paginationData.currentPage === paginationData.totalPages,
               },
             ]"
-            :disabled="
-              paginationData.currentPage === paginationData.totalPages
-            "
+            :disabled="paginationData.currentPage === paginationData.totalPages"
             aria-label="Next page"
           >
             ›
@@ -133,9 +131,7 @@
                   paginationData.currentPage === paginationData.totalPages,
               },
             ]"
-            :disabled="
-              paginationData.currentPage === paginationData.totalPages
-            "
+            :disabled="paginationData.currentPage === paginationData.totalPages"
             aria-label="Last page"
           >
             »»
@@ -161,7 +157,9 @@
 
     <div v-else class="empty-state">
       <p>No games found matching your filters.</p>
-      <p class="empty-state-hint">Try adjusting your filters or clearing them.</p>
+      <p class="empty-state-hint">
+        Try adjusting your filters or clearing them.
+      </p>
     </div>
   </main>
 </template>
@@ -265,7 +263,12 @@ module.exports = exports = {
     };
 
     // Fetch games from API
-    const fetchGames = async (search = "", platform = "", sort = "title-asc", page = 1) => {
+    const fetchGames = async (
+      search = "",
+      platform = "",
+      sort = "title-asc",
+      page = 1,
+    ) => {
       loading.value = true;
 
       try {
@@ -366,7 +369,7 @@ module.exports = exports = {
         paginationData.value = {
           currentPage: parsedPagination.currentPage || 1,
           totalPages: parsedPagination.totalPages || 1,
-          itemsPerPage: parsedPagination.itemsPerPage || 20,
+          itemsPerPage: parsedPagination.itemsPerPage || 25,
           totalItems: parsedPagination.totalItems || 0,
           startItem:
             (parsedPagination.currentPage - 1) * parsedPagination.itemsPerPage +

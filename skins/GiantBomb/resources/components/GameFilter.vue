@@ -138,7 +138,7 @@ module.exports = exports = {
             search: searchQuery.value,
             platform: selectedPlatform.value,
             sort: selectedSort.value,
-            page: 1
+            page: 1,
           },
         }),
       );
@@ -160,7 +160,7 @@ module.exports = exports = {
             search: "",
             platform: "",
             sort: "title-asc",
-            page: 1
+            page: 1,
           },
         }),
       );

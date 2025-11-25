@@ -25,7 +25,7 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 		$queryConditions = '[[Category:Games]]';
 
 		if (!empty($searchQuery)) {
-			$queryConditions .= '[[~*' . str_replace(['[', ']', '|'], '', $searchQuery) . '*]]';
+			$queryConditions .= '[[Has name::~*' . str_replace(['[', ']', '|'], '', $searchQuery) . '*]]';
 		}
 
 		if (!empty($platformFilter)) {
