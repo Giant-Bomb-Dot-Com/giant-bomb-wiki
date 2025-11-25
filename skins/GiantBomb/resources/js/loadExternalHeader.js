@@ -16,7 +16,7 @@
 
   // If no header URL is configured, hide the empty container
   if (!baseUrl) {
-    hideEmptyContainer();
+    //hideEmptyContainer();
     return;
   }
   // Load the external header CSS
@@ -36,13 +36,13 @@
       GiantBombHeader.render("gb-header");
     } else {
       console.error("GiantBombHeader not available after script load");
-      hideEmptyContainer();
+      //hideEmptyContainer();
     }
   };
 
   script.onerror = function () {
     console.error("Failed to load Giant Bomb header script");
-    hideEmptyContainer();
+    //hideEmptyContainer();
   };
 
   document.head.appendChild(script);
