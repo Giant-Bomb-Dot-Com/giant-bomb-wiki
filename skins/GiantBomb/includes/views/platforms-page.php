@@ -37,6 +37,7 @@ $data = [
     'currentSort' => htmlspecialchars($sort, ENT_QUOTES, 'UTF-8'),
     'currentRequireAllGames' => $requireAllGames ? "true" : "false",
     'currentGames' => $filterGameTitlesString,
+    'addPlatformUrl' => htmlspecialchars('/wiki/Form:Platform', ENT_QUOTES, 'UTF-8'),
     'vue' => [
         'platformsJson' => htmlspecialchars(json_encode($result['platforms']), ENT_QUOTES, 'UTF-8'),
     ],
