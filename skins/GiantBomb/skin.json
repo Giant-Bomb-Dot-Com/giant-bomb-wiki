@@ -28,7 +28,7 @@
     "skins.giantbomb.styles": {
       "styles": [
         "resources/css/styles.css",
-        "resources/css/header.css",
+        "resources/css/search.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
         "resources/css/newReleasesPage.css"
@@ -42,7 +42,7 @@
     "skins.giantbomb.externalheader": {
       "scripts": [
         "resources/js/loadExternalHeader.js",
-        "resources/js/headerSearch.js"
+        "resources/js/search.js"
       ],
       "position": "top"
     },
