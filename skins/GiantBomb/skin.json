@@ -59,6 +59,7 @@
         "resources/components/GameList.vue",
         "resources/components/Pagination.vue",
         "resources/helpers/countryFlags.js",
+        "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]

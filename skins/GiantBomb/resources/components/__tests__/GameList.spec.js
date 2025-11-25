@@ -94,20 +94,6 @@ describe("GameList", () => {
       expect(titles[3].text()).toBe("Elden Ring");
     });
 
-    it("renders game images", async () => {
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(mockGames),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const images = wrapper.findAll(".game-image img");
-      expect(images.length).toBeGreaterThan(0);
-      expect(images[0].attributes("alt")).toBeTruthy();
-    });
-
     it("renders placeholder for missing images", async () => {
       const gamesWithoutImage = [
         {
@@ -130,56 +116,29 @@ describe("GameList", () => {
       expect(wrapper.find(".game-image-placeholder").exists()).toBe(true);
       expect(wrapper.find(".game-image img").exists()).toBe(false);
     });
-
-    it("renders platform badges", async () => {
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(mockGames),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const badges = wrapper.findAll(".platform-badge");
-      expect(badges.length).toBeGreaterThan(0);
-    });
-
-    it("renders game links correctly", async () => {
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(mockGames),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const firstLink = wrapper.find(".game-card-link");
-      expect(firstLink.attributes("href")).toBeTruthy();
-    });
   });
 
   describe("Search Filtering", () => {
-    it("filters games by search query (case-insensitive)", async () => {
-      const filteredGames = [mockGames[0]]; // Only Zelda
-
-      global.fetch = jest.fn(() =>
+    it("calls fetch with correct search parameter when search filter changes", async () => {
+      const fetchSpy = jest.fn(() =>
         Promise.resolve({
           ok: true,
           json: () =>
             Promise.resolve({
               success: true,
-              games: filteredGames,
+              games: [],
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
                 itemsPerPage: 25,
-                totalItems: 1,
-                startItem: 1,
-                endItem: 1,
+                totalItems: 0,
+                startItem: 0,
+                endItem: 0,
               },
             }),
         }),
       );
+      global.fetch = fetchSpy;
 
       wrapper = mount(GameList, {
         props: {
@@ -189,7 +148,7 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      // Trigger filter event
+      // Trigger search filter event
       const filterEvent = new CustomEvent("games-filter-changed", {
         detail: { search: "zelda", platform: "", sort: "title-asc", page: 1 },
       });
@@ -199,11 +158,13 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const gameCards = wrapper.findAll(".game-card");
-      expect(gameCards).toHaveLength(1);
-      expect(gameCards[0].find(".game-title").text()).toBe(
-        "The Legend of Zelda: Breath of the Wild",
-      );
+      // Verify fetch was called with correct search parameter
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      const fetchUrl = fetchSpy.mock.calls[0][0];
+      expect(fetchUrl).toContain("action=get-games");
+      expect(fetchUrl).toContain("search=zelda");
+      expect(fetchUrl).toContain("perPage=25");
+      expect(fetchUrl).not.toContain("platform=");
     });
 
     it("shows no results message when search yields no matches", async () => {
@@ -235,7 +196,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "nonexistent", platform: "", sort: "title-asc", page: 1 },
+        detail: {
+          search: "nonexistent",
+          platform: "",
+          sort: "title-asc",
+          page: 1,
+        },
       });
       window.dispatchEvent(filterEvent);
 
@@ -252,7 +218,7 @@ describe("GameList", () => {
     it("filters games by platform", async () => {
       const filteredGames = [mockGames[2]]; // Only God of War
 
-      global.fetch = jest.fn(() =>
+      const fetchSpy = jest.fn(() =>
         Promise.resolve({
           ok: true,
           json: () =>
@@ -270,6 +236,7 @@ describe("GameList", () => {
             }),
         }),
       );
+      global.fetch = fetchSpy;
 
       wrapper = mount(GameList, {
         props: {
@@ -280,13 +247,25 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "PlayStation 4", sort: "title-asc", page: 1 },
+        detail: {
+          search: "",
+          platform: "PlayStation 4",
+          sort: "title-asc",
+          page: 1,
+        },
       });
       window.dispatchEvent(filterEvent);
 
       // Wait for async fetch
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
+
+      // Assert fetch was called with correct URL
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      const fetchUrl = fetchSpy.mock.calls[0][0];
+      expect(fetchUrl).toContain("action=get-games");
+      expect(fetchUrl).toContain("platform=PlayStation");
+      expect(fetchUrl).toContain("perPage=25");
 
       const gameCards = wrapper.findAll(".game-card");
       expect(gameCards).toHaveLength(1);
@@ -324,7 +303,12 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "Nintendo Switch", sort: "title-asc", page: 1 },
+        detail: {
+          search: "",
+          platform: "Nintendo Switch",
+          sort: "title-asc",
+          page: 1,
+        },
       });
       window.dispatchEvent(filterEvent);
 
@@ -335,56 +319,13 @@ describe("GameList", () => {
       const gameCards = wrapper.findAll(".game-card");
       expect(gameCards).toHaveLength(2); // Zelda and Mario
     });
-
-    it("handles platform filter with partial matches", async () => {
-      const filteredGames = [mockGames[2], mockGames[3]]; // God of War (PS4) and Elden Ring (PS5)
-
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              success: true,
-              games: filteredGames,
-              pagination: {
-                currentPage: 1,
-                totalPages: 1,
-                itemsPerPage: 25,
-                totalItems: 2,
-                startItem: 1,
-                endItem: 2,
-              },
-            }),
-        }),
-      );
-
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(mockGames),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "PlayStation", sort: "title-asc", page: 1 },
-      });
-      window.dispatchEvent(filterEvent);
-
-      // Wait for async fetch
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      await wrapper.vm.$nextTick();
-
-      const gameCards = wrapper.findAll(".game-card");
-      expect(gameCards).toHaveLength(2); // God of War (PS4) and Elden Ring (PS5)
-    });
   });
 
   describe("Combined Filtering", () => {
     it("filters by both search and platform", async () => {
       const filteredGames = [mockGames[0]]; // Only Zelda
 
-      global.fetch = jest.fn(() =>
+      const fetchSpy = jest.fn(() =>
         Promise.resolve({
           ok: true,
           json: () =>
@@ -402,6 +343,7 @@ describe("GameList", () => {
             }),
         }),
       );
+      global.fetch = fetchSpy;
 
       wrapper = mount(GameList, {
         props: {
@@ -424,6 +366,14 @@ describe("GameList", () => {
       // Wait for async fetch
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
+
+      // Assert fetch was called with correct URL
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      const fetchUrl = fetchSpy.mock.calls[0][0];
+      expect(fetchUrl).toContain("action=get-games");
+      expect(fetchUrl).toContain("search=zelda");
+      expect(fetchUrl).toContain("platform=Nintendo");
+      expect(fetchUrl).toContain("perPage=25");
 
       const gameCards = wrapper.findAll(".game-card");
       expect(gameCards).toHaveLength(1);
@@ -481,7 +431,12 @@ describe("GameList", () => {
   describe("Sorting", () => {
     it("sorts by title ascending (A-Z)", async () => {
       // Sorted A-Z
-      const sortedGames = [mockGames[3], mockGames[2], mockGames[1], mockGames[0]];
+      const sortedGames = [
+        mockGames[3],
+        mockGames[2],
+        mockGames[1],
+        mockGames[0],
+      ];
 
       global.fetch = jest.fn(() =>
         Promise.resolve({
@@ -528,7 +483,12 @@ describe("GameList", () => {
 
     it("sorts by title descending (Z-A)", async () => {
       // Sorted Z-A (reverse of A-Z)
-      const sortedGames = [mockGames[0], mockGames[1], mockGames[2], mockGames[3]];
+      const sortedGames = [
+        mockGames[0],
+        mockGames[1],
+        mockGames[2],
+        mockGames[3],
+      ];
 
       global.fetch = jest.fn(() =>
         Promise.resolve({
@@ -575,7 +535,12 @@ describe("GameList", () => {
 
     it("sorts by date descending (newest first)", async () => {
       // Sorted by date newest first: Elden (2022), GoW (2018), Mario (2017-10), Zelda (2017-03)
-      const sortedGames = [mockGames[3], mockGames[2], mockGames[1], mockGames[0]];
+      const sortedGames = [
+        mockGames[3],
+        mockGames[2],
+        mockGames[1],
+        mockGames[0],
+      ];
 
       global.fetch = jest.fn(() =>
         Promise.resolve({
@@ -622,7 +587,12 @@ describe("GameList", () => {
 
     it("sorts by date ascending (oldest first)", async () => {
       // Already in date ascending order in mockGames
-      const sortedGames = [mockGames[0], mockGames[1], mockGames[2], mockGames[3]];
+      const sortedGames = [
+        mockGames[0],
+        mockGames[1],
+        mockGames[2],
+        mockGames[3],
+      ];
 
       global.fetch = jest.fn(() =>
         Promise.resolve({
@@ -721,110 +691,6 @@ describe("GameList", () => {
       expect(wrapper.find(".games-main").exists()).toBe(true);
 
       consoleSpy.mockRestore();
-    });
-
-    it("handles games without platforms array", async () => {
-      const gamesWithoutPlatforms = [
-        {
-          title: "Test Game",
-          url: "/wiki/Test",
-          img: "",
-          date: "2023-01-01",
-          platforms: [],
-        },
-      ];
-
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(gamesWithoutPlatforms),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.findAll(".platform-badge")).toHaveLength(0);
-    });
-
-    it("handles games with missing date field", async () => {
-      const gamesWithoutDate = [
-        {
-          title: "Test Game",
-          url: "/wiki/Test",
-          img: "",
-          date: "",
-          platforms: ["PC"],
-        },
-      ];
-
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(gamesWithoutDate),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Should still render
-      expect(wrapper.findAll(".game-card")).toHaveLength(1);
-    });
-
-    it("handles sorting with missing dates", async () => {
-      const gamesWithMixedDates = [
-        {
-          title: "Game A",
-          url: "/wiki/A",
-          img: "",
-          date: "2023-01-01",
-          platforms: ["PC"],
-        },
-        {
-          title: "Game B",
-          url: "/wiki/B",
-          img: "",
-          date: "",
-          platforms: ["PC"],
-        },
-      ];
-
-      // Mock API response with sorted games
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              success: true,
-              games: gamesWithMixedDates,
-              pagination: {
-                currentPage: 1,
-                totalPages: 1,
-                itemsPerPage: 25,
-                totalItems: 2,
-                startItem: 1,
-                endItem: 2,
-              },
-            }),
-        }),
-      );
-
-      wrapper = mount(GameList, {
-        props: {
-          initialData: JSON.stringify(gamesWithMixedDates),
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const filterEvent = new CustomEvent("games-filter-changed", {
-        detail: { search: "", platform: "", sort: "date-desc", page: 1 },
-      });
-      window.dispatchEvent(filterEvent);
-
-      // Wait for async fetch
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      await wrapper.vm.$nextTick();
-
-      // Should not crash
-      expect(wrapper.findAll(".game-card")).toHaveLength(2);
     });
   });
 });

@@ -112,7 +112,7 @@ describe("GameFilter", () => {
   });
 
   describe("Filter Selection", () => {
-    it("updates platform filter value", async () => {
+    it("updates platform filter value and dispatches event", async () => {
       wrapper = mount(GameFilter, {
         props: {
           platformsData: JSON.stringify(mockPlatforms),
@@ -126,9 +126,22 @@ describe("GameFilter", () => {
 
       // Verify the component state updated
       expect(wrapper.vm.selectedPlatform).toBe("PlayStation 5");
+
+      // Verify event was dispatched with correct details
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "games-filter-changed",
+          detail: {
+            search: "",
+            platform: "PlayStation 5",
+            sort: "title-asc",
+            page: 1,
+          },
+        }),
+      );
     });
 
-    it("updates sort filter value", async () => {
+    it("updates sort filter value and dispatches event", async () => {
       wrapper = mount(GameFilter, {
         props: {
           platformsData: JSON.stringify(mockPlatforms),
@@ -140,6 +153,19 @@ describe("GameFilter", () => {
 
       // Verify the component state updated
       expect(wrapper.vm.selectedSort).toBe("date-desc");
+
+      // Verify event was dispatched with correct details
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "games-filter-changed",
+          detail: {
+            search: "",
+            platform: "",
+            sort: "date-desc",
+            page: 1,
+          },
+        }),
+      );
     });
 
     it("loads filters from URL parameters on mount", async () => {
@@ -207,6 +233,9 @@ describe("GameFilter", () => {
       const clearButton = wrapper.find(".clear-filters-btn");
       expect(clearButton.exists()).toBe(true);
 
+      // Clear the spy before clicking
+      eventListenerSpy.mockClear();
+
       // Click the clear button
       await clearButton.trigger("click");
       await wrapper.vm.$nextTick();
@@ -215,6 +244,19 @@ describe("GameFilter", () => {
       expect(wrapper.vm.searchQuery).toBe("");
       expect(wrapper.vm.selectedPlatform).toBe("");
       expect(wrapper.vm.selectedSort).toBe("title-asc");
+
+      // Verify event was dispatched with empty filters
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "games-filter-changed",
+          detail: {
+            search: "",
+            platform: "",
+            sort: "title-asc",
+            page: 1,
+          },
+        }),
+      );
     });
   });
 
@@ -280,8 +322,25 @@ describe("GameFilter", () => {
       await platformSelect.setValue("PC");
       await platformSelect.trigger("change");
 
-      // Verify pushState was called
-      expect(window.history.pushState).toHaveBeenCalled();
+      // Verify pushState was called with correct URL
+      expect(window.history.pushState).toHaveBeenCalledWith(
+        {},
+        "",
+        expect.stringContaining("platform=PC"),
+      );
+
+      // Verify event was dispatched
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "games-filter-changed",
+          detail: {
+            search: "",
+            platform: "PC",
+            sort: "title-asc",
+            page: 1,
+          },
+        }),
+      );
     });
 
     it("emits games-filter-changed event when clear button is clicked", async () => {
