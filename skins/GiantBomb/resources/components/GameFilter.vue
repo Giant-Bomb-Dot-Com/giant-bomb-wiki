@@ -23,8 +23,12 @@
         class="filter-select"
       >
         <option value="">All Platforms</option>
-        <option v-for="platform in platforms" :key="platform" :value="platform">
-          {{ platform }}
+        <option
+          v-for="platform in platforms"
+          :key="platform.name"
+          :value="platform.name"
+        >
+          {{ platform.displayName }}
         </option>
       </select>
     </div>

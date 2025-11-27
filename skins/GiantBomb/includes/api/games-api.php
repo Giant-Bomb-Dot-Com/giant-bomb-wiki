@@ -26,7 +26,6 @@ if ($action === 'get-games') {
 	$result = queryGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
 	$games = $result['games'];
 	$totalGames = $result['totalGames'];
-	$allPlatforms = $result['platforms'];
 
 	// Calculate pagination
 	$totalPages = max(1, ceil($totalGames / $itemsPerPage));
@@ -36,7 +35,6 @@ if ($action === 'get-games') {
 	$response = [
 		'success' => true,
 		'games' => $games,
-		'platforms' => $allPlatforms,
 		'pagination' => [
 			'currentPage' => $currentPage,
 			'totalPages' => $totalPages,

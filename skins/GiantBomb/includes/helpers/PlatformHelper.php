@@ -220,7 +220,9 @@ function getAllPlatforms() {
                         // Get display name or fall back to clean name
                         $displayName = $cleanName;
                         if (isset($printouts['Has name'][0]) && !empty($printouts['Has name'][0])) {
-                            $displayName = $printouts['Has name'][0];
+                            // Handle both string and array responses from SMW API
+                            $nameValue = $printouts['Has name'][0];
+                            $displayName = is_string($nameValue) ? $nameValue : $cleanName;
                         }
                         
                         // Get abbreviation
