@@ -3,6 +3,9 @@
  * Helper functions for querying games data using SemanticMediaWiki
  */
 
+// Load platform helper functions
+require_once __DIR__ . '/PlatformHelper.php';
+
 /**
  * Query games from SMW with filters, sorting, and pagination
  *
@@ -11,12 +14,11 @@
  * @param string $sortOrder Sort order (title-asc, title-desc, date-asc, date-desc)
  * @param int $currentPage Current page number
  * @param int $itemsPerPage Items per page
- * @return array Array with 'games', 'totalGames', and 'platforms' keys
+ * @return array Array with 'games' and 'totalGames' keys
  */
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
 	$games = [];
 	$totalGames = 0;
-	$allPlatforms = [];
 
 	try {
 		$store = \SMW\StoreFactory::getStore();
@@ -167,25 +169,12 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 			$games[] = $pageData;
 		}
 
-		// Extract unique platforms from all games
-		foreach ($games as $game) {
-			if (isset($game['platforms']) && is_array($game['platforms'])) {
-				foreach ($game['platforms'] as $platform) {
-					if (!in_array($platform, $allPlatforms)) {
-						$allPlatforms[] = $platform;
-					}
-				}
-			}
-		}
-		sort($allPlatforms);
-
 	} catch (Exception $e) {
 		error_log("GamesHelper error: " . $e->getMessage());
 	}
 
 	return [
 		'games' => $games,
-		'totalGames' => $totalGames,
-		'platforms' => $allPlatforms
+		'totalGames' => $totalGames
 	];
 }

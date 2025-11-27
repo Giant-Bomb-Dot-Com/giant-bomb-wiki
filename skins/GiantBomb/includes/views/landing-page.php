@@ -4,6 +4,7 @@ use MediaWiki\MediaWikiServices;
 
 // Load helper functions
 require_once __DIR__ . '/../helpers/GamesHelper.php';
+require_once __DIR__ . '/../helpers/PlatformHelper.php';
 
 // Define available category buttons
 $buttons = [
@@ -32,8 +33,9 @@ $sortOrder = $request->getText('sort', 'title-asc');
 $result = queryGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
 $games = $result['games'];
 $totalGames = $result['totalGames'];
-$allPlatforms = $result['platforms'];
 
+// Get all platforms for filter dropdown (cached for 24 hours)
+$platforms = getAllPlatforms();
 $buttonData = [];
 
 // Populate buttonData from buttons array
@@ -63,7 +65,7 @@ $data = [
     ],
     'vue' => [
         'gamesJson' => htmlspecialchars(json_encode($games), ENT_QUOTES, 'UTF-8'),
-        'platformsJson' => htmlspecialchars(json_encode($allPlatforms), ENT_QUOTES, 'UTF-8'),
+        'platformsJson' => htmlspecialchars(json_encode($platforms), ENT_QUOTES, 'UTF-8'),
         'paginationJson' => htmlspecialchars(json_encode([
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
