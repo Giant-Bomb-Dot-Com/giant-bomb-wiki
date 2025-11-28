@@ -12,6 +12,10 @@ require_once __DIR__ . '/PlatformHelper.php';
  * Query games from Semantic MediaWiki with optional filters
  * 
  * @param string $filterText Optional text filter
+ * @param string $platformFilter Optional platform filter
+ * @param string $sortOrder Optional sort order
+ * @param int $currentPage Optional current page
+ * @param int $itemsPerPage Optional items per page
  * @return array Array of game data
  */
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
@@ -44,9 +48,11 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
         }
         
         $printouts = '|?Has name|?Has image|?Has platforms|?Has release date';
-        $params = '|limit=' . $itemsPerPage;
         
-        $countQuery = $queryConditions . $printouts;
+        $countParams = '|limit=5000';
+        
+        // No printouts needed for count query
+        $countQuery = $queryConditions . $countParams;
         
         $api = new ApiMain(
             new DerivativeRequest(
@@ -70,7 +76,8 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
             $page = max(1, min($currentPage, $totalPages));
             $offset = ($page - 1) * $itemsPerPage;
         }
-            
+        
+        $params = '|limit=' . $itemsPerPage;
         $fullQuery = $queryConditions . $printouts . $params;
         
         $api = new ApiMain(
