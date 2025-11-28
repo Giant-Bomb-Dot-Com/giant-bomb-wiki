@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\MediaWikiServices;
 /**
  * Platform Helper
  * 
@@ -395,43 +396,107 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
 }
 
 /**
- * Get the number of games for a given platform from Semantic MediaWiki
+ * Get the number of games for a platform from cache (fast lookup)
+ * Falls back to live query if cache is empty
+ * 
+ * @param string $platformName The platform name (e.g. PC or Platforms/PC)
+ * @return int The number of games associated with the platform
+ */
+function getGameCountForPlatform($platformName) {
+    $platformName = str_replace('Platforms/', '', $platformName);
+    
+    // Try to get from database cache first
+    $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
+    $row = $dbr->selectRow(
+        'platform_game_counts',
+        ['game_count', 'last_updated'],
+        ['platform_name' => $platformName],
+        __METHOD__
+    );
+    
+    if ($row) {
+        return (int)$row->game_count;
+    }
+    
+    // Fallback to live query if not cached (slow)
+    error_log("⚠ Game count cache miss for platform: $platformName - Consider running rebuild script");
+    return getGameCountForPlatformFromSMW($platformName);
+}
+
+/**
+ * Get the number of games for a given platform from Semantic MediaWiki database tables
+ * Queries SMW's internal tables directly to avoid pagination issues with ask queries
  * 
  * @param string $platformName The platform name (e.g. PC or Platforms/PC)
  * @return int The number of games associated with the platform
  */
 function getGameCountForPlatformFromSMW($platformName) {
     $gameCount = 0;
+    $SMW_PROPERTY_NAMESPACE = 102;
+    
     try {
+        // Ensure platform name has the namespace prefix
         $platformName = str_replace('Platforms/', '', $platformName);
-        $queryConditions = '[[Category:Games]][[Has platforms::Platforms/' . $platformName . ']]';
-        $printouts = '|?Has platforms';
-        $params = '|limit=50000';
-        $fullQuery = $queryConditions . $printouts . $params;
+        // Replace spaces with underscores for SMW property names
+        $fullPlatformName = 'Platforms/' . str_replace(' ', '_', $platformName);
         
-        $api = new ApiMain(
-            new DerivativeRequest(
-                RequestContext::getMain()->getRequest(),
-                [
-                    'action' => 'ask',
-                    'query' => $fullQuery,
-                    'format' => 'json',
-                ],
-                true
-            ),
-            true
+        $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
+        
+        // Get the platform's SMW page ID (s_id)
+        // smw_object_ids stores the mapping of page names to SMW internal IDs
+        $platformSmwId = $dbr->selectField(
+            'smw_object_ids',
+            'smw_id',
+            [
+                'smw_title' => $fullPlatformName,
+                'smw_namespace' => 0,  // Main namespace
+                'smw_subobject' => ''
+            ],
+            __METHOD__
         );
         
-        $api->execute();
-        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
-        
-        if (isset($result['query']['results'])) {
-            $gameCount = count($result['query']['results']);
+        if (!$platformSmwId) {
+            error_log("⚠ Platform not found in SMW: $platformName");
+            return 0;
         }
+        
+        // Get the property ID for "Has platforms"
+        $propertyId = $dbr->selectField(
+            'smw_object_ids',
+            'smw_id',
+            [
+                'smw_title' => 'Has_platforms',
+                'smw_namespace' => $SMW_PROPERTY_NAMESPACE,  // Property namespace
+                'smw_subobject' => ''
+            ],
+            __METHOD__
+        );
+        
+        if (!$propertyId) {
+            error_log("⚠ Property 'Has platforms' not found in SMW");
+            return 0;
+        }
+        
+        // Count games that have this platform
+        // smw_di_wikipage stores page-type property values
+        // s_id = subject (the game page), p_id = property (Has platforms), o_id = object (the platform)
+        $gameCount = $dbr->selectField(
+            'smw_di_wikipage',
+            'COUNT(DISTINCT s_id)',
+            [
+                'p_id' => $propertyId,
+                'o_id' => $platformSmwId
+            ],
+            __METHOD__
+        );
+        
+        error_log("✓ Platform '$platformName' (SMW ID: $platformSmwId): $gameCount games (direct SMW query)");
+        
     } catch (Exception $e) {
-        error_log("Error getting game count for platform: " . $e->getMessage());
+        error_log("Error getting game count for platform '$platformName': " . $e->getMessage());
     }
-    return $gameCount;
+    
+    return (int)$gameCount;
 }
 
 
@@ -538,7 +603,7 @@ function processPlatformQueryResults($results) {
                 $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $platformData['image']);
             }
             
-            $platformData['gameCount'] = getGameCountForPlatformFromSMW($pageName);
+            $platformData['gameCount'] = getGameCountForPlatform($pageName);
             
             $platforms[] = $platformData;
         }
