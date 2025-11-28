@@ -4,8 +4,8 @@ use MediaWiki\MediaWikiServices;
  * Rebuild platform game count cache
  * 
  * Usage:
- *   php maintenance/rebuildPlatformGameCounts.php
- *   php maintenance/rebuildPlatformGameCounts.php --platform="PlayStation 5"
+ *   php maintenance/RebuildPlatformGameCounts.php
+ *   php maintenance/RebuildPlatformGameCounts.php --platform="PlayStation 5"
  */
 
 require_once __DIR__ . '/Maintenance.php';
