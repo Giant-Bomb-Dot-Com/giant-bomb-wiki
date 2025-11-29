@@ -407,7 +407,7 @@ $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 # Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200;
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
 
 # Auto-append {{GameEnd}} to game pages missing it
 $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
@@ -540,3 +540,29 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 // user permissions
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
+
+// user groups and permissions
+// Also see extensions/GbSessionProvider/extension.json
+
+// to revise
+$wgCookieDomain = 'localhost';
+$wgCookiePrefix = '';
+$wgCookiePath = '/';
+$wgCookieSecure = true;
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
+
+// DEV only
+$wgDebugToolbar = true;
+$wgShowDebug = true;
+$wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+$wgDebugLogGroups = [
+    // log channel -> log path
+    'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+];
+
+// configs for GbSessionProvider
+wfLoadExtension( 'GbSessionProvider' );
+$wgGbSessionProviderJWKSUri = 'https://enormousexplosive.com/.well-known/jwks.json';
+$wgGbSessionProviderTestModeEnabled = true;
+$wgGbSessionProviderTestJWT = 'wannabe-jwt-token';

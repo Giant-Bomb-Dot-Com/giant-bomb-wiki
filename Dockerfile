@@ -65,6 +65,7 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
 
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
+COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh
