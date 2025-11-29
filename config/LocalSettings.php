@@ -412,7 +412,7 @@ $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 # Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200;
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
 
 # Auto-append {{GameEnd}} to game pages missing it
 $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
@@ -542,9 +542,12 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
-// user permissions
+// user groups and permissions
+// Also see extensions/GbSessionProvider/extension.json
 $wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['*']['edit'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
+$wgGroupPermissions['sysop']['edit'] = true;
 
 function RestrictImportExport(&$list) {
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
@@ -554,3 +557,24 @@ function RestrictImportExport(&$list) {
     return true;
 }
 $wgHooks['SpecialPage_initList'][]='RestrictImportExport';
+
+# =============================================================================
+# GBSESSIONPROVIDER (SSO)
+# =============================================================================
+
+wfLoadExtension( 'GbSessionProvider' );
+$wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
+
+$wgCookiePrefix = '';
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
+
+if ( $wikiEnv === 'dev' ) {
+    $wgDebugToolbar = true;
+    $wgShowDebug = true;
+    $wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+    $wgDebugLogGroups = [
+        // log channel -> log path
+        'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+    ];
+}
