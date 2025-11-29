@@ -97,4 +97,3 @@ function useSearch(
 }
 
 module.exports = { useSearch };
-
