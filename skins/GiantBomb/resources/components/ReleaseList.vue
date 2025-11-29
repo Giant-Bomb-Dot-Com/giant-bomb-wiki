@@ -97,11 +97,7 @@ module.exports = exports = defineComponent({
     const loading = ref(false);
 
     // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
+    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     const fetchReleases = async (region = "", platform = "") => {
       loading.value = true;

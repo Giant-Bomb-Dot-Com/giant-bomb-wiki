@@ -40,29 +40,14 @@
         </div>
       </div>
 
-      <!-- Pagination -->
-      <div v-if="totalPages > 1" class="pagination">
-        <button
-          @click="goToPage(currentPage - 1)"
-          :disabled="currentPage <= 1"
-          class="pagination-btn"
-        >
-          &lt;&nbsp;Previous
-        </button>
-
-        <div class="pagination-info">
-          Page {{ currentPage }} of {{ totalPages }}
-          <span class="pagination-total">({{ totalCount }} total)</span>
-        </div>
-
-        <button
-          @click="goToPage(currentPage + 1)"
-          :disabled="currentPage >= totalPages"
-          class="pagination-btn"
-        >
-          Next&nbsp;&gt;
-        </button>
-      </div>
+      <pagination
+        :total-items="totalCount"
+        :current-page="currentPage"
+        @page-change="handlePageChange"
+        :items-per-page-options="[24, 48, 72, 96]"
+        :items-per-page="48"
+      >
+      </pagination>
     </div>
 
     <div v-else class="no-platforms">
@@ -73,6 +58,8 @@
 
 <script>
 const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
+const Pagination = require("./Pagination.vue");
+const DEFAULT_PAGE_SIZE = 48;
 
 /**
  * PlatformList Component
@@ -80,6 +67,9 @@ const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
  */
 module.exports = exports = defineComponent({
   name: "PlatformList",
+  components: {
+    Pagination,
+  },
   props: {
     initialData: {
       type: String,
@@ -97,21 +87,23 @@ module.exports = exports = defineComponent({
       type: String,
       default: "1",
     },
+    pageSize: {
+      type: String,
+      default: DEFAULT_PAGE_SIZE.toString(),
+    },
   },
   setup(props) {
-    const { initialData, totalCount, currentPage, totalPages } = toRefs(props);
+    const { initialData, totalCount, currentPage, totalPages, pageSize } =
+      toRefs(props);
     const platforms = ref([]);
     const loading = ref(false);
     const pageCount = ref(parseInt(totalCount.value) || 0);
     const page = ref(parseInt(currentPage.value) || 1);
     const pages = ref(parseInt(totalPages.value) || 1);
+    const itemsPerPage = ref(parseInt(pageSize.value) || DEFAULT_PAGE_SIZE);
 
     // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
+    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     const fetchPlatforms = async (
       letter = "",
@@ -119,6 +111,7 @@ module.exports = exports = defineComponent({
       gameTitles = [],
       requireAllGames = false,
       pageNum = 1,
+      pageSize = DEFAULT_PAGE_SIZE,
     ) => {
       loading.value = true;
 
@@ -142,6 +135,7 @@ module.exports = exports = defineComponent({
           queryParts.push(`require_all_games=1`);
         }
         queryParts.push(`page=${pageNum}`);
+        queryParts.push(`page_size=${pageSize}`);
 
         const url = `${window.location.pathname}?${queryParts.join("&")}`;
 
@@ -166,6 +160,7 @@ module.exports = exports = defineComponent({
           pageCount.value = data.totalCount || 0;
           page.value = data.currentPage || 1;
           pages.value = data.totalPages || 1;
+          itemsPerPage.value = data.pageSize || DEFAULT_PAGE_SIZE;
         } else {
           console.error("API returned error:", data);
           platforms.value = [];
@@ -192,10 +187,16 @@ module.exports = exports = defineComponent({
         gameTitles,
         requireAllGames || false,
         pageNum || 1,
+        itemsPerPage.value,
       );
     };
 
-    const goToPage = (pageNum) => {
+    const handlePageChange = (event) => {
+      const { page, itemsPerPage } = event;
+      goToPage(page, itemsPerPage);
+    };
+
+    const goToPage = (pageNum, pageSize) => {
       if (pageNum < 1 || pageNum > pages.value) {
         return;
       }
@@ -225,6 +226,7 @@ module.exports = exports = defineComponent({
         queryParts.push(`require_all_games=1`);
       }
       queryParts.push(`page=${pageNum}`);
+      queryParts.push(`page_size=${pageSize}`);
 
       const queryString =
         queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
@@ -232,7 +234,14 @@ module.exports = exports = defineComponent({
       window.history.pushState({}, "", newUrl);
 
       // Fetch new page
-      fetchPlatforms(letter, sort, gameTitles, requireAllGames, pageNum);
+      fetchPlatforms(
+        letter,
+        sort,
+        gameTitles,
+        requireAllGames,
+        pageNum,
+        pageSize,
+      );
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -246,6 +255,7 @@ module.exports = exports = defineComponent({
         pageCount.value = parseInt(totalCount.value) || 0;
         page.value = parseInt(currentPage.value) || 1;
         pages.value = parseInt(totalPages.value) || 1;
+        itemsPerPage.value = parseInt(pageSize.value) || DEFAULT_PAGE_SIZE;
       } catch (e) {
         console.error("Failed to parse initial data:", e);
         platforms.value = [];
@@ -269,6 +279,7 @@ module.exports = exports = defineComponent({
       currentPage: page,
       totalPages: pages,
       goToPage,
+      handlePageChange,
     };
   },
 });

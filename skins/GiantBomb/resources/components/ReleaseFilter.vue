@@ -93,11 +93,7 @@ module.exports = exports = defineComponent({
     };
 
     // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
+    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     onMounted(() => {
       // Parse platforms data
