@@ -159,17 +159,17 @@ $wgExternalDataSources['gb_api_dump'] = [
     'password' => getenv("MARIADB_PASSWORD")
 ];
 
-$wgExternalDatabases['external_db'] = [ 
-    'class' => 'DatabaseLoadBalancer', 
-    'hosts' => [ 
-        [ 
+$wgExternalDatabases['external_db'] = [
+    'class' => 'DatabaseLoadBalancer',
+    'hosts' => [
+        [
             'type' => 'mysql',
-            'host' => getenv( 'EXTERNAL_DB_HOST' ), 
+            'host' => getenv( 'EXTERNAL_DB_HOST' ),
             'dbname' => getenv( 'EXTERNAL_DB_NAME' ),
             'user' => getenv( 'EXTERNAL_DB_USER' ),
-            'password' => getenv( 'EXTERNAL_DB_PASSWORD' ) 
-        ] 
-    ] 
+            'password' => getenv( 'EXTERNAL_DB_PASSWORD' )
+        ]
+    ]
 ];
 
 
@@ -387,5 +387,31 @@ $smwgQMaxInlineLimit = 7500;
 #Allow a large range of conditions in SMW queries
 $smwgQMaxSize = 100;
 
-#Allow custom favicon location 
+#Allow custom favicon location
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
+
+// to revise
+$wgCookieDomain = 'localhost';
+$wgCookiePrefix = '';
+$wgCookiePath = '/';
+$wgCookieSecure = true;
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
+
+// DEV only
+$wgDebugToolbar = true;
+$wgShowDebug = true;
+$wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+$wgDebugLogGroups = [
+    // log channel -> log path
+    'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+];
+
+// configs for GbSessionProvider
+wfLoadExtension( 'GbSessionProvider' );
+$wgGbSessionProviderJWKSUri = 'https://enormousexplosive.com/.well-known/jwks.json';
+$wgGbSessionProviderTestModeEnabled = true;
+$wgGbSessionProviderTestJWT = 'wannabe-jwt-token';
+
+// user groups and permissions
+// Also see extensions/GbSessionProvider/extension.json
