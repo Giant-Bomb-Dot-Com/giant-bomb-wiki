@@ -72,13 +72,13 @@
 </template>
 
 <script>
-const { ref, toRefs, onMounted, onUnmounted } = require("vue");
+const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
 
 /**
  * PlatformList Component
  * Displays platforms and handles async filtering and pagination
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "PlatformList",
   props: {
     initialData: {
@@ -182,8 +182,8 @@ module.exports = exports = {
       const {
         letter,
         sort,
-        gameTitles,
-        requireAllGames,
+        game_title: gameTitles,
+        require_all_games: requireAllGames,
         page: pageNum,
       } = event.detail;
       fetchPlatforms(
@@ -271,7 +271,7 @@ module.exports = exports = {
       goToPage,
     };
   },
-};
+});
 </script>
 
 <style>
