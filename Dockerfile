@@ -33,8 +33,8 @@ RUN chown -R www-data:www-data /var/www/html
 RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
     lsb_release -c -s > /tmp/lsb_release && \
     GCSFUSE_REPO=$(cat /tmp/lsb_release) && \
-    echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
-    wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | tee /usr/share/keyrings/cloud.google.gpg >/dev/null && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
     apt-get update && apt-get install -y gcsfuse; \
     fi
 

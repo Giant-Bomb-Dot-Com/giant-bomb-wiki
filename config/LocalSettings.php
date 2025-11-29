@@ -304,6 +304,7 @@ wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
+wfLoadExtension( 'AlgoliaSearch' );
 
 $wgGiantBombResolveFields = [
 	'displaytitle',
@@ -329,6 +330,29 @@ $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
 $wgPageFormsUseDisplayTitle = false;
+
+$wgAlgoliaSearchEnabled = false;
+$algoliaEnabled = getenv( 'ALGOLIA_SEARCH_ENABLED' );
+if ( $algoliaEnabled !== false && $algoliaEnabled !== null ) {
+	$flag = strtolower( trim( (string)$algoliaEnabled ) );
+	if ( $flag === '1' || $flag === 'true' || $flag === 'yes' ) {
+		$wgAlgoliaSearchEnabled = true;
+	}
+}
+$algoliaAppId = getenv( 'ALGOLIA_APP_ID' );
+if ( $algoliaAppId !== false && $algoliaAppId !== null && trim( $algoliaAppId ) !== '' ) {
+	$wgAlgoliaAppId = trim( $algoliaAppId );
+}
+$algoliaAdminKey = getenv( 'ALGOLIA_ADMIN_API_KEY' );
+if ( $algoliaAdminKey !== false && $algoliaAdminKey !== null && trim( $algoliaAdminKey ) !== '' ) {
+	$wgAlgoliaAdminApiKey = trim( $algoliaAdminKey );
+}
+$algoliaIndex = getenv( 'ALGOLIA_INDEX_CONTENT' );
+if ( $algoliaIndex !== false && $algoliaIndex !== null && trim( $algoliaIndex ) !== '' ) {
+	$wgAlgoliaIndexName = trim( $algoliaIndex );
+} else {
+	$wgAlgoliaIndexName = 'gb_content';
+}
 
 # Turn on subpages
 $wgNamespacesWithSubpages[NS_MAIN] = true;
