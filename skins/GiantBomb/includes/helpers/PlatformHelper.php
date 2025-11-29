@@ -392,6 +392,7 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
         'totalCount' => $totalCount,
         'currentPage' => $page,
         'totalPages' => max(1, ceil($totalCount / $limit)),
+        'pageSize' => $limit,
     ];
 }
 

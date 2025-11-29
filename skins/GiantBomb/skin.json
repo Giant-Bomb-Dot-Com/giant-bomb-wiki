@@ -59,10 +59,12 @@
         "resources/components/FilterContainer.vue",
         "resources/components/FilterDropdown.vue",
         "resources/components/SearchableMultiSelect.vue",
+        "resources/components/Pagination.vue",
         "resources/composables/index.js",
         "resources/composables/useFilters.js",
         "resources/composables/useSearch.js",
         "resources/helpers/countryFlags.js",
+        "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
