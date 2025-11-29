@@ -555,8 +555,8 @@ describe("PlatformList", () => {
         detail: {
           letter: "A",
           sort: "alphabetical",
-          gameTitles: [],
-          requireAllGames: false,
+          game_title: [],
+          require_all_games: false,
           page: 1,
         },
       });
@@ -619,8 +619,8 @@ describe("PlatformList", () => {
         detail: {
           letter: "N",
           sort: "release_date",
-          gameTitles: [],
-          requireAllGames: false,
+          game_title: [],
+          require_all_games: false,
           page: 1,
         },
       });
@@ -690,8 +690,8 @@ describe("PlatformList", () => {
         detail: {
           letter: "",
           sort: "release_date",
-          gameTitles: ["Games/Test_Game", "Games/Another_Game"],
-          requireAllGames: true,
+          game_title: ["Games/Test_Game", "Games/Another_Game"],
+          require_all_games: true,
           page: 1,
         },
       });
@@ -722,7 +722,7 @@ describe("PlatformList", () => {
       await wrapper.vm.$nextTick();
 
       const event = new CustomEvent("platforms-filter-changed", {
-        detail: { letter: "", sort: "release_date", gameTitles: [], page: 1 },
+        detail: { letter: "", sort: "release_date", game_title: [], page: 1 },
       });
       window.dispatchEvent(event);
 
@@ -756,7 +756,7 @@ describe("PlatformList", () => {
       await wrapper.vm.$nextTick();
 
       const event = new CustomEvent("platforms-filter-changed", {
-        detail: { letter: "", sort: "release_date", gameTitles: [], page: 1 },
+        detail: { letter: "", sort: "release_date", game_title: [], page: 1 },
       });
       window.dispatchEvent(event);
 

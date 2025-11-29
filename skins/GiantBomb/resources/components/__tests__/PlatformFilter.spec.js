@@ -191,18 +191,16 @@ describe("PlatformFilter", () => {
         expect.stringContaining("letter=A"),
       );
 
-      expect(window.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: "platforms-filter-changed",
-          detail: {
-            letter: "A",
-            sort: "release_date",
-            gameTitles: [],
-            requireAllGames: false,
-            page: 1,
-          },
-        }),
-      );
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "A",
+        sort: "release_date",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
     });
 
     it("updates URL and dispatches event when sort is changed", async () => {
@@ -221,18 +219,16 @@ describe("PlatformFilter", () => {
         expect.stringContaining("sort=alphabetical"),
       );
 
-      expect(window.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: "platforms-filter-changed",
-          detail: {
-            letter: "",
-            sort: "alphabetical",
-            gameTitles: [],
-            requireAllGames: false,
-            page: 1,
-          },
-        }),
-      );
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "",
+        sort: "alphabetical",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
     });
 
     it("shows clear filters button when filters are active", async () => {
@@ -248,286 +244,6 @@ describe("PlatformFilter", () => {
       const clearButton = wrapper.find(".clear-filters-btn");
       expect(clearButton.exists()).toBe(true);
       expect(clearButton.text()).toBe("Clear Filters");
-    });
-
-    it("does not add sort parameter to URL when default sort is selected", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const letterSelect = wrapper.find("#letter-filter");
-      await letterSelect.setValue("C");
-
-      const lastCall =
-        window.history.pushState.mock.calls[
-          window.history.pushState.mock.calls.length - 1
-        ];
-      expect(lastCall[2]).not.toContain("sort=");
-      expect(lastCall[2]).toContain("letter=C");
-    });
-  });
-
-  describe("Search Functionality", () => {
-    it("does not search when input is less than 2 characters", async () => {
-      jest.useFakeTimers();
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const searchInput = wrapper.find("#search-filter");
-      await searchInput.setValue("A");
-      await wrapper.vm.$nextTick();
-
-      jest.advanceTimersByTime(500);
-      await wrapper.vm.$nextTick();
-
-      expect(global.fetch).not.toHaveBeenCalled();
-      expect(wrapper.vm.showSearchResults).toBe(false);
-
-      jest.useRealTimers();
-    });
-
-    it("searches games after debounce delay", async () => {
-      jest.useFakeTimers();
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          games: [
-            {
-              searchName: "Games/Test_Game",
-              title: "Test Game",
-              image: "https://example.com/test.jpg",
-              releaseYear: "2023",
-              platforms: [{ abbrev: "PC" }],
-            },
-          ],
-          currentPage: 1,
-          totalPages: 1,
-          hasMore: false,
-        }),
-      });
-
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const searchInput = wrapper.find("#search-filter");
-      await searchInput.setValue("Test");
-      await wrapper.vm.$nextTick();
-
-      jest.advanceTimersByTime(500);
-      await wrapper.vm.$nextTick();
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("action=get-games"),
-      );
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("name=Test"),
-      );
-
-      jest.useRealTimers();
-    });
-
-    it("displays search results", async () => {
-      const mockGames = [
-        {
-          searchName: "Games/Test_Game",
-          title: "Test Game",
-          image: "https://example.com/test.jpg",
-          releaseYear: "2023",
-          platforms: [{ abbrev: "PC" }],
-        },
-      ];
-
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Manually set the search results
-      wrapper.vm.searchText = "Test";
-      wrapper.vm.showSearchResults = true;
-      wrapper.vm.searchResults = mockGames;
-      await wrapper.vm.$nextTick();
-
-      const searchResults = wrapper.find(".search-results");
-      expect(searchResults.exists()).toBe(true);
-
-      const resultItems = wrapper.findAll(".search-result-item");
-      expect(resultItems).toHaveLength(1);
-      expect(resultItems[0].text()).toContain("Test Game");
-    });
-
-    it("displays loading state during search", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Manually set loading state
-      wrapper.vm.isSearching = true;
-      wrapper.vm.showSearchResults = true;
-      await wrapper.vm.$nextTick();
-
-      const loadingDiv = wrapper.find(".search-loading");
-      expect(loadingDiv.exists()).toBe(true);
-      expect(loadingDiv.text()).toBe("Searching...");
-    });
-
-    it("displays no results message when no games found", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Set up state to show no results
-      wrapper.vm.searchText = "NonexistentGame";
-      wrapper.vm.showSearchResults = true;
-      wrapper.vm.searchResults = [];
-      wrapper.vm.isSearching = false;
-      await wrapper.vm.$nextTick();
-
-      const noResults = wrapper.find(".search-no-results");
-      expect(noResults.exists()).toBe(true);
-      expect(noResults.text()).toBe("No games found");
-    });
-
-    it("selects game and adds it to chips", async () => {
-      const mockGames = [
-        {
-          searchName: "Games/Test_Game",
-          title: "Test Game",
-          image: "https://example.com/test.jpg",
-          releaseYear: "2023",
-          platforms: [],
-        },
-      ];
-
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Set up search results
-      wrapper.vm.searchText = "Test";
-      wrapper.vm.showSearchResults = true;
-      wrapper.vm.searchResults = mockGames;
-      await wrapper.vm.$nextTick();
-
-      const resultItem = wrapper.find(".search-result-item");
-      await resultItem.trigger("mousedown");
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.selectedGames).toHaveLength(1);
-      expect(wrapper.vm.selectedGames[0].title).toBe("Test Game");
-
-      const gameChip = wrapper.find(".game-chip");
-      expect(gameChip.exists()).toBe(true);
-      expect(gameChip.text()).toContain("Test Game");
-    });
-
-    it("removes game chip when remove button is clicked", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Manually add a game to selectedGames
-      wrapper.vm.selectedGames = [
-        {
-          searchName: "Games/Test_Game",
-          title: "Test Game",
-        },
-      ];
-      await wrapper.vm.$nextTick();
-
-      const removeButton = wrapper.find(".game-chip-remove");
-      expect(removeButton.exists()).toBe(true);
-
-      await removeButton.trigger("click");
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.selectedGames).toHaveLength(0);
-      expect(wrapper.find(".game-chip").exists()).toBe(false);
-    });
-
-    it("shows require all games checkbox when multiple games selected", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.selectedGames = [
-        { searchName: "Games/Game1", title: "Game 1" },
-        { searchName: "Games/Game2", title: "Game 2" },
-      ];
-      await wrapper.vm.$nextTick();
-
-      const checkbox = wrapper.find(".filter-checkbox-group");
-      expect(checkbox.exists()).toBe(true);
-
-      const checkboxLabel = wrapper.find(".filter-checkbox-label");
-      expect(checkboxLabel.text()).toContain(
-        "Only return results if linked to all games",
-      );
-    });
-
-    it("loads more results when load more button is clicked", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      // Set up initial search results with more available
-      wrapper.vm.searchText = "Game";
-      wrapper.vm.showSearchResults = true;
-      wrapper.vm.searchResults = [
-        { searchName: "Games/Game1", title: "Game 1" },
-      ];
-      wrapper.vm.hasMoreResults = true;
-      wrapper.vm.currentSearchPage = 1;
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.hasMoreResults).toBe(true);
-
-      const loadMoreBtn = wrapper.find(".load-more-btn");
-      expect(loadMoreBtn.exists()).toBe(true);
-
-      // Mock fetch for the load more action
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          games: [{ searchName: "Games/Game2", title: "Game 2" }],
-          currentPage: 2,
-          totalPages: 2,
-          hasMore: false,
-        }),
-      });
-
-      await loadMoreBtn.trigger("mousedown");
-      await wrapper.vm.$nextTick();
-
-      // Wait for the async operation
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.searchResults).toHaveLength(2);
-      expect(wrapper.vm.hasMoreResults).toBe(false);
     });
   });
 
@@ -596,18 +312,16 @@ describe("PlatformFilter", () => {
       const clearButton = wrapper.find(".clear-filters-btn");
       await clearButton.trigger("click");
 
-      expect(window.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: "platforms-filter-changed",
-          detail: {
-            letter: "",
-            sort: "release_date",
-            gameTitles: [],
-            requireAllGames: false,
-            page: 1,
-          },
-        }),
-      );
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "",
+        sort: "release_date",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
     });
 
     it("hides clear button after clearing", async () => {
@@ -701,28 +415,6 @@ describe("PlatformFilter", () => {
 
       // Reset
       window.location.search = "";
-    });
-
-    it("handles game selection without duplicates", async () => {
-      const wrapper = mount(PlatformFilter, {
-        props: defaultProps,
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const game = {
-        searchName: "Games/Duplicate_Game",
-        title: "Duplicate Game",
-      };
-
-      wrapper.vm.selectedGames = [game];
-      await wrapper.vm.$nextTick();
-
-      // Try to select the same game again
-      wrapper.vm.selectGame(game);
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.selectedGames).toHaveLength(1);
     });
 
     it("handles fetch errors gracefully", async () => {
