@@ -29,6 +29,8 @@ services:
     volumes:
       #Skins
       - ./skins:/var/www/html/skins:cached
+      # Extensions
+      - ./extensions/AlgoliaSearch:/var/www/html/extensions/AlgoliaSearch:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
       - ./config:/config
