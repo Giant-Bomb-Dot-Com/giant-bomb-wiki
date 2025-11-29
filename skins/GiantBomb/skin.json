@@ -56,6 +56,12 @@
         "resources/components/ReleaseList.vue",
         "resources/components/PlatformFilter.vue",
         "resources/components/PlatformList.vue",
+        "resources/components/FilterContainer.vue",
+        "resources/components/FilterDropdown.vue",
+        "resources/components/SearchableMultiSelect.vue",
+        "resources/composables/index.js",
+        "resources/composables/useFilters.js",
+        "resources/composables/useSearch.js",
         "resources/helpers/countryFlags.js",
         "resources/data/countryFlags.json"
       ],
