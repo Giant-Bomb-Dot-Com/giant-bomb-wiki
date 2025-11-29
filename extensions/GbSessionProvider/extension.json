@@ -1,0 +1,63 @@
+{
+  "manifest_version": 2,
+  "name": "GbSessionProvider",
+  "author": "Zelnox",
+  "description": "To provide a Mediawiki session for Giant Bomb Next single-sign-on (SSO) cookies. Also to create a Mediawiki user is required.",
+  "url": "https://www.giantbomb.com",
+  "version": "0.1",
+  "license-name": "MIT",
+  "type": "identity",
+  "requires": {
+    "MediaWiki": ">= 1.43.5"
+  },
+  "load_composer_autoloader": true,
+  "AutoloadNamespaces": {
+    "MediaWiki\\Extension\\GbSessionProvider\\": "src/"
+  },
+  "SessionProviders": {
+    "MediaWiki\\Extension\\GbSessionProvider\\GbSessionProvider": {
+      "class": "MediaWiki\\Extension\\GbSessionProvider\\GbSessionProvider",
+      "args": []
+    }
+  },
+  "config": {
+    "GbSessionProviderTestModeEnabled": {
+      "value": false,
+      "description": "Enable test mode (boolean)"
+    },
+    "GbSessionProviderJWKSUri": {
+      "value": "https://enormousexplosive.com/.well-known/jwks.json",
+      "description": "URI to JWKS"
+    },
+    "GbSessionProviderTestJWT": {
+      "value": "some value",
+      "description": "A test JWT for the dummy cookie (string)"
+    },
+    "GbSessionProviderGbnCookieName": {
+      "value": "gb_wiki",
+      "description": "Name of the GBN cookie used for external authentication"
+    }
+  },
+	"AvailableRights": [
+		"gb-premium"
+	],
+  "RevokePermissions": {
+    "*": {
+      "createpage": true
+    },
+    "user": {
+      "edit": true,
+      "editcontentmodel": true
+    }
+  },
+	"GroupPermissions": {
+    "subscriber": {
+      "createpage": true,
+      "editcontentmodel": true,
+      "gb-premium": true
+    },
+		"bureaucrat": {
+			"gb-premium": true
+		}
+	}
+}

@@ -69,6 +69,7 @@ RUN mkdir -p -m 755 /var/www/html/cache/html && \
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 COPY --chown=www-data:www-data ./extensions/AlgoliaSearch /var/www/html/extensions/AlgoliaSearch
+COPY --chown=www-data:www-data ./extension/GbSessionProvider /var/www/html/extensions/GbSessionProvider
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh
