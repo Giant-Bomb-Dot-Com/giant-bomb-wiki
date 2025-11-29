@@ -17,5 +17,3 @@ services:
     platform: linux/amd64
     environment:
       - MV_ENV=prod
-
-

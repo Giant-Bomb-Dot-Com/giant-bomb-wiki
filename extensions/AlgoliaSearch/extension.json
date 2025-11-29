@@ -15,9 +15,7 @@
     "MediaWiki\\Extension\\AlgoliaSearch\\IndexSettings": "includes/IndexSettings.php",
     "MediaWiki\\Extension\\AlgoliaSearch\\RecordMapper": "includes/RecordMapper.php"
   },
-  "MaintenanceScripts": [
-    "maintenance/algoliaReindex.php"
-  ],
+  "MaintenanceScripts": ["maintenance/algoliaReindex.php"],
   "HookHandlers": [],
   "config": {
     "AlgoliaSearchEnabled": {
@@ -53,5 +51,3 @@
     }
   }
 }
-
-
