@@ -37,8 +37,7 @@ function useFilters(eventName, initialFilters = {}) {
     });
 
     // Build the final URL
-    const queryString =
-      queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+    const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
     const newUrl = `${url.pathname}${queryString}`;
 
     // Update URL without reloading
@@ -102,4 +101,3 @@ function useFilters(eventName, initialFilters = {}) {
 }
 
 module.exports = { useFilters };
-
