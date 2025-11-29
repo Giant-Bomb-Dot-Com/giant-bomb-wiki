@@ -1,0 +1,21 @@
+services:
+  db:
+    extends:
+      service: db
+      file: docker-compose.yml
+
+  wiki:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        INSTALL_GCSFUSE: "false"
+    extends:
+      service: wiki
+      file: docker-compose.yml
+    # Ensure we mimic prod arch on Apple Silicon
+    platform: linux/amd64
+    environment:
+      - MV_ENV=prod
+
+
