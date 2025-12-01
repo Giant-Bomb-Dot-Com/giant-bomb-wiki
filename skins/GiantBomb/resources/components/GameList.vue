@@ -54,105 +54,14 @@
         </a>
       </div>
 
-      <!-- Async Pagination Controls -->
-      <div class="pagination" v-if="paginationData.totalPages > 1">
-        <div class="pagination-info">
-          Showing {{ paginationData.startItem }}-{{ paginationData.endItem }} of
-          {{ paginationData.totalItems }} items
-        </div>
-
-        <div class="pagination-controls">
-          <button
-            @click.prevent="goToPage(1)"
-            :class="[
-              'pagination-btn',
-              'pagination-first',
-              { disabled: paginationData.currentPage === 1 },
-            ]"
-            :disabled="paginationData.currentPage === 1"
-            aria-label="First page"
-          >
-            ««
-          </button>
-
-          <button
-            @click.prevent="goToPage(paginationData.currentPage - 1)"
-            :class="[
-              'pagination-btn',
-              'pagination-prev',
-              { disabled: paginationData.currentPage === 1 },
-            ]"
-            :disabled="paginationData.currentPage === 1"
-            aria-label="Previous page"
-          >
-            ‹
-          </button>
-
-          <button
-            v-for="page in visiblePages"
-            :key="page"
-            @click.prevent="goToPage(page)"
-            :class="[
-              'pagination-btn',
-              'pagination-page',
-              { active: page === paginationData.currentPage },
-            ]"
-            :aria-label="`Page ${page}`"
-            :aria-current="
-              page === paginationData.currentPage ? 'page' : undefined
-            "
-          >
-            {{ page }}
-          </button>
-
-          <button
-            @click.prevent="goToPage(paginationData.currentPage + 1)"
-            :class="[
-              'pagination-btn',
-              'pagination-next',
-              {
-                disabled:
-                  paginationData.currentPage === paginationData.totalPages,
-              },
-            ]"
-            :disabled="paginationData.currentPage === paginationData.totalPages"
-            aria-label="Next page"
-          >
-            ›
-          </button>
-
-          <button
-            @click.prevent="goToPage(paginationData.totalPages)"
-            :class="[
-              'pagination-btn',
-              'pagination-last',
-              {
-                disabled:
-                  paginationData.currentPage === paginationData.totalPages,
-              },
-            ]"
-            :disabled="paginationData.currentPage === paginationData.totalPages"
-            aria-label="Last page"
-          >
-            »»
-          </button>
-        </div>
-
-        <div class="pagination-size">
-          <label for="items-per-page-games">Items per page:</label>
-          <select
-            id="items-per-page-games"
-            :value="paginationData.itemsPerPage"
-            @change="changeItemsPerPage"
-            class="pagination-select"
-          >
-            <option :value="25">25</option>
-            <option :value="50">50</option>
-            <option :value="75">75</option>
-            <option :value="100">100</option>
-          </select>
-        </div>
-      </div>
+      <!-- Pagination Component -->
+      <Pagination
+        v-if="paginationData.totalPages > 1"
+        :total-items="paginationData.totalItems"
+        :items-per-page="paginationData.itemsPerPage"
+        :current-page="paginationData.currentPage"
+        @page-change="handlePageChange"
+      />
     </div>
 
     <div v-else class="empty-state">
@@ -165,8 +74,9 @@
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
+const { ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
+const Pagination = require("./Pagination.vue");
 
 /**
  * GameList Component
@@ -174,6 +84,9 @@ const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
  */
 module.exports = exports = {
   name: "GameList",
+  components: {
+    Pagination,
+  },
   props: {
     initialData: {
       type: String,
@@ -198,68 +111,45 @@ module.exports = exports = {
       endItem: 0,
     });
 
-    // Calculate visible pages for pagination
-    const visiblePages = computed(() => {
-      const total = paginationData.value.totalPages;
-      const current = paginationData.value.currentPage;
-      const maxVisible = 5;
-
-      if (total <= maxVisible) {
-        return Array.from({ length: total }, (_, i) => i + 1);
-      }
-
-      const halfVisible = Math.floor(maxVisible / 2);
-      let start = Math.max(1, current - halfVisible);
-      let end = Math.min(total, start + maxVisible - 1);
-
-      if (end - start < maxVisible - 1) {
-        start = Math.max(1, end - maxVisible + 1);
-      }
-
-      return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-    });
-
-    // Navigate to a specific page
-    const goToPage = (page) => {
-      if (page < 1 || page > paginationData.value.totalPages) {
-        return;
-      }
-
-      // Update URL
+    // Handle pagination change from Pagination component
+    const handlePageChange = ({ page, itemsPerPage }) => {
+      // Get current URL params
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
 
-      if (page === 1) {
-        params.delete("page");
-      } else {
-        params.set("page", page);
-      }
-
-      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
-
-      // Fetch games for the new page
+      // Preserve existing search, platform, and sort params
       const search = params.get("search") || "";
       const platform = params.get("platform") || "";
       const sort = params.get("sort") || "title-asc";
-      fetchGames(search, platform, sort, page);
-    };
 
-    // Build URL for page navigation (kept for compatibility)
-    const buildPageUrl = (page) => {
-      if (page < 1 || page > paginationData.value.totalPages) {
-        return "#";
-      }
-
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
+      // Update page param
       if (page === 1) {
         params.delete("page");
       } else {
         params.set("page", page);
       }
 
-      return `${url.pathname}?${params.toString()}`;
+      // Update itemsPerPage param
+      if (itemsPerPage !== paginationData.value.itemsPerPage) {
+        if (itemsPerPage === 25) {
+          params.delete("perPage");
+        } else {
+          params.set("perPage", itemsPerPage);
+        }
+        // Reset to page 1 when changing items per page
+        params.delete("page");
+        page = 1;
+      }
+
+      // Update URL in browser
+      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
+
+      // Update local pagination data immediately
+      paginationData.value.itemsPerPage = itemsPerPage;
+      paginationData.value.currentPage = page;
+
+      // Fetch games for the new page
+      fetchGames(search, platform, sort, page);
     };
 
     // Fetch games from API
@@ -327,31 +217,6 @@ module.exports = exports = {
       fetchGames(search, platform, sort, page);
     };
 
-    // Change items per page (now uses async fetch)
-    const changeItemsPerPage = (event) => {
-      const newPerPage = parseInt(event.target.value);
-      paginationData.value.itemsPerPage = newPerPage;
-
-      // Update URL
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
-      if (newPerPage === 25) {
-        params.delete("perPage");
-      } else {
-        params.set("perPage", newPerPage);
-      }
-      params.delete("page");
-
-      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
-
-      // Fetch with new page size
-      const search = params.get("search") || "";
-      const platform = params.get("platform") || "";
-      const sort = params.get("sort") || "title-asc";
-      fetchGames(search, platform, sort, 1);
-    };
-
     onMounted(() => {
       // Parse initial server-rendered data
       try {
@@ -395,10 +260,7 @@ module.exports = exports = {
       games,
       loading,
       paginationData,
-      visiblePages,
-      buildPageUrl,
-      goToPage,
-      changeItemsPerPage,
+      handlePageChange,
     };
   },
 };
@@ -426,126 +288,5 @@ module.exports = exports = {
 .game-placeholder-icon {
   font-size: 4rem;
   opacity: 0.3;
-}
-
-/* Pagination styles */
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 0 20px 0;
-  gap: 20px;
-  flex-wrap: wrap;
-  border-top: 1px solid #333;
-  margin-top: 30px;
-}
-
-.pagination-info {
-  font-size: 0.9rem;
-  color: #999;
-}
-
-.pagination-controls {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
-
-.pagination-btn {
-  min-width: 36px;
-  height: 36px;
-  padding: 8px 12px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 4px;
-  color: #ccc;
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pagination-btn:hover:not(.disabled) {
-  background: #3a3a3a;
-  border-color: #e63946;
-  color: #fff;
-}
-
-.pagination-btn.disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.pagination-btn.active {
-  background: #e63946;
-  border-color: #e63946;
-  color: #fff;
-  font-weight: 600;
-  pointer-events: none;
-}
-
-.pagination-first,
-.pagination-last {
-  font-weight: bold;
-}
-
-.pagination-prev,
-.pagination-next {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.pagination-size {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
-  color: #999;
-}
-
-.pagination-select {
-  padding: 6px 10px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 4px;
-  color: #ccc;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.pagination-select:hover {
-  border-color: #e63946;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .pagination {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-  }
-
-  .pagination-info {
-    text-align: center;
-  }
-
-  .pagination-controls {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .pagination-size {
-    justify-content: center;
-  }
-
-  .pagination-btn {
-    min-width: 32px;
-    height: 32px;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
 }
 </style>
