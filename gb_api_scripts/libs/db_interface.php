@@ -40,6 +40,7 @@ interface DbInterface
     public function getAll(string $table, array $fields, int $continue = 0);
     public function getPageName(string $table, int $id);
     public function getImageName(int $id);
+    public function getImageData(int $id): array;
     public function getRelatedPageNames(string $table, array $relationsMap, int $id);
     public function getCreditsFromDB(int $id);
     public function getReleasesFromDB(int $id);

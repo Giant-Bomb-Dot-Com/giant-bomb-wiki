@@ -41,22 +41,6 @@ trait BuildPageData
             $text .= "\n| Deck={$deck}";
         }
 
-        if (!empty($data['infobox_image'])) {
-            $infoboxImage = $this->getDb()->getImageName($data['infobox_image']);
-            $infoboxImage = str_replace('%20', ' ', $infoboxImage);
-            $infoboxImage = str_replace('&', '&amp;', $infoboxImage);
-            $text .= "\n| Image={$infoboxImage}";
-            $text .= "\n| Caption=image of {$data['name']}";
-        }
-
-        if (!empty($data['background_image'])) {
-            $backgroundImage = $this->getDb()->getImageName($data['background_image']);
-            $backgroundImage = str_replace('%20', ' ', $backgroundImage);
-            $backgroundImage = str_replace('&', '&amp;', $backgroundImage);
-            $text .= "\n| BackgroundImage={$backgroundImage}";
-            $text .= "\n| BackgroundImageCaption=background image used in Giant Bomb's game page for {$data['name']}";
-        }
-
         if (!empty($data['real_name'])) {
             $realName = trim(htmlspecialchars($data['real_name'], ENT_XML1, 'UTF-8'));
             $text .= "\n| RealName={$realName}";
@@ -184,5 +168,31 @@ trait BuildPageData
         $text .= "\n}}\n";
 
         return $text;
+    }
+
+    /**
+     * Creates a image div containing infobox and background image data
+     *
+     * @param array $data
+     * @return string
+     */
+    public function getImageData(array $data): string
+    {
+        $imageArray = [
+            'infobox' => [],
+            'background' => []
+        ];
+
+        if (!empty($data['infobox_image_id'])) {
+            $imageArray['infobox'] = $this->getImageData($data['infobox_image_id']);
+        }
+
+        if (!empty($data['background_image_id'])) {
+            $imageArray['background'] = $this->getImageData($data['background_image_id']);
+        }
+
+        $imageData = "<div id='imageData' data-json='".json_encode($imageArray)."' />";
+
+        return $imageData;
     }
 }

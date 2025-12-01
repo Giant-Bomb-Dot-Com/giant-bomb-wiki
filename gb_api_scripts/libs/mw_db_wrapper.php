@@ -95,6 +95,23 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchField();
     }
 
+    public function getImageData(int $id): array
+    {
+        $result = $this->getById('image', 'name, caption, path, mimetype, image_sizes', $id);
+
+        if (empty($result)) {
+            return [];
+        }
+
+        return [
+            'file' => $result->name,
+            'path' => $result->path,
+            'mime' => $result->mimetype,
+            'sizes' => $result->image_sizes,
+            'caption' => $result->caption
+        ];
+    }
+
     public function getCreditsFromDB(int $id)
     {
         $qb = $this->dbConnection->newSelectQueryBuilder()

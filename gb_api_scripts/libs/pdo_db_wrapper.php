@@ -90,6 +90,24 @@ class PdoDbWrapper implements DbInterface
         return 'https://giantbomb.com/a/uploads/original/' . $result->path . $result->name;
     }
 
+    public function getImageData(int $id): array
+    {
+        $sql = "SELECT name, caption, path, mimetype, image_sizes' FROM image WHERE id = :id";
+        $result = $this->fetchObject($sql, ['id' => $id]);
+
+        if (!$result) {
+            return [];
+        }
+
+        return [
+            'file' => $result->name,
+            'path' => $result->path,
+            'mime' => $result->mimetype,
+            'sizes' => $result->image_sizes,
+            'caption' => $result->caption
+        ];
+    }
+
     public function getCreditsFromDB(int $id)
     {
         $sql = "SELECT o.person_id, o.description, o.role_id, p.mw_page_name
