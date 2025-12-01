@@ -1,0 +1,14 @@
+<div id="gb-search" class="gb-search">    
+    <div class="search-form">        
+        <select id="search_dropdown" class="search_dropdown">
+            {{#wikiTypes}}
+                <option data-title="{{title}}">{{label}}</option>
+            {{/wikiTypes}}
+        </select>        
+        <input
+            id="gb-search-bar"
+            v-model="searchText"
+            type="text"
+            placeholder="" /><button id="gb-search-btn" class="gb-search-btn">🔎︎</button>            
+    </div>
+</div>

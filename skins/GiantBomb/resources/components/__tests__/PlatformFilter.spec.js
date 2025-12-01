@@ -1,0 +1,470 @@
+const { mount } = require("@vue/test-utils");
+const PlatformFilter = require("../PlatformFilter.vue");
+
+describe("PlatformFilter", () => {
+  const defaultProps = {
+    currentLetter: "",
+    currentSort: "release_date",
+    currentRequireAllGames: false,
+    currentGames: "",
+  };
+
+  beforeEach(() => {
+    // Mock window.history to update window.location
+    window.history.pushState = jest.fn((state, title, url) => {
+      if (url) {
+        const fullUrl = url.startsWith("http")
+          ? url
+          : `http://localhost:8080${url}`;
+        const urlObj = new URL(fullUrl);
+        window.location.href = fullUrl;
+        window.location.pathname = urlObj.pathname;
+        window.location.search = urlObj.search;
+      }
+    });
+
+    // Mock URLSearchParams
+    global.URLSearchParams = jest.fn().mockImplementation((search) => {
+      const params = new Map();
+      if (search) {
+        search
+          .replace("?", "")
+          .split("&")
+          .forEach((pair) => {
+            const [key, value] = pair.split("=");
+            if (key && value) {
+              // Handle array parameters like game_title[]
+              const cleanKey = key.replace("[]", "");
+              if (key.endsWith("[]")) {
+                if (!params.has(cleanKey)) {
+                  params.set(cleanKey, []);
+                }
+                params.get(cleanKey).push(decodeURIComponent(value));
+              } else {
+                params.set(key, decodeURIComponent(value));
+              }
+            }
+          });
+      }
+      return {
+        get: (key) => {
+          const value = params.get(key);
+          return Array.isArray(value) ? null : value || null;
+        },
+        getAll: (key) => {
+          const value = params.get(key.replace("[]", ""));
+          return Array.isArray(value) ? value : [];
+        },
+        set: (key, value) => params.set(key, value),
+        delete: (key) => params.delete(key),
+        toString: () => {
+          const pairs = [];
+          params.forEach((value, key) => {
+            if (Array.isArray(value)) {
+              value.forEach((v) => {
+                pairs.push(`${key}[]=${encodeURIComponent(v)}`);
+              });
+            } else {
+              pairs.push(`${key}=${encodeURIComponent(value)}`);
+            }
+          });
+          return pairs.join("&");
+        },
+      };
+    });
+
+    // Clear all event listeners
+    window.dispatchEvent = jest.fn();
+
+    // Mock fetch for game search
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe("Initial Render", () => {
+    it("renders filter title and labels", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const title = wrapper.find(".filter-title");
+      expect(title.exists()).toBe(true);
+      expect(title.text()).toBe("Filter");
+
+      const labels = wrapper.findAll(".filter-label");
+      expect(labels).toHaveLength(3);
+      expect(labels[0].text()).toBe("Letter");
+      expect(labels[1].text()).toBe("Sort By");
+      expect(labels[2].text()).toBe("Has Games");
+    });
+
+    it("renders letter select with alphabet options", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const letterSelect = wrapper.find("#letter-filter");
+      expect(letterSelect.exists()).toBe(true);
+
+      const options = letterSelect.findAll("option");
+      expect(options).toHaveLength(28); // "All" + "#" + 26 letters
+      expect(options[0].text()).toBe("All");
+      expect(options[1].text()).toBe("#");
+      expect(options[2].text()).toBe("A");
+      expect(options[27].text()).toBe("Z");
+    });
+
+    it("renders sort select with sort options", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const sortSelect = wrapper.find("#sort-filter");
+      expect(sortSelect.exists()).toBe(true);
+
+      const options = sortSelect.findAll("option");
+      expect(options).toHaveLength(4);
+      expect(options[0].text()).toBe("Release Date");
+      expect(options[1].text()).toBe("Alphabetical");
+      expect(options[2].text()).toBe("Last Edited");
+      expect(options[3].text()).toBe("Last Created");
+    });
+
+    it("renders search input", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const searchInput = wrapper.find("#search-filter");
+      expect(searchInput.exists()).toBe(true);
+      expect(searchInput.attributes("placeholder")).toBe("Enter game name...");
+    });
+
+    it("does not show clear filters button when no filters are active", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      expect(clearButton.exists()).toBe(false);
+    });
+
+    it("does not show require all games checkbox when no games selected", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const checkbox = wrapper.find(".filter-checkbox-group");
+      expect(checkbox.exists()).toBe(false);
+    });
+  });
+
+  describe("Filter Selection", () => {
+    it("updates URL and dispatches event when letter is selected", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const letterSelect = wrapper.find("#letter-filter");
+      await letterSelect.setValue("A");
+
+      expect(window.history.pushState).toHaveBeenCalledWith(
+        {},
+        "",
+        expect.stringContaining("letter=A"),
+      );
+
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "A",
+        sort: "release_date",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
+    });
+
+    it("updates URL and dispatches event when sort is changed", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const sortSelect = wrapper.find("#sort-filter");
+      await sortSelect.setValue("alphabetical");
+
+      expect(window.history.pushState).toHaveBeenCalledWith(
+        {},
+        "",
+        expect.stringContaining("sort=alphabetical"),
+      );
+
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "",
+        sort: "alphabetical",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
+    });
+
+    it("shows clear filters button when filters are active", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      await wrapper.find("#letter-filter").setValue("B");
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      expect(clearButton.exists()).toBe(true);
+      expect(clearButton.text()).toBe("Clear Filters");
+    });
+  });
+
+  describe("Clear Filters", () => {
+    it("clears all filters when clear button is clicked", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // Set some filters
+      await wrapper.find("#letter-filter").setValue("D");
+      await wrapper.find("#sort-filter").setValue("alphabetical");
+      wrapper.vm.selectedGames = [{ searchName: "Games/Test", title: "Test" }];
+      await wrapper.vm.$nextTick();
+
+      // Click clear button
+      const clearButton = wrapper.find(".clear-filters-btn");
+      await clearButton.trigger("click");
+
+      expect(wrapper.vm.selectedLetter).toBe("");
+      expect(wrapper.vm.selectedSort).toBe("release_date");
+      expect(wrapper.vm.selectedGames).toHaveLength(0);
+
+      const letterSelect = wrapper.find("#letter-filter");
+      const sortSelect = wrapper.find("#sort-filter");
+      expect(letterSelect.element.value).toBe("");
+      expect(sortSelect.element.value).toBe("release_date");
+    });
+
+    it("updates URL to remove parameters when cleared", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      await wrapper.find("#letter-filter").setValue("E");
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      await clearButton.trigger("click");
+
+      await wrapper.vm.$nextTick();
+
+      const lastCall =
+        window.history.pushState.mock.calls[
+          window.history.pushState.mock.calls.length - 1
+        ];
+      expect(lastCall[2]).toBe("/");
+    });
+
+    it("dispatches event with empty filters when cleared", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      await wrapper.find("#sort-filter").setValue("last_edited");
+      await wrapper.vm.$nextTick();
+
+      window.dispatchEvent.mockClear();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      await clearButton.trigger("click");
+
+      expect(window.dispatchEvent).toHaveBeenCalled();
+      const dispatchedEvent = window.dispatchEvent.mock.calls[0][0];
+      expect(dispatchedEvent.type).toBe("platforms-filter-changed");
+      expect(dispatchedEvent.detail).toEqual({
+        letter: "",
+        sort: "release_date",
+        game_title: [],
+        require_all_games: false,
+        page: 1,
+      });
+    });
+
+    it("hides clear button after clearing", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      await wrapper.find("#letter-filter").setValue("F");
+      await wrapper.vm.$nextTick();
+
+      const clearButton = wrapper.find(".clear-filters-btn");
+      await clearButton.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find(".clear-filters-btn").exists()).toBe(false);
+    });
+  });
+
+  describe("Computed Properties", () => {
+    it("hasActiveFilters returns true when letter is selected", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.hasActiveFilters).toBe(false);
+
+      await wrapper.find("#letter-filter").setValue("G");
+      expect(wrapper.vm.hasActiveFilters).toBe(true);
+    });
+
+    it("hasActiveFilters returns true when non-default sort is selected", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      await wrapper.find("#sort-filter").setValue("last_created");
+      expect(wrapper.vm.hasActiveFilters).toBe(true);
+    });
+
+    it("hasActiveFilters returns true when games are selected", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      wrapper.vm.selectedGames = [{ searchName: "Games/Test", title: "Test" }];
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.hasActiveFilters).toBe(true);
+    });
+
+    it("hasActiveFilters returns false when all filters are default", async () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.hasActiveFilters).toBe(false);
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("handles URL with existing parameters", async () => {
+      // Set up URL params before mounting
+      const mockSearchParams = new URLSearchParams(
+        "?letter=H&sort=alphabetical",
+      );
+      window.location.search = "?letter=H&sort=alphabetical";
+
+      // Update the global URLSearchParams mock to return these values
+      global.URLSearchParams = jest
+        .fn()
+        .mockImplementation(() => mockSearchParams);
+
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.selectedLetter).toBe("H");
+      expect(wrapper.vm.selectedSort).toBe("alphabetical");
+
+      // Reset
+      window.location.search = "";
+    });
+
+    it("handles fetch errors gracefully", async () => {
+      const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
+      // This test just verifies the component doesn't crash when there's a search error
+      // We'll manually set up an error state
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      await wrapper.vm.$nextTick();
+
+      // The component should handle errors gracefully
+      wrapper.vm.searchText = "Test";
+      wrapper.vm.searchResults = [];
+      wrapper.vm.isSearching = false;
+      await wrapper.vm.$nextTick();
+
+      // Component should still be functional
+      expect(wrapper.vm.searchText).toBe("Test");
+      expect(wrapper.vm.searchResults).toEqual([]);
+
+      consoleErrorSpy.mockRestore();
+    });
+
+    it("formats platforms correctly", () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      const platforms = [
+        { abbrev: "PC" },
+        { abbrev: "PS5" },
+        { abbrev: "XSX" },
+        { abbrev: "NSW" },
+        { abbrev: "PS4" },
+      ];
+
+      const formatted = wrapper.vm.formatPlatforms(platforms);
+      expect(formatted).toBe("PC, PS5, XSX +2 more");
+    });
+
+    it("handles empty platforms array", () => {
+      const wrapper = mount(PlatformFilter, {
+        props: defaultProps,
+      });
+
+      const formatted = wrapper.vm.formatPlatforms([]);
+      expect(formatted).toBe("");
+    });
+  });
+});

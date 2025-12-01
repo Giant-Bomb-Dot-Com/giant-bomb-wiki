@@ -88,7 +88,7 @@ const { ref, computed, watch, toRefs } = require("vue");
  * - maxVisiblePages: Maximum number of page buttons to show (default: 5)
  *
  * Events:
- * - page-change: Emitted when page changes { page, itemsPerPage }
+ * - pageChange: Emitted when page changes { page, itemsPerPage }
  */
 module.exports = exports = {
   name: "Pagination",
@@ -110,7 +110,7 @@ module.exports = exports = {
       default: 5,
     },
   },
-  emits: ["page-change"],
+  emits: ["pageChange"],
   setup(props, { emit }) {
     const { totalItems, itemsPerPage, currentPage, maxVisiblePages } =
       toRefs(props);
@@ -159,7 +159,7 @@ module.exports = exports = {
     const goToPage = (page) => {
       if (page < 1 || page > totalPages.value) return;
       currentPageLocal.value = page;
-      emit("page-change", {
+      emit("pageChange", {
         page: currentPageLocal.value,
         itemsPerPage: itemsPerPageLocal.value,
       });
@@ -168,7 +168,7 @@ module.exports = exports = {
     const changeItemsPerPage = () => {
       // Reset to page 1 when changing items per page
       currentPageLocal.value = 1;
-      emit("page-change", {
+      emit("pageChange", {
         page: currentPageLocal.value,
         itemsPerPage: itemsPerPageLocal.value,
       });

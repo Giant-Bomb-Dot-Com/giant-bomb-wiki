@@ -75,6 +75,7 @@ $data = [
     ],
 ];
 
+
 // Path to Mustache templates
 $templateDir = realpath(__DIR__ . '/../templates');
 

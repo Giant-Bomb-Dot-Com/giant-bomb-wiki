@@ -1,0 +1,53 @@
+{
+  "name": "AlgoliaSearch",
+  "version": "0.1.0",
+  "author": "Giant Bomb Engineering",
+  "description": "Algolia search integration: mapping, backfill, and hooks for MediaWiki/SMW.",
+  "type": "extension",
+  "manifest_version": 2,
+  "requires": {
+    "MediaWiki": ">=1.40.0"
+  },
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaClientFactory": "includes/AlgoliaClientFactory.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaRestClient": "includes/AlgoliaRestClient.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaRestIndex": "includes/AlgoliaRestClient.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\IndexSettings": "includes/IndexSettings.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\RecordMapper": "includes/RecordMapper.php"
+  },
+  "MaintenanceScripts": ["maintenance/algoliaReindex.php"],
+  "HookHandlers": [],
+  "config": {
+    "AlgoliaSearchEnabled": {
+      "value": false,
+      "description": "Enable Algolia indexing/sync. When false, no writes are attempted."
+    },
+    "AlgoliaTypePrefixMap": {
+      "value": {
+        "Game": "Games",
+        "Character": "Characters",
+        "Concept": "Concepts",
+        "Accessory": "Accessories",
+        "Location": "Locations",
+        "Person": "People",
+        "Franchise": "Franchises",
+        "Platform": "Platforms",
+        "Company": "Companies",
+        "Object": "Objects"
+      },
+      "description": "Mapping of record type to top-level page prefix used to enumerate content during backfill."
+    },
+    "AlgoliaAppId": {
+      "value": null,
+      "description": "Algolia App ID (server-only)."
+    },
+    "AlgoliaAdminApiKey": {
+      "value": null,
+      "description": "Algolia Admin API key (server-only)."
+    },
+    "AlgoliaIndexName": {
+      "value": "gb_content",
+      "description": "Algolia index name (e.g., gb_content)."
+    }
+  }
+}

@@ -28,12 +28,14 @@
     "skins.giantbomb.styles": {
       "styles": [
         "resources/css/styles.css",
+        "resources/css/search.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
         "resources/css/newReleasesPage.css",
         "resources/css/filters.css",
         "resources/css/itemGrid.css",
-        "resources/css/viewToggle.css"
+        "resources/css/viewToggle.css",
+        "resources/css/platformsPage.css"
       ]
     },
     "skins.giantbomb.js": {
@@ -42,7 +44,10 @@
       "position": "bottom"
     },
     "skins.giantbomb.externalheader": {
-      "scripts": ["resources/js/loadExternalHeader.js"],
+      "scripts": [
+        "resources/js/loadExternalHeader.js",
+        "resources/js/search.js"
+      ],
       "position": "top"
     },
     "skins.giantbomb": {
@@ -50,6 +55,7 @@
         "resources/components/index.js",
         "resources/components/VueSingleFileComponentExample.vue",
         "resources/components/AnotherVueComponent.vue",
+        "resources/components/DatabaseAddPrompt.vue",
         "resources/components/GameImageViewer.vue",
         "resources/components/ReleaseSelector.vue",
         "resources/components/ViewToggle.vue",
@@ -58,6 +64,14 @@
         "resources/components/GameFilter.vue",
         "resources/components/GameList.vue",
         "resources/components/Pagination.vue",
+        "resources/components/PlatformFilter.vue",
+        "resources/components/PlatformList.vue",
+        "resources/components/FilterContainer.vue",
+        "resources/components/FilterDropdown.vue",
+        "resources/components/SearchableMultiSelect.vue",
+        "resources/composables/index.js",
+        "resources/composables/useFilters.js",
+        "resources/composables/useSearch.js",
         "resources/helpers/countryFlags.js",
         "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"
