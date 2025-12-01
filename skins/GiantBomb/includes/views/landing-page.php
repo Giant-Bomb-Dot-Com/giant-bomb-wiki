@@ -17,6 +17,21 @@ $buttons = [
 	'Accessories'
 ];
 
+// Define available category wikitypes
+$wikiTypes = [
+	'All',
+	'Game',
+	'Character',
+	'Company',
+	'Concept',
+	'Franchise',
+	'Location',
+	'Person',
+	'Platform',
+	'Object',
+	'Accessory'
+];
+
 // Query games from MediaWiki database directly
 $games = [];
 try {
@@ -110,11 +125,21 @@ foreach ($buttons as $button) {
     ];
 }
 
+// Populate wikiType from wikiType array
+foreach ($wikiTypes as $type) {
+    $wikiTypeData[] = [
+        'title' => $type,
+        'label' => $type
+    ];
+}
+
 // Set Mustache data - just show all games
 $data = [
     'buttons' => $buttonData,
+	'wikiTypes' => $wikiTypeData,
     'games' => $games,
 ];
+
 
 // Path to Mustache templates
 $templateDir = realpath(__DIR__ . '/../templates');
