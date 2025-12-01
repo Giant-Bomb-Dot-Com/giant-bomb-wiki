@@ -237,13 +237,8 @@ describe("Pagination", () => {
 
         await wrapper.find(".pagination-first").trigger("click");
 
-
         expect(wrapper.emitted("pageChange")).toBeTruthy();
         expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
-        expect(wrapper.emitted("pageChange")).toBeTruthy();
-        expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
           page: 1,
           itemsPerPage: 25,
         });
@@ -259,11 +254,7 @@ describe("Pagination", () => {
 
         await wrapper.find(".pagination-prev").trigger("click");
 
-
         expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
-        expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
           page: 2,
           itemsPerPage: 25,
         });
@@ -279,11 +270,7 @@ describe("Pagination", () => {
 
         await wrapper.find(".pagination-next").trigger("click");
 
-
         expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
-        expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
           page: 3,
           itemsPerPage: 25,
         });
@@ -299,11 +286,7 @@ describe("Pagination", () => {
 
         await wrapper.find(".pagination-last").trigger("click");
 
-
         expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
-        expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
           page: 4,
           itemsPerPage: 25,
         });
@@ -320,11 +303,7 @@ describe("Pagination", () => {
         const pageButtons = wrapper.findAll(".pagination-page");
         await pageButtons[2].trigger("click"); // Click page 3
 
-
         expect(wrapper.emitted("pageChange")[0][0].page).toBe(3);
-
-        expect(wrapper.emitted("pageChange")[0][0].page).toBe(3);
-
       });
     });
 
@@ -353,11 +332,7 @@ describe("Pagination", () => {
         const select = wrapper.find("#items-per-page");
         await select.setValue("50");
 
-
         expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
-        expect(wrapper.emitted("pageChange")[0][0]).toEqual({
-
           page: 1,
           itemsPerPage: 50,
         });
@@ -414,11 +389,7 @@ describe("Pagination", () => {
   });
 
   describe("Event Emissions", () => {
-
-    it("emits page-change with correct structure", async () => {
-
     it("emits pageChange with correct structure", async () => {
-
       wrapper = mount(Pagination, {
         props: {
           totalItems: 100,
@@ -428,17 +399,10 @@ describe("Pagination", () => {
 
       await wrapper.find(".pagination-next").trigger("click");
 
-
       expect(wrapper.emitted("pageChange")).toBeTruthy();
       expect(wrapper.emitted("pageChange")).toHaveLength(1);
       expect(wrapper.emitted("pageChange")[0][0]).toHaveProperty("page");
       expect(wrapper.emitted("pageChange")[0][0]).toHaveProperty(
-
-      expect(wrapper.emitted("pageChange")).toBeTruthy();
-      expect(wrapper.emitted("pageChange")).toHaveLength(1);
-      expect(wrapper.emitted("pageChange")[0][0]).toHaveProperty("page");
-      expect(wrapper.emitted("pageChange")[0][0]).toHaveProperty(
-
         "itemsPerPage",
       );
     });
@@ -465,11 +429,7 @@ describe("Pagination", () => {
 
       await wrapper.find(".pagination-prev").trigger("click");
 
-
       expect(wrapper.emitted("pageChange")).toHaveLength(3);
-
-      expect(wrapper.emitted("pageChange")).toHaveLength(3);
-
     });
 
     it("items-per-page change emits with page=1", async () => {
@@ -482,11 +442,7 @@ describe("Pagination", () => {
 
       await wrapper.find("#items-per-page").setValue("50");
 
-
       expect(wrapper.emitted("pageChange")[0][0].page).toBe(1);
-
-      expect(wrapper.emitted("pageChange")[0][0].page).toBe(1);
-
     });
   });
   describe("Edge Cases", () => {

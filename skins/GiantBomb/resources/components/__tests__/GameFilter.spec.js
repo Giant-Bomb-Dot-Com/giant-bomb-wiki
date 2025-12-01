@@ -4,10 +4,10 @@ const GameFilter = require("../GameFilter.vue");
 describe("GameFilter", () => {
   let wrapper;
   const mockPlatforms = [
-    "PlayStation 5",
-    "Xbox Series X",
-    "PC",
-    "Nintendo Switch",
+    { name: "PlayStation 5", displayName: "PlayStation 5" },
+    { name: "Xbox Series X", displayName: "Xbox Series X" },
+    { name: "PC", displayName: "PC" },
+    { name: "Nintendo Switch", displayName: "Nintendo Switch" },
   ];
   let eventListenerSpy;
 
