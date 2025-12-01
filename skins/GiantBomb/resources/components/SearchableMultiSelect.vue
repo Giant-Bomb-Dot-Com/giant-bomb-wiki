@@ -48,7 +48,12 @@
       </label>
     </div>
 
-    <div v-if="showSearchResults" class="search-results">
+    <div
+      v-if="showSearchResults"
+      class="search-results"
+      @mouseenter="onResultsMouseEnter"
+      @mouseleave="onResultsMouseLeave"
+    >
       <div v-if="isSearching" class="search-loading">Searching...</div>
 
       <div v-else-if="searchResults.length > 0" class="search-results-list">
@@ -72,7 +77,7 @@
 
         <button
           v-if="hasMoreResults"
-          @mousedown="loadMore"
+          @mousedown.prevent="loadMore"
           class="load-more-btn"
           :disabled="isLoadingMore"
         >
@@ -182,6 +187,7 @@ const component = defineComponent({
   setup(props, { emit }) {
     const searchText = ref("");
     const showSearchResults = ref(false);
+    const isInteractingWithResults = ref(false);
     let debounceTimer = null;
 
     const getItemKey = (item) => {
@@ -224,6 +230,11 @@ const component = defineComponent({
     };
 
     const onSearchBlur = () => {
+      // Don't hide results if we're interacting with the results or loading more results
+      if (isInteractingWithResults.value || props.isLoadingMore) {
+        return;
+      }
+
       // Delay to allow click events on results to fire
       setTimeout(() => {
         showSearchResults.value = false;
@@ -256,7 +267,20 @@ const component = defineComponent({
     };
 
     const loadMore = () => {
+      isInteractingWithResults.value = true;
       emit("loadMore");
+      // Reset the flag after a short delay to allow click events on results to fire
+      setTimeout(() => {
+        isInteractingWithResults.value = false;
+      }, 200);
+    };
+
+    const onResultsMouseEnter = () => {
+      isInteractingWithResults.value = true;
+    };
+
+    const onResultsMouseLeave = () => {
+      isInteractingWithResults.value = false;
     };
 
     return {
@@ -270,6 +294,8 @@ const component = defineComponent({
       selectItem,
       removeItem,
       loadMore,
+      onResultsMouseEnter,
+      onResultsMouseLeave,
     };
   },
 });
