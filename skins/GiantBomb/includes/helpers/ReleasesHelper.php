@@ -11,32 +11,8 @@ use MediaWiki\MediaWikiServices;
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
 
-/**
- * Format a date based on the "Has release date type" property
- * 
- * @param string $rawDate The raw date from SMW (e.g., "1/1986", "10/2003", "12/31/2024")
- * @param int $timestamp The timestamp of the date
- * @param string $dateType The date type: "Year", "Month", "Quarter", "Full", or "None"
- * @return string The formatted date string
- */
-function formatReleaseDate($rawDate, $timestamp, $dateType) {
-    if (!$timestamp || $dateType === 'None') {
-        return $rawDate;
-    }
-    
-    switch ($dateType) {
-        case 'Year':
-            return date('Y', $timestamp);
-        case 'Month':
-            return date('F Y', $timestamp);
-        case 'Quarter':
-            $quarter = ceil(date('n', $timestamp) / 3);
-            return 'Q' . $quarter . ' ' . date('Y', $timestamp);
-        case 'Full':
-        default:
-            return date('F j, Y', $timestamp);
-    }
-}
+// Load date helper functions
+require_once __DIR__ . '/DateHelper.php';
 
 /**
  * Group releases by time period based on date specificity
@@ -48,12 +24,12 @@ function groupReleasesByPeriod($releases) {
     $groups = [];
     
     foreach ($releases as $release) {
-        if (!isset($release['sortTimestamp']) || !isset($release['dateSpecificity'])) {
+        if (!isset($release['releaseDateTimestamp']) || !isset($release['dateSpecificity'])) {
             continue;
         }
         
         $specificity = $release['dateSpecificity'];
-        $timestamp = $release['sortTimestamp'];
+        $timestamp = $release['releaseDateTimestamp'];
         
         $groupData = processDateForGrouping($timestamp, $specificity);
         $groupKey = $groupData['groupKey'];
@@ -131,8 +107,6 @@ function groupReleasesByPeriod($releases) {
  */
 function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
     $releases = [];
-    $platformMappings = loadPlatformMappings();
-    
     try {
         // Calculate date range: today to one month in the future
         $today = date('Y-m-d');
@@ -149,7 +123,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
         }
         
         $printouts = '|?Has games|?Has name|?Has release date|?Has release date type|?Has platforms|?Has region|?Has image';
-        $params = '|sort=Has release date|order=asc|limit=50';
+        $params = '|sort=Has release date|order=desc|limit=50';
         
         $fullQuery = $queryConditions . $printouts . $params;
         
@@ -188,6 +162,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
 function processReleaseQueryResults($results) {
     $releases = [];
     $seenReleases = [];
+    $platformMappings = loadPlatformMappings();
     
     if (isset($results) && is_array($results)) {
         foreach ($results as $pageName => $pageData) {
@@ -213,7 +188,6 @@ function processReleaseQueryResults($results) {
                 
                 $releaseData['releaseDate'] = $rawDate;
                 $releaseData['releaseDateTimestamp'] = $timestamp;
-                $releaseData['sortTimestamp'] = $timestamp;
                 
                 $dateType = 'Full';
                 if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {

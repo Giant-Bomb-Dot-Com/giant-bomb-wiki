@@ -1,0 +1,39 @@
+{{> header }}
+
+<div class="platforms-page">
+    <div class="platforms-header">
+        <h1>Platforms</h1>
+        <div
+            data-vue-component="ViewToggle"
+            data-target-container=".platforms-page"
+            data-storage-key="platformViewPreference">
+        </div>
+    </div>
+
+    <div class="platforms-content">
+        <aside class="platforms-sidebar">
+            <div
+                data-vue-component="PlatformFilter"
+                data-current-letter="{{{currentLetter}}}"
+                data-current-sort="{{{currentSort}}}"
+                data-current-require-all-games="{{{currentRequireAllGames}}}"
+                data-current-games="{{{currentGames}}}">
+            </div>
+            <div
+                data-vue-component="DatabaseAddPrompt"
+                data-object-type="platform"
+                data-link-url="{{{addPlatformUrl}}}">
+            </div>
+        </aside>
+
+        <div class="platforms-main-wrapper"
+            data-vue-component="PlatformList"
+            data-initial-data="{{{vue.platformsJson}}}"
+            data-total-count="{{{totalCount}}}"
+            data-current-page="{{{currentPage}}}"
+            data-total-pages="{{{totalPages}}}"
+            data-page-size="{{{pageSize}}}">
+        </div>
+    </div>
+</div>
+

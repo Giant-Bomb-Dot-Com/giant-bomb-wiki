@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\MediaWikiServices;
 /**
  * Platform Helper
  * 
@@ -6,6 +7,9 @@
  * with caching support for performance.
  */
 
+ // Load date helper functions
+ require_once __DIR__ . '/DateHelper.php';
+ 
 /**
  * Load platform name to abbreviation mappings from SMW with caching
  * 
@@ -247,3 +251,466 @@ function getAllPlatforms() {
     );
 }
 
+
+/**
+ * Query platforms from Semantic MediaWiki with optional filters
+ * 
+ * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
+ * @param array $filterGameTitles Optional array of game title filters
+ * @param string $sort Sort method ('alphabetical' or 'release_date')
+ * @param int $page Current page number (1-based)
+ * @param int $limit Results per page
+ * @param bool $requireAllGames If true, platforms must be linked to ALL games (AND logic). If false, ANY game (OR logic)
+ * @return array Array with 'platforms', 'totalCount', 'currentPage', 'totalPages'
+ */
+function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'release_date', $page = 1, $limit = 48, $requireAllGames = false) {
+    $platforms = [];
+    $totalCount = 0;
+    
+    try {
+        // First, get total count for pagination
+        $totalCount = getPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames);
+        
+        // Calculate pagination
+        $totalPages = max(1, ceil($totalCount / $limit));
+        $page = max(1, min($page, $totalPages));
+        $offset = ($page - 1) * $limit;
+        
+        // Now get the actual data
+        $queryConditions = '[[Category:Platforms]]';
+        
+        if (!empty($filterLetter)) {
+            if ($filterLetter === '#') {
+                $queryConditions .= '[[Has name::~0*||~1*||~2*||~3*||~4*||~5*||~6*||~7*||~8*||~9*]]';
+            } else {
+                $queryConditions .= '[[Has name::~' . $filterLetter . '*]]';
+            }
+        }
+        
+        if (!empty($filterGameTitles) && is_array($filterGameTitles)) {
+            if ($requireAllGames && count($filterGameTitles) > 1) {
+                // AND logic: Find platforms that are linked to ALL selected games
+                $allGamePlatforms = [];
+                foreach ($filterGameTitles as $index => $filterGameTitle) {
+                    $gamePlatforms = getPlatformsForGameFromSMW($filterGameTitle);
+                    if ($index === 0) {
+                        // First game: start with all its platforms
+                        $allGamePlatforms = $gamePlatforms;
+                    } else {
+                        // Subsequent games: intersect with existing platforms
+                        $allGamePlatforms = array_intersect($allGamePlatforms, $gamePlatforms);
+                    }
+                    
+                    // If no platforms match all games so far, we can stop early
+                    if (empty($allGamePlatforms)) {
+                        break;
+                    }
+                }
+                
+                // Only add condition if we found common platforms
+                if (!empty($allGamePlatforms)) {
+                    $platformNames = array_map(function($p) {
+                        return str_replace('"', '\"', $p);
+                    }, $allGamePlatforms);
+                    $queryConditions .= '[[Has name::' . implode('||', $platformNames) . ']]';
+                }
+            } else {
+                // OR logic: Find platforms linked to ANY selected game (default behavior)
+                $allPlatforms = [];
+                foreach ($filterGameTitles as $filterGameTitle) {
+                    $gamePlatforms = getPlatformsForGameFromSMW($filterGameTitle);
+                    if (!empty($gamePlatforms)) {
+                        // Build Has name:: conditions for these platforms
+                        $platformNames = array_map(function($p) {
+                            // Escape double quotes for SMW queries, just in case
+                            return str_replace('"', '\"', $p);
+                        }, $gamePlatforms);
+                        // Only add if we have something
+                        if (count($platformNames) > 0) {
+                            $allPlatforms = array_merge($allPlatforms, $platformNames);
+                        }
+                    }
+                }
+                
+                if (!empty($allPlatforms)) {
+                    $queryConditions .= '[[Has name::' . implode('||', $allPlatforms) . ']]';
+                }
+            }
+        }
+        
+        $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
+        
+        // Set sort order using switch statement
+        switch ($sort) {
+            case 'release_date':
+                $params = '|sort=Has release date|order=desc';
+                break;
+            case 'alphabetical':
+                $params = '|sort=Has name|order=asc';
+                break;
+            case 'last_edited':
+                $params = '|sort=Modification date|order=desc';
+                break;
+            case 'last_created':
+                $params = '|sort=Creation date|order=desc';
+                break;
+            default:
+                $params = '|sort=Has release date|order=desc';
+                break;
+        }
+        
+        $params .= '|limit=' . $limit . '|offset=' . $offset;
+        
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        $api = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $fullQuery,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $api->execute();
+        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($result['query']['results']) && is_array($result['query']['results'])) {
+            $platforms = processPlatformQueryResults($result['query']['results']);
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error querying platforms: " . $e->getMessage());
+    }
+    
+    return [
+        'platforms' => $platforms,
+        'totalCount' => $totalCount,
+        'currentPage' => $page,
+        'totalPages' => max(1, ceil($totalCount / $limit)),
+        'pageSize' => $limit,
+    ];
+}
+
+/**
+ * Get the number of games for a platform from cache (fast lookup)
+ * Falls back to live query if cache is empty
+ * 
+ * @param string $platformName The platform name (e.g. PC or Platforms/PC)
+ * @return int The number of games associated with the platform
+ */
+function getGameCountForPlatform($platformName) {
+    $platformName = str_replace('Platforms/', '', $platformName);
+    
+    // Try to get from database cache first
+    $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
+    $row = $dbr->selectRow(
+        'platform_game_counts',
+        ['game_count', 'last_updated'],
+        ['platform_name' => $platformName],
+        __METHOD__
+    );
+    
+    if ($row) {
+        return (int)$row->game_count;
+    }
+    
+    // Fallback to live query if not cached (slow)
+    error_log("⚠ Game count cache miss for platform: $platformName - Consider running rebuild script");
+    return getGameCountForPlatformFromSMW($platformName);
+}
+
+/**
+ * Get the number of games for a given platform from Semantic MediaWiki database tables
+ * Queries SMW's internal tables directly to avoid pagination issues with ask queries
+ * 
+ * @param string $platformName The platform name (e.g. PC or Platforms/PC)
+ * @return int The number of games associated with the platform
+ */
+function getGameCountForPlatformFromSMW($platformName) {
+    $gameCount = 0;
+    $SMW_PROPERTY_NAMESPACE = 102;
+    
+    try {
+        // Ensure platform name has the namespace prefix
+        $platformName = str_replace('Platforms/', '', $platformName);
+        // Replace spaces with underscores for SMW property names
+        $fullPlatformName = 'Platforms/' . str_replace(' ', '_', $platformName);
+        
+        $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
+        
+        // Get the platform's SMW page ID (s_id)
+        // smw_object_ids stores the mapping of page names to SMW internal IDs
+        $platformSmwId = $dbr->selectField(
+            'smw_object_ids',
+            'smw_id',
+            [
+                'smw_title' => $fullPlatformName,
+                'smw_namespace' => 0,  // Main namespace
+                'smw_subobject' => ''
+            ],
+            __METHOD__
+        );
+        
+        if (!$platformSmwId) {
+            error_log("⚠ Platform not found in SMW: $platformName");
+            return 0;
+        }
+        
+        // Get the property ID for "Has platforms"
+        $propertyId = $dbr->selectField(
+            'smw_object_ids',
+            'smw_id',
+            [
+                'smw_title' => 'Has_platforms',
+                'smw_namespace' => $SMW_PROPERTY_NAMESPACE,  // Property namespace
+                'smw_subobject' => ''
+            ],
+            __METHOD__
+        );
+        
+        if (!$propertyId) {
+            error_log("⚠ Property 'Has platforms' not found in SMW");
+            return 0;
+        }
+        
+        // Count games that have this platform
+        // smw_di_wikipage stores page-type property values
+        // s_id = subject (the game page), p_id = property (Has platforms), o_id = object (the platform)
+        $gameCount = $dbr->selectField(
+            'smw_di_wikipage',
+            'COUNT(DISTINCT s_id)',
+            [
+                'p_id' => $propertyId,
+                'o_id' => $platformSmwId
+            ],
+            __METHOD__
+        );
+        
+        error_log("✓ Platform '$platformName' (SMW ID: $platformSmwId): $gameCount games (direct SMW query)");
+        
+    } catch (Exception $e) {
+        error_log("Error getting game count for platform '$platformName': " . $e->getMessage());
+    }
+    
+    return (int)$gameCount;
+}
+
+
+/**
+ * Get the platforms for a given game from Semantic MediaWiki
+ * 
+ * @param string $gameTitle The game page name
+ * @return array Array of platform names
+ */
+function getPlatformsForGameFromSMW($gamePageName) {
+    $platforms = [];
+    try {
+        $queryConditions = '[[Category:Games]][[' . $gamePageName . ']]';
+        $printouts = '|?Has platforms';
+        $params = '|limit=1';
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        $api = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $fullQuery,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $api->execute();
+        $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($result['query']['results'])) {
+            foreach ($result['query']['results'] as $pageName => $data) {
+                $platformResults = $data['printouts']['Has platforms'];
+                if (!empty($platformResults)) {
+                    foreach ($platformResults as $platformResult) {
+                        $platforms[] = $platformResult['displaytitle'] ?? $platformResult['fulltext'];
+                    }
+                }
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error getting platforms for game: " . $e->getMessage());
+    }
+    return $platforms;
+}
+
+/**
+ * Process the results of the platform query from Semantic MediaWiki and returns an array of platform data
+ * 
+ * @param array $results The results of the platform query from Semantic MediaWiki
+ * @return array Array of platform data with 'url', 'title', 'shortName', 'deck', 'releaseDate', 'releaseDateFormatted', 'image' keys
+ */
+function processPlatformQueryResults($results) {
+    $platforms = [];
+    
+    if (isset($results) && is_array($results)) {
+        foreach ($results as $pageName => $pageData) {
+            $platformData = [];
+            $printouts = $pageData['printouts'];
+            
+            // Add URL for the platform
+            $platformData['url'] = $pageData['fullurl'] ?? '';
+            
+            if (isset($printouts['Has name']) && count($printouts['Has name']) > 0) {
+                $name = $printouts['Has name'][0];
+                $platformData['title'] = $name;
+            } else {
+                // Fallback to page name without namespace
+                $platformData['title'] = str_replace('Platforms/', '', $pageName);
+            }
+            
+            if (isset($printouts['Has short name']) && count($printouts['Has short name']) > 0) {
+                $shortName = $printouts['Has short name'][0];
+                $platformData['shortName'] = $shortName;
+            }
+            
+            if (isset($printouts['Has deck']) && count($printouts['Has deck']) > 0) {
+                $deck = $printouts['Has deck'][0];
+                $platformData['deck'] = $deck;
+            }
+            
+            if (isset($printouts['Has release date']) && count($printouts['Has release date']) > 0) {
+                $releaseDate = $printouts['Has release date'][0];
+                $rawDate = $releaseDate['raw'] ?? '';
+                $timestamp = $releaseDate['timestamp'] ?? strtotime($rawDate);
+                $platformData['releaseDate'] = $rawDate;
+                $platformData['releaseDateTimestamp'] = $timestamp;
+                
+                $dateType = 'Full';
+                if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {
+                    $dateType = $printouts['Has release date type'][0];
+                }
+                
+                $platformData['dateSpecificity'] = strtolower($dateType);
+                $platformData['releaseDateFormatted'] = formatReleaseDate($rawDate, $timestamp, $dateType);
+            }
+            
+            if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
+                $image = $printouts['Has image'][0];
+                $platformData['image'] = $image['fullurl'] ?? '';
+                $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $platformData['image']);
+            }
+            
+            $platformData['gameCount'] = getGameCountForPlatform($pageName);
+            
+            $platforms[] = $platformData;
+        }
+    }
+    return $platforms;
+}
+
+/**
+ * Get the total number of platforms from Semantic MediaWiki with optional filters
+ * 
+ * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
+ * @param array $filterGameTitles Optional array of game title filters
+ * @param bool $requireAllGames If true, platforms must be linked to ALL games (AND logic). If false, ANY game (OR logic)
+ * @return int Total number of platforms
+ */
+function getPlatformCountFromSMW($filterLetter = '', $filterGameTitles = [], $requireAllGames = false) {
+    $totalCount = 0;
+    try {
+        
+        $countQuery = '[[Category:Platforms]]';
+        
+        if (!empty($filterLetter)) {
+            if ($filterLetter === '#') {
+                // Match platforms starting with numbers
+                $countQuery .= '[[Has name::~0*||~1*||~2*||~3*||~4*||~5*||~6*||~7*||~8*||~9*]]';
+            } else {
+                $countQuery .= '[[Has name::~' . $filterLetter . '*]]';
+            }
+        }
+        
+        if (!empty($filterGameTitles) && is_array($filterGameTitles)) {
+            if ($requireAllGames && count($filterGameTitles) > 1) {
+                // AND logic: Find platforms that are linked to ALL selected games
+                $allGamePlatforms = [];
+                foreach ($filterGameTitles as $index => $filterGameTitle) {
+                    $gamePlatforms = getPlatformsForGameFromSMW($filterGameTitle);
+                    if ($index === 0) {
+                        // First game: start with all its platforms
+                        $allGamePlatforms = $gamePlatforms;
+                    } else {
+                        // Subsequent games: intersect with existing platforms
+                        $allGamePlatforms = array_intersect($allGamePlatforms, $gamePlatforms);
+                    }
+                    
+                    // If no platforms match all games so far, we can stop early
+                    if (empty($allGamePlatforms)) {
+                        break;
+                    }
+                }
+                
+                // Only add condition if we found common platforms
+                if (!empty($allGamePlatforms)) {
+                    $platformNames = array_map(function($p) {
+                        return str_replace('"', '\"', $p);
+                    }, $allGamePlatforms);
+                    $countQuery .= '[[Has name::' . implode('||', $platformNames) . ']]';
+                }
+            } else {
+                // OR logic: Find platforms linked to ANY selected game (default behavior)
+                $allPlatforms = [];
+                foreach ($filterGameTitles as $filterGameTitle) {
+                    $gamePlatforms = getPlatformsForGameFromSMW($filterGameTitle);
+                    if (!empty($gamePlatforms)) {
+                        // Build Has name:: conditions for these platforms
+                        $platformNames = array_map(function($p) {
+                            // Escape double quotes for SMW queries, just in case
+                            return str_replace('"', '\"', $p);
+                        }, $gamePlatforms);
+                        // Only add if we have something
+                        if (count($platformNames) > 0) {
+                            $allPlatforms = array_merge($allPlatforms, $platformNames);
+                        }
+                    }
+                }
+                
+                if (!empty($allPlatforms)) {
+                    $countQuery .= '[[Has name::' . implode('||', $allPlatforms) . ']]';
+                }
+            }
+        }
+        
+        // Get count (need to specify release date so count matches queryPlatformsFromSMW)
+        $countQueryFull = $countQuery . '|limit=5000|sort=Has release date|order=desc';
+        
+        $countApi = new ApiMain(
+            new DerivativeRequest(
+                RequestContext::getMain()->getRequest(),
+                [
+                    'action' => 'ask',
+                    'query' => $countQueryFull,
+                    'format' => 'json',
+                ],
+                true
+            ),
+            true
+        );
+        
+        $countApi->execute();
+        $countResult = $countApi->getResult()->getResultData(null, ['Strip' => 'all']);
+        
+        if (isset($countResult['query']['results'])) {
+            $totalCount = count($countResult['query']['results']);
+        }
+    } catch (Exception $e) {
+        error_log("Error getting platform count: " . $e->getMessage());
+    }
+    
+    return $totalCount;
+}

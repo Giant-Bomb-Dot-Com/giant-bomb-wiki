@@ -76,14 +76,14 @@
 </template>
 
 <script>
-const { ref, toRefs, onMounted, onUnmounted } = require("vue");
+const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { getCountryCode, getFlagUrl } = require("../helpers/countryFlags.js");
 
 /**
  * ReleaseList Component
  * Displays releases and handles async filtering
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "ReleaseList",
   props: {
     initialData: {
@@ -97,11 +97,7 @@ module.exports = exports = {
     const loading = ref(false);
 
     // Helper function to decode HTML entities
-    const decodeHtmlEntities = (text) => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = text;
-      return textarea.value;
-    };
+    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     const fetchReleases = async (region = "", platform = "") => {
       loading.value = true;
@@ -175,7 +171,7 @@ module.exports = exports = {
       getFlagUrl,
     };
   },
-};
+});
 </script>
 
 <style>

@@ -362,6 +362,12 @@ $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
+# Enable full-text search
+$smwgEnabledFulltextSearch = true;
+
+# Enable creation date property
+$smwgPageSpecialProperties[] = '_CDAT';
+
 # Remove before prod push
 $wgShowExceptionDetails = true;
 $wgDevelopmentWarnings = true;
@@ -377,6 +383,9 @@ if ( $wikiEnv === 'dev' ) {
 
 #Allow more results with SMW query
 $smwgQMaxInlineLimit = 7500;
+
+#Allow a large range of conditions in SMW queries
+$smwgQMaxSize = 100;
 
 #Allow custom favicon location 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
