@@ -14,6 +14,9 @@ const components = {
   ViewToggle: require("./ViewToggle.vue"),
   ReleaseFilter: require("./ReleaseFilter.vue"),
   ReleaseList: require("./ReleaseList.vue"),
+  PlatformFilter: require("./PlatformFilter.vue"),
+  PlatformList: require("./PlatformList.vue"),
+  DatabaseAddPrompt: require("./DatabaseAddPrompt.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

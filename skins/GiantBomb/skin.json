@@ -31,7 +31,8 @@
         "resources/css/search.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
-        "resources/css/newReleasesPage.css"
+        "resources/css/newReleasesPage.css",
+        "resources/css/platformsPage.css"
       ]
     },
     "skins.giantbomb.js": {
@@ -51,12 +52,23 @@
         "resources/components/index.js",
         "resources/components/VueSingleFileComponentExample.vue",
         "resources/components/AnotherVueComponent.vue",
+        "resources/components/DatabaseAddPrompt.vue",
         "resources/components/GameImageViewer.vue",
         "resources/components/ReleaseSelector.vue",
         "resources/components/ViewToggle.vue",
         "resources/components/ReleaseFilter.vue",
         "resources/components/ReleaseList.vue",
+        "resources/components/PlatformFilter.vue",
+        "resources/components/PlatformList.vue",
+        "resources/components/FilterContainer.vue",
+        "resources/components/FilterDropdown.vue",
+        "resources/components/SearchableMultiSelect.vue",
+        "resources/components/Pagination.vue",
+        "resources/composables/index.js",
+        "resources/composables/useFilters.js",
+        "resources/composables/useSearch.js",
         "resources/helpers/countryFlags.js",
+        "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
