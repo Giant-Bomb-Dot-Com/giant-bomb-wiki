@@ -106,8 +106,23 @@ case "${cmd}" in
     run_php "$MW_ROOT/extensions/SemanticMediaWiki/maintenance/rebuildData.php" -v
     ;;
 
+  # Generic runner for any maintenance script via run.php
+  run)
+    if [ $# -lt 1 ]; then
+      echo "Usage: wiki-admin run <path-to-maintenance-script> [args...]" >&2
+      exit 2
+    fi
+    run_php --conf "$CONF_PATH" "$@"
+    ;;
+
+  # Convenience alias for refreshLinks:
+  refresh-links)
+    # Pass any extra flags, e.g. --batch-size=500
+    run_php --conf "$CONF_PATH" "$MW_ROOT/maintenance/refreshLinks.php" "$@"
+    ;;
+
   *)
-    echo "Usage: wiki-admin {install|update|smw-setup|smw-rebuild}" >&2
+    echo "Usage: wiki-admin {install|update|smw-setup|smw-rebuild|run|refresh-links}" >&2
     exit 2
     ;;
 esac

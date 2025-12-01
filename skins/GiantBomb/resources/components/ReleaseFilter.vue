@@ -1,63 +1,49 @@
 <template>
-  <div class="release-filter">
-    <h3 class="filter-title">Filter</h3>
+  <filter-container
+    title="Filter"
+    :show-clear-button="hasActiveFilters"
+    @clear="clearFilters"
+  >
+    <filter-dropdown
+      id="region-filter"
+      label="Region"
+      v-model="selectedRegion"
+      :options="regionOptions"
+      placeholder="All Regions"
+      @update:model-value="onFilterChange"
+    ></filter-dropdown>
 
-    <div class="filter-group">
-      <label for="region-filter" class="filter-label">Region</label>
-      <select
-        id="region-filter"
-        v-model="selectedRegion"
-        @change="applyFilters"
-        class="filter-select"
-      >
-        <option value="">All Regions</option>
-        <option value="United States">United States</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="Japan">Japan</option>
-        <option value="Australia">Australia</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label for="platform-filter" class="filter-label">Platform</label>
-      <select
-        id="platform-filter"
-        v-model="selectedPlatform"
-        @change="applyFilters"
-        class="filter-select"
-      >
-        <option value="">All Platforms</option>
-        <option
-          v-for="platform in platforms"
-          :key="platform.name"
-          :value="platform.name"
-        >
-          {{ platform.displayName }}
-        </option>
-      </select>
-    </div>
-
-    <button
-      v-if="hasActiveFilters"
-      @click="clearFilters"
-      class="clear-filters-btn"
-    >
-      Clear Filters
-    </button>
-  </div>
+    <filter-dropdown
+      id="platform-filter"
+      label="Platform"
+      v-model="selectedPlatform"
+      :options="platforms"
+      placeholder="All Platforms"
+      value-key="name"
+      label-key="displayName"
+      @update:model-value="onFilterChange"
+    ></filter-dropdown>
+  </filter-container>
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted } = require("vue");
+const { defineComponent, ref, computed, toRefs, onMounted } = require("vue");
+const { useFilters } = require("../composables/useFilters.js");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
+const FilterContainer = require("./FilterContainer.vue");
+const FilterDropdown = require("./FilterDropdown.vue");
 
 /**
  * ReleaseFilter Component
  * Handles filtering of releases by region and platform
- * Updates URL query parameters and refreshes the page
+ * Note: FilterContainer and FilterDropdown are globally registered
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "ReleaseFilter",
+  components: {
+    FilterContainer,
+    FilterDropdown,
+  },
   props: {
     platformsData: {
       type: String,
@@ -66,64 +52,45 @@ module.exports = exports = {
   },
   setup(props) {
     const { platformsData } = toRefs(props);
+
+    // Filter state
     const platforms = ref([]);
     const selectedRegion = ref("");
     const selectedPlatform = ref("");
+
+    // Region options
+    const regionOptions = [
+      "United States",
+      "United Kingdom",
+      "Japan",
+      "Australia",
+    ];
+
+    // Use filters composable
+    const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
+      useFilters("releases-filter-changed", {
+        region: "",
+        platform: "",
+      });
 
     const hasActiveFilters = computed(() => {
       return selectedRegion.value !== "" || selectedPlatform.value !== "";
     });
 
-    const applyFilters = () => {
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
-      // Update or remove region parameter
-      if (selectedRegion.value) {
-        params.set("region", selectedRegion.value);
-      } else {
-        params.delete("region");
-      }
-
-      // Update or remove platform parameter
-      if (selectedPlatform.value) {
-        params.set("platform", selectedPlatform.value);
-      } else {
-        params.delete("platform");
-      }
-
-      // Update URL without reloading (for bookmarking/sharing)
-      const newUrl = `${url.pathname}?${params.toString()}`;
-      window.history.pushState({}, "", newUrl);
-
-      // Emit event for ReleaseList to listen to
-      window.dispatchEvent(
-        new CustomEvent("releases-filter-changed", {
-          detail: {
-            region: selectedRegion.value,
-            platform: selectedPlatform.value,
-          },
-        }),
-      );
+    const onFilterChange = () => {
+      applyFiltersBase({
+        region: selectedRegion.value,
+        platform: selectedPlatform.value,
+      });
     };
 
     const clearFilters = () => {
       selectedRegion.value = "";
       selectedPlatform.value = "";
-
-      // Update URL without reloading
-      const url = new URL(window.location.href);
-      window.history.pushState({}, "", url.pathname);
-
-      // Emit event to reload all releases
-      window.dispatchEvent(
-        new CustomEvent("releases-filter-changed", {
-          detail: {
-            region: "",
-            platform: "",
-          },
-        }),
-      );
+      clearFiltersBase({
+        region: "",
+        platform: "",
+      });
     };
 
     onMounted(() => {
@@ -144,17 +111,13 @@ module.exports = exports = {
 
     return {
       platforms,
+      regionOptions,
       selectedRegion,
       selectedPlatform,
       hasActiveFilters,
-      applyFilters,
+      onFilterChange,
       clearFilters,
     };
   },
-};
+});
 </script>
-
-<style>
-/* All shared filter styles are in filters.css */
-/* Component-specific styles only */
-</style>

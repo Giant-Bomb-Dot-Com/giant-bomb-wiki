@@ -76,7 +76,7 @@
 </template>
 
 <script>
-const { ref, toRefs, onMounted, onUnmounted } = require("vue");
+const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { getCountryCode, getFlagUrl } = require("../helpers/countryFlags.js");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
@@ -84,7 +84,7 @@ const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
  * ReleaseList Component
  * Displays releases and handles async filtering
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "ReleaseList",
   props: {
     initialData: {
@@ -169,7 +169,7 @@ module.exports = exports = {
       getFlagUrl,
     };
   },
-};
+});
 </script>
 
 <style>

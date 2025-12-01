@@ -304,6 +304,7 @@ wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
+wfLoadExtension( 'AlgoliaSearch' );
 
 $wgGiantBombResolveFields = [
 	'displaytitle',
@@ -330,6 +331,29 @@ $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
 $wgPageFormsUseDisplayTitle = false;
 
+$wgAlgoliaSearchEnabled = false;
+$algoliaEnabled = getenv( 'ALGOLIA_SEARCH_ENABLED' );
+if ( $algoliaEnabled !== false && $algoliaEnabled !== null ) {
+	$flag = strtolower( trim( (string)$algoliaEnabled ) );
+	if ( $flag === '1' || $flag === 'true' || $flag === 'yes' ) {
+		$wgAlgoliaSearchEnabled = true;
+	}
+}
+$algoliaAppId = getenv( 'ALGOLIA_APP_ID' );
+if ( $algoliaAppId !== false && $algoliaAppId !== null && trim( $algoliaAppId ) !== '' ) {
+	$wgAlgoliaAppId = trim( $algoliaAppId );
+}
+$algoliaAdminKey = getenv( 'ALGOLIA_ADMIN_API_KEY' );
+if ( $algoliaAdminKey !== false && $algoliaAdminKey !== null && trim( $algoliaAdminKey ) !== '' ) {
+	$wgAlgoliaAdminApiKey = trim( $algoliaAdminKey );
+}
+$algoliaIndex = getenv( 'ALGOLIA_INDEX_CONTENT' );
+if ( $algoliaIndex !== false && $algoliaIndex !== null && trim( $algoliaIndex ) !== '' ) {
+	$wgAlgoliaIndexName = trim( $algoliaIndex );
+} else {
+	$wgAlgoliaIndexName = 'gb_content';
+}
+
 # Turn on subpages
 $wgNamespacesWithSubpages[NS_MAIN] = true;
 $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
@@ -337,6 +361,12 @@ $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 # Allows the use of DISPLAYTITLE magic keyword
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
+
+# Enable full-text search
+$smwgEnabledFulltextSearch = true;
+
+# Enable creation date property
+$smwgPageSpecialProperties[] = '_CDAT';
 
 # Remove before prod push
 $wgShowExceptionDetails = true;
@@ -353,6 +383,9 @@ if ( $wikiEnv === 'dev' ) {
 
 #Allow more results with SMW query
 $smwgQMaxInlineLimit = 7500;
+
+#Allow a large range of conditions in SMW queries
+$smwgQMaxSize = 100;
 
 #Allow custom favicon location 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";

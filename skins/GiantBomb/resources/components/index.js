@@ -17,6 +17,9 @@ const components = {
   GameFilter: require("./GameFilter.vue"),
   GameList: require("./GameList.vue"),
   Pagination: require("./Pagination.vue"),
+  PlatformFilter: require("./PlatformFilter.vue"),
+  PlatformList: require("./PlatformList.vue"),
+  DatabaseAddPrompt: require("./DatabaseAddPrompt.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

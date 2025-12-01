@@ -4,7 +4,7 @@
  * Returns game data as JSON for async filtering
  */
 
-// Load helper functions
+// Load games helper functions
 require_once __DIR__ . '/../helpers/GamesHelper.php';
 
 $request = RequestContext::getMain()->getRequest();
