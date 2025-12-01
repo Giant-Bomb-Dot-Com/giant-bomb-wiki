@@ -22,6 +22,30 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
     $games = [];
 	$totalGames = 0;
     
+    // Validation on searchQuery input
+    $searchQuery = (string) $searchQuery;
+    $searchQuery = trim($searchQuery);
+    
+    // Trim searchQuery to 255 characters
+    if (strlen($searchQuery) > 255) {
+        $searchQuery = substr($searchQuery, 0, 255);
+    }
+    
+    // Remove special SMW query characters
+    $searchQuery = str_replace(['[[', ']]', '|', '::', '*', '{', '}'], '', $searchQuery);
+    
+    // If searchQuery is now empty after removing special characters, return empty response
+    if (empty($searchQuery)) {
+        return [
+            'games' => $games,
+            'totalGames' => $totalGames,
+            'totalPages' => 1,
+            'currentPage' => 1,
+            'offset' => 0,
+            'itemsPerPage' => $itemsPerPage,
+        ];
+    }
+    
     try {
         $queryConditions = '[[Category:Games]][[Has name::~*' . $searchQuery . '*]]';
         
@@ -77,7 +101,7 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
             $offset = ($page - 1) * $itemsPerPage;
         }
         
-        $params = '|limit=' . $itemsPerPage;
+        $params = '|limit=' . $itemsPerPage . '|offset=' . $offset;
         $fullQuery = $queryConditions . $printouts . $params;
         
         $api = new ApiMain(
