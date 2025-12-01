@@ -20,6 +20,21 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 	$games = [];
 	$totalGames = 0;
 
+	// Validation on searchQuery input
+	$searchQuery = (string) $searchQuery;
+	$searchQuery = trim($searchQuery);
+
+	// Trim searchQuery to 255 characters
+	if (strlen($searchQuery) > 255) {
+		$searchQuery = substr($searchQuery, 0, 255);
+	}
+
+	// Remove special SMW query characters
+	$searchQuery = str_replace(['[[', ']]', '|', '::', '*', '{', '}'], '', $searchQuery);
+
+	// If searchQuery is now empty after removing special characters, treat as no search filter
+	// (don't return early, just continue with no search filter applied)
+
 	try {
 		$store = \SMW\StoreFactory::getStore();
 
