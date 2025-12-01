@@ -8,7 +8,7 @@ use MediaWiki\MediaWikiServices;
  *   php maintenance/RebuildPlatformGameCounts.php --platform="PlayStation 5"
  */
 
-require_once __DIR__ . '/Maintenance.php';
+require_once dirname( __DIR__, 4 ) . '/maintenance/Maintenance.php';
 
 class RebuildPlatformGameCounts extends Maintenance {
     public function __construct() {
