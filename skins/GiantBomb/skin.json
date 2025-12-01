@@ -68,6 +68,7 @@
         "resources/components/PlatformList.vue",
         "resources/components/FilterContainer.vue",
         "resources/components/FilterDropdown.vue",
+        "resources/components/FilterInput.vue",
         "resources/components/SearchableMultiSelect.vue",
         "resources/composables/index.js",
         "resources/composables/useFilters.js",

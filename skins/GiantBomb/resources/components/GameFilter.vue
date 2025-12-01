@@ -1,74 +1,69 @@
 <template>
-  <div class="game-filter">
-    <h3 class="filter-title">Filter Games</h3>
+  <filter-container
+    class="game-filter"
+    title="Filter Games"
+    :show-clear-button="hasActiveFilters"
+    @clear="clearFilters"
+  >
+    <filter-input
+      id="search-filter"
+      label="Search"
+      v-model="searchQuery"
+      @update:model-value="handleSearchInput"
+      placeholder="Search games..."
+    ></filter-input>
 
-    <div class="filter-group">
-      <label for="search-filter" class="filter-label">Search</label>
-      <input
-        id="search-filter"
-        v-model="searchQuery"
-        @input="handleSearchInput"
-        type="text"
-        placeholder="Search games..."
-        class="filter-input"
-      />
-    </div>
+    <filter-dropdown
+      id="platform-filter"
+      label="Platform"
+      v-model="selectedPlatform"
+      :options="platforms"
+      placeholder="All Platforms"
+      value-key="name"
+      label-key="displayName"
+      @update:model-value="applyFilters"
+    ></filter-dropdown>
 
-    <div class="filter-group">
-      <label for="platform-filter" class="filter-label">Platform</label>
-      <select
-        id="platform-filter"
-        v-model="selectedPlatform"
-        @change="applyFilters"
-        class="filter-select"
-      >
-        <option value="">All Platforms</option>
-        <option
-          v-for="platform in platforms"
-          :key="platform.name"
-          :value="platform.name"
-        >
-          {{ platform.displayName }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label for="sort-filter" class="filter-label">Sort By</label>
-      <select
-        id="sort-filter"
-        v-model="selectedSort"
-        @change="applyFilters"
-        class="filter-select"
-      >
-        <option value="title-asc">Title (A-Z)</option>
-        <option value="title-desc">Title (Z-A)</option>
-        <option value="date-desc">Newest First</option>
-        <option value="date-asc">Oldest First</option>
-      </select>
-    </div>
-
-    <button
-      v-if="hasActiveFilters"
-      @click="clearFilters"
-      class="clear-filters-btn"
-    >
-      Clear Filters
-    </button>
-  </div>
+    <filter-dropdown
+      id="sort-filter"
+      label="Sort By"
+      v-model="selectedSort"
+      :options="sortOptions"
+      value-key="value"
+      label-key="label"
+      @update:model-value="applyFilters"
+    ></filter-dropdown>
+  </filter-container>
 </template>
 
 <script>
-const { ref, computed, toRefs, onMounted, onUnmounted } = require("vue");
+const {
+  defineComponent,
+  ref,
+  computed,
+  toRefs,
+  onMounted,
+  onUnmounted,
+} = require("vue");
+const { useFilters } = require("../composables/useFilters.js");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
+const FilterContainer = require("./FilterContainer.vue");
+const FilterDropdown = require("./FilterDropdown.vue");
+const FilterInput = require("./FilterInput.vue");
 
 /**
  * GameFilter Component
  * Handles filtering of games by search query, platform, and sort order
  * Updates URL query parameters and emits filter events
+ * Note: FilterContainer, FilterDropdown, and FilterInput are globally registered
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "GameFilter",
+  components: {
+    FilterContainer,
+    FilterDropdown,
+    FilterInput,
+  },
   props: {
     platformsData: {
       type: String,
@@ -77,11 +72,31 @@ module.exports = exports = {
   },
   setup(props) {
     const { platformsData } = toRefs(props);
+
+    // Filter state
     const platforms = ref([]);
     const searchQuery = ref("");
     const selectedPlatform = ref("");
     const selectedSort = ref("title-asc");
+
+    // Sort options
+    const sortOptions = [
+      { value: "title-asc", label: "Title (A-Z)" },
+      { value: "title-desc", label: "Title (Z-A)" },
+      { value: "date-desc", label: "Newest First" },
+      { value: "date-asc", label: "Oldest First" },
+    ];
+
     let searchTimeout = null;
+
+    // Use filters composable
+    const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
+      useFilters("games-filter-changed", {
+        search: "",
+        platform: "",
+        sort: "title-asc",
+        page: 1,
+      });
 
     const hasActiveFilters = computed(() => {
       return (
@@ -104,48 +119,12 @@ module.exports = exports = {
     };
 
     const applyFilters = () => {
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
-      // Update or remove search parameter
-      if (searchQuery.value) {
-        params.set("search", searchQuery.value);
-      } else {
-        params.delete("search");
-      }
-
-      // Update or remove platform parameter
-      if (selectedPlatform.value) {
-        params.set("platform", selectedPlatform.value);
-      } else {
-        params.delete("platform");
-      }
-
-      // Update or remove sort parameter
-      if (selectedSort.value && selectedSort.value !== "title-asc") {
-        params.set("sort", selectedSort.value);
-      } else {
-        params.delete("sort");
-      }
-
-      // Reset to page 1 when filters change
-      params.delete("page");
-
-      // Update URL without reloading (for bookmarking/sharing)
-      const newUrl = `${url.pathname}?${params.toString()}`;
-      window.history.pushState({}, "", newUrl);
-
-      // Emit event for GameList to listen to
-      window.dispatchEvent(
-        new CustomEvent("games-filter-changed", {
-          detail: {
-            search: searchQuery.value,
-            platform: selectedPlatform.value,
-            sort: selectedSort.value,
-            page: 1,
-          },
-        }),
-      );
+      applyFiltersBase({
+        search: searchQuery.value,
+        platform: selectedPlatform.value,
+        sort: selectedSort.value,
+        page: 1,
+      });
     };
 
     const clearFilters = () => {
@@ -153,21 +132,12 @@ module.exports = exports = {
       selectedPlatform.value = "";
       selectedSort.value = "title-asc";
 
-      // Update URL without reloading
-      const url = new URL(window.location.href);
-      window.history.pushState({}, "", url.pathname);
-
-      // Emit event to reload all games
-      window.dispatchEvent(
-        new CustomEvent("games-filter-changed", {
-          detail: {
-            search: "",
-            platform: "",
-            sort: "title-asc",
-            page: 1,
-          },
-        }),
-      );
+      clearFiltersBase({
+        search: "",
+        platform: "",
+        sort: "title-asc",
+        page: 1,
+      });
     };
 
     onMounted(() => {
@@ -199,13 +169,14 @@ module.exports = exports = {
       searchQuery,
       selectedPlatform,
       selectedSort,
+      sortOptions,
       hasActiveFilters,
       handleSearchInput,
       applyFilters,
       clearFilters,
     };
   },
-};
+});
 </script>
 
 <style>
