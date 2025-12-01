@@ -168,6 +168,7 @@
 
 .game-card .game-image {
   width: 100%;
+  height: auto;
   aspect-ratio: 3/4;
   overflow: hidden;
   background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
