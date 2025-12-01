@@ -11,6 +11,9 @@ document.getElementById("gb-search-btn").addEventListener("click", function () {
 });
 
 function searchGBWiki(searchText) {
-  window.location.href =
-    "/search?type=wiki&q=" + encodeURIComponent(searchText);
+  let uri = "/search?type=wiki&q=" + encodeURIComponent(searchText);
+  let wikiType = document.getElementById("search_dropdown").value;
+  if (wikiType !== "All") uri += "&wikiType=" + wikiType;
+
+  window.location.href = uri;
 }
