@@ -58,3 +58,32 @@
 .gb-search-btn:active {
   background: #333;
 }
+
+.gb-search .search_dropdown {
+  width: 10%;
+  padding: 10px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #5a5a5a;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gb-search .search_dropdown:hover {
+  border-color: #6a6a6a;
+  background-color: #333333;
+}
+
+.gb-search .search_dropdown:focus {
+  outline: none;
+  border-color: #4c9ed9;
+  background-color: #333333;
+}
+
+.gb-search .search_dropdown option {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  padding: 10px;
+}
