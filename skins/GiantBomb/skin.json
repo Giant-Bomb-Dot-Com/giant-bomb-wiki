@@ -28,6 +28,7 @@
     "skins.giantbomb.styles": {
       "styles": [
         "resources/css/styles.css",
+        "resources/css/pageWrapper.css",
         "resources/css/search.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
