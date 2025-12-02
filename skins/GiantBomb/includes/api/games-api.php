@@ -20,7 +20,7 @@ if ($action === 'get-games') {
 	$platformFilter = trim($request->getText('platform', ''));
 	$sortOrder = $request->getText('sort', 'title-asc');
 	$currentPage = max(1, $request->getInt('page', 1));
-	$itemsPerPage = max(25, min(100, $request->getInt('perPage', 25)));
+	$itemsPerPage = max(1, min(100, $request->getInt('perPage', 25)));
 
 	// Query games using helper function
 	$result = queryGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);

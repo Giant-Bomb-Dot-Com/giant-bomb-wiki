@@ -65,17 +65,27 @@
         @change="changeItemsPerPage"
         class="pagination-select"
       >
-        <option :value="25">25</option>
-        <option :value="50">50</option>
-        <option :value="75">75</option>
-        <option :value="100">100</option>
+        <option
+          v-for="option in itemsPerPageOptions"
+          :key="option"
+          :value="option"
+        >
+          {{ option }}
+        </option>
       </select>
     </div>
   </div>
 </template>
 
 <script>
-const { ref, computed, watch, toRefs } = require("vue");
+const {
+  ref,
+  computed,
+  watch,
+  toRefs,
+  defineComponent,
+  onMounted,
+} = require("vue");
 
 /**
  * Pagination Component
@@ -90,7 +100,7 @@ const { ref, computed, watch, toRefs } = require("vue");
  * Events:
  * - pageChange: Emitted when page changes { page, itemsPerPage }
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "Pagination",
   props: {
     totalItems: {
@@ -108,6 +118,10 @@ module.exports = exports = {
     maxVisiblePages: {
       type: Number,
       default: 5,
+    },
+    itemsPerPageOptions: {
+      type: Array,
+      default: () => [25, 50, 75, 100],
     },
   },
   emits: ["pageChange"],
@@ -174,6 +188,15 @@ module.exports = exports = {
       });
     };
 
+    onMounted(() => {
+      // Read current values from url
+      const urlParams = new URLSearchParams(window.location.search);
+      itemsPerPageLocal.value =
+        parseInt(urlParams.get("page_size")) || itemsPerPage.value;
+      currentPageLocal.value =
+        parseInt(urlParams.get("page")) || currentPage.value;
+    });
+
     // Watch for prop changes from parent
     watch(currentPage, (newPage) => {
       currentPageLocal.value = newPage;
@@ -194,7 +217,7 @@ module.exports = exports = {
       changeItemsPerPage,
     };
   },
-};
+});
 </script>
 
 <style>

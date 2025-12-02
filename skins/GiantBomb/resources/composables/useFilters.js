@@ -10,9 +10,29 @@ function useFilters(eventName, initialFilters = {}) {
   const applyFilters = (customFilters = null) => {
     const activeFilters = customFilters || filters.value;
     const url = new URL(window.location.href);
-    const queryParts = [];
 
-    // Build query string from active filters
+    // Start with existing URL parameters
+    const existingParams = new URLSearchParams(url.search);
+
+    // Get all filter keys that will be set (including array keys)
+    const filterKeys = new Set();
+    Object.keys(activeFilters).forEach((key) => {
+      filterKeys.add(key);
+      filterKeys.add(`${key}[]`); // Also track array version
+    });
+
+    // Remove existing filter parameters from URL
+    for (const key of filterKeys) {
+      existingParams.delete(key);
+    }
+
+    // Build query parts from existing non-filter params
+    const queryParts = [];
+    existingParams.forEach((value, key) => {
+      queryParts.push(`${key}=${value}`);
+    });
+
+    // Add filter parameters
     Object.entries(activeFilters).forEach(([key, value]) => {
       if (value === null || value === undefined || value === "") return;
 
@@ -54,9 +74,26 @@ function useFilters(eventName, initialFilters = {}) {
   const clearFilters = (defaultFilters = {}) => {
     filters.value = { ...defaultFilters };
 
-    // Update URL without reloading
+    // Remove all default filters from URL
     const url = new URL(window.location.href);
-    window.history.pushState({}, "", url.pathname);
+    const params = new URLSearchParams(url.search);
+    // Collect keys to delete first (can't delete while iterating)
+    const keysToDelete = [];
+    params.forEach((value, key) => {
+      // Handle array parameters (e.g., game_title[])
+      const strippedKey = key.replace("[]", "");
+      if (Object.keys(defaultFilters).includes(strippedKey)) {
+        keysToDelete.push(key);
+      }
+    });
+
+    // Now delete the collected keys
+    keysToDelete.forEach((key) => {
+      params.delete(key);
+    });
+
+    url.search = params.toString();
+    window.history.pushState({}, "", url.toString());
 
     // Emit event to reload with defaults
     window.dispatchEvent(
