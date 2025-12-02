@@ -19,6 +19,7 @@ require_once __DIR__ . '/PlatformHelper.php';
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
 	$games = [];
 	$totalGames = 0;
+    $platformMappings = loadPlatformMappings();
 
 	// Validation on searchQuery input
 	$searchQuery = (string) $searchQuery;
@@ -152,6 +153,8 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 				while ($dv = $field->getNextDataValue()) {
 					$values[] = $dv->getShortWikiText();
 				}
+                
+                $pageData['searchName'] = $title->getText();
 
 				switch ($label) {
 					case 'Has name':
@@ -170,12 +173,19 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 							$timestamp = strtotime($values[0]);
 							if ($timestamp !== false) {
 								$pageData['date'] = date('Y-m-d', $timestamp);
+                                $pageData['releaseYear'] = date('Y', $timestamp);
 							}
 						}
 						break;
 					case 'Has platforms':
 						$pageData['platforms'] = array_map(function($p) {
-							return str_replace('_', ' ', str_replace('Platforms/', '', $p));
+                            $platformName = str_replace('_', ' ', str_replace('Platforms/', '', $p));
+                            $abbrev = $platformMappings[$platformName] ?? basename($platformName);
+                            
+							return [
+                                'title' => $platformName,
+                                'abbrev' => $abbrev,
+                            ];
 						}, $values);
 						break;
 				}
