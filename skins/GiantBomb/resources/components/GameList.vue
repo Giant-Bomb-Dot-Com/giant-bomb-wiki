@@ -36,14 +36,14 @@
                   v-for="(platform, idx) in game.platforms.slice(0, 3)"
                   :key="idx"
                   class="platform-badge"
-                  :title="platform"
+                  :title="getPlatformTitle(platform)"
                 >
-                  {{ platform }}
+                  {{ getPlatformAbbrev(platform) }}
                 </span>
                 <span
                   v-if="game.platforms.length > 3"
                   class="platform-badge platform-badge-more"
-                  :title="game.platforms.slice(3).join(', ')"
+                  :title="getRemainingPlatformsTitles(game.platforms)"
                 >
                   +{{ game.platforms.length - 3 }}
                 </span>
@@ -256,11 +256,37 @@ module.exports = exports = {
       window.removeEventListener("games-filter-changed", handleFilterChange);
     });
 
+    // Helper functions for platform display
+    const getPlatformTitle = (platform) => {
+      // Handle both object format (new API) and string format (legacy)
+      return typeof platform === "object" && platform.title
+        ? platform.title
+        : platform;
+    };
+
+    const getPlatformAbbrev = (platform) => {
+      // Handle both object format (new API) and string format (legacy)
+      return typeof platform === "object" && platform.abbrev
+        ? platform.abbrev
+        : platform;
+    };
+
+    const getRemainingPlatformsTitles = (platforms) => {
+      // Get titles of platforms after the first 3
+      return platforms
+        .slice(3)
+        .map((p) => getPlatformTitle(p))
+        .join(", ");
+    };
+
     return {
       games,
       loading,
       paginationData,
       handlePageChange,
+      getPlatformTitle,
+      getPlatformAbbrev,
+      getRemainingPlatformsTitles,
     };
   },
 };
