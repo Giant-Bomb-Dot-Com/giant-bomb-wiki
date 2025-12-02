@@ -38,9 +38,7 @@
       "description": "Name of the GBN cookie used for external authentication"
     }
   },
-	"AvailableRights": [
-		"gb-premium"
-	],
+  "AvailableRights": ["gb-premium"],
   "RevokePermissions": {
     "*": {
       "createpage": true
@@ -50,14 +48,14 @@
       "editcontentmodel": true
     }
   },
-	"GroupPermissions": {
+  "GroupPermissions": {
     "subscriber": {
       "createpage": true,
       "editcontentmodel": true,
       "gb-premium": true
     },
-		"bureaucrat": {
-			"gb-premium": true
-		}
-	}
+    "bureaucrat": {
+      "gb-premium": true
+    }
+  }
 }
