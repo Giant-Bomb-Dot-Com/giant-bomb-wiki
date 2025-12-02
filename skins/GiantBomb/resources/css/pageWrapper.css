@@ -1,0 +1,23 @@
+/**
+ * Shared page wrapper styles
+ * Applied consistently across all page types (landing, game, platforms, releases)
+ */
+
+.page-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Responsive padding */
+@media (max-width: 1024px) {
+  .page-wrapper {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-wrapper {
+    padding: 0 0.5rem;
+  }
+}

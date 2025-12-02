@@ -18,8 +18,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: var(--main-padding);
-  padding-right: var(--main-padding);
   hr {
     margin: 3rem;
   }
