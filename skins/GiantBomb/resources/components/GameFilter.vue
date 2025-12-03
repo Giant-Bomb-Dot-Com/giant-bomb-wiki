@@ -9,8 +9,9 @@
       id="search-filter"
       label="Search"
       v-model="searchQuery"
-      @update:model-value="handleSearchInput"
+      @update:model-value="applyFilters"
       placeholder="Search games..."
+      :debounce="800"
     ></filter-input>
 
     <filter-dropdown
@@ -37,14 +38,7 @@
 </template>
 
 <script>
-const {
-  defineComponent,
-  ref,
-  computed,
-  toRefs,
-  onMounted,
-  onUnmounted,
-} = require("vue");
+const { defineComponent, ref, computed, toRefs, onMounted } = require("vue");
 const { useFilters } = require("../composables/useFilters.js");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 const FilterContainer = require("./FilterContainer.vue");
@@ -87,8 +81,6 @@ module.exports = exports = defineComponent({
       { value: "date-asc", label: "Oldest First" },
     ];
 
-    let searchTimeout = null;
-
     // Use filters composable
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
       useFilters("games-filter-changed", {
@@ -105,18 +97,6 @@ module.exports = exports = defineComponent({
         selectedSort.value !== "title-asc"
       );
     });
-
-    const handleSearchInput = () => {
-      // Clear existing timeout
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-
-      // Wait 800ms after user stops typing before applying filters
-      searchTimeout = setTimeout(() => {
-        applyFilters();
-      }, 800);
-    };
 
     const applyFilters = () => {
       applyFiltersBase({
@@ -157,13 +137,6 @@ module.exports = exports = defineComponent({
       selectedSort.value = urlParams.get("sort") || "title-asc";
     });
 
-    onUnmounted(() => {
-      // Clear any pending search timeout
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-    });
-
     return {
       platforms,
       searchQuery,
@@ -171,7 +144,6 @@ module.exports = exports = defineComponent({
       selectedSort,
       sortOptions,
       hasActiveFilters,
-      handleSearchInput,
       applyFilters,
       clearFilters,
     };
