@@ -1,4 +1,6 @@
 {
     "editorconfig": true,
-    "semi": true
+    "semi": true,
+    "plugins": ["@prettier/plugin-php"],
+    "phpVersion": "8.1"
 }

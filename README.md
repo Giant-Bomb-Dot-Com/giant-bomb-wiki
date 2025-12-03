@@ -84,19 +84,20 @@ If you want to generate **new wiki pages** from the 86,147 games in the API:
 1. Prepare the environment by first installing [Docker Desktop](https://www.docker.com/products/docker-desktop/) and running it.
 2. Configure the wiki by copying `.env.example` to `.env` and filling out the missing values accordingly.
    - (optional) If you need services that will use the Giant Bomb legacy API, see the readme for [gb_api_scripts](gb_api_scripts/README.md).
-3. Start the wiki services from the terminal, with
+3. Build the container first with `docker compose build`
+   - Use the option `--no-cache` if switching branches and some packages got cached. The terminal log should list Mediawiki 1.43.5 and the extensions from the Dockerfile.
+4. Start the wiki services from the terminal, with
    - `docker compose up -d`
-   - This will download, install, and start the database and the mediawiki services.
-   - (optional) Run `docker compose build --no-cache` if you can see the version of mediawiki is not the expected one (currently Mediawiki 1.43.5).
-4. Install the wiki in two steps
-   1. Find the wiki container with `docker ps`. By default it should be `giant-bomb-wiki-wiki-1`
-   2. Install with
-      - `docker exec <wiki-container-name> /bin/bash /installwiki.sh`
+   - This will start the database and the mediawiki services.
+5. Install the wiki in two steps
+   1. Install with
+      - `docker exec wiki /bin/bash /installwiki.sh`
+      - `wiki` is the name of the Wiki service as named in the Dockerfile
       - This is a one time action to configure Mediawiki and install the necessary Mediawiki extensions/skins as seen in `/config/LocalSettings.php`.
       - It also performs some web-centric configurations.
-5. Verify the Special Version page http://localhost:8080/index.php/Special:Version loads in a browser and see the installed extensions/skins and their versions.
-6. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
-7. (optional) Execute all end-to-end tests with `pnpm test:e2e`. See the [Tests](#Tests) section for the set-up.
+6. Verify the Special Version page http://localhost:8080/index.php/Special:Version loads in a browser and see the installed extensions/skins and their versions.
+7. (optional) To tear down everything and remove the Volumes, `docker compose down -v`
+8. (optional) Execute all end-to-end tests with `pnpm test:e2e`. See the [Tests](#Tests) section for the set-up.
 
 </details>
 

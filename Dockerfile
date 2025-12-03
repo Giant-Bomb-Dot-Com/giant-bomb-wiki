@@ -63,9 +63,15 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 COPY ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 RUN chown -R www-data:www-data /var/www/html/extensions/GiantBombResolve
 
+RUN mkdir -p -m 755 /var/www/html/extensions/GbSessionProvider
+COPY --chmod=755 extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider/
+
 # So can be docker exec after build
 COPY installwiki.sh /installwiki.sh
 RUN chmod 755 /installwiki.sh
+RUN mkdir -p -m 740 /var/log/mediawiki && \
+    chown -R www-data:www-data /var/log/mediawiki && \
+    chown -R www-data:www-data /var/www/html/extensions/GbSessionProvider
 
 # START CONTAINER
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
