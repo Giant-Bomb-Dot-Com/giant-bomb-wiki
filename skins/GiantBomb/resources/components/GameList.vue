@@ -56,7 +56,6 @@
 
       <!-- Pagination Component -->
       <Pagination
-        v-if="paginationData.totalPages > 1"
         :total-items="paginationData.totalItems"
         :items-per-page="paginationData.itemsPerPage"
         :current-page="paginationData.currentPage"
