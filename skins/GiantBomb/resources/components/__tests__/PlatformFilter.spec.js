@@ -57,6 +57,17 @@ describe("PlatformFilter", () => {
         },
         set: (key, value) => params.set(key, value),
         delete: (key) => params.delete(key),
+        forEach: (callback) => {
+          params.forEach((value, key) => {
+            if (Array.isArray(value)) {
+              value.forEach((v) => {
+                callback(v, `${key}[]`);
+              });
+            } else {
+              callback(value, key);
+            }
+          });
+        },
         toString: () => {
           const pairs = [];
           params.forEach((value, key) => {
@@ -294,7 +305,7 @@ describe("PlatformFilter", () => {
         window.history.pushState.mock.calls[
           window.history.pushState.mock.calls.length - 1
         ];
-      expect(lastCall[2]).toBe("/");
+      expect(lastCall[2]).toBe("http://localhost/");
     });
 
     it("dispatches event with empty filters when cleared", async () => {
