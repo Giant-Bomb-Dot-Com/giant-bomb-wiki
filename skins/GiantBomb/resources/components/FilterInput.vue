@@ -5,7 +5,7 @@
       :id="id"
       :type="type"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="handleInput"
       :placeholder="placeholder"
       class="filter-input"
     />
@@ -15,9 +15,9 @@
 <script>
 /**
  * FilterInput Component
- * Generic reusable text input filter component
+ * Generic reusable text input filter component with optional debouncing
  */
-const { defineComponent } = require("vue");
+const { defineComponent, onUnmounted } = require("vue");
 
 const component = defineComponent({
   name: "FilterInput",
@@ -42,8 +42,45 @@ const component = defineComponent({
       type: String,
       default: "text",
     },
+    debounce: {
+      type: Number,
+      default: 0,
+    },
   },
   emits: ["update:modelValue"],
+  setup(props, { emit }) {
+    let debounceTimeout = null;
+
+    const handleInput = (event) => {
+      const value = event.target.value;
+
+      if (props.debounce > 0) {
+        // Clear existing timeout
+        if (debounceTimeout) {
+          clearTimeout(debounceTimeout);
+        }
+
+        // Wait for debounce delay before emitting
+        debounceTimeout = setTimeout(() => {
+          emit("update:modelValue", value);
+        }, props.debounce);
+      } else {
+        // No debouncing, emit immediately
+        emit("update:modelValue", value);
+      }
+    };
+
+    onUnmounted(() => {
+      // Clear any pending timeout
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+    });
+
+    return {
+      handleInput,
+    };
+  },
 });
 
 module.exports = exports = component;

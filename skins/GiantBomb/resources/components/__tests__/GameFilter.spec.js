@@ -376,7 +376,7 @@ describe("GameFilter", () => {
   });
 
   describe("Debounced Search", () => {
-    it("updates search query value on input", async () => {
+    it("applies filters after debounce delay when typing in search", async () => {
       wrapper = mount(GameFilter, {
         props: {
           platformsData: JSON.stringify(mockPlatforms),
@@ -384,51 +384,48 @@ describe("GameFilter", () => {
       });
 
       const searchInput = wrapper.find("#search-filter");
+
+      // Type in the search input
       await searchInput.setValue("zelda");
 
-      // Verify the component state updated
+      // Filter should NOT be applied immediately
+      expect(wrapper.vm.searchQuery).toBe("");
+
+      // Fast-forward timers by 800ms (the debounce delay)
+      jest.advanceTimersByTime(800);
+      await wrapper.vm.$nextTick();
+
+      // Now the component state should be updated
       expect(wrapper.vm.searchQuery).toBe("zelda");
     });
 
-    it("has handleSearchInput method that sets timeout", async () => {
+    it("debounces multiple rapid inputs", async () => {
       wrapper = mount(GameFilter, {
         props: {
           platformsData: JSON.stringify(mockPlatforms),
         },
       });
 
-      // Verify the debounce handler exists
-      expect(typeof wrapper.vm.handleSearchInput).toBe("function");
+      const searchInput = wrapper.find("#search-filter");
 
-      // Call the handler
-      wrapper.vm.handleSearchInput();
+      // Simulate rapid typing
+      await searchInput.setValue("z");
+      jest.advanceTimersByTime(400);
 
-      // Verify a timeout was set (timer count > 0)
-      const timerCount = jest.getTimerCount();
-      expect(timerCount).toBeGreaterThan(0);
-    });
+      await searchInput.setValue("ze");
+      jest.advanceTimersByTime(400);
 
-    it("clears timeout when component is unmounted", async () => {
-      wrapper = mount(GameFilter, {
-        props: {
-          platformsData: JSON.stringify(mockPlatforms),
-        },
-      });
+      await searchInput.setValue("zel");
 
-      // Call handle search to create a timeout
-      wrapper.vm.handleSearchInput();
-      const timersBefore = jest.getTimerCount();
-      expect(timersBefore).toBeGreaterThan(0);
+      // Still shouldn't have updated yet (debounce restarts on each input)
+      expect(wrapper.vm.searchQuery).toBe("");
 
-      // Unmount the component
-      wrapper.unmount();
+      // Complete the debounce delay
+      jest.advanceTimersByTime(800);
+      await wrapper.vm.$nextTick();
 
-      // Run any pending timers
-      jest.runAllTimers();
-
-      // Component cleanup should have cleared the timeout
-      // (We can't directly test this, but unmount calls onUnmounted lifecycle hook)
-      expect(true).toBe(true); // Component unmounted successfully
+      // Now it should be updated with the final value
+      expect(wrapper.vm.searchQuery).toBe("zel");
     });
   });
 
