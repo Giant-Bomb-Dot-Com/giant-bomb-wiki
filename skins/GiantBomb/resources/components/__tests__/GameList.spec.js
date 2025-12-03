@@ -9,28 +9,35 @@ describe("GameList", () => {
       url: "/wiki/The_Legend_of_Zelda:_Breath_of_the_Wild",
       img: "zelda.jpg",
       date: "2017-03-03",
-      platforms: ["Nintendo Switch", "Wii U"],
+      platforms: [
+        { title: "Nintendo Switch", abbrev: "NSW" },
+        { title: "Wii U", abbrev: "WIIU" },
+      ],
     },
     {
       title: "Super Mario Odyssey",
       url: "/wiki/Super_Mario_Odyssey",
       img: "mario.jpg",
       date: "2017-10-27",
-      platforms: ["Nintendo Switch"],
+      platforms: [{ title: "Nintendo Switch", abbrev: "NSW" }],
     },
     {
       title: "God of War",
       url: "/wiki/God_of_War_(2018)",
       img: "gow.jpg",
       date: "2018-04-20",
-      platforms: ["PlayStation 4"],
+      platforms: [{ title: "PlayStation 4", abbrev: "PS4" }],
     },
     {
       title: "Elden Ring",
       url: "/wiki/Elden_Ring",
       img: "elden.jpg",
       date: "2022-02-25",
-      platforms: ["PlayStation 5", "Xbox Series X", "PC"],
+      platforms: [
+        { title: "PlayStation 5", abbrev: "PS5" },
+        { title: "Xbox Series X", abbrev: "XBSX" },
+        { title: "PC", abbrev: "PC" },
+      ],
     },
   ];
 
@@ -101,7 +108,7 @@ describe("GameList", () => {
           url: "/wiki/Test",
           img: "",
           date: "2023-01-01",
-          platforms: ["PC"],
+          platforms: [{ title: "PC", abbrev: "PC" }],
         },
       ];
 
