@@ -1,0 +1,12 @@
+/**
+ * Concept-specific styles
+ * Extends shared listing styles from listingPage.css
+ * Uses .concepts-page for page-specific overrides while keeping .listing-* classes for shared behavior
+ */
+
+/* Concept page uses the shared listing-page styles via the class in the template */
+/* Only add concept-specific overrides here if needed */
+
+/* Currently concepts use the same layout as platforms */
+/* Add any concept-specific customizations below */
+

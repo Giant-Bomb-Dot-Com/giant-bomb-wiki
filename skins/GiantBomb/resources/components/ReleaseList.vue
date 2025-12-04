@@ -1,6 +1,6 @@
 <template>
-  <main class="releases-main">
-    <div v-if="loading" class="releases-loading">
+  <main class="listing-main">
+    <div v-if="loading" class="listing-loading">
       <div class="loading-spinner"></div>
       <p>Loading new releases...</p>
     </div>
@@ -9,20 +9,20 @@
       <div
         v-for="weekGroup in weekGroups"
         :key="weekGroup.label"
-        class="week-group"
+        class="listing-group"
       >
-        <h2 class="week-label">{{ weekGroup.label }}</h2>
-        <div class="releases-grid">
+        <h2 class="listing-group-label">{{ weekGroup.label }}</h2>
+        <div class="listing-grid listing-grid--compact">
           <div
             v-for="(release, index) in weekGroup.releases"
             :key="index"
-            class="release-card"
+            class="listing-card"
           >
-            <a :href="release.url" class="release-card-link">
-              <div v-if="release.image" class="release-image">
+            <a :href="release.url" class="listing-card-link">
+              <div v-if="release.image" class="listing-card-image listing-card-image--portrait">
                 <img :src="release.image" :alt="release.title" loading="lazy" />
               </div>
-              <div v-else class="release-image release-image-placeholder">
+              <div v-else class="listing-card-image listing-card-image--portrait listing-card-image-placeholder">
                 <img
                   src="https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png"
                   alt="Giant Bomb Default Image"
@@ -30,9 +30,9 @@
                 />
               </div>
 
-              <div class="release-info">
-                <h3 class="release-title">{{ release.title }}</h3>
-                <div class="release-date">
+              <div class="listing-card-info">
+                <h3 class="listing-card-title">{{ release.title }}</h3>
+                <div class="listing-card-release-date">
                   <span v-if="release.releaseDateFormatted">{{
                     release.releaseDateFormatted
                   }}</span>
@@ -51,7 +51,7 @@
 
                 <div
                   v-if="release.platforms && release.platforms.length > 0"
-                  class="release-platforms"
+                  class="platform-badges"
                 >
                   <span
                     v-for="(platform, idx) in release.platforms"
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div v-else class="no-releases">
+    <div v-else class="listing-empty">
       <p>No releases found for the selected filters.</p>
     </div>
   </main>
@@ -175,36 +175,8 @@ module.exports = exports = defineComponent({
 </script>
 
 <style>
-.releases-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #999;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #333;
-  border-top-color: #e63946;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.releases-loading p {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
+/* All shared styles are now in listingPage.css */
+/* Release-specific styles only below */
 .region-flag {
   margin-left: 6px;
   height: 14px;

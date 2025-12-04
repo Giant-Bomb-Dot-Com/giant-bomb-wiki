@@ -2,19 +2,19 @@
   <main class="listing-main">
     <div v-if="loading" class="listing-loading">
       <div class="loading-spinner"></div>
-      <p>Loading platforms...</p>
+      <p>Loading concepts...</p>
     </div>
 
-    <div v-else-if="platforms.length > 0">
+    <div v-else-if="concepts.length > 0">
       <div class="listing-grid">
         <div
-          v-for="(platform, index) in platforms"
+          v-for="(concept, index) in concepts"
           :key="index"
           class="listing-card"
         >
-          <a :href="platform.url" class="listing-card-link">
-            <div v-if="platform.image" class="listing-card-image">
-              <img :src="platform.image" :alt="platform.title" loading="lazy" />
+          <a :href="concept.url" class="listing-card-link">
+            <div v-if="concept.image" class="listing-card-image">
+              <img :src="concept.image" :alt="concept.caption" loading="lazy" />
             </div>
             <div
               v-else
@@ -28,21 +28,9 @@
             </div>
 
             <div class="listing-card-info">
-              <h3 class="listing-card-title">{{ platform.title }}</h3>
-              <div v-if="platform.deck" class="listing-card-deck">
-                {{ platform.deck }}
-              </div>
-              <div
-                v-if="platform.releaseDateFormatted"
-                class="listing-card-meta listing-card-date"
-              >
-                Launched on {{ platform.releaseDateFormatted }}
-              </div>
-              <div
-                v-if="platform.gameCount"
-                class="listing-card-meta listing-card-game-count"
-              >
-                Games: {{ platform.gameCount }}
+              <h3 class="listing-card-title">{{ concept.title }}</h3>
+              <div v-if="concept.deck" class="listing-card-deck">
+                {{ concept.deck }}
               </div>
             </div>
           </a>
@@ -60,7 +48,7 @@
     </div>
 
     <div v-else class="listing-empty">
-      <p>No platforms found for the selected filters.</p>
+      <p>No concepts found for the selected filters.</p>
     </div>
   </main>
 </template>
@@ -71,11 +59,11 @@ const Pagination = require("./Pagination.vue");
 const DEFAULT_PAGE_SIZE = 48;
 
 /**
- * PlatformList Component
- * Displays platforms and handles async filtering and pagination
+ * ConceptList Component
+ * Displays concepts and handles async filtering and pagination
  */
 module.exports = exports = defineComponent({
-  name: "PlatformList",
+  name: "ConceptList",
   components: {
     Pagination,
   },
@@ -104,7 +92,7 @@ module.exports = exports = defineComponent({
   setup(props) {
     const { initialData, totalCount, currentPage, totalPages, pageSize } =
       toRefs(props);
-    const platforms = ref([]);
+    const concepts = ref([]);
     const loading = ref(false);
     const pageCount = ref(parseInt(totalCount.value) || 0);
     const page = ref(parseInt(currentPage.value) || 1);
@@ -114,7 +102,7 @@ module.exports = exports = defineComponent({
     // Helper function to decode HTML entities
     const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
-    const fetchPlatforms = async (
+    const fetchConcepts = async (
       letter = "",
       sort = "release_date",
       gameTitles = [],
@@ -127,7 +115,7 @@ module.exports = exports = defineComponent({
       try {
         // Build query string manually to preserve [] notation for PHP arrays
         const queryParts = [];
-        queryParts.push("action=get-platforms");
+        queryParts.push("action=get-concepts");
 
         if (letter) {
           queryParts.push(`letter=${encodeURIComponent(letter)}`);
@@ -165,17 +153,17 @@ module.exports = exports = defineComponent({
         const data = await response.json();
 
         if (data.success) {
-          platforms.value = data.platforms || [];
+          concepts.value = data.concepts || [];
           pageCount.value = data.totalCount || 0;
           page.value = data.currentPage || 1;
           pages.value = data.totalPages || 1;
           itemsPerPage.value = data.pageSize || DEFAULT_PAGE_SIZE;
         } else {
           console.error("API returned error:", data);
-          platforms.value = [];
+          concepts.value = [];
         }
       } catch (error) {
-        console.error("Failed to fetch platforms:", error);
+        console.error("Failed to fetch concepts:", error);
         // Keep existing data on error
       } finally {
         loading.value = false;
@@ -190,7 +178,7 @@ module.exports = exports = defineComponent({
         require_all_games: requireAllGames,
         page: pageNum,
       } = event.detail;
-      fetchPlatforms(
+      fetchConcepts(
         letter,
         sort,
         gameTitles,
@@ -243,7 +231,7 @@ module.exports = exports = defineComponent({
       window.history.pushState({}, "", newUrl);
 
       // Fetch new page
-      fetchPlatforms(
+      fetchConcepts(
         letter,
         sort,
         gameTitles,
@@ -260,29 +248,26 @@ module.exports = exports = defineComponent({
       // Parse initial server-rendered data
       try {
         const decoded = decodeHtmlEntities(initialData.value);
-        platforms.value = JSON.parse(decoded);
+        concepts.value = JSON.parse(decoded);
         pageCount.value = parseInt(totalCount.value) || 0;
         page.value = parseInt(currentPage.value) || 1;
         pages.value = parseInt(totalPages.value) || 1;
         itemsPerPage.value = parseInt(pageSize.value) || DEFAULT_PAGE_SIZE;
       } catch (e) {
         console.error("Failed to parse initial data:", e);
-        platforms.value = [];
+        concepts.value = [];
       }
 
       // Listen for filter changes
-      window.addEventListener("platforms-filter-changed", handleFilterChange);
+      window.addEventListener("concepts-filter-changed", handleFilterChange);
     });
 
     onUnmounted(() => {
-      window.removeEventListener(
-        "platforms-filter-changed",
-        handleFilterChange,
-      );
+      window.removeEventListener("concepts-filter-changed", handleFilterChange);
     });
 
     return {
-      platforms,
+      concepts,
       loading,
       totalCount: pageCount,
       currentPage: page,
