@@ -92,7 +92,7 @@ class PdoDbWrapper implements DbInterface
 
     public function getImageData(int $id): array
     {
-        $sql = "SELECT name, caption, path, mimetype, image_sizes' FROM image WHERE id = :id";
+        $sql = "SELECT name, caption, path, mimetype, image_sizes FROM image WHERE id = :id";
         $result = $this->fetchObject($sql, ['id' => $id]);
 
         if (!$result) {

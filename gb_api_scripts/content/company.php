@@ -154,7 +154,7 @@ class Company extends Resource
             'website' => $row->website,
             'relations' => $relations
         ])
-        .$this->getImageData([
+        .$this->getImageDiv([
             'infobox_image_id' => $row->image_id,
             'background_image_id' => $row->background_image_id,
         ])

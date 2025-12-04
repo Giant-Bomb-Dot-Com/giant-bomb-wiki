@@ -192,7 +192,7 @@ class Game extends Resource
             'release_date_type' => $row->release_date_type,
             'relations' => $relations
         ])
-        .$this->getImageData([
+        .$this->getImageDiv([
             'infobox_image_id' => $row->image_id,
             'background_image_id' => $row->background_image_id,
         ])
@@ -578,6 +578,7 @@ MARKUP;
                         $imageName = $this->getDb()->getImageName($dlc->image_id);
                         if (!empty($imageName)) {
                             $imageName = str_replace('%20', ' ', $imageName);
+                            $imageName = str_replace('&', '%26', $imageName);
                         }
                     }
 

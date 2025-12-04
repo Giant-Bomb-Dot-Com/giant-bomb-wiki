@@ -176,7 +176,7 @@ trait BuildPageData
      * @param array $data
      * @return string
      */
-    public function getImageData(array $data): string
+    public function getImageDiv(array $data): string
     {
         $imageArray = [
             'infobox' => [],
@@ -184,14 +184,17 @@ trait BuildPageData
         ];
 
         if (!empty($data['infobox_image_id'])) {
-            $imageArray['infobox'] = $this->getImageData($data['infobox_image_id']);
+            $imageArray['infobox'] = $this->getDb()->getImageData($data['infobox_image_id']);
         }
 
         if (!empty($data['background_image_id'])) {
-            $imageArray['background'] = $this->getImageData($data['background_image_id']);
+            $imageArray['background'] = $this->getDb()->getImageData($data['background_image_id']);
         }
 
-        $imageData = "<div id='imageData' data-json='".json_encode($imageArray)."' />";
+        $jsonData = json_encode($imageArray);
+        $encodedJson = htmlspecialchars( $jsonData, ENT_QUOTES, 'UTF-8' );
+
+        $imageData = "\n&lt;div id='imageData' data-json='{$encodedJson}' /&gt;\n";
 
         return $imageData;
     }

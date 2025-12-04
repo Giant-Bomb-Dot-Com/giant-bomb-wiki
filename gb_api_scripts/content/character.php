@@ -148,7 +148,7 @@ class Character extends Resource
             'death' => $row->death,
             'relations' => $relations
         ])
-        .$this->getImageData([
+        .$this->getImageDiv([
             'infobox_image_id' => $row->image_id,
             'background_image_id' => $row->background_image_id,
         ])

@@ -10,7 +10,7 @@ trait DBConnection
         $dbName = getenv( 'EXTERNAL_DB_NAME' );
 
         try {
-            $dsn = "mysql:host={$dbHost};dbname={$dbName};charset=utf8mb4";
+            $dsn = "mysql:host=giantbomb-mysql;dbname={$dbName};charset=utf8mb4";
             $db = new PDO($dsn, $dbUser, $dbPassword);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

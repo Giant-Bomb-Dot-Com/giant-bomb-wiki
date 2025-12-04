@@ -147,7 +147,7 @@ class Person extends Resource
             'twitter' => $row->twitter,
             'relations' => $relations
         ])
-        .$this->getImageData([
+        .$this->getImageDiv([
             'infobox_image_id' => $row->image_id,
             'background_image_id' => $row->background_image_id,
         ])

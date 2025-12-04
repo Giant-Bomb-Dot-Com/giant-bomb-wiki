@@ -73,7 +73,7 @@ class Genre extends Resource
             'aliases' => $row->aliases,
             'deck' => $row->deck,
         ])
-        .$this->getImageData([
+        .$this->getImageDiv([
             'infobox_image_id' => $row->image_id,
             'background_image_id' => $row->background_image_id,
         ])
