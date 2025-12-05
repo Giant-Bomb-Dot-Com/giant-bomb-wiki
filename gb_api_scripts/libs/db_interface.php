@@ -47,6 +47,7 @@ interface DbInterface
     public function getDLCFromDB(int $id);
     public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0);
     public function getNamesToConvert(string $table, $id = false, $force = false);
+    public function getPageEditors();
     public function updateMediaWikiDescription(string $table, int $id, string $mwDescription);
     public function updateMediaWikiPageName(string $table, int $id, string $mwPageName);
 }

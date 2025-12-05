@@ -205,6 +205,16 @@ class PdoDbWrapper implements DbInterface
         return $this->fetchAllObjects($sql, $params);
     }
 
+    public function getPageEditors()
+    {
+        $sql = "SELECT submitter_id, assoc_type_id, assoc_id, total_points, submitter_comment, date_moderated
+                  FROM wiki_changeset
+                 WHERE status = 2 AND assoc_id IS NOT NULL
+              ORDER BY assoc_type_id, assoc_id";
+
+        return $this->fetchAllObjects($sql);
+    }
+
     public function updateMediaWikiDescription(string $table, int $id, string $mwDescription) 
     {
         $this->descriptionTableCheck($table);

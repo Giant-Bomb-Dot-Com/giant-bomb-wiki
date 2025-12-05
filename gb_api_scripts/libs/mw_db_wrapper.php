@@ -219,6 +219,19 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchResultSet();
     }
 
+    public function getPageEditors()
+    {
+        $qb = $this->dbConnection->newSelectQueryBuilder()
+                   ->select(['o.submitter_id','o.image_id','o.release_date','o.release_date_type','o.name','o.description','o.launch_price','o.deck','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a7.name as dlc_type'])
+                   ->from('wiki_changeset', 'o')
+                   ->where('o.status = 2 AND o.assoc_id IS NOT NULL')
+                   ->orderBy('o.assoc_type_id', 'ASC')
+                   ->orderBy('o.assoc_id', 'ASC')
+                   ->caller(__METHOD__);
+
+        return $qb->fetchResultSet();
+    }
+
     public function updateMediaWikiDescription(string $table, int $id, string $mwDescription) 
     {
         $ub = $this->dbConnection->newUpdateQueryBuilder();
