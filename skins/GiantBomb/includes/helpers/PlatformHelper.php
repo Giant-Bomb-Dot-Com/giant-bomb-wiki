@@ -9,6 +9,22 @@ use MediaWiki\MediaWikiServices;
 
  // Load date helper functions
  require_once __DIR__ . '/DateHelper.php';
+
+/**
+ * Safely extract a string value from SMW printout data
+ *
+ * @param array $printouts The printouts array from SMW query results
+ * @param string $propertyName The property name to extract
+ * @param string $default Default value if property is missing or invalid
+ * @return string The extracted string value or default
+ */
+function extractPrintoutString($printouts, $propertyName, $default = '') {
+    if (isset($printouts[$propertyName]) && count($printouts[$propertyName]) > 0) {
+        $value = $printouts[$propertyName][0];
+        return is_string($value) ? $value : $default;
+    }
+    return $default;
+}
  
 /**
  * Load platform name to abbreviation mappings from SMW with caching
@@ -73,20 +89,13 @@ function loadPlatformMappings() {
                 
                 if (isset($result['query']['results'])) {
                     foreach ($result['query']['results'] as $pageName => $data) {
-                        $shortName = '';
-                        if (isset($data['printouts']['Has short name'][0])) {
-                            $shortName = $data['printouts']['Has short name'][0];
-                        }
-                        
-                        // Get the display name if available
-                        $displayName = '';
-                        if (isset($data['printouts']['Has name'][0])) {
-                            $displayName = $data['printouts']['Has name'][0];
-                        }
-                        
+                        $printouts = $data['printouts'];
+                        $shortName = extractPrintoutString($printouts, 'Has short name');
+                        $displayName = extractPrintoutString($printouts, 'Has name');
+
                         $cleanName = str_replace('Platforms/', '', $pageName);
                         $fallback = $shortName ?: $cleanName;
-                        
+
                         // Store by page name (with Platforms/ prefix)
                         $platforms[$pageName] = $fallback;
                         // Store by clean name (without prefix)
@@ -220,19 +229,10 @@ function getAllPlatforms() {
                     foreach ($result['query']['results'] as $pageName => $data) {
                         $printouts = $data['printouts'];
                         $cleanName = str_replace('Platforms/', '', $pageName);
-                        
-                        // Get display name or fall back to clean name
-                        $displayName = $cleanName;
-                        if (isset($printouts['Has name'][0]) && !empty($printouts['Has name'][0])) {
-                            $displayName = $printouts['Has name'][0];
-                        }
-                        
-                        // Get abbreviation
-                        $abbrev = '';
-                        if (isset($printouts['Has short name'][0])) {
-                            $abbrev = $printouts['Has short name'][0];
-                        }
-                        
+
+                        $displayName = extractPrintoutString($printouts, 'Has name', $cleanName);
+                        $abbrev = extractPrintoutString($printouts, 'Has short name');
+
                         $platforms[] = [
                             'name' => $cleanName,
                             'displayName' => $displayName,
@@ -555,57 +555,51 @@ function getPlatformsForGameFromSMW($gamePageName) {
  */
 function processPlatformQueryResults($results) {
     $platforms = [];
-    
+
     if (isset($results) && is_array($results)) {
         foreach ($results as $pageName => $pageData) {
-            $platformData = [];
             $printouts = $pageData['printouts'];
-            
-            // Add URL for the platform
-            $platformData['url'] = $pageData['fullurl'] ?? '';
-            
-            if (isset($printouts['Has name']) && count($printouts['Has name']) > 0) {
-                $name = $printouts['Has name'][0];
-                $platformData['title'] = $name;
-            } else {
-                // Fallback to page name without namespace
-                $platformData['title'] = str_replace('Platforms/', '', $pageName);
-            }
-            
-            if (isset($printouts['Has short name']) && count($printouts['Has short name']) > 0) {
-                $shortName = $printouts['Has short name'][0];
+            $cleanName = str_replace('Platforms/', '', $pageName);
+
+            $platformData = [
+                'url' => $pageData['fullurl'] ?? '',
+                'title' => extractPrintoutString($printouts, 'Has name', $cleanName),
+            ];
+
+            // Extract optional string properties
+            $shortName = extractPrintoutString($printouts, 'Has short name');
+            if ($shortName) {
                 $platformData['shortName'] = $shortName;
             }
-            
-            if (isset($printouts['Has deck']) && count($printouts['Has deck']) > 0) {
-                $deck = $printouts['Has deck'][0];
+
+            $deck = extractPrintoutString($printouts, 'Has deck');
+            if ($deck) {
                 $platformData['deck'] = $deck;
             }
-            
+
+            // Handle release date (complex structure)
             if (isset($printouts['Has release date']) && count($printouts['Has release date']) > 0) {
                 $releaseDate = $printouts['Has release date'][0];
                 $rawDate = $releaseDate['raw'] ?? '';
                 $timestamp = $releaseDate['timestamp'] ?? strtotime($rawDate);
+
+                $dateType = extractPrintoutString($printouts, 'Has release date type', 'Full');
+
                 $platformData['releaseDate'] = $rawDate;
                 $platformData['releaseDateTimestamp'] = $timestamp;
-                
-                $dateType = 'Full';
-                if (isset($printouts['Has release date type']) && count($printouts['Has release date type']) > 0) {
-                    $dateType = $printouts['Has release date type'][0];
-                }
-                
                 $platformData['dateSpecificity'] = strtolower($dateType);
                 $platformData['releaseDateFormatted'] = formatReleaseDate($rawDate, $timestamp, $dateType);
             }
-            
+
+            // Handle image (complex structure)
             if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
                 $image = $printouts['Has image'][0];
-                $platformData['image'] = $image['fullurl'] ?? '';
-                $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $platformData['image']);
+                $imageUrl = $image['fullurl'] ?? '';
+                $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $imageUrl);
             }
-            
+
             $platformData['gameCount'] = getGameCountForPlatform($pageName);
-            
+
             $platforms[] = $platformData;
         }
     }

@@ -1,17 +1,18 @@
 <template>
   <filter-container
-    title="Filter"
+    class="game-filter"
+    title="Filter Games"
     :show-clear-button="hasActiveFilters"
     @clear="clearFilters"
   >
-    <filter-dropdown
-      id="region-filter"
-      label="Region"
-      v-model="selectedRegion"
-      :options="regionOptions"
-      placeholder="All Regions"
-      @update:model-value="onFilterChange"
-    ></filter-dropdown>
+    <filter-input
+      id="search-filter"
+      label="Search"
+      v-model="searchQuery"
+      @update:model-value="applyFilters"
+      placeholder="Search games..."
+      :debounce="800"
+    ></filter-input>
 
     <filter-dropdown
       id="platform-filter"
@@ -21,7 +22,17 @@
       placeholder="All Platforms"
       value-key="name"
       label-key="displayName"
-      @update:model-value="onFilterChange"
+      @update:model-value="applyFilters"
+    ></filter-dropdown>
+
+    <filter-dropdown
+      id="sort-filter"
+      label="Sort By"
+      v-model="selectedSort"
+      :options="sortOptions"
+      value-key="value"
+      label-key="label"
+      @update:model-value="applyFilters"
     ></filter-dropdown>
   </filter-container>
 </template>
@@ -32,17 +43,20 @@ const { useFilters } = require("../composables/useFilters.js");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 const FilterContainer = require("./FilterContainer.vue");
 const FilterDropdown = require("./FilterDropdown.vue");
+const FilterInput = require("./FilterInput.vue");
 
 /**
- * ReleaseFilter Component
- * Handles filtering of releases by region and platform
- * Note: FilterContainer and FilterDropdown are globally registered
+ * GameFilter Component
+ * Handles filtering of games by search query, platform, and sort order
+ * Updates URL query parameters and emits filter events
+ * Note: FilterContainer, FilterDropdown, and FilterInput are globally registered
  */
 module.exports = exports = defineComponent({
-  name: "ReleaseFilter",
+  name: "GameFilter",
   components: {
     FilterContainer,
     FilterDropdown,
+    FilterInput,
   },
   props: {
     platformsData: {
@@ -55,41 +69,54 @@ module.exports = exports = defineComponent({
 
     // Filter state
     const platforms = ref([]);
-    const selectedRegion = ref("");
+    const searchQuery = ref("");
     const selectedPlatform = ref("");
+    const selectedSort = ref("title-asc");
 
-    // Region options
-    const regionOptions = [
-      "United States",
-      "United Kingdom",
-      "Japan",
-      "Australia",
+    // Sort options
+    const sortOptions = [
+      { value: "title-asc", label: "Title (A-Z)" },
+      { value: "title-desc", label: "Title (Z-A)" },
+      { value: "date-desc", label: "Newest First" },
+      { value: "date-asc", label: "Oldest First" },
     ];
 
     // Use filters composable
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
-      useFilters("releases-filter-changed", {
-        region: "",
+      useFilters("games-filter-changed", {
+        search: "",
         platform: "",
+        sort: "title-asc",
+        page: 1,
       });
 
     const hasActiveFilters = computed(() => {
-      return selectedRegion.value !== "" || selectedPlatform.value !== "";
+      return (
+        searchQuery.value !== "" ||
+        selectedPlatform.value !== "" ||
+        selectedSort.value !== "title-asc"
+      );
     });
 
-    const onFilterChange = () => {
+    const applyFilters = () => {
       applyFiltersBase({
-        region: selectedRegion.value,
+        search: searchQuery.value,
         platform: selectedPlatform.value,
+        sort: selectedSort.value,
+        page: 1,
       });
     };
 
     const clearFilters = () => {
-      selectedRegion.value = "";
+      searchQuery.value = "";
       selectedPlatform.value = "";
+      selectedSort.value = "title-asc";
+
       clearFiltersBase({
-        region: "",
+        search: "",
         platform: "",
+        sort: "title-asc",
+        page: 1,
       });
     };
 
@@ -105,19 +132,26 @@ module.exports = exports = defineComponent({
 
       // Read current filter values from URL
       const urlParams = new URLSearchParams(window.location.search);
-      selectedRegion.value = urlParams.get("region") || "";
+      searchQuery.value = urlParams.get("search") || "";
       selectedPlatform.value = urlParams.get("platform") || "";
+      selectedSort.value = urlParams.get("sort") || "title-asc";
     });
 
     return {
       platforms,
-      regionOptions,
-      selectedRegion,
+      searchQuery,
       selectedPlatform,
+      selectedSort,
+      sortOptions,
       hasActiveFilters,
-      onFilterChange,
+      applyFilters,
       clearFilters,
     };
   },
 });
 </script>
+
+<style>
+/* All shared filter styles are in filters.css */
+/* Component-specific styles only */
+</style>

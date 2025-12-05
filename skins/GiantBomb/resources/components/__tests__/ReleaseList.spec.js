@@ -229,7 +229,7 @@ describe("ReleaseList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const loadingDiv = wrapper.find(".releases-loading");
+      const loadingDiv = wrapper.find(".item-loading");
       expect(loadingDiv.exists()).toBe(true);
 
       const spinner = wrapper.find(".loading-spinner");
@@ -264,7 +264,7 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const noReleases = wrapper.find(".no-releases");
+      const noReleases = wrapper.find(".empty-state");
       expect(noReleases.exists()).toBe(true);
       expect(noReleases.text()).toContain(
         "No releases found for the selected filters.",
@@ -482,7 +482,7 @@ describe("ReleaseList", () => {
         expect.any(Error),
       );
 
-      const noReleases = wrapper.find(".no-releases");
+      const noReleases = wrapper.find(".empty-state");
       expect(noReleases.exists()).toBe(true);
 
       consoleErrorSpy.mockRestore();
