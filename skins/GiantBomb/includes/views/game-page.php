@@ -2,6 +2,93 @@
 use MediaWiki\Html\TemplateParser;
 use MediaWiki\MediaWikiServices;
 
+if ( !defined( 'GB_LEGACY_UPLOAD_HOST' ) ) {
+	define( 'GB_LEGACY_UPLOAD_HOST', 'https://www.giantbomb.com' );
+}
+
+if ( !function_exists( 'gbParseLegacyImageData' ) ) {
+	function gbParseLegacyImageData( string $text ): ?array {
+		if ( !preg_match(
+			'/<div[^>]*id=(["\'])imageData\\1[^>]*data-json=(["\'])(.*?)\\2/si',
+			$text,
+			$matches
+		) ) {
+			return null;
+		}
+		$raw = html_entity_decode( $matches[3], ENT_QUOTES | ENT_HTML5 );
+		$raw = trim( $raw );
+		if ( $raw === '' ) {
+			return null;
+		}
+		$data = json_decode( $raw, true );
+		if ( !is_array( $data ) || json_last_error() !== JSON_ERROR_NONE ) {
+			return null;
+		}
+		return $data;
+	}
+
+	function gbChooseLegacySize( array $available, array $preferred ): ?string {
+		foreach ( $preferred as $candidate ) {
+			if ( in_array( $candidate, $available, true ) ) {
+				return $candidate;
+			}
+		}
+		return $available[0] ?? null;
+	}
+
+	function gbBuildLegacyImageUrl( array $entry, array $preferredSizes ): ?string {
+		$file = isset( $entry['file'] ) ? trim( (string)$entry['file'] ) : '';
+		$path = isset( $entry['path'] ) ? trim( (string)$entry['path'] ) : '';
+		$sizes = isset( $entry['sizes'] ) ? (string)$entry['sizes'] : '';
+		if ( $file === '' || $path === '' || $sizes === '' ) {
+			return null;
+		}
+		$availableSizes = array_values(
+			array_filter(
+				array_map( 'trim', explode( ',', $sizes ) ),
+				static fn ( $size ) => $size !== ''
+			)
+		);
+		if ( !$availableSizes ) {
+			return null;
+		}
+		$chosen = gbChooseLegacySize( $availableSizes, $preferredSizes );
+		if ( $chosen === null ) {
+			return null;
+		}
+		$normalizedPath = trim( $path, '/' );
+		$relative = '/a/uploads/' . $chosen . '/' . ( $normalizedPath !== '' ? $normalizedPath . '/' : '' ) . $file;
+		return GB_LEGACY_UPLOAD_HOST . $relative;
+	}
+
+	function gbResolveWikiImageUrl( string $value ): ?string {
+		$trimmed = trim( $value );
+		if ( $trimmed === '' ) {
+			return null;
+		}
+		if ( preg_match( '#^https?://#i', $trimmed ) ) {
+			return $trimmed;
+		}
+		if ( stripos( $trimmed, 'File:' ) !== 0 ) {
+			$trimmed = 'File:' . $trimmed;
+		}
+		$title = \Title::newFromText( $trimmed );
+		if ( !$title ) {
+			return null;
+		}
+		$services = MediaWikiServices::getInstance();
+		$file = $services->getRepoGroup()->findFile( $title );
+		if ( !$file ) {
+			return null;
+		}
+		$url = $file->getFullUrl();
+		if ( !is_string( $url ) || $url === '' ) {
+			return null;
+		}
+		return \wfExpandUrl( $url, \PROTO_CANONICAL );
+	}
+}
+
 /**
  * Game Page View
  * Displays comprehensive game information with all related data
@@ -17,6 +104,7 @@ $gameData = [
 	'name' => str_replace('Games/', '', str_replace('_', ' ', $pageTitle)),
 	'url' => '/wiki/' . $pageTitleDB,
 	'image' => '',
+	'backgroundImage' => '',
 	'deck' => '',
 	'description' => '',
 	'releaseDate' => '',
@@ -72,6 +160,7 @@ try {
 
 	if ($content) {
 		$text = $content->getText();
+		$legacyImageData = gbParseLegacyImageData( $text );
 
 		// Extract wikitext (content after the template closing}})
 		$wikitext = '';
@@ -124,6 +213,33 @@ try {
 		}
 		if (preg_match('/\| Guid=([^\n]+)/', $text, $matches)) {
 			$gameData['guid'] = trim($matches[1]);
+		}
+
+		$resolvedTemplateImage = gbResolveWikiImageUrl( $gameData['image'] );
+		$gameData['image'] = $resolvedTemplateImage ?? '';
+
+		if ( isset( $legacyImageData ) && is_array( $legacyImageData ) ) {
+			if ( $gameData['image'] === '' && isset( $legacyImageData['infobox'] ) ) {
+				$infoboxUrl = gbBuildLegacyImageUrl(
+					$legacyImageData['infobox'],
+					[ 'scale_super', 'screen_kubrick', 'screen_medium', 'scale_large', 'scale_medium' ]
+				);
+				if ( $infoboxUrl !== null ) {
+					$gameData['image'] = $infoboxUrl;
+				}
+			}
+			if ( isset( $legacyImageData['background'] ) ) {
+				$backgroundUrl = gbBuildLegacyImageUrl(
+					$legacyImageData['background'],
+					[ 'screen_kubrick_wide', 'screen_kubrick', 'scale_super', 'scale_large', 'screen_medium' ]
+				);
+				if ( $backgroundUrl !== null ) {
+					$gameData['backgroundImage'] = $backgroundUrl;
+				}
+			}
+			if ( $gameData['image'] === '' && $gameData['backgroundImage'] !== '' ) {
+				$gameData['image'] = $gameData['backgroundImage'];
+			}
 		}
 
 		// Parse array fields (comma-separated values)
