@@ -168,7 +168,7 @@ function processConceptQueryResults($results) {
  */
 function getConceptCountFromDB($filterLetter = '', $filterGameTitles = [], $requireAllGames = false) {
     $SMW_PROPERTY_NAMESPACE = 102;
-    $CONCEPTS_NAMESPACE = 3000; // Concepts namespace ID
+    $GENERIC_NAMESPACE = 0; // Generic namespace ID
     
     try {
         $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
@@ -181,7 +181,7 @@ function getConceptCountFromDB($filterLetter = '', $filterGameTitles = [], $requ
         ];
         $conds = [
             'cl_to' => 'Concepts',
-            'page_namespace' => $CONCEPTS_NAMESPACE
+            'page_namespace' => $GENERIC_NAMESPACE
         ];
         
         // Add letter filter
@@ -256,7 +256,7 @@ function getConceptCountFromDB($filterLetter = '', $filterGameTitles = [], $requ
             $tables[] = 'smw_object_ids';
             $joinConds['smw_object_ids'] = ['JOIN', [
                 'smw_title = page_title',
-                'smw_namespace' => $CONCEPTS_NAMESPACE,
+                'smw_namespace' => $GENERIC_NAMESPACE,
                 'smw_subobject' => ''
             ]];
             

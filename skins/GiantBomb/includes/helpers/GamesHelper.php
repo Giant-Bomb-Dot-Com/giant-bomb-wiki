@@ -47,7 +47,8 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
     }
     
     try {
-        $queryConditions = '[[Category:Games]][[Has name::~*' . $searchQuery . '*]]';
+        // Need to add quotes to match the phrase, otherwise full-text-search runs an OR on each word
+        $queryConditions = '[[Category:Games]][[Has name::~*"' . $searchQuery . '"*]]';
         
         if (!empty($platformFilter)) {
             $queryConditions .= '[[Has platforms::Platforms/' . str_replace('Platforms/', '', $platformFilter) . ']]';

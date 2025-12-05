@@ -71,6 +71,7 @@
         "resources/composables/index.js",
         "resources/composables/useFilters.js",
         "resources/composables/useSearch.js",
+        "resources/composables/useListData.js",
         "resources/helpers/countryFlags.js",
         "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"

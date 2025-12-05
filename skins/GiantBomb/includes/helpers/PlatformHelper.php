@@ -307,13 +307,21 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
                     }
                 }
                 
-                // Only add condition if we found common platforms
-                if (!empty($allGamePlatforms)) {
-                    $platformNames = array_map(function($p) {
-                        return str_replace('"', '\"', $p);
-                    }, $allGamePlatforms);
-                    $queryConditions .= '[[Has name::' . implode('||', $platformNames) . ']]';
+                // If no platforms match all games, then we return empty data
+                if (empty($allGamePlatforms)) {
+                    return [
+                        'platforms' => [],
+                        'totalCount' => 0,
+                        'currentPage' => $page,
+                        'totalPages' => 0,
+                        'pageSize' => $limit,
+                    ];
                 }
+                
+                $platformNames = array_map(function($p) {
+                    return str_replace('"', '\"', $p);
+                }, $allGamePlatforms);
+                $queryConditions .= '[[Has name::' . implode('||', $platformNames) . ']]';
             } else {
                 // OR logic: Find platforms linked to ANY selected game (default behavior)
                 $allPlatforms = [];
