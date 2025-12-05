@@ -51,8 +51,8 @@
         >
           <div class="game-image">
             <img
-              v-if="game.image"
-              :src="game.image"
+              v-if="game.img"
+              :src="game.img"
               :alt="game.title"
               @error="onImageError"
             />
@@ -148,6 +148,9 @@ module.exports = exports = defineComponent({
     const selectedGames = ref([]);
     const requireAllGames = ref(false);
 
+    // Get current page size from URL
+    const url = new URL(window.location.origin + window.location.pathname);
+    const pageSize = url.searchParams.get("page_size") || 48;
     // Use filters composable
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
       useFilters("platforms-filter-changed", {
@@ -156,15 +159,16 @@ module.exports = exports = defineComponent({
         game_title: [],
         require_all_games: false,
         page: 1,
+        page_size: pageSize,
       });
 
     // Search games function
     const searchGamesApi = async (query, page) => {
       const url = new URL(window.location.origin + window.location.pathname);
       url.searchParams.set("action", "get-games");
-      url.searchParams.set("name", query);
+      url.searchParams.set("search", query);
       url.searchParams.set("page", page);
-      url.searchParams.set("itemsPerPage", "10");
+      url.searchParams.set("perPage", "10");
 
       const response = await fetch(url.toString());
       const data = await response.json();
@@ -172,9 +176,9 @@ module.exports = exports = defineComponent({
       return {
         success: data.success,
         items: data.games || [],
-        currentPage: data.currentPage,
-        totalPages: data.totalPages,
-        hasMore: data.hasMore,
+        currentPage: data.pagination.currentPage,
+        totalPages: data.pagination.totalPages,
+        hasMore: data.pagination.totalPages > data.pagination.currentPage,
       };
     };
 

@@ -319,19 +319,26 @@ describe("PlatformList", () => {
       expect(pagination.exists()).toBe(true);
 
       const paginationInfo = wrapper.find(".pagination-info");
-      expect(paginationInfo.text()).toContain("Page 2 of 5");
-      expect(paginationInfo.text()).toContain("(50 total)");
+      // Pagination component displays "Showing X-Y of Z items"
+      expect(paginationInfo.text()).toContain("Showing");
+      expect(paginationInfo.text()).toContain("of 50 items");
     });
 
-    it("hides pagination when total pages is 1", async () => {
+    it("shows pagination even when total pages is 1", async () => {
       const wrapper = mount(PlatformList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
+      // PlatformList always renders the Pagination component
+      // The Pagination component itself handles single-page display
       const pagination = wrapper.find(".pagination");
-      expect(pagination.exists()).toBe(false);
+      expect(pagination.exists()).toBe(true);
+
+      // Should show "Showing 1-10 of 10 items" for single page
+      const paginationInfo = wrapper.find(".pagination-info");
+      expect(paginationInfo.text()).toContain("Showing");
     });
 
     it("disables previous button on first page", async () => {
@@ -346,7 +353,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const prevButton = wrapper.findAll(".pagination-btn")[0];
+      const prevButton = wrapper.find(".pagination-prev");
       expect(prevButton.attributes("disabled")).toBeDefined();
     });
 
@@ -354,15 +361,15 @@ describe("PlatformList", () => {
       const wrapper = mount(PlatformList, {
         props: {
           initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
-          currentPage: "5",
-          totalPages: "5",
+          totalCount: "96", // 96 items / 48 per page = 2 pages
+          currentPage: "2",
+          totalPages: "2",
         },
       });
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       expect(nextButton.attributes("disabled")).toBeDefined();
     });
 
@@ -384,6 +391,7 @@ describe("PlatformList", () => {
           totalCount: 50,
           currentPage: 2,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
@@ -398,7 +406,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -420,16 +428,17 @@ describe("PlatformList", () => {
         json: async () => ({
           success: true,
           platforms: mockPlatforms,
-          totalCount: 50,
+          totalCount: 240, // 240 / 48 = 5 pages
           currentPage: 3,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
       const wrapper = mount(PlatformList, {
         props: {
           initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
+          totalCount: "240", // 240 / 48 = 5 pages
           currentPage: "2",
           totalPages: "5",
         },
@@ -437,7 +446,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -459,6 +468,7 @@ describe("PlatformList", () => {
           totalCount: 50,
           currentPage: 2,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
@@ -473,7 +483,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));

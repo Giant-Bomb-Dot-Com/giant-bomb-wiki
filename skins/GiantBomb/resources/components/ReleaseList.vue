@@ -1,6 +1,6 @@
 <template>
   <main class="releases-main">
-    <div v-if="loading" class="releases-loading">
+    <div v-if="loading" class="item-loading">
       <div class="loading-spinner"></div>
       <p>Loading new releases...</p>
     </div>
@@ -51,7 +51,7 @@
 
                 <div
                   v-if="release.platforms && release.platforms.length > 0"
-                  class="release-platforms"
+                  class="item-platforms"
                 >
                   <span
                     v-for="(platform, idx) in release.platforms"
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div v-else class="no-releases">
+    <div v-else class="empty-state">
       <p>No releases found for the selected filters.</p>
     </div>
   </main>
@@ -78,6 +78,7 @@
 <script>
 const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { getCountryCode, getFlagUrl } = require("../helpers/countryFlags.js");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * ReleaseList Component
@@ -95,9 +96,6 @@ module.exports = exports = defineComponent({
     const { initialData } = toRefs(props);
     const weekGroups = ref([]);
     const loading = ref(false);
-
-    // Helper function to decode HTML entities
-    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     const fetchReleases = async (region = "", platform = "") => {
       loading.value = true;
@@ -175,36 +173,9 @@ module.exports = exports = defineComponent({
 </script>
 
 <style>
-.releases-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #999;
-}
+/* Shared grid/list styles are in itemGrid.css */
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #333;
-  border-top-color: #e63946;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.releases-loading p {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
+/* Component-specific styles */
 .region-flag {
   margin-left: 6px;
   height: 14px;
