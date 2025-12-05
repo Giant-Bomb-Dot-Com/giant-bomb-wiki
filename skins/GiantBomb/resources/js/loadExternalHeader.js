@@ -28,7 +28,7 @@
   // Load the external header script
   const script = document.createElement("script");
   script.src = baseUrl + "/api/public/header-assets?format=js";
-  // script.async = true;
+  script.async = true;
 
   script.onload = function () {
     // Wait for DOM to be ready and header script to be available
