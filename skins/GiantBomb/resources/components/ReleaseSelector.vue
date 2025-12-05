@@ -71,7 +71,6 @@ module.exports = exports = {
   mounted() {
     try {
       this.releasesData = JSON.parse(this.releases);
-      console.log("Loaded releases:", this.releasesData.length);
     } catch (e) {
       console.error("Failed to parse releases data:", e);
       this.releasesData = [];

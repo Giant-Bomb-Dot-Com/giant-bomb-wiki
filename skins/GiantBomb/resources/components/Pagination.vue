@@ -86,6 +86,7 @@ const {
   defineComponent,
   onMounted,
 } = require("vue");
+
 /**
  * Pagination Component
  * Reusable pagination component for lists
@@ -95,7 +96,6 @@ const {
  * - itemsPerPage: Number of items to display per page (default: 20)
  * - currentPage: Current page number (default: 1)
  * - maxVisiblePages: Maximum number of page buttons to show (default: 5)
- * - itemsPerPageOptions: Array of items per page options (default: [25, 50, 75, 100])
  *
  * Events:
  * - pageChange: Emitted when page changes { page, itemsPerPage }
@@ -130,37 +130,46 @@ module.exports = exports = defineComponent({
       toRefs(props);
     const itemsPerPageLocal = ref(itemsPerPage.value);
     const currentPageLocal = ref(currentPage.value);
+
     // Calculate total pages
     const totalPages = computed(() => {
       return Math.max(1, Math.ceil(totalItems.value / itemsPerPageLocal.value));
     });
+
     // Calculate start and end item numbers for display
     const startItem = computed(() => {
       if (totalItems.value === 0) return 0;
       return (currentPageLocal.value - 1) * itemsPerPageLocal.value + 1;
     });
+
     const endItem = computed(() => {
       const end = currentPageLocal.value * itemsPerPageLocal.value;
       return Math.min(end, totalItems.value);
     });
+
     // Calculate which page numbers to show
     const visiblePages = computed(() => {
       const total = totalPages.value;
       const current = currentPageLocal.value;
       const maxVisible = maxVisiblePages.value;
+
       if (total <= maxVisible) {
         // Show all pages if total is less than max
         return Array.from({ length: total }, (_, i) => i + 1);
       }
+
       const halfVisible = Math.floor(maxVisible / 2);
       let start = Math.max(1, current - halfVisible);
       let end = Math.min(total, start + maxVisible - 1);
+
       // Adjust start if we're near the end
       if (end - start < maxVisible - 1) {
         start = Math.max(1, end - maxVisible + 1);
       }
+
       return Array.from({ length: end - start + 1 }, (_, i) => start + i);
     });
+
     const goToPage = (page) => {
       if (page < 1 || page > totalPages.value) return;
       currentPageLocal.value = page;
@@ -169,6 +178,7 @@ module.exports = exports = defineComponent({
         itemsPerPage: itemsPerPageLocal.value,
       });
     };
+
     const changeItemsPerPage = () => {
       // Reset to page 1 when changing items per page
       currentPageLocal.value = 1;
@@ -191,6 +201,7 @@ module.exports = exports = defineComponent({
     watch(currentPage, (newPage) => {
       currentPageLocal.value = newPage;
     });
+
     watch(itemsPerPage, (newItemsPerPage) => {
       itemsPerPageLocal.value = newItemsPerPage;
     });
@@ -218,15 +229,18 @@ module.exports = exports = defineComponent({
   gap: 20px;
   flex-wrap: wrap;
 }
+
 .pagination-info {
   font-size: 0.9rem;
   color: #999;
 }
+
 .pagination-controls {
   display: flex;
   gap: 5px;
   align-items: center;
 }
+
 .pagination-btn {
   min-width: 36px;
   height: 36px;
@@ -242,30 +256,36 @@ module.exports = exports = defineComponent({
   align-items: center;
   justify-content: center;
 }
+
 .pagination-btn:hover:not(:disabled) {
   background: #3a3a3a;
   border-color: #e63946;
   color: #fff;
 }
+
 .pagination-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
+
 .pagination-btn.active {
   background: #e63946;
   border-color: #e63946;
   color: #fff;
   font-weight: 600;
 }
+
 .pagination-first,
 .pagination-last {
   font-weight: bold;
 }
+
 .pagination-prev,
 .pagination-next {
   font-size: 1.2rem;
   font-weight: bold;
 }
+
 .pagination-size {
   display: flex;
   align-items: center;
@@ -273,6 +293,7 @@ module.exports = exports = defineComponent({
   font-size: 0.9rem;
   color: #999;
 }
+
 .pagination-select {
   padding: 6px 10px;
   background: #2a2a2a;
@@ -282,9 +303,11 @@ module.exports = exports = defineComponent({
   font-size: 0.9rem;
   cursor: pointer;
 }
+
 .pagination-select:hover {
   border-color: #e63946;
 }
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .pagination {
@@ -292,21 +315,26 @@ module.exports = exports = defineComponent({
     align-items: stretch;
     gap: 15px;
   }
+
   .pagination-info {
     text-align: center;
   }
+
   .pagination-controls {
     justify-content: center;
   }
+
   .pagination-size {
     justify-content: center;
   }
+
   .pagination-btn {
     min-width: 32px;
     height: 32px;
     padding: 6px 10px;
     font-size: 0.85rem;
   }
+
   /* Hide some page numbers on mobile */
   .pagination-page:not(.active):nth-child(n + 6) {
     display: none;

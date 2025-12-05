@@ -200,6 +200,26 @@
     hideEmptyContainer();
     return;
   }
+  // Load the external header CSS
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = baseUrl + "/api/public/header-assets?format=css";
+  document.head.appendChild(link);
+
+  // Load the external header script
+  const script = document.createElement("script");
+  script.src = baseUrl + "/api/public/header-assets?format=js";
+  script.async = true;
+
+  script.onload = function () {
+    // Wait for DOM to be ready and header script to be available
+    if (typeof GiantBombHeader !== "undefined" && GiantBombHeader.render) {
+      GiantBombHeader.render("gb-header");
+    } else {
+      console.error("GiantBombHeader not available after script load");
+      hideEmptyContainer();
+    }
+  };
 
   const baseUrl = configuredBaseUrl.replace(/\/+$/, "");
   const cssUrl = baseUrl + "/api/public/header-assets?format=css";
