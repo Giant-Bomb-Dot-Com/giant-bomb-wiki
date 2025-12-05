@@ -1,0 +1,63 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page platform-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#platform.backgroundImage}}, url('{{platform.backgroundImage}}'){{/platform.backgroundImage}}{{^platform.backgroundImage}}{{#platform.image}}, url('{{platform.image}}'){{/platform.image}}{{/platform.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#platform.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{platform.image}}"
+						data-alt-text="{{platform.name}} hardware">
+					</div>
+				</div>
+				{{/platform.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{platform.name}}</h1>
+					{{#platform.shortName}}
+					<div class="game-hero__metadata">
+						<span class="game-hero__meta-item">{{platform.shortName}}</span>
+					</div>
+					{{/platform.shortName}}
+
+					{{#platform.deck}}
+					<p class="game-hero__description">{{platform.deck}}</p>
+					{{/platform.deck}}
+
+					{{#platform.hasStats}}
+					<div class="game-hero__metadata platform-hero__stats">
+						{{#platform.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/platform.stats}}
+					</div>
+					{{/platform.hasStats}}
+
+					{{#platform.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{platform.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/platform.aliasesDisplay}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content platform-content">
+			<div class="game-main">
+				{{#platform.description}}
+				<div class="game-wiki-content">
+					{{{platform.description}}}
+				</div>
+				{{/platform.description}}
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,102 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page accessory-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#accessory.backgroundImage}}, url('{{accessory.backgroundImage}}'){{/accessory.backgroundImage}}{{^accessory.backgroundImage}}{{#accessory.image}}, url('{{accessory.image}}'){{/accessory.image}}{{/accessory.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#accessory.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{accessory.image}}"
+						data-alt-text="{{accessory.name}} accessory">
+					</div>
+				</div>
+				{{/accessory.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{accessory.name}}</h1>
+
+					{{#accessory.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{accessory.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/accessory.aliasesDisplay}}
+
+					{{#accessory.deck}}
+					<p class="game-hero__description">{{accessory.deck}}</p>
+					{{/accessory.deck}}
+
+					{{#accessory.hasStats}}
+					<div class="game-hero__metadata accessory-hero__stats">
+						{{#accessory.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/accessory.stats}}
+					</div>
+					{{/accessory.hasStats}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content accessory-content">
+			<div class="game-main">
+				{{#accessory.description}}
+				<div class="game-wiki-content">
+					{{{accessory.description}}}
+				</div>
+				{{/accessory.description}}
+
+				{{#accessory.relations.games.0}}
+				<section class="game-sidebar-section accessory-section">
+					<h2 class="game-sidebar-section__title">Supported games</h2>
+					<ul class="game-detail-list">
+						{{#accessory.relations.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/accessory.relations.games}}
+					</ul>
+				</section>
+				{{/accessory.relations.games.0}}
+
+				{{#accessory.relations.franchises.0}}
+				<section class="game-sidebar-section accessory-section">
+					<h2 class="game-sidebar-section__title">Franchises</h2>
+					<ul class="game-detail-list">
+						{{#accessory.relations.franchises}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/accessory.relations.franchises}}
+					</ul>
+				</section>
+				{{/accessory.relations.franchises.0}}
+
+				{{#accessory.relations.companies.0}}
+				<section class="game-sidebar-section accessory-section">
+					<h2 class="game-sidebar-section__title">Companies</h2>
+					<ul class="game-detail-list">
+						{{#accessory.relations.companies}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/accessory.relations.companies}}
+					</ul>
+				</section>
+				{{/accessory.relations.companies.0}}
+
+				{{#accessory.relations.objects.0}}
+				<section class="game-sidebar-section accessory-section">
+					<h2 class="game-sidebar-section__title">Related objects</h2>
+					<ul class="game-detail-list">
+						{{#accessory.relations.objects}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/accessory.relations.objects}}
+					</ul>
+				</section>
+				{{/accessory.relations.objects.0}}
+			</div>
+		</div>
+	</div>
+</div>
+
