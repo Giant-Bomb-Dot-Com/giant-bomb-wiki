@@ -1,0 +1,91 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page concept-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#concept.backgroundImage}}, url('{{concept.backgroundImage}}'){{/concept.backgroundImage}}{{^concept.backgroundImage}}{{#concept.image}}, url('{{concept.image}}'){{/concept.image}}{{/concept.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#concept.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{concept.image}}"
+						data-alt-text="{{concept.name}} concept art">
+					</div>
+				</div>
+				{{/concept.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{concept.name}}</h1>
+
+					{{#concept.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{concept.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/concept.aliasesDisplay}}
+
+					{{#concept.deck}}
+					<p class="game-hero__description">{{concept.deck}}</p>
+					{{/concept.deck}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content concept-content">
+			<div class="game-main">
+				{{#concept.description}}
+				<div class="game-wiki-content">
+					{{{concept.description}}}
+				</div>
+				{{/concept.description}}
+
+				{{#concept.related.games.0}}
+				<section class="game-sidebar-section concept-section">
+					<h2 class="game-sidebar-section__title">Games</h2>
+					<ul class="game-detail-list">
+						{{#concept.related.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/concept.related.games}}
+					</ul>
+				</section>
+				{{/concept.related.games.0}}
+
+				{{#concept.related.franchises.0}}
+				<section class="game-sidebar-section concept-section">
+					<h2 class="game-sidebar-section__title">Franchises</h2>
+					<ul class="game-detail-list">
+						{{#concept.related.franchises}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/concept.related.franchises}}
+					</ul>
+				</section>
+				{{/concept.related.franchises.0}}
+
+				{{#concept.related.characters.0}}
+				<section class="game-sidebar-section concept-section">
+					<h2 class="game-sidebar-section__title">Characters</h2>
+					<ul class="game-detail-list">
+						{{#concept.related.characters}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/concept.related.characters}}
+					</ul>
+				</section>
+				{{/concept.related.characters.0}}
+
+				{{#concept.related.locations.0}}
+				<section class="game-sidebar-section concept-section">
+					<h2 class="game-sidebar-section__title">Locations</h2>
+					<ul class="game-detail-list">
+						{{#concept.related.locations}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/concept.related.locations}}
+					</ul>
+				</section>
+				{{/concept.related.locations.0}}
+			</div>
+		</div>
+	</div>
+</div>
+
