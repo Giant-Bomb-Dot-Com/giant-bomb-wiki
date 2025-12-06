@@ -158,7 +158,9 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 				$label = $pr->getLabel();
 
 				$values = [];
-				while ($dv = $field->getNextDataValue()) {
+                $dv = null;
+				while ($tempDV = $field->getNextDataValue()) {
+                    $dv = $tempDV;
 					$values[] = $dv->getShortWikiText();
 				}
                 
@@ -174,7 +176,17 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 						$pageData['desc'] = $values[0] ?? '';
 						break;
 					case 'Has image':
-						$pageData['img'] = $values[0] ?? '';
+						if ($dv) {
+                            // For wiki page types (like File:), get URL from the Title object
+                            $dataItem = $dv->getDataItem();
+                            if ($dataItem instanceof \SMW\DIWikiPage) {
+                                $imageTitle = $dataItem->getTitle();
+                                if ($imageTitle) {
+                                    $pageData['img'] = $imageTitle->getFullURL();
+                                    $pageData['img'] = str_replace('http://localhost:8080/wiki/', '', $pageData['img']);
+                                }
+                            }
+                        }
 						break;
 					case 'Has release date':
 						if (!empty($values[0])) {
