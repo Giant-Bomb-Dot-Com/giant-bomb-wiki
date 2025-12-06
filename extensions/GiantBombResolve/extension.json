@@ -10,7 +10,10 @@
   "HookHandlers": [],
   "manifest_version": 2,
   "requires": {
-    "MediaWiki": ">=1.40.0"
+    "MediaWiki": ">=1.40.0",
+    "extensions": {
+      "AlgoliaSearch": "*"
+    }
   },
   "config": {
     "GiantBombResolveBatchLimit": {

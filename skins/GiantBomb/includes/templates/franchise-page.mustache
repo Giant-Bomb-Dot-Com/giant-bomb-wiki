@@ -1,0 +1,91 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page franchise-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#franchise.backgroundImage}}, url('{{franchise.backgroundImage}}'){{/franchise.backgroundImage}}{{^franchise.backgroundImage}}{{#franchise.image}}, url('{{franchise.image}}'){{/franchise.image}}{{/franchise.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#franchise.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{franchise.image}}"
+						data-alt-text="{{franchise.name}} art">
+					</div>
+				</div>
+				{{/franchise.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{franchise.name}}</h1>
+
+					{{#franchise.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{franchise.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/franchise.aliasesDisplay}}
+
+					{{#franchise.deck}}
+					<p class="game-hero__description">{{franchise.deck}}</p>
+					{{/franchise.deck}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content franchise-content">
+			<div class="game-main">
+				{{#franchise.description}}
+				<div class="game-wiki-content">
+					{{{franchise.description}}}
+				</div>
+				{{/franchise.description}}
+
+				{{#franchise.relations.games.0}}
+				<section class="game-sidebar-section franchise-section">
+					<h2 class="game-sidebar-section__title">Games</h2>
+					<ul class="game-detail-list">
+						{{#franchise.relations.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/franchise.relations.games}}
+					</ul>
+				</section>
+				{{/franchise.relations.games.0}}
+
+				{{#franchise.relations.characters.0}}
+				<section class="game-sidebar-section franchise-section">
+					<h2 class="game-sidebar-section__title">Characters</h2>
+					<ul class="game-detail-list">
+						{{#franchise.relations.characters}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/franchise.relations.characters}}
+					</ul>
+				</section>
+				{{/franchise.relations.characters.0}}
+
+				{{#franchise.relations.concepts.0}}
+				<section class="game-sidebar-section franchise-section">
+					<h2 class="game-sidebar-section__title">Concepts</h2>
+					<ul class="game-detail-list">
+						{{#franchise.relations.concepts}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/franchise.relations.concepts}}
+					</ul>
+				</section>
+				{{/franchise.relations.concepts.0}}
+
+				{{#franchise.relations.locations.0}}
+				<section class="game-sidebar-section franchise-section">
+					<h2 class="game-sidebar-section__title">Locations</h2>
+					<ul class="game-detail-list">
+						{{#franchise.relations.locations}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/franchise.relations.locations}}
+					</ul>
+				</section>
+				{{/franchise.relations.locations.0}}
+			</div>
+		</div>
+	</div>
+</div>
+

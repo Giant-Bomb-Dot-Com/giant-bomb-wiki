@@ -1,0 +1,80 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page object-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#object.backgroundImage}}, url('{{object.backgroundImage}}'){{/object.backgroundImage}}{{^object.backgroundImage}}{{#object.image}}, url('{{object.image}}'){{/object.image}}{{/object.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#object.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{object.image}}"
+						data-alt-text="{{object.name}} art">
+					</div>
+				</div>
+				{{/object.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{object.name}}</h1>
+
+					{{#object.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{object.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/object.aliasesDisplay}}
+
+					{{#object.deck}}
+					<p class="game-hero__description">{{object.deck}}</p>
+					{{/object.deck}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content object-content">
+			<div class="game-main">
+				{{#object.description}}
+				<div class="game-wiki-content">
+					{{{object.description}}}
+				</div>
+				{{/object.description}}
+
+				{{#object.relations.games.0}}
+				<section class="game-sidebar-section object-section">
+					<h2 class="game-sidebar-section__title">Featured in games</h2>
+					<ul class="game-detail-list">
+						{{#object.relations.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/object.relations.games}}
+					</ul>
+				</section>
+				{{/object.relations.games.0}}
+
+				{{#object.relations.franchises.0}}
+				<section class="game-sidebar-section object-section">
+					<h2 class="game-sidebar-section__title">Franchises</h2>
+					<ul class="game-detail-list">
+						{{#object.relations.franchises}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/object.relations.franchises}}
+					</ul>
+				</section>
+				{{/object.relations.franchises.0}}
+
+				{{#object.relations.concepts.0}}
+				<section class="game-sidebar-section object-section">
+					<h2 class="game-sidebar-section__title">Related concepts</h2>
+					<ul class="game-detail-list">
+						{{#object.relations.concepts}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/object.relations.concepts}}
+					</ul>
+				</section>
+				{{/object.relations.concepts.0}}
+			</div>
+		</div>
+	</div>
+</div>
+

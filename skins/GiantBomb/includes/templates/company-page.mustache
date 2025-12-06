@@ -1,0 +1,91 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page company-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#company.backgroundImage}}, url('{{company.backgroundImage}}'){{/company.backgroundImage}}{{^company.backgroundImage}}{{#company.image}}, url('{{company.image}}'){{/company.image}}{{/company.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#company.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{company.image}}"
+						data-alt-text="{{company.name}} logo">
+					</div>
+				</div>
+				{{/company.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{company.name}}</h1>
+
+					{{#company.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{company.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/company.aliasesDisplay}}
+
+					{{#company.deck}}
+					<p class="game-hero__description">{{company.deck}}</p>
+					{{/company.deck}}
+
+					{{#company.hasStats}}
+					<div class="game-hero__metadata company-hero__stats">
+						{{#company.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/company.stats}}
+					</div>
+					{{/company.hasStats}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content company-content">
+			<div class="game-main">
+				{{#company.description}}
+				<div class="game-wiki-content">
+					{{{company.description}}}
+				</div>
+				{{/company.description}}
+
+				{{#company.relations.developed.0}}
+				<section class="game-sidebar-section company-section">
+					<h2 class="game-sidebar-section__title">Notable developed games</h2>
+					<ul class="game-detail-list">
+						{{#company.relations.developed}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/company.relations.developed}}
+					</ul>
+				</section>
+				{{/company.relations.developed.0}}
+
+				{{#company.relations.published.0}}
+				<section class="game-sidebar-section company-section">
+					<h2 class="game-sidebar-section__title">Published titles</h2>
+					<ul class="game-detail-list">
+						{{#company.relations.published}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/company.relations.published}}
+					</ul>
+				</section>
+				{{/company.relations.published.0}}
+
+				{{#company.relations.people.0}}
+				<section class="game-sidebar-section company-section">
+					<h2 class="game-sidebar-section__title">Key people</h2>
+					<ul class="game-detail-list">
+						{{#company.relations.people}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/company.relations.people}}
+					</ul>
+				</section>
+				{{/company.relations.people.0}}
+			</div>
+		</div>
+	</div>
+</div>
+

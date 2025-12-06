@@ -1,0 +1,124 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="game-page location-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#location.backgroundImage}}, url('{{location.backgroundImage}}'){{/location.backgroundImage}}{{^location.backgroundImage}}{{#location.image}}, url('{{location.image}}'){{/location.image}}{{/location.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#location.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{location.image}}"
+						data-alt-text="{{location.name}} artwork">
+					</div>
+				</div>
+				{{/location.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{location.name}}</h1>
+
+					{{#location.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{location.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/location.aliasesDisplay}}
+
+					{{#location.deck}}
+					<p class="game-hero__description">{{location.deck}}</p>
+					{{/location.deck}}
+
+					{{#location.hasStats}}
+					<div class="game-hero__metadata location-hero__stats">
+						{{#location.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/location.stats}}
+					</div>
+					{{/location.hasStats}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content location-content">
+			<div class="game-main">
+				{{#location.description}}
+				<div class="game-wiki-content">
+					{{{location.description}}}
+				</div>
+				{{/location.description}}
+
+				{{#location.relations.characters.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Notable characters</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.characters}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.characters}}
+					</ul>
+				</section>
+				{{/location.relations.characters.0}}
+
+				{{#location.relations.concepts.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Concepts</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.concepts}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.concepts}}
+					</ul>
+				</section>
+				{{/location.relations.concepts.0}}
+
+				{{#location.relations.objects.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Objects</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.objects}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.objects}}
+					</ul>
+				</section>
+				{{/location.relations.objects.0}}
+
+				{{#location.relations.games.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Featured in games</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.games}}
+					</ul>
+				</section>
+				{{/location.relations.games.0}}
+
+				{{#location.relations.franchises.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Franchises</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.franchises}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.franchises}}
+					</ul>
+				</section>
+				{{/location.relations.franchises.0}}
+
+				{{#location.relations.locations.0}}
+				<section class="game-sidebar-section location-section">
+					<h2 class="game-sidebar-section__title">Related locations</h2>
+					<ul class="game-detail-list">
+						{{#location.relations.locations}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/location.relations.locations}}
+					</ul>
+				</section>
+				{{/location.relations.locations.0}}
+			</div>
+		</div>
+	</div>
+</div>
+
