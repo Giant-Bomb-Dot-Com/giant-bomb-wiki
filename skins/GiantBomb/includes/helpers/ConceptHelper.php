@@ -3,10 +3,15 @@
  * Concepts Helper
  * 
  * Provides utility functions for looking up concepts data from Semantic MediaWiki
+ * with caching support for performance.
  */
+
+require_once __DIR__ . '/CacheHelper.php';
 
 /**
  * Query concepts from Semantic MediaWiki with optional filters
+ * 
+ * Results are cached based on query parameters for improved performance.
  * 
  * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
  * @param array $filterGameTitles Optional array of game title filters
@@ -17,6 +22,36 @@
  * @return array Array with 'concepts', 'totalCount', 'currentPage', 'totalPages'
  */
 function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'alphabetical', $page = 1, $limit = 48, $requireAllGames = false) {
+    $cache = CacheHelper::getInstance();
+    
+    // Build cache key from query parameters
+    $cacheKey = $cache->buildQueryKey('concepts', [
+        'letter' => $filterLetter,
+        'games' => $filterGameTitles,
+        'sort' => $sort,
+        'page' => $page,
+        'limit' => $limit,
+        'requireAll' => $requireAllGames ? '1' : '0'
+    ]);
+    
+    // Try to get from cache, or compute and store
+    return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
+        return fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
+    }, CacheHelper::TTL_MINUTE * 5); // Cache for 5 minutes
+}
+
+/**
+ * Internal function to fetch concepts from SMW (not cached)
+ * 
+ * @param string $filterLetter Optional letter filter
+ * @param array $filterGameTitles Optional game title filters
+ * @param string $sort Sort method
+ * @param int $page Current page number
+ * @param int $limit Results per page
+ * @param bool $requireAllGames AND/OR logic for game filters
+ * @return array Query results
+ */
+function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
     $concepts = [];
     $totalCount = 0;
     
@@ -39,17 +74,17 @@ function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort 
         // Add game filters
         if (!empty($filterGameTitles) && is_array($filterGameTitles)) {
             if ($requireAllGames && count($filterGameTitles) > 1) {
-                // AND logic: Add separate Has game:: condition for each selected game
+                // AND logic: Add separate Has games:: condition for each selected game
                 foreach ($filterGameTitles as $filterGameTitle) {
                     $safeGameTitle = str_replace(['[', ']', '|'], '', $filterGameTitle);
-                    $queryConditions .= '[[Has game::' . $safeGameTitle . ']]';
+                    $queryConditions .= '[[Has games::' . $safeGameTitle . ']]';
                 }
             } else {
-                // OR logic: Add Has game:: condition with multiple OR conditions
+                // OR logic: Add Has games:: condition with multiple OR conditions
                 $safeGameTitles = array_map(function($title) {
                     return str_replace(['[', ']', '|'], '', $title);
                 }, $filterGameTitles);
-                $queryConditions .= '[[Has game::' . implode('||', $safeGameTitles) . ']]';
+                $queryConditions .= '[[Has games::' . implode('||', $safeGameTitles) . ']]';
             }
         }
         

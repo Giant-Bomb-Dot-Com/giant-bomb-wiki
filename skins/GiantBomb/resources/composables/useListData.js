@@ -267,5 +267,3 @@ function useListData(config) {
 }
 
 module.exports = { useListData, DEFAULT_PAGE_SIZE };
-
-

@@ -7,8 +7,9 @@ use MediaWiki\MediaWikiServices;
  * with caching support for performance.
  */
 
- // Load date helper functions
- require_once __DIR__ . '/DateHelper.php';
+// Load date helper functions
+require_once __DIR__ . '/DateHelper.php';
+require_once __DIR__ . '/CacheHelper.php';
 
 /**
  * Safely extract a string value from SMW printout data
@@ -46,75 +47,59 @@ function extractPrintoutString($printouts, $propertyName, $default = '') {
  * $abbrev = $platforms['Platforms/PlayStation 5'] ?? 'PS5'; // Returns "PS5"
  */
 function loadPlatformMappings() {
-    $cache = MediaWiki\MediaWikiServices::getInstance()->getMainWANObjectCache();
-    $cacheKey = $cache->makeKey('platforms', 'abbreviations', 'v1');
+    $cache = CacheHelper::getInstance();
     
-    // Check if we have cached data
-    $cachedData = $cache->get($cacheKey);
-    if ($cachedData !== false) {
-        error_log("✓ Platform mappings: CACHE HIT (using cached data)");
-        return $cachedData;
-    }
-    
-    error_log("⚠ Platform mappings: CACHE MISS (querying database)");
-    
-    return $cache->getWithSetCallback(
-        $cacheKey,
-        $cache::TTL_DAY,
-        function() {
-            $platforms = [];
-            
-            // Query SMW for all platforms
-            $queryConditions = '[[Category:Platforms]]';
-            $printouts = '|?Has name|?Has short name';
-            $params = '|limit=500';
-            $fullQuery = $queryConditions . $printouts . $params;
-            
-            try {
-                $api = new ApiMain(
-                    new DerivativeRequest(
-                        RequestContext::getMain()->getRequest(),
-                        [
-                            'action' => 'ask',
-                            'query' => $fullQuery,
-                            'format' => 'json',
-                        ],
-                        true
-                    ),
+    return $cache->getOrSet('platforms-abbreviations-v1', function() {
+        $platforms = [];
+        
+        // Query SMW for all platforms
+        $queryConditions = '[[Category:Platforms]]';
+        $printouts = '|?Has name|?Has short name';
+        $params = '|limit=500';
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        try {
+            $api = new ApiMain(
+                new DerivativeRequest(
+                    RequestContext::getMain()->getRequest(),
+                    [
+                        'action' => 'ask',
+                        'query' => $fullQuery,
+                        'format' => 'json',
+                    ],
                     true
-                );
-                
-                $api->execute();
-                $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
-                
-                if (isset($result['query']['results'])) {
-                    foreach ($result['query']['results'] as $pageName => $data) {
-                        $printouts = $data['printouts'];
-                        $shortName = extractPrintoutString($printouts, 'Has short name');
-                        $displayName = extractPrintoutString($printouts, 'Has name');
+                ),
+                true
+            );
+            
+            $api->execute();
+            $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+            
+            if (isset($result['query']['results'])) {
+                foreach ($result['query']['results'] as $pageName => $data) {
+                    $printouts = $data['printouts'];
+                    $shortName = extractPrintoutString($printouts, 'Has short name');
+                    $displayName = extractPrintoutString($printouts, 'Has name');
 
-                        $cleanName = str_replace('Platforms/', '', $pageName);
-                        $fallback = $shortName ?: $cleanName;
+                    $cleanName = str_replace('Platforms/', '', $pageName);
+                    $fallback = $shortName ?: $cleanName;
 
-                        // Store by page name (with Platforms/ prefix)
-                        $platforms[$pageName] = $fallback;
-                        // Store by clean name (without prefix)
-                        $platforms[$cleanName] = $fallback;
-                        // Store by display name if different
-                        if ($displayName && $displayName !== $cleanName) {
-                            $platforms[$displayName] = $fallback;
-                        }
+                    // Store by page name (with Platforms/ prefix)
+                    $platforms[$pageName] = $fallback;
+                    // Store by clean name (without prefix)
+                    $platforms[$cleanName] = $fallback;
+                    // Store by display name if different
+                    if ($displayName && $displayName !== $cleanName) {
+                        $platforms[$displayName] = $fallback;
                     }
                 }
-                
-                error_log("✓ Platform mappings: Loaded " . count($platforms) . " entries from database (now cached for 24 hours)");
-            } catch (Exception $e) {
-                error_log("✗ Platform query failed: " . $e->getMessage());
             }
-            
-            return $platforms;
+        } catch (Exception $e) {
+            error_log("✗ Platform query failed: " . $e->getMessage());
         }
-    );
+        
+        return $platforms;
+    }, CacheHelper::TTL_DAY);
 }
 
 /**
@@ -184,76 +169,62 @@ function getPlatformData($platformName) {
  * }
  */
 function getAllPlatforms() {
-    $cache = MediaWiki\MediaWikiServices::getInstance()->getMainWANObjectCache();
-    $cacheKey = $cache->makeKey('platforms', 'list-all', 'v1');
+    $cache = CacheHelper::getInstance();
     
-    // Check if we have cached data
-    $cachedData = $cache->get($cacheKey);
-    if ($cachedData !== false) {
-        error_log("✓ Platform list: CACHE HIT (using cached data)");
-        return $cachedData;
-    }
-    
-    error_log("⚠ Platform list: CACHE MISS (querying database)");
-    
-    return $cache->getWithSetCallback(
-        $cacheKey,
-        $cache::TTL_DAY,
-        function() {
-            $platforms = [];
-            
-            // Query SMW for all platforms
-            $queryConditions = '[[Category:Platforms]]';
-            $printouts = '|?Has name|?Has short name';
-            $params = '|sort=Has name|order=asc|limit=500';
-            $fullQuery = $queryConditions . $printouts . $params;
-            
-            try {
-                $api = new ApiMain(
-                    new DerivativeRequest(
-                        RequestContext::getMain()->getRequest(),
-                        [
-                            'action' => 'ask',
-                            'query' => $fullQuery,
-                            'format' => 'json',
-                        ],
-                        true
-                    ),
+    return $cache->getOrSet('platforms-list-all-v1', function() {
+        $platforms = [];
+        
+        // Query SMW for all platforms
+        $queryConditions = '[[Category:Platforms]]';
+        $printouts = '|?Has name|?Has short name';
+        $params = '|sort=Has name|order=asc|limit=500';
+        $fullQuery = $queryConditions . $printouts . $params;
+        
+        try {
+            $api = new ApiMain(
+                new DerivativeRequest(
+                    RequestContext::getMain()->getRequest(),
+                    [
+                        'action' => 'ask',
+                        'query' => $fullQuery,
+                        'format' => 'json',
+                    ],
                     true
-                );
-                
-                $api->execute();
-                $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
-                
-                if (isset($result['query']['results'])) {
-                    foreach ($result['query']['results'] as $pageName => $data) {
-                        $printouts = $data['printouts'];
-                        $cleanName = str_replace('Platforms/', '', $pageName);
-
-                        $displayName = extractPrintoutString($printouts, 'Has name', $cleanName);
-                        $abbrev = extractPrintoutString($printouts, 'Has short name');
-
-                        $platforms[] = [
-                            'name' => $cleanName,
-                            'displayName' => $displayName,
-                            'abbreviation' => $abbrev ?: $cleanName,
-                        ];
-                    }
-                }
-                
-                error_log("✓ Platform dropdown list: Loaded " . count($platforms) . " platforms (now cached for 24 hours)");
-            } catch (Exception $e) {
-                error_log("✗ Platform dropdown query failed: " . $e->getMessage());
-            }
+                ),
+                true
+            );
             
-            return $platforms;
+            $api->execute();
+            $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
+            
+            if (isset($result['query']['results'])) {
+                foreach ($result['query']['results'] as $pageName => $data) {
+                    $printouts = $data['printouts'];
+                    $cleanName = str_replace('Platforms/', '', $pageName);
+
+                    $displayName = extractPrintoutString($printouts, 'Has name', $cleanName);
+                    $abbrev = extractPrintoutString($printouts, 'Has short name');
+
+                    $platforms[] = [
+                        'name' => $cleanName,
+                        'displayName' => $displayName,
+                        'abbreviation' => $abbrev ?: $cleanName,
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            error_log("✗ Platform dropdown query failed: " . $e->getMessage());
         }
-    );
+        
+        return $platforms;
+    }, CacheHelper::TTL_DAY);
 }
 
 
 /**
  * Query platforms from Semantic MediaWiki with optional filters
+ * 
+ * Results are cached based on query parameters for improved performance.
  * 
  * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
  * @param array $filterGameTitles Optional array of game title filters
@@ -264,6 +235,27 @@ function getAllPlatforms() {
  * @return array Array with 'platforms', 'totalCount', 'currentPage', 'totalPages'
  */
 function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'release_date', $page = 1, $limit = 48, $requireAllGames = false) {
+    $cache = CacheHelper::getInstance();
+    
+    // Build cache key from query parameters
+    $cacheKey = $cache->buildQueryKey('platforms', [
+        'letter' => $filterLetter,
+        'games' => $filterGameTitles,
+        'sort' => $sort,
+        'page' => $page,
+        'limit' => $limit,
+        'requireAll' => $requireAllGames ? '1' : '0'
+    ]);
+    
+    return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
+        return fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
+    }, CacheHelper::TTL_MINUTE * 5);
+}
+
+/**
+ * Internal function to fetch platforms from SMW (not cached)
+ */
+function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
     $platforms = [];
     $totalCount = 0;
     
@@ -348,7 +340,7 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
         
         $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
         
-        // Set sort order using switch statement
+        // Set sort order
         switch ($sort) {
             case 'release_date':
                 $params = '|sort=Has release date|order=desc';
@@ -512,10 +504,27 @@ function getGameCountForPlatformFromSMW($platformName) {
 /**
  * Get the platforms for a given game from Semantic MediaWiki
  * 
- * @param string $gameTitle The game page name
+ * Results are cached for improved performance.
+ * 
+ * @param string $gamePageName The game page name
  * @return array Array of platform names
  */
 function getPlatformsForGameFromSMW($gamePageName) {
+    $cache = CacheHelper::getInstance();
+    
+    // Sanitize game name for cache key
+    $safeGameName = preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '_', $gamePageName));
+    $cacheKey = "platforms-for-game-{$safeGameName}";
+    
+    return $cache->getOrSet($cacheKey, function() use ($gamePageName) {
+        return fetchPlatformsForGameFromSMW($gamePageName);
+    }, CacheHelper::TTL_MINUTE * 10);
+}
+
+/**
+ * Internal function to fetch platforms for a game (not cached)
+ */
+function fetchPlatformsForGameFromSMW($gamePageName) {
     $platforms = [];
     try {
         $queryConditions = '[[Category:Games]][[' . $gamePageName . ']]';
@@ -556,7 +565,7 @@ function getPlatformsForGameFromSMW($gamePageName) {
 }
 
 /**
- * Process the results of the platform query from Semantic MediaWiki and returns an array of platform data
+ * Process the results of the platform query from Semantic MediaWiki
  * 
  * @param array $results The results of the platform query from Semantic MediaWiki
  * @return array Array of platform data with 'url', 'title', 'shortName', 'deck', 'releaseDate', 'releaseDateFormatted', 'image' keys
@@ -623,9 +632,26 @@ function processPlatformQueryResults($results) {
  * @return int Total number of platforms
  */
 function getPlatformCountFromSMW($filterLetter = '', $filterGameTitles = [], $requireAllGames = false) {
+    $cache = CacheHelper::getInstance();
+    
+    // Build cache key
+    $cacheKey = $cache->buildQueryKey('platforms-count', [
+        'letter' => $filterLetter,
+        'games' => $filterGameTitles,
+        'requireAll' => $requireAllGames ? '1' : '0'
+    ]);
+    
+    return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $requireAllGames) {
+        return fetchPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames);
+    }, CacheHelper::TTL_MINUTE * 5);
+}
+
+/**
+ * Internal function to fetch platform count (not cached)
+ */
+function fetchPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames) {
     $totalCount = 0;
     try {
-        
         $countQuery = '[[Category:Platforms]]';
         
         if (!empty($filterLetter)) {

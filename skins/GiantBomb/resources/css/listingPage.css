@@ -110,7 +110,7 @@
 }
 
 .listing-card:hover .listing-card-image img {
-  transform: scale(0.9);
+  transform: scaleX(0.92) scaleY(0.9004166667);
 }
 
 .listing-card-image-placeholder {
