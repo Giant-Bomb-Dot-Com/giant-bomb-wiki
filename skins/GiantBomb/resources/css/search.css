@@ -1,5 +1,5 @@
 .gb-search {
-  width: 50%;
+  width: 100%;
 }
 
 .gb-search .search-form {
@@ -60,7 +60,6 @@
 }
 
 .gb-search .search_dropdown {
-  width: 10%;
   padding: 10px;
   background-color: #2a2a2a;
   color: #ffffff;
