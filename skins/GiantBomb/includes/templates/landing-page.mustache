@@ -1,20 +1,36 @@
-<div id="landing-page-container">
-
+<div class="page-wrapper">
     {{> header }}
 
-    {{> search }}
+    <div id="landing-page-container">
 
-    {{> wiki-button-group }}
+        {{> search }}
+
+        {{> wiki-button-group }}
 
     <div id="dynamic-content">
         <hr class="highlight" />
 
-        <div class="all-games-section">
-            <h2>All Games</h2>
-            <div class="game-grid">
-                {{#games}}
-                    {{> game-card }}
-                {{/games}}
+        <div class="landing-page-header">
+            <h1>All Games</h1>
+            <div
+                data-vue-component="ViewToggle"
+                data-target-container="#dynamic-content"
+                data-storage-key="gamesViewPreference">
+            </div>
+        </div>
+
+        <div class="landing-page-content">
+            <aside class="landing-sidebar">
+                <div
+                    data-vue-component="GameFilter"
+                    data-platforms-data="{{{vue.platformsJson}}}">
+                </div>
+            </aside>
+
+            <div class="landing-main-wrapper"
+                data-vue-component="GameList"
+                data-initial-data="{{{vue.gamesJson}}}"
+                data-pagination-info="{{{vue.paginationJson}}}">
             </div>
         </div>
 

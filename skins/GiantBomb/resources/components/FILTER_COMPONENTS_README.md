@@ -32,7 +32,34 @@ A wrapper component that provides consistent layout and styling for filter secti
 </filter-container>
 ```
 
-### 2. FilterDropdown
+### 2. FilterInput
+
+A generic text input component for filters.
+
+**Props:**
+
+- `id` (String, required): HTML id for the input element
+- `label` (String): Label text displayed above the input
+- `model-value` (String/Number): The input value (use with v-model)
+- `placeholder` (String): Placeholder text for the input
+- `type` (String): Input type (default: "text")
+
+**Events:**
+
+- `@update:model-value`: Emitted when input value changes (v-model compatible)
+
+**Usage:**
+
+```vue
+<filter-input
+  id="search-filter"
+  label="Search"
+  v-model="searchQuery"
+  placeholder="Search games..."
+/>
+```
+
+### 3. FilterDropdown
 
 A generic dropdown/select component for filters.
 
@@ -76,7 +103,7 @@ A generic dropdown/select component for filters.
 ></filter-dropdown>
 ```
 
-### 3. SearchableMultiSelect
+### 4. SearchableMultiSelect
 
 A complex component for searchable multi-select with chips/tags display.
 
@@ -255,10 +282,11 @@ The refactored PlatformFilter and ReleaseFilter components maintain the same ext
 To create a new filter component:
 
 1. Use `FilterContainer` as the wrapper
-2. Add `FilterDropdown` components for select/dropdown filters
-3. Use `SearchableMultiSelect` for searchable multi-select with chips
-4. Use `useFilters` composable for filter state management
-5. Use `useSearch` composable for search functionality
+2. Add `FilterInput` components for text/search inputs
+3. Add `FilterDropdown` components for select/dropdown filters
+4. Use `SearchableMultiSelect` for searchable multi-select with chips
+5. Use `useFilters` composable for filter state management
+6. Use `useSearch` composable for search functionality
 
 Example:
 
@@ -269,6 +297,14 @@ Example:
     :show-clear-button="hasActiveFilters"
     @clear="clearFilters"
   >
+    <filter-input
+      id="search-filter"
+      label="Search"
+      v-model="searchQuery"
+      placeholder="Search..."
+      @update:model-value="onFilterChange"
+    ></filter-input>
+
     <filter-dropdown
       id="category-filter"
       label="Category"
@@ -282,27 +318,36 @@ Example:
 <script>
 const { ref, computed } = require("vue");
 const FilterContainer = require("./FilterContainer.vue");
+const FilterInput = require("./FilterInput.vue");
 const FilterDropdown = require("./FilterDropdown.vue");
 const { useFilters } = require("../composables/useFilters.js");
 
 module.exports = exports = {
   name: "MyFilter",
-  components: { FilterContainer, FilterDropdown },
+  components: { FilterContainer, FilterInput, FilterDropdown },
   setup() {
+    const searchQuery = ref("");
     const selectedCategory = ref("");
     const categories = ["A", "B", "C"];
 
     const { applyFilters, clearFilters } = useFilters("my-filter-changed", {
+      search: "",
       category: "",
     });
 
-    const hasActiveFilters = computed(() => selectedCategory.value !== "");
+    const hasActiveFilters = computed(
+      () => searchQuery.value !== "" || selectedCategory.value !== "",
+    );
 
     const onFilterChange = () => {
-      applyFilters({ category: selectedCategory.value });
+      applyFilters({
+        search: searchQuery.value,
+        category: selectedCategory.value,
+      });
     };
 
     return {
+      searchQuery,
       selectedCategory,
       categories,
       hasActiveFilters,

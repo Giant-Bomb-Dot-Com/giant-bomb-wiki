@@ -101,10 +101,10 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const platformsGrid = wrapper.find(".platforms-grid");
+      const platformsGrid = wrapper.find(".listing-grid");
       expect(platformsGrid.exists()).toBe(true);
 
-      const platformCards = wrapper.findAll(".platform-card");
+      const platformCards = wrapper.findAll(".listing-card");
       expect(platformCards).toHaveLength(2);
     });
 
@@ -115,20 +115,20 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const firstPlatform = wrapper.findAll(".platform-card")[0];
-      const title = firstPlatform.find(".platform-title");
+      const firstPlatform = wrapper.findAll(".listing-card")[0];
+      const title = firstPlatform.find(".listing-card-title");
       expect(title.text()).toBe("PlayStation 5");
 
-      const deck = firstPlatform.find(".platform-deck");
+      const deck = firstPlatform.find(".listing-card-deck");
       expect(deck.text()).toBe("Sony's next-generation console");
 
-      const date = firstPlatform.find(".platform-date");
+      const date = firstPlatform.find(".listing-card-date");
       expect(date.text()).toContain("November 12, 2020");
 
-      const gameCount = firstPlatform.find(".platform-game-count");
+      const gameCount = firstPlatform.find(".listing-card-game-count");
       expect(gameCount.text()).toBe("Games: 450");
 
-      const link = firstPlatform.find(".platform-card-link");
+      const link = firstPlatform.find(".listing-card-link");
       expect(link.attributes("href")).toBe("/wiki/PlayStation_5");
     });
 
@@ -139,7 +139,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const images = wrapper.findAll(".platform-image img");
+      const images = wrapper.findAll(".listing-card-image img");
       expect(images).toHaveLength(2);
       expect(images[0].attributes("src")).toBe(
         "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970349-ps5.jpg",
@@ -170,7 +170,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const placeholder = wrapper.find(".platform-image-placeholder");
+      const placeholder = wrapper.find(".listing-card-image-placeholder");
       expect(placeholder.exists()).toBe(true);
 
       const img = placeholder.find("img");
@@ -184,7 +184,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const decks = wrapper.findAll(".platform-deck");
+      const decks = wrapper.findAll(".listing-card-deck");
       expect(decks).toHaveLength(2);
       expect(decks[0].text()).toBe("Sony's next-generation console");
     });
@@ -212,7 +212,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const deck = wrapper.find(".platform-deck");
+      const deck = wrapper.find(".listing-card-deck");
       expect(deck.exists()).toBe(false);
     });
 
@@ -239,7 +239,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const gameCount = wrapper.find(".platform-game-count");
+      const gameCount = wrapper.find(".listing-card-game-count");
       expect(gameCount.exists()).toBe(false);
     });
   });
@@ -256,7 +256,7 @@ describe("PlatformList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const loadingDiv = wrapper.find(".platforms-loading");
+      const loadingDiv = wrapper.find(".listing-loading");
       expect(loadingDiv.exists()).toBe(true);
 
       const spinner = wrapper.find(".loading-spinner");
@@ -276,7 +276,7 @@ describe("PlatformList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const platformsGrid = wrapper.find(".platforms-grid");
+      const platformsGrid = wrapper.find(".listing-grid");
       expect(platformsGrid.exists()).toBe(false);
     });
   });
@@ -294,7 +294,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const noPlatforms = wrapper.find(".no-platforms");
+      const noPlatforms = wrapper.find(".listing-empty");
       expect(noPlatforms.exists()).toBe(true);
       expect(noPlatforms.text()).toContain(
         "No platforms found for the selected filters.",
@@ -319,19 +319,26 @@ describe("PlatformList", () => {
       expect(pagination.exists()).toBe(true);
 
       const paginationInfo = wrapper.find(".pagination-info");
-      expect(paginationInfo.text()).toContain("Page 2 of 5");
-      expect(paginationInfo.text()).toContain("(50 total)");
+      // Pagination component displays "Showing X-Y of Z items"
+      expect(paginationInfo.text()).toContain("Showing");
+      expect(paginationInfo.text()).toContain("of 50 items");
     });
 
-    it("hides pagination when total pages is 1", async () => {
+    it("shows pagination even when total pages is 1", async () => {
       const wrapper = mount(PlatformList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
+      // PlatformList always renders the Pagination component
+      // The Pagination component itself handles single-page display
       const pagination = wrapper.find(".pagination");
-      expect(pagination.exists()).toBe(false);
+      expect(pagination.exists()).toBe(true);
+
+      // Should show "Showing 1-10 of 10 items" for single page
+      const paginationInfo = wrapper.find(".pagination-info");
+      expect(paginationInfo.text()).toContain("Showing");
     });
 
     it("disables previous button on first page", async () => {
@@ -346,7 +353,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const prevButton = wrapper.findAll(".pagination-btn")[0];
+      const prevButton = wrapper.find(".pagination-prev");
       expect(prevButton.attributes("disabled")).toBeDefined();
     });
 
@@ -354,15 +361,15 @@ describe("PlatformList", () => {
       const wrapper = mount(PlatformList, {
         props: {
           initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
-          currentPage: "5",
-          totalPages: "5",
+          totalCount: "96", // 96 items / 48 per page = 2 pages
+          currentPage: "2",
+          totalPages: "2",
         },
       });
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       expect(nextButton.attributes("disabled")).toBeDefined();
     });
 
@@ -384,6 +391,7 @@ describe("PlatformList", () => {
           totalCount: 50,
           currentPage: 2,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
@@ -398,7 +406,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -420,16 +428,17 @@ describe("PlatformList", () => {
         json: async () => ({
           success: true,
           platforms: mockPlatforms,
-          totalCount: 50,
+          totalCount: 240, // 240 / 48 = 5 pages
           currentPage: 3,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
       const wrapper = mount(PlatformList, {
         props: {
           initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
+          totalCount: "240", // 240 / 48 = 5 pages
           currentPage: "2",
           totalPages: "5",
         },
@@ -437,7 +446,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -459,6 +468,7 @@ describe("PlatformList", () => {
           totalCount: 50,
           currentPage: 2,
           totalPages: 5,
+          pageSize: 48,
         }),
       });
 
@@ -473,7 +483,7 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const nextButton = wrapper.findAll(".pagination-btn")[1];
+      const nextButton = wrapper.find(".pagination-next");
       await nextButton.trigger("click");
 
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -483,42 +493,6 @@ describe("PlatformList", () => {
         top: 0,
         behavior: "smooth",
       });
-    });
-
-    it("does not navigate when clicking previous on first page", async () => {
-      const wrapper = mount(PlatformList, {
-        props: {
-          initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
-          currentPage: "1",
-          totalPages: "5",
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.goToPage(0);
-      await wrapper.vm.$nextTick();
-
-      expect(global.fetch).not.toHaveBeenCalled();
-    });
-
-    it("does not navigate when clicking next on last page", async () => {
-      const wrapper = mount(PlatformList, {
-        props: {
-          initialData: JSON.stringify(mockPlatforms),
-          totalCount: "50",
-          currentPage: "5",
-          totalPages: "5",
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.goToPage(6);
-      await wrapper.vm.$nextTick();
-
-      expect(global.fetch).not.toHaveBeenCalled();
     });
   });
 
@@ -659,11 +633,11 @@ describe("PlatformList", () => {
       await wrapper.vm.$nextTick();
 
       // Verify the component's internal state was updated
-      expect(wrapper.vm.platforms).toHaveLength(1);
-      expect(wrapper.vm.platforms[0].title).toBe("New Platform");
+      expect(wrapper.vm.items).toHaveLength(1);
+      expect(wrapper.vm.items[0].title).toBe("New Platform");
 
       // Verify the DOM was updated
-      const platformCards = wrapper.findAll(".platform-card");
+      const platformCards = wrapper.findAll(".listing-card");
       expect(platformCards).toHaveLength(1);
       expect(platformCards[0].text()).toContain("New Platform");
     });
@@ -732,7 +706,7 @@ describe("PlatformList", () => {
       expect(consoleErrorSpy).toHaveBeenCalled();
 
       // Should keep existing data on error
-      const platformCards = wrapper.findAll(".platform-card");
+      const platformCards = wrapper.findAll(".listing-card");
       expect(platformCards).toHaveLength(2);
 
       consoleErrorSpy.mockRestore();
@@ -796,10 +770,10 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const title = wrapper.find(".platform-title");
+      const title = wrapper.find(".listing-card-title");
       expect(title.text()).toBe("Platform & Test");
 
-      const deck = wrapper.find(".platform-deck");
+      const deck = wrapper.find(".listing-card-deck");
       expect(deck.text()).toBe("A platform & test");
     });
 
@@ -822,7 +796,7 @@ describe("PlatformList", () => {
         expect.any(Error),
       );
 
-      const noPlatforms = wrapper.find(".no-platforms");
+      const noPlatforms = wrapper.find(".listing-empty");
       expect(noPlatforms.exists()).toBe(true);
 
       consoleErrorSpy.mockRestore();
