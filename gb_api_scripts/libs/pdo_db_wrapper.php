@@ -90,6 +90,24 @@ class PdoDbWrapper implements DbInterface
         return 'https://giantbomb.com/a/uploads/original/' . $result->path . $result->name;
     }
 
+    public function getImageData(int $id): array
+    {
+        $sql = "SELECT name, caption, path, mimetype, image_sizes FROM image WHERE id = :id";
+        $result = $this->fetchObject($sql, ['id' => $id]);
+
+        if (!$result) {
+            return [];
+        }
+
+        return [
+            'file' => $result->name,
+            'path' => $result->path,
+            'mime' => $result->mimetype,
+            'sizes' => $result->image_sizes,
+            'caption' => $result->caption
+        ];
+    }
+
     public function getCreditsFromDB(int $id)
     {
         $sql = "SELECT o.person_id, o.description, o.role_id, p.mw_page_name
@@ -185,6 +203,16 @@ class PdoDbWrapper implements DbInterface
         $sql = "SELECT {$fields} FROM {$table} WHERE ".$clause.$order;
 
         return $this->fetchAllObjects($sql, $params);
+    }
+
+    public function getPageEditors()
+    {
+        $sql = "SELECT submitter_id, assoc_type_id, assoc_id, total_points, submitter_comment, date_moderated
+                  FROM wiki_changeset
+                 WHERE status = 2 AND assoc_id IS NOT NULL
+              ORDER BY assoc_type_id, assoc_id";
+
+        return $this->fetchAllObjects($sql);
     }
 
     public function updateMediaWikiDescription(string $table, int $id, string $mwDescription) 
