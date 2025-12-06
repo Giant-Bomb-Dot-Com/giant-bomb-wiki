@@ -75,13 +75,13 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const weekGroups = wrapper.findAll(".week-group");
+      const weekGroups = wrapper.findAll(".listing-group");
       expect(weekGroups).toHaveLength(1);
 
-      const weekLabel = wrapper.find(".week-label");
+      const weekLabel = wrapper.find(".listing-group-label");
       expect(weekLabel.text()).toBe("November 2, 2025 - November 8, 2025");
 
-      const releaseCards = wrapper.findAll(".release-card");
+      const releaseCards = wrapper.findAll(".listing-card");
       expect(releaseCards).toHaveLength(2);
     });
 
@@ -92,14 +92,14 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const firstRelease = wrapper.findAll(".release-card")[0];
-      const title = firstRelease.find(".release-title");
+      const firstRelease = wrapper.findAll(".listing-card")[0];
+      const title = firstRelease.find(".listing-card-title");
       expect(title.text()).toBe("Hyrule Warriors: Age of Imprisonment");
 
-      const date = firstRelease.find(".release-date");
+      const date = firstRelease.find(".listing-card-release-date");
       expect(date.text()).toContain("November 6, 2025");
 
-      const link = firstRelease.find(".release-card-link");
+      const link = firstRelease.find(".listing-card-link");
       expect(link.attributes("href")).toBe(
         "/wiki/Hyrule_Warriors:_Age_of_Imprisonment",
       );
@@ -112,7 +112,7 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const images = wrapper.findAll(".release-image img");
+      const images = wrapper.findAll(".listing-card-image img");
       expect(images).toHaveLength(2);
       expect(images[0].attributes("src")).toBe(
         "https://www.giantbomb.com/a/uploads/scale_small/20/201266/3821180-5821929028-coag7.jpg",
@@ -147,7 +147,7 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const placeholder = wrapper.find(".release-image-placeholder");
+      const placeholder = wrapper.find(".listing-card-image-placeholder");
       expect(placeholder.exists()).toBe(true);
 
       const img = placeholder.find("img");
@@ -229,7 +229,7 @@ describe("ReleaseList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const loadingDiv = wrapper.find(".releases-loading");
+      const loadingDiv = wrapper.find(".listing-loading");
       expect(loadingDiv.exists()).toBe(true);
 
       const spinner = wrapper.find(".loading-spinner");
@@ -249,7 +249,7 @@ describe("ReleaseList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const weekGroups = wrapper.findAll(".week-group");
+      const weekGroups = wrapper.findAll(".listing-group");
       expect(weekGroups).toHaveLength(0);
     });
   });
@@ -264,7 +264,7 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const noReleases = wrapper.find(".no-releases");
+      const noReleases = wrapper.find(".listing-empty");
       expect(noReleases.exists()).toBe(true);
       expect(noReleases.text()).toContain(
         "No releases found for the selected filters.",
@@ -361,7 +361,7 @@ describe("ReleaseList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const weekLabel = wrapper.find(".week-label");
+      const weekLabel = wrapper.find(".listing-group-label");
       expect(weekLabel.text()).toBe("November 9, 2025 - November 15, 2025");
     });
 
@@ -393,7 +393,7 @@ describe("ReleaseList", () => {
       expect(consoleErrorSpy).toHaveBeenCalled();
 
       // Should keep existing data on error
-      const weekGroups = wrapper.findAll(".week-group");
+      const weekGroups = wrapper.findAll(".listing-group");
       expect(weekGroups).toHaveLength(1);
 
       consoleErrorSpy.mockRestore();
@@ -462,7 +462,7 @@ describe("ReleaseList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const title = wrapper.find(".release-title");
+      const title = wrapper.find(".listing-card-title");
       expect(title.text()).toBe("Game & Test");
     });
 
@@ -482,7 +482,7 @@ describe("ReleaseList", () => {
         expect.any(Error),
       );
 
-      const noReleases = wrapper.find(".no-releases");
+      const noReleases = wrapper.find(".listing-empty");
       expect(noReleases.exists()).toBe(true);
 
       consoleErrorSpy.mockRestore();

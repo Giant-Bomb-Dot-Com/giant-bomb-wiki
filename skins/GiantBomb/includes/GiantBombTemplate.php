@@ -4,9 +4,14 @@ class GiantBombTemplate extends BaseTemplate {
         // Handle API requests first
         $request = RequestContext::getMain()->getRequest();
         $action = $request->getText('action', '');
-        
+
         if ($action === 'get-releases') {
             require_once __DIR__ . '/api/releases-api.php';
+            return;
+        }
+
+        if ($action === 'get-games') {
+            require_once __DIR__ . '/api/games-api.php';
             return;
         }
         

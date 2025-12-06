@@ -19,10 +19,16 @@
             class="listing-card"
           >
             <a :href="release.url" class="listing-card-link">
-              <div v-if="release.image" class="listing-card-image listing-card-image--portrait">
+              <div
+                v-if="release.image"
+                class="listing-card-image listing-card-image--portrait"
+              >
                 <img :src="release.image" :alt="release.title" loading="lazy" />
               </div>
-              <div v-else class="listing-card-image listing-card-image--portrait listing-card-image-placeholder">
+              <div
+                v-else
+                class="listing-card-image listing-card-image--portrait listing-card-image-placeholder"
+              >
                 <img
                   src="https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png"
                   alt="Giant Bomb Default Image"
@@ -78,6 +84,7 @@
 <script>
 const { defineComponent, ref, toRefs, onMounted, onUnmounted } = require("vue");
 const { getCountryCode, getFlagUrl } = require("../helpers/countryFlags.js");
+const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 /**
  * ReleaseList Component
@@ -95,9 +102,6 @@ module.exports = exports = defineComponent({
     const { initialData } = toRefs(props);
     const weekGroups = ref([]);
     const loading = ref(false);
-
-    // Helper function to decode HTML entities
-    const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
     const fetchReleases = async (region = "", platform = "") => {
       loading.value = true;
