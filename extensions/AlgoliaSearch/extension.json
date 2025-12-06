@@ -13,7 +13,8 @@
     "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaRestClient": "includes/AlgoliaRestClient.php",
     "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaRestIndex": "includes/AlgoliaRestClient.php",
     "MediaWiki\\Extension\\AlgoliaSearch\\IndexSettings": "includes/IndexSettings.php",
-    "MediaWiki\\Extension\\AlgoliaSearch\\RecordMapper": "includes/RecordMapper.php"
+    "MediaWiki\\Extension\\AlgoliaSearch\\RecordMapper": "includes/RecordMapper.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\LegacyImageHelper": "includes/LegacyImageHelper.php"
   },
   "MaintenanceScripts": ["maintenance/algoliaReindex.php"],
   "HookHandlers": [],

@@ -385,14 +385,14 @@ try {
 			$descData = $descCacheKey ? $wanCache->get( $descCacheKey ) : null;
 			if ( !is_array( $descData ) ) {
 				$descHtml = '';
-				try {
-					$parser = $services->getParser();
+			try {
+				$parser = $services->getParser();
 					$parserOptions = ParserOptions::newFromAnon();
 					$parserOutput = $parser->parse( $wikitext, $title, $parserOptions );
 					$descHtml = $parserOutput->getText( [
-						'allowTOC' => false,
-						'enableSectionEditLinks' => false,
-						'wrapperDivClass' => ''
+					'allowTOC' => false,
+					'enableSectionEditLinks' => false,
+					'wrapperDivClass' => ''
 					] );
 				} catch ( \Throwable $e ) {
 					error_log( 'Failed to parse wikitext: ' . $e->getMessage() );
@@ -594,8 +594,8 @@ $gameData['hasDLC'] = $dlcTitleObj && $dlcTitleObj->exists();
 $gameData['hasCredits'] = $creditsTitleObj && $creditsTitleObj->exists();
 
 	// Get images linked from this page
-$gameData['images'] = [];
-try {
+	$gameData['images'] = [];
+	try {
 	$pageId = $title->getArticleID();
 	if ( $pageId ) {
 		$imageCacheKey = ( $latestRevisionId > 0 )
@@ -605,26 +605,26 @@ try {
 		if ( is_array( $cachedImages ) ) {
 			$gameData['images'] = $cachedImages;
 		} else {
-			$dbLoadBalancer = $services->getDBLoadBalancer();
+		$dbLoadBalancer = $services->getDBLoadBalancer();
 			$db = $dbLoadBalancer->getConnection( \DB_REPLICA );
 			$images = [];
-			$result = $db->select(
-				'imagelinks',
+		$result = $db->select(
+			'imagelinks',
 				[ 'il_to' ],
 				[ 'il_from' => $pageId ],
-				__METHOD__
-			);
+			__METHOD__
+		);
 			foreach ( $result as $row ) {
 				$images[] = [
-					'url' => $row->il_to,
+				'url' => $row->il_to,
 					'caption' => basename( $row->il_to ),
-					'width' => 0,
+				'width' => 0,
 					'height' => 0,
-				];
-			}
+			];
+		}
 			if ( $imageCacheKey ) {
 				$wanCache->set( $imageCacheKey, $images, $cacheTtl );
-			}
+	}
 			$gameData['images'] = $images;
 		}
 	}
@@ -635,14 +635,14 @@ try {
 $gameData['imagesCount'] = count( $gameData['images'] );
 
 $gameData['releasesCount'] = 0;
-$gameData['releases'] = [];
+	$gameData['releases'] = [];
 
 if ( $gameData['hasReleases'] && $releasesTitleObj ) {
 	try {
 		$releasesPage = $wikiPageFactory->newFromTitle( $releasesTitleObj );
 		$releasesContent = $releasesPage ? $releasesPage->getContent() : null;
 		if ( $releasesContent ) {
-			$releasesText = $releasesContent->getText();
+					$releasesText = $releasesContent->getText();
 			$releaseRevisionId = (int)$releasesPage->getLatest();
 			$releaseCacheKey = $releaseRevisionId > 0
 				? $wanCache->makeKey( 'giantbomb-game-releases', $releaseRevisionId )
@@ -652,15 +652,15 @@ if ( $gameData['hasReleases'] && $releasesTitleObj ) {
 				$releaseData = gbExtractReleaseData( $releasesText );
 				if ( $releaseCacheKey ) {
 					$wanCache->set( $releaseCacheKey, $releaseData, $cacheTtl );
-				}
+						}
 			}
 			$gameData['releasesCount'] = $releaseData['count'] ?? 0;
 			$gameData['releases'] = $releaseData['items'] ?? [];
-		}
+					}
 	} catch ( Exception $e ) {
 		error_log( 'Failed to fetch release details: ' . $e->getMessage() );
+		}
 	}
-}
 
 	// Convert booleans to strings for Vue props
 	$gameData['hasReleasesStr'] = $gameData['hasReleases'] ? 'true' : 'false';
