@@ -249,7 +249,7 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
     
     return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
         return fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
-    }, CacheHelper::TTL_MINUTE * 5);
+    }, CacheHelper::TTL_HOUR);
 }
 
 /**
@@ -518,7 +518,7 @@ function getPlatformsForGameFromSMW($gamePageName) {
     
     return $cache->getOrSet($cacheKey, function() use ($gamePageName) {
         return fetchPlatformsForGameFromSMW($gamePageName);
-    }, CacheHelper::TTL_MINUTE * 10);
+    }, CacheHelper::TTL_HOUR);
 }
 
 /**
@@ -643,7 +643,7 @@ function getPlatformCountFromSMW($filterLetter = '', $filterGameTitles = [], $re
     
     return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $requireAllGames) {
         return fetchPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames);
-    }, CacheHelper::TTL_MINUTE * 5);
+    }, CacheHelper::TTL_HOUR);
 }
 
 /**
