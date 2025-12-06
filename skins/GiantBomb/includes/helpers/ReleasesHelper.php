@@ -14,6 +14,9 @@ require_once __DIR__ . '/PlatformHelper.php';
 // Load date helper functions
 require_once __DIR__ . '/DateHelper.php';
 
+// Load cache helper
+require_once __DIR__ . '/CacheHelper.php';
+
 /**
  * Group releases by time period based on date specificity
  * 
@@ -61,8 +64,7 @@ function groupReleasesByPeriod($releases) {
  * @param string $specificity The specificity of the date: "full", "month", "quarter", or "year"
  * @return array The group key, label, and sort key
  */
-
- function processDateForGrouping($timestamp, $specificity) {
+function processDateForGrouping($timestamp, $specificity) {
 
     if ($specificity === 'full') {
         // Calculate the Sunday that starts the week containing this date
@@ -101,11 +103,38 @@ function groupReleasesByPeriod($releases) {
 /**
  * Query releases from Semantic MediaWiki with optional filters
  * 
+ * Results are cached based on query parameters for improved performance.
+ * 
  * @param string $filterRegion Optional region filter
  * @param string $filterPlatform Optional platform filter
  * @return array Array of release data
  */
 function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
+    $cache = CacheHelper::getInstance();
+    
+    // Include today's date in cache key since the query is date-based
+    $today = date('Y-m-d');
+    
+    // Build cache key from query parameters
+    $cacheKey = $cache->buildQueryKey('releases', [
+        'date' => $today,
+        'region' => $filterRegion,
+        'platform' => $filterPlatform
+    ]);
+    
+    return $cache->getOrSet($cacheKey, function() use ($filterRegion, $filterPlatform) {
+        return fetchReleasesFromSMW($filterRegion, $filterPlatform);
+    }, CacheHelper::TTL_MINUTE * 5);
+}
+
+/**
+ * Internal function to fetch releases from SMW (not cached)
+ * 
+ * @param string $filterRegion Optional region filter
+ * @param string $filterPlatform Optional platform filter
+ * @return array Array of release data
+ */
+function fetchReleasesFromSMW($filterRegion, $filterPlatform) {
     $releases = [];
     try {
         // Calculate date range: today to one month in the future
@@ -245,4 +274,3 @@ function processReleaseQueryResults($results) {
     
     return $releases;
 }
-
