@@ -37,7 +37,7 @@ function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort 
     // Try to get from cache, or compute and store
     return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
         return fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
-    }, CacheHelper::TTL_MINUTE * 5); // Cache for 5 minutes
+    }, CacheHelper::TTL_HOUR); // Cache for 1 hour
 }
 
 /**

@@ -148,7 +148,7 @@ class CacheHelper {
     public function getOrSet(string $key, callable $callback, int $ttl = self::TTL_DAY) {
         $cacheKey = $this->ensureKey($key);
         
-        // First check if we have a cached value
+        // Try to get from cache first
         $cachedValue = $this->cache->get($cacheKey);
         if ($cachedValue !== false) {
             if ($this->debugLogging) {
@@ -161,18 +161,22 @@ class CacheHelper {
             error_log("⚠ Cache MISS: {$key} (computing value)");
         }
         
-        // Use getWithSetCallback for proper stampede protection
-        return $this->cache->getWithSetCallback(
-            $cacheKey,
-            $ttl,
-            function() use ($callback, $key) {
-                $value = $callback();
-                if ($this->debugLogging) {
-                    error_log("✓ Cache SET: {$key} (value computed and cached)");
-                }
-                return $value;
+        // Compute the value
+        $value = $callback();
+        
+        // Store in cache using explicit set() for reliable storage
+        $setResult = $this->cache->set($cacheKey, $value, $ttl);
+        
+        if ($this->debugLogging) {
+            $ttlHuman = $this->formatTTL($ttl);
+            if ($setResult) {
+                error_log("✓ Cache SET: {$key} (TTL: {$ttlHuman})");
+            } else {
+                error_log("✗ Cache SET FAILED: {$key} - value not stored");
             }
-        );
+        }
+        
+        return $value;
     }
     
     /**
