@@ -236,6 +236,6 @@
         applyAssets(stale);
         return;
       }
-      hideEmptyContainer();
+    hideEmptyContainer();
     });
 })();

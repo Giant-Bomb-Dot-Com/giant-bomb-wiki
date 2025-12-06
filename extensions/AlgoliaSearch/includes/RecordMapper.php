@@ -9,7 +9,6 @@ use ApiMain;
 use Title;
 
 class RecordMapper {
-	private const LEGACY_UPLOAD_HOST = 'https://www.giantbomb.com';
 	public static function getSupportedTypes(): array {
 		return [
 			'Game',
@@ -35,7 +34,7 @@ class RecordMapper {
 			return null;
 		}
 
-		$href = $title->getFullURL();
+		$href = $title->getLocalURL();
 		$slug = $title->getPrefixedURL();
 
 		$objectId = 'wiki:' . $pageId;
@@ -70,7 +69,7 @@ class RecordMapper {
 			$record['thumbnail'] = self::getThumbnailForTitle( $title );
 		}
 		if ( $record['thumbnail'] === null ) {
-			$legacyImage = self::getLegacyImageDataForTitle( $title );
+			$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
 			if ( $legacyImage !== null ) {
 				$record['thumbnail'] = $legacyImage['thumb'] ?? $legacyImage['full'];
 			}
@@ -250,108 +249,7 @@ class RecordMapper {
 		];
 	}
 
-	private static function getLegacyImageDataForTitle( Title $title ): ?array {
-		try {
-			$services = MediaWikiServices::getInstance();
-			$page = $services->getWikiPageFactory()->newFromTitle( $title );
-			if ( !$page ) {
-				return null;
-			}
-			$content = $page->getContent();
-			if ( !$content ) {
-				return null;
-			}
-			$text = $content->getText();
-			if ( $text === '' || stripos( $text, 'imageData' ) === false ) {
-				return null;
-			}
-			$parsed = self::parseLegacyImageData( $text );
-			if ( !$parsed ) {
-				return null;
-			}
-			foreach ( [ 'infobox', 'background' ] as $key ) {
-				if ( isset( $parsed[$key] ) && is_array( $parsed[$key] ) ) {
-					$full = self::buildLegacyImageUrl(
-						$parsed[$key],
-						[ 'scale_super', 'screen_kubrick', 'screen_kubrick_wide', 'scale_large' ]
-					);
-					$thumb = self::buildLegacyImageUrl(
-						$parsed[$key],
-						[ 'screen_kubrick', 'screen_medium', 'scale_medium', 'scale_large', 'scale_small', 'square_medium' ]
-					);
-					if ( $full || $thumb ) {
-						if ( !$thumb ) {
-							$thumb = $full;
-						}
-						return [
-							'full' => $full,
-							'thumb' => $thumb,
-							'caption' => isset( $parsed[$key]['caption'] ) && $parsed[$key]['caption'] !== ''
-								? $parsed[$key]['caption']
-								: null,
-						];
-					}
-				}
-			}
-		} catch ( \Throwable $e ) {
-			// Swallow parsing or fetch errors; fallback handling covers absence.
-		}
-		return null;
-	}
-
-	private static function parseLegacyImageData( string $text ): ?array {
-		if ( !preg_match(
-			'/<div[^>]*id=(["\'])imageData\\1[^>]*data-json=(["\'])(.*?)\\2/si',
-			$text,
-			$matches
-		) ) {
-			return null;
-		}
-		$raw = html_entity_decode( $matches[3], ENT_QUOTES | ENT_HTML5 );
-		$raw = trim( $raw );
-		if ( $raw === '' ) {
-			return null;
-		}
-		$data = json_decode( $raw, true );
-		if ( !is_array( $data ) || json_last_error() !== JSON_ERROR_NONE ) {
-			return null;
-		}
-		return $data;
-	}
-
-	private static function buildLegacyImageUrl( array $entry, array $preferredSizes ): ?string {
-		$file = isset( $entry['file'] ) ? trim( (string)$entry['file'] ) : '';
-		$path = isset( $entry['path'] ) ? trim( (string)$entry['path'] ) : '';
-		$sizes = isset( $entry['sizes'] ) ? (string)$entry['sizes'] : '';
-		if ( $file === '' || $path === '' || $sizes === '' ) {
-			return null;
-		}
-		$availableSizes = array_values(
-			array_filter(
-				array_map( 'trim', explode( ',', $sizes ) ),
-				static fn ( $size ) => $size !== ''
-			)
-		);
-		if ( !$availableSizes ) {
-			return null;
-		}
-		$useSize = self::chooseLegacySize( $availableSizes, $preferredSizes );
-		if ( $useSize === null ) {
-			return null;
-		}
-		$normalizedPath = trim( $path, '/' );
-		$relative = '/a/uploads/' . $useSize . '/' . ( $normalizedPath !== '' ? $normalizedPath . '/' : '' ) . $file;
-		return self::LEGACY_UPLOAD_HOST . $relative;
-	}
-
-	private static function chooseLegacySize( array $available, array $preferred ): ?string {
-		foreach ( $preferred as $candidate ) {
-			if ( in_array( $candidate, $available, true ) ) {
-				return $candidate;
-			}
-		}
-		return $available[0] ?? null;
-	}
+	// Legacy image helper methods were deduplicated into LegacyImageHelper.
 
 	private static function runApiQuery( array $params ): ?array {
 		$fauxRequest = new FauxRequest( $params );

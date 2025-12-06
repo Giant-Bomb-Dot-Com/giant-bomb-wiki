@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\GiantBombResolve\Rest;
 use ApiMain;
 use FauxRequest;
 use MediaWiki\Config\Config;
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\Handler;
@@ -17,8 +18,6 @@ use Title;
 use User;
 
 class ResolveHandler extends SimpleHandler {
-	private const LEGACY_UPLOAD_HOST = 'https://www.giantbomb.com';
-
 	private const GUID_PATTERN = '/^(\d{3,4})-(\d{1,12})$/';
 
 	/** @var Config */
@@ -199,9 +198,22 @@ class ResolveHandler extends SimpleHandler {
 					in_array( 'image', $fields, true ) &&
 					( !isset( $data['image'] ) || $data['image'] === null )
 				) {
-					$fallbackImage = $this->getLegacyFallbackImage( $title );
+					$fallbackImage = LegacyImageHelper::findLegacyImageForTitle( $title );
 					if ( $fallbackImage !== null ) {
-						$data['image'] = $fallbackImage;
+						$fullUrl = $fallbackImage['full'] ?? $fallbackImage['thumb'];
+						$thumbUrl = $fallbackImage['thumb'] ?? $fallbackImage['full'];
+						if ( $fullUrl !== null || $thumbUrl !== null ) {
+							$data['image'] = [
+								'title' => $fallbackImage['caption'] ?? $fallbackImage['file'],
+								'descriptionUrl' => $fullUrl,
+								'url' => $fullUrl,
+								'width' => null,
+								'height' => null,
+								'thumbUrl' => $thumbUrl,
+								'thumbWidth' => null,
+								'thumbHeight' => null,
+							];
+						}
 					}
 				}
 			}
@@ -491,114 +503,6 @@ class ResolveHandler extends SimpleHandler {
 			return $entry;
 		}
 		return null;
-	}
-
-	private function getLegacyFallbackImage( Title $title ): ?array {
-		try {
-			$services = MediaWikiServices::getInstance();
-			$page = $services->getWikiPageFactory()->newFromTitle( $title );
-			if ( !$page ) {
-				return null;
-			}
-			$content = $page->getContent();
-			if ( !$content ) {
-				return null;
-			}
-			$text = $content->getText();
-			if ( $text === '' || stripos( $text, 'imageData' ) === false ) {
-				return null;
-			}
-			$parsed = $this->parseLegacyImageData( $text );
-			if ( !$parsed ) {
-				return null;
-			}
-			foreach ( [ 'infobox', 'background' ] as $key ) {
-				if ( isset( $parsed[$key] ) && is_array( $parsed[$key] ) ) {
-					$full = $this->buildLegacyImageUrl(
-						$parsed[$key],
-						[ 'scale_super', 'screen_kubrick', 'screen_kubrick_wide', 'scale_large' ]
-					);
-					$thumb = $this->buildLegacyImageUrl(
-						$parsed[$key],
-						[ 'screen_kubrick', 'screen_medium', 'scale_medium', 'scale_large', 'scale_small', 'square_medium' ]
-					);
-					if ( $full || $thumb ) {
-						if ( !$thumb ) {
-							$thumb = $full;
-						}
-						return [
-							'title' => isset( $parsed[$key]['caption'] ) && $parsed[$key]['caption'] !== ''
-								? $parsed[$key]['caption']
-								: ( $parsed[$key]['file'] ?? null ),
-							'descriptionUrl' => $full,
-							'url' => $full,
-							'width' => null,
-							'height' => null,
-							'thumbUrl' => $thumb,
-							'thumbWidth' => null,
-							'thumbHeight' => null,
-						];
-					}
-				}
-			}
-		} catch ( \Throwable $e ) {
-			// Fallback errors are non-fatal; ignore.
-		}
-		return null;
-	}
-
-	private function parseLegacyImageData( string $text ): ?array {
-		if ( !preg_match(
-			'/<div[^>]*id=(["\'])imageData\\1[^>]*data-json=(["\'])(.*?)\\2/si',
-			$text,
-			$matches
-		) ) {
-			return null;
-		}
-		$raw = html_entity_decode( $matches[3], ENT_QUOTES | ENT_HTML5 );
-		$raw = trim( $raw );
-		if ( $raw === '' ) {
-			return null;
-		}
-		$data = json_decode( $raw, true );
-		if ( !is_array( $data ) || json_last_error() !== JSON_ERROR_NONE ) {
-			return null;
-		}
-		return $data;
-	}
-
-	private function buildLegacyImageUrl( array $entry, array $preferredSizes ): ?string {
-		$file = isset( $entry['file'] ) ? trim( (string)$entry['file'] ) : '';
-		$path = isset( $entry['path'] ) ? trim( (string)$entry['path'] ) : '';
-		$sizes = isset( $entry['sizes'] ) ? (string)$entry['sizes'] : '';
-		if ( $file === '' || $path === '' || $sizes === '' ) {
-			return null;
-		}
-		$availableSizes = array_values(
-			array_filter(
-				array_map( 'trim', explode( ',', $sizes ) ),
-				static fn ( $size ) => $size !== ''
-			)
-		);
-		if ( !$availableSizes ) {
-			return null;
-		}
-		$useSize = $this->chooseLegacySize( $availableSizes, $preferredSizes );
-		if ( $useSize === null ) {
-			return null;
-		}
-		$normalizedPath = trim( $path, '/' );
-		$relative = '/a/uploads/' . $useSize . '/' . ( $normalizedPath !== '' ? $normalizedPath . '/' : '' ) . $file;
-		return self::LEGACY_UPLOAD_HOST . $relative;
-	}
-
-	private function chooseLegacySize( array $available, array $preferred ): ?string {
-		foreach ( $preferred as $candidate ) {
-			if ( in_array( $candidate, $available, true ) ) {
-				return $candidate;
-			}
-		}
-		return $available[0] ?? null;
 	}
 
 	private function createResponse( array $payload ): Response {
