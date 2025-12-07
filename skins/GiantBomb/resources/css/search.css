@@ -5,6 +5,7 @@
 .gb-search .search-form {
   display: flex;
   flex-direction: row;
+  gap: 8px;
   height: 100%;
 }
 

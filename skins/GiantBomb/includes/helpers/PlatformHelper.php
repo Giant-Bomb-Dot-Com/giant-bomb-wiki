@@ -49,7 +49,8 @@ function extractPrintoutString($printouts, $propertyName, $default = '') {
 function loadPlatformMappings() {
     $cache = CacheHelper::getInstance();
     
-    return $cache->getOrSet('platforms-abbreviations-v1', function() {
+    $cacheKey = $cache->buildSimpleKey(CacheHelper::PREFIX_PLATFORMS_ABBREV);
+    return $cache->getOrSet($cacheKey, function() {
         $platforms = [];
         
         // Query SMW for all platforms
@@ -171,7 +172,8 @@ function getPlatformData($platformName) {
 function getAllPlatforms() {
     $cache = CacheHelper::getInstance();
     
-    return $cache->getOrSet('platforms-list-all-v1', function() {
+    $cacheKey = $cache->buildSimpleKey(CacheHelper::PREFIX_PLATFORMS_LIST);
+    return $cache->getOrSet($cacheKey, function() {
         $platforms = [];
         
         // Query SMW for all platforms
@@ -238,7 +240,7 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
     $cache = CacheHelper::getInstance();
     
     // Build cache key from query parameters
-    $cacheKey = $cache->buildQueryKey('platforms', [
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_PLATFORMS, [
         'letter' => $filterLetter,
         'games' => $filterGameTitles,
         'sort' => $sort,
@@ -512,9 +514,9 @@ function getGameCountForPlatformFromSMW($platformName) {
 function getPlatformsForGameFromSMW($gamePageName) {
     $cache = CacheHelper::getInstance();
     
-    // Sanitize game name for cache key
+    // Sanitize game name for cache key suffix
     $safeGameName = preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '_', $gamePageName));
-    $cacheKey = "platforms-for-game-{$safeGameName}";
+    $cacheKey = $cache->buildSimpleKey(CacheHelper::PREFIX_PLATFORMS_FOR_GAME, $safeGameName);
     
     return $cache->getOrSet($cacheKey, function() use ($gamePageName) {
         return fetchPlatformsForGameFromSMW($gamePageName);
@@ -635,7 +637,7 @@ function getPlatformCountFromSMW($filterLetter = '', $filterGameTitles = [], $re
     $cache = CacheHelper::getInstance();
     
     // Build cache key
-    $cacheKey = $cache->buildQueryKey('platforms-count', [
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_PLATFORMS_COUNT, [
         'letter' => $filterLetter,
         'games' => $filterGameTitles,
         'requireAll' => $requireAllGames ? '1' : '0'

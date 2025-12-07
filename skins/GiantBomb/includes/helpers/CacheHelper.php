@@ -42,6 +42,16 @@ class CacheHelper {
     const TTL_DAY = 86400;
     const TTL_WEEK = 604800;
     
+    // Cache key prefix constants - used with buildQueryKey() or buildSimpleKey()
+    const PREFIX_GAMES = 'games';
+    const PREFIX_CONCEPTS = 'concepts';
+    const PREFIX_PLATFORMS = 'platforms';
+    const PREFIX_PLATFORMS_COUNT = 'platforms-count';
+    const PREFIX_PLATFORMS_LIST = 'platforms-list';
+    const PREFIX_PLATFORMS_ABBREV = 'platforms-abbrev';
+    const PREFIX_PLATFORMS_FOR_GAME = 'platforms-for-game';
+    const PREFIX_RELEASES = 'releases';
+    
     /**
      * Private constructor - use getInstance()
      */
@@ -200,6 +210,7 @@ class CacheHelper {
      * 
      * Creates a deterministic cache key from an array of parameters,
      * useful for caching query results with different filters.
+     * Includes a version number to support cache invalidation.
      * 
      * @param string $prefix Key prefix (e.g., 'concepts', 'platforms')
      * @param array $params Query parameters
@@ -211,13 +222,16 @@ class CacheHelper {
      *     'sort' => 'alphabetical',
      *     'page' => 1
      * ]);
-     * // Returns something like: "concepts-letter_A-sort_alphabetical-page_1"
+     * // Returns something like: "concepts-v1-letter_A-sort_alphabetical-page_1"
      */
     public function buildQueryKey(string $prefix, array $params): string {
         // Sort params for consistent key generation
         ksort($params);
         
-        $parts = [$prefix];
+        // Get the current version for this prefix
+        $version = $this->getPrefixVersion($prefix);
+        
+        $parts = [$prefix, "v{$version}"];
         foreach ($params as $key => $value) {
             if (is_array($value)) {
                 // Handle array values (e.g., game filters)
@@ -231,6 +245,95 @@ class CacheHelper {
         }
         
         return implode('-', $parts);
+    }
+    
+    /**
+     * Build a simple versioned cache key
+     * 
+     * Use this for keys that don't have query parameters, just a prefix
+     * and optional suffix. The version is automatically included.
+     * 
+     * @param string $prefix Key prefix (e.g., 'platforms-list', 'platforms-abbrev')
+     * @param string $suffix Optional suffix to append (e.g., game name)
+     * @return string The generated cache key with version
+     * 
+     * @example
+     * $key = $cache->buildSimpleKey('platforms-list');
+     * // Returns: "platforms-list-v1"
+     * 
+     * $key = $cache->buildSimpleKey('platforms-for-game', 'HalfLife2');
+     * // Returns: "platforms-for-game-v1-HalfLife2"
+     */
+    public function buildSimpleKey(string $prefix, string $suffix = ''): string {
+        $version = $this->getPrefixVersion($prefix);
+        
+        if ($suffix !== '') {
+            return "{$prefix}-v{$version}-{$suffix}";
+        }
+        
+        return "{$prefix}-v{$version}";
+    }
+    
+    /**
+     * Get the path to the version file for cache invalidation
+     * 
+     * Versions are stored in files (not in APCu) because APCu is per-process,
+     * so CLI scripts and web server processes don't share cache.
+     * 
+     * @return string Path to the versions directory
+     */
+    private function getVersionFilePath(string $prefix): string {
+        global $IP;
+        $cacheDir = $IP . '/cache/giantbomb-versions';
+        
+        // Create directory if it doesn't exist
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+        
+        return $cacheDir . '/' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $prefix) . '.version';
+    }
+    
+    /**
+     * Get the current version number for a cache prefix
+     * 
+     * Versions are stored in files to persist across PHP processes
+     * (APCu is per-process so can't be used for this).
+     * 
+     * @param string $prefix The cache prefix
+     * @return int The version number (defaults to 1)
+     */
+    private function getPrefixVersion(string $prefix): int {
+        $versionFile = $this->getVersionFilePath($prefix);
+        
+        if (file_exists($versionFile)) {
+            $version = (int)trim(file_get_contents($versionFile));
+            return $version > 0 ? $version : 1;
+        }
+        
+        return 1;
+    }
+    
+    /**
+     * Increment the version number for a cache prefix
+     * This effectively invalidates all cached entries for that prefix
+     * 
+     * @param string $prefix The cache prefix
+     * @return int The new version number
+     */
+    private function incrementPrefixVersion(string $prefix): int {
+        $currentVersion = $this->getPrefixVersion($prefix);
+        $newVersion = $currentVersion + 1;
+        
+        $versionFile = $this->getVersionFilePath($prefix);
+        $setResult = file_put_contents($versionFile, (string)$newVersion) !== false;
+        
+        if ($this->debugLogging) {
+            $status = $setResult ? 'success' : 'FAILED';
+            error_log("✓ Cache VERSION INCREMENT: {$prefix} (v{$currentVersion} -> v{$newVersion}) [{$status}]");
+        }
+        
+        return $newVersion;
     }
     
     /**
@@ -253,6 +356,120 @@ class CacheHelper {
      */
     public function getCache(): \WANObjectCache {
         return $this->cache;
+    }
+    
+    /**
+     * Get the cache prefix used by this helper
+     * 
+     * @return string The prefix string
+     */
+    public function getPrefix(): string {
+        return $this->prefix;
+    }
+    
+    /**
+     * List of known cache key prefixes used by the GiantBomb skin
+     * Used for bulk purging operations
+     * 
+     * @return array List of cache key prefixes
+     */
+    public static function getKnownCachePrefixes(): array {
+        return [
+            self::PREFIX_GAMES,
+            self::PREFIX_CONCEPTS,
+            self::PREFIX_PLATFORMS,
+            self::PREFIX_PLATFORMS_COUNT,
+            self::PREFIX_PLATFORMS_LIST,
+            self::PREFIX_PLATFORMS_ABBREV,
+            self::PREFIX_PLATFORMS_FOR_GAME,
+            self::PREFIX_RELEASES,
+        ];
+    }
+    
+    /**
+     * Purge a specific cache key
+     * 
+     * @param string $key The cache key to purge
+     * @return bool True if deletion was successful
+     */
+    public function purge(string $key): bool {
+        $result = $this->delete($key);
+        if ($this->debugLogging) {
+            error_log("🗑 Cache PURGE: {$key} - " . ($result ? 'success' : 'failed'));
+        }
+        return $result;
+    }
+    
+    /**
+     * Purge all cache entries for a specific prefix (e.g., 'games', 'concepts')
+     * 
+     * This works by incrementing the version number for the prefix.
+     * All existing cached entries become orphaned (they use the old version)
+     * and will naturally expire. New requests will use the new version.
+     * 
+     * @param string $prefix The prefix to purge (e.g., 'games', 'platforms')
+     * @return int The new version number
+     */
+    public function purgeByPrefix(string $prefix): int {
+        $oldVersion = $this->getPrefixVersion($prefix);
+        $newVersion = $this->incrementPrefixVersion($prefix);
+        
+        if ($this->debugLogging) {
+            error_log("🗑 Cache PURGE by prefix: {$prefix} (version {$oldVersion} -> {$newVersion})");
+        }
+        
+        return $newVersion;
+    }
+    
+    /**
+     * Purge all known GiantBomb cache entries
+     * 
+     * Increments version numbers for all known prefixes, effectively
+     * invalidating all cached entries.
+     * 
+     * @return array Results showing old and new versions for each prefix
+     */
+    public function purgeAll(): array {
+        $results = [];
+        $prefixes = self::getKnownCachePrefixes();
+        
+        foreach ($prefixes as $prefix) {
+            $oldVersion = $this->getPrefixVersion($prefix);
+            $newVersion = $this->purgeByPrefix($prefix);
+            $results[$prefix] = ['old' => $oldVersion, 'new' => $newVersion];
+        }
+        
+        if ($this->debugLogging) {
+            error_log("🗑 Cache PURGE ALL: " . count($prefixes) . " prefixes invalidated");
+        }
+        
+        return $results;
+    }
+    
+    /**
+     * Clear the entire cache (use with caution!)
+     * 
+     * This attempts to clear the entire cache backend.
+     * Only works with certain cache backends (APCu, etc.)
+     * 
+     * @return bool True if the operation was attempted
+     */
+    public function clearAll(): bool {
+        // For APCu
+        if (function_exists('apcu_clear_cache')) {
+            apcu_clear_cache();
+            if ($this->debugLogging) {
+                error_log("🗑 Cache CLEAR ALL: APCu cache cleared");
+            }
+            return true;
+        }
+        
+        // For other backends, fall back to purging known prefixes
+        if ($this->debugLogging) {
+            error_log("⚠ Cache CLEAR ALL: Backend doesn't support full clear, using purgeAll()");
+        }
+        $this->purgeAll();
+        return true;
     }
     
     /**

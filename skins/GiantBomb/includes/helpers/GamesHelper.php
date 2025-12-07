@@ -22,7 +22,7 @@ require_once __DIR__ . '/CacheHelper.php';
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
     $cache = CacheHelper::getInstance();
     
-    $cacheKey = $cache->buildQueryKey('games', [
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_GAMES, [
         'searchQuery' => $searchQuery,
         'platformFilter' => $platformFilter,
         'sortOrder' => $sortOrder,

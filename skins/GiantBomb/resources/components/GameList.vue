@@ -1,33 +1,36 @@
 <template>
-  <main class="games-main">
+  <main class="listing-main">
     <div v-if="loading" class="listing-loading">
       <div class="loading-spinner"></div>
       <p>Loading games...</p>
     </div>
 
     <div v-else-if="games.length > 0">
-      <div class="game-grid">
-        <a
-          v-for="(game, index) in games"
-          :key="index"
-          :href="game.url"
-          class="game-card-link"
-        >
-          <div class="game-card">
-            <div class="game-image">
+      <div class="listing-grid">
+        <div v-for="(game, index) in games" :key="index" class="listing-card">
+          <a :href="game.url" class="listing-card-link">
+            <div v-if="game.img" class="listing-card-image">
+              <img :src="game.img" :alt="game.title" loading="lazy" />
+            </div>
+            <div
+              v-else
+              class="listing-card-image listing-card-image-placeholder"
+            >
               <img
-                v-if="game.img"
-                :src="game.img"
-                :alt="game.title"
+                src="https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png"
+                alt="Giant Bomb Default Image"
                 loading="lazy"
               />
-              <div v-else class="game-image-placeholder">
-                <span class="game-placeholder-icon">🎮</span>
-              </div>
             </div>
-            <div class="game-info">
-              <h3 class="game-title">{{ game.title }}</h3>
-              <p v-if="game.date" class="game-date">{{ game.date }}</p>
+
+            <div class="listing-card-info">
+              <h3 class="listing-card-title">{{ game.title }}</h3>
+              <div v-if="game.date" class="listing-card-meta">
+                {{ game.date }}
+              </div>
+              <div v-if="game.desc" class="listing-card-deck">
+                {{ game.desc }}
+              </div>
               <div
                 v-if="game.platforms && game.platforms.length > 0"
                 class="platform-badges"
@@ -48,10 +51,9 @@
                   +{{ game.platforms.length - 3 }}
                 </span>
               </div>
-              <p v-if="game.desc" class="game-desc">{{ game.desc }}</p>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
 
       <!-- Pagination Component -->
@@ -293,23 +295,8 @@ module.exports = exports = {
 </script>
 
 <style>
-/* Game grid/card styles are in landingPage.css */
-/* Shared loading/empty/badge styles are in listingPage.css */
+/* All shared styles are now in listingPage.css */
 /* Component-specific styles only below */
-.game-image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-}
-
-.game-placeholder-icon {
-  font-size: 4rem;
-  opacity: 0.3;
-}
-
 .listing-empty-hint {
   font-size: 0.95rem;
   color: #666;
