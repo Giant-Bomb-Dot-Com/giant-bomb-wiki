@@ -36,6 +36,12 @@ class CacheHelper {
     /** @var bool Whether to log cache hits/misses */
     private $debugLogging = true;
     
+    /** @var string Database table name for cache versions */
+    private const VERSION_TABLE = 'giantbomb_cache_versions';
+    
+    /** @var bool Whether the version table has been verified to exist */
+    private static $tableVerified = false;
+    
     // Common TTL constants (in seconds)
     const TTL_MINUTE = 60;
     const TTL_HOUR = 3600;
@@ -275,43 +281,58 @@ class CacheHelper {
     }
     
     /**
-     * Get the path to the version file for cache invalidation
+     * Ensure the cache versions table exists in the database
      * 
-     * Versions are stored in files (not in APCu) because APCu is per-process,
-     * so CLI scripts and web server processes don't share cache.
-     * 
-     * @return string Path to the versions directory
+     * Creates the table if it doesn't exist. This is called lazily
+     * on first version read/write operation.
      */
-    private function getVersionFilePath(string $prefix): string {
-        global $IP;
-        $cacheDir = $IP . '/cache/giantbomb-versions';
-        
-        // Create directory if it doesn't exist
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir, 0755, true);
+    private function ensureVersionTable(): void {
+        if (self::$tableVerified) {
+            return;
         }
         
-        return $cacheDir . '/' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $prefix) . '.version';
+        $dbw = MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase();
+        
+        if (!$dbw->tableExists(self::VERSION_TABLE, __METHOD__)) {
+            $dbw->query(
+                "CREATE TABLE IF NOT EXISTS " . self::VERSION_TABLE . " (
+                    prefix VARCHAR(100) PRIMARY KEY,
+                    version INT NOT NULL DEFAULT 1,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )",
+                __METHOD__
+            );
+            
+            if ($this->debugLogging) {
+                error_log("✓ Cache version table created: " . self::VERSION_TABLE);
+            }
+        }
+        
+        self::$tableVerified = true;
     }
     
     /**
      * Get the current version number for a cache prefix
      * 
-     * Versions are stored in files to persist across PHP processes
+     * Versions are stored in the database to persist across PHP processes
      * (APCu is per-process so can't be used for this).
      * 
      * @param string $prefix The cache prefix
      * @return int The version number (defaults to 1)
      */
     private function getPrefixVersion(string $prefix): int {
-        $versionFile = $this->getVersionFilePath($prefix);
+        $this->ensureVersionTable();
         
-        if (file_exists($versionFile)) {
-            $version = (int)trim(file_get_contents($versionFile));
-            return $version > 0 ? $version : 1;
-        }
+        $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
         
-        return 1;
+        $row = $dbr->selectRow(
+            self::VERSION_TABLE,
+            ['version'],
+            ['prefix' => $prefix],
+            __METHOD__
+        );
+        
+        return $row ? (int)$row->version : 1;
     }
     
     /**
@@ -322,11 +343,27 @@ class CacheHelper {
      * @return int The new version number
      */
     private function incrementPrefixVersion(string $prefix): int {
+        $this->ensureVersionTable();
+        
         $currentVersion = $this->getPrefixVersion($prefix);
         $newVersion = $currentVersion + 1;
         
-        $versionFile = $this->getVersionFilePath($prefix);
-        $setResult = file_put_contents($versionFile, (string)$newVersion) !== false;
+        $dbw = MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase();
+        
+        $dbw->upsert(
+            self::VERSION_TABLE,
+            [
+                'prefix' => $prefix,
+                'version' => $newVersion
+            ],
+            ['prefix'],
+            [
+                'version' => $newVersion
+            ],
+            __METHOD__
+        );
+        
+        $setResult = $dbw->affectedRows() > 0;
         
         if ($this->debugLogging) {
             $status = $setResult ? 'success' : 'FAILED';
