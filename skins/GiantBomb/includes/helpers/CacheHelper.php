@@ -8,20 +8,20 @@ use MediaWiki\MediaWikiServices;
  * Provides simple methods for storing and retrieving cached data with
  * configurable TTL and automatic cache key generation.
  * 
- * @example Basic usage:
+ * @example Using getOrSet callback:
  * $cache = CacheHelper::getInstance();
  * 
- * // Simple get/set
- * $data = $cache->get('my-key');
- * if ($data === false) {
- *     $data = expensiveOperation();
- *     $cache->set('my-key', $data, CacheHelper::TTL_HOUR);
- * }
+ * // Generate a cache key from query parameters
+ * $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_RELEASES, [
+ *     'date' => $today,
+ *     'region' => $filterRegion,
+ *     'platform' => $filterPlatform
+ * ]);
  * 
- * @example Using getOrSet callback:
- * $data = $cache->getOrSet('my-key', function() {
- *     return expensiveOperation();
- * }, CacheHelper::TTL_DAY);
+ * // Get the data from the cache, or compute and store it if not found
+ * $data = $cache->getOrSet($cacheKey, function() use ($filterRegion, $filterPlatform) {
+ *     return fetchReleasesFromSMW($filterRegion, $filterPlatform);
+ * }, CacheHelper::TTL_HOUR);
  */
 class CacheHelper {
     /** @var CacheHelper|null Singleton instance */
