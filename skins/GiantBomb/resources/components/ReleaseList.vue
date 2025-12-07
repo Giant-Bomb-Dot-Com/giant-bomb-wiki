@@ -12,22 +12,19 @@
         class="listing-group"
       >
         <h2 class="listing-group-label">{{ weekGroup.label }}</h2>
-        <div class="listing-grid listing-grid--compact">
+        <div class="listing-grid">
           <div
             v-for="(release, index) in weekGroup.releases"
             :key="index"
             class="listing-card"
           >
             <a :href="release.url" class="listing-card-link">
-              <div
-                v-if="release.image"
-                class="listing-card-image listing-card-image--portrait"
-              >
+              <div v-if="release.image" class="listing-card-image">
                 <img :src="release.image" :alt="release.title" loading="lazy" />
               </div>
               <div
                 v-else
-                class="listing-card-image listing-card-image--portrait listing-card-image-placeholder"
+                class="listing-card-image listing-card-image-placeholder"
               >
                 <img
                   src="https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png"
@@ -60,12 +57,19 @@
                   class="platform-badges"
                 >
                   <span
-                    v-for="(platform, idx) in release.platforms"
+                    v-for="(platform, idx) in release.platforms.slice(0, 3)"
                     :key="idx"
                     class="platform-badge"
                     :title="platform.title"
                   >
                     {{ platform.abbrev }}
+                  </span>
+                  <span
+                    v-if="release.platforms.length > 3"
+                    class="platform-badge platform-badge-more"
+                    :title="getRemainingPlatformsTitles(release.platforms)"
+                  >
+                    +{{ release.platforms.length - 3 }}
                   </span>
                 </div>
               </div>
@@ -168,11 +172,20 @@ module.exports = exports = defineComponent({
       window.removeEventListener("releases-filter-changed", handleFilterChange);
     });
 
+    // Helper function for remaining platforms tooltip
+    const getRemainingPlatformsTitles = (platforms) => {
+      return platforms
+        .slice(3)
+        .map((p) => p.title)
+        .join(", ");
+    };
+
     return {
       weekGroups,
       loading,
       getCountryCode,
       getFlagUrl,
+      getRemainingPlatformsTitles,
     };
   },
 });

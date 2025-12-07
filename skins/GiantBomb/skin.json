@@ -30,6 +30,7 @@
         "resources/css/styles.css",
         "resources/css/pageWrapper.css",
         "resources/css/search.css",
+        "resources/css/wikiButtons.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
         "resources/css/listingPage.css",

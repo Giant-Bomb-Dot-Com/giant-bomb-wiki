@@ -25,7 +25,7 @@ function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort 
     $cache = CacheHelper::getInstance();
     
     // Build cache key from query parameters
-    $cacheKey = $cache->buildQueryKey('concepts', [
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_CONCEPTS, [
         'letter' => $filterLetter,
         'games' => $filterGameTitles,
         'sort' => $sort,

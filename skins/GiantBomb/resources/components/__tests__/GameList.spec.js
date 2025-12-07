@@ -63,7 +63,7 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const gameCards = wrapper.findAll(".game-card");
+      const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(4);
     });
 
@@ -76,11 +76,11 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const firstCard = wrapper.find(".game-card");
-      expect(firstCard.find(".game-image").exists()).toBe(true);
-      expect(firstCard.find(".game-info").exists()).toBe(true);
-      expect(firstCard.find(".game-title").exists()).toBe(true);
-      expect(firstCard.find(".game-date").exists()).toBe(true);
+      const firstCard = wrapper.find(".listing-card");
+      expect(firstCard.find(".listing-card-image").exists()).toBe(true);
+      expect(firstCard.find(".listing-card-info").exists()).toBe(true);
+      expect(firstCard.find(".listing-card-title").exists()).toBe(true);
+      expect(firstCard.find(".listing-card-meta").exists()).toBe(true);
       expect(firstCard.find(".platform-badges").exists()).toBe(true);
     });
 
@@ -93,7 +93,7 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const titles = wrapper.findAll(".game-title");
+      const titles = wrapper.findAll(".listing-card-title");
       // Games are displayed in the order provided by initialData
       expect(titles[0].text()).toBe("The Legend of Zelda: Breath of the Wild");
       expect(titles[1].text()).toBe("Super Mario Odyssey");
@@ -120,8 +120,16 @@ describe("GameList", () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.find(".game-image-placeholder").exists()).toBe(true);
-      expect(wrapper.find(".game-image img").exists()).toBe(false);
+      expect(wrapper.find(".listing-card-image-placeholder").exists()).toBe(
+        true,
+      );
+      const placeholderImg = wrapper.find(
+        ".listing-card-image-placeholder img",
+      );
+      expect(placeholderImg.exists()).toBe(true);
+      expect(placeholderImg.attributes("src")).toBe(
+        "https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png",
+      );
     });
   });
 
@@ -274,9 +282,11 @@ describe("GameList", () => {
       expect(fetchUrl).toContain("platform=PlayStation");
       expect(fetchUrl).toContain("perPage=25");
 
-      const gameCards = wrapper.findAll(".game-card");
+      const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(1);
-      expect(gameCards[0].find(".game-title").text()).toBe("God of War");
+      expect(gameCards[0].find(".listing-card-title").text()).toBe(
+        "God of War",
+      );
     });
 
     it("shows games with multiple platforms when one matches", async () => {
@@ -323,7 +333,7 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const gameCards = wrapper.findAll(".game-card");
+      const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(2); // Zelda and Mario
     });
   });
@@ -382,9 +392,9 @@ describe("GameList", () => {
       expect(fetchUrl).toContain("platform=Nintendo");
       expect(fetchUrl).toContain("perPage=25");
 
-      const gameCards = wrapper.findAll(".game-card");
+      const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(1);
-      expect(gameCards[0].find(".game-title").text()).toBe(
+      expect(gameCards[0].find(".listing-card-title").text()).toBe(
         "The Legend of Zelda: Breath of the Wild",
       );
     });
@@ -481,7 +491,7 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const titles = wrapper.findAll(".game-title");
+      const titles = wrapper.findAll(".listing-card-title");
       expect(titles[0].text()).toBe("Elden Ring");
       expect(titles[1].text()).toBe("God of War");
       expect(titles[2].text()).toBe("Super Mario Odyssey");
@@ -533,7 +543,7 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const titles = wrapper.findAll(".game-title");
+      const titles = wrapper.findAll(".listing-card-title");
       expect(titles[0].text()).toBe("The Legend of Zelda: Breath of the Wild");
       expect(titles[1].text()).toBe("Super Mario Odyssey");
       expect(titles[2].text()).toBe("God of War");
@@ -585,7 +595,7 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const titles = wrapper.findAll(".game-title");
+      const titles = wrapper.findAll(".listing-card-title");
       expect(titles[0].text()).toBe("Elden Ring"); // 2022
       expect(titles[1].text()).toBe("God of War"); // 2018
       expect(titles[2].text()).toBe("Super Mario Odyssey"); // 2017-10
@@ -637,7 +647,7 @@ describe("GameList", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       await wrapper.vm.$nextTick();
 
-      const titles = wrapper.findAll(".game-title");
+      const titles = wrapper.findAll(".listing-card-title");
       expect(titles[0].text()).toBe("The Legend of Zelda: Breath of the Wild"); // 2017-03
       expect(titles[1].text()).toBe("Super Mario Odyssey"); // 2017-10
       expect(titles[2].text()).toBe("God of War"); // 2018
@@ -656,7 +666,7 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       expect(wrapper.find(".listing-empty").exists()).toBe(true);
-      expect(wrapper.findAll(".game-card")).toHaveLength(0);
+      expect(wrapper.findAll(".listing-card")).toHaveLength(0);
     });
 
     it("handles invalid JSON in initialData", async () => {
@@ -674,8 +684,8 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       // Should render without crashing
-      expect(wrapper.find(".games-main").exists()).toBe(true);
-      expect(wrapper.findAll(".game-card")).toHaveLength(0);
+      expect(wrapper.find(".listing-main").exists()).toBe(true);
+      expect(wrapper.findAll(".listing-card")).toHaveLength(0);
 
       consoleSpy.mockRestore();
     });
@@ -695,7 +705,7 @@ describe("GameList", () => {
       await wrapper.vm.$nextTick();
 
       // Should render without crashing
-      expect(wrapper.find(".games-main").exists()).toBe(true);
+      expect(wrapper.find(".listing-main").exists()).toBe(true);
 
       consoleSpy.mockRestore();
     });

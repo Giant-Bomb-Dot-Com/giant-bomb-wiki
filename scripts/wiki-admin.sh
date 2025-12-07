@@ -121,8 +121,21 @@ case "${cmd}" in
     run_php --conf "$CONF_PATH" "$MW_ROOT/maintenance/refreshLinks.php" "$@"
     ;;
 
+  # GiantBomb cache management (uses version-based invalidation)
+  cache-purge)
+    # Purge GiantBomb skin cache by incrementing version numbers
+    # Old cached entries become orphaned; new requests fetch fresh data
+    # Examples:
+    #   cache-purge --all                    Purge all known cache prefixes
+    #   cache-purge --prefix=games           Purge games cache
+    #   cache-purge --prefix=platforms       Purge platforms cache
+    #   cache-purge --list                   List known cache prefixes
+    #   cache-purge --clear                  Clear entire APCu cache
+    run_php --conf "$CONF_PATH" "$MW_ROOT/skins/GiantBomb/includes/maintenance/PurgeGiantBombCache.php" "$@"
+    ;;
+
   *)
-    echo "Usage: wiki-admin {install|update|smw-setup|smw-rebuild|run|refresh-links}" >&2
+    echo "Usage: wiki-admin {install|update|smw-setup|smw-rebuild|run|refresh-links|cache-purge}" >&2
     exit 2
     ;;
 esac

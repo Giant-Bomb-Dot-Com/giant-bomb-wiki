@@ -116,7 +116,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
     $today = date('Y-m-d');
     
     // Build cache key from query parameters
-    $cacheKey = $cache->buildQueryKey('releases', [
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_RELEASES, [
         'date' => $today,
         'region' => $filterRegion,
         'platform' => $filterPlatform
