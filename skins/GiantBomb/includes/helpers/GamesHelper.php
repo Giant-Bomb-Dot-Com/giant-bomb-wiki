@@ -32,7 +32,7 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
     
     return $cache->getOrSet($cacheKey, function() use ($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage) {
         return fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
-    }, CacheHelper::TTL_HOUR);
+    }, CacheHelper::QUERY_TTL);
 }
 
 /**

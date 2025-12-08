@@ -71,6 +71,7 @@ const Pagination = require("./Pagination.vue");
 const {
   useListData,
   DEFAULT_PAGE_SIZE,
+  FILTER_TYPES,
 } = require("../composables/useListData.js");
 
 /**
@@ -107,7 +108,46 @@ module.exports = exports = defineComponent({
   setup(props) {
     const propsRefs = toRefs(props);
 
-    // Use the shared list data composable
+    // Filter configuration for platforms
+    const filterConfig = {
+      letter: {
+        queryParam: "letter",
+        type: FILTER_TYPES.STRING,
+        default: "",
+        omitIfDefault: true,
+      },
+      sort: {
+        queryParam: "sort",
+        type: FILTER_TYPES.STRING,
+        default: "release_date",
+        omitIfDefault: true,
+      },
+      gameTitles: {
+        eventKey: "game_title",
+        queryParam: "game_title[]",
+        type: FILTER_TYPES.ARRAY,
+        default: [],
+      },
+      requireAllGames: {
+        eventKey: "require_all_games",
+        queryParam: "require_all_games",
+        type: FILTER_TYPES.BOOLEAN,
+        default: false,
+        booleanValue: "1",
+        // Only include if gameTitles has more than 1 item
+        conditionalOn: (filters) =>
+          filters.gameTitles && filters.gameTitles.length > 1,
+      },
+    };
+
+    // Pagination configuration for platforms
+    const paginationConfig = {
+      pageParam: "page",
+      pageSizeParam: "page_size",
+      responseFormat: "flat",
+    };
+
+    // Use the shared list data composable with platforms configuration
     const {
       items,
       loading,
@@ -122,6 +162,8 @@ module.exports = exports = defineComponent({
       actionName: "get-platforms",
       dataKey: "platforms",
       filterEventName: "platforms-filter-changed",
+      filterConfig,
+      paginationConfig,
       defaultSort: "release_date",
       hasPagination: true,
     });

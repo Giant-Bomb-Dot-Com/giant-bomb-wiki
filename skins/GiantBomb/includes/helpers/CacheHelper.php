@@ -48,6 +48,9 @@ class CacheHelper {
     const TTL_DAY = 86400;
     const TTL_WEEK = 604800;
     
+    // Default cache time for queries is 1 hour
+    const QUERY_TTL = self::TTL_HOUR;
+    
     // Cache key prefix constants - used with buildQueryKey() or buildSimpleKey()
     const PREFIX_GAMES = 'games';
     const PREFIX_CONCEPTS = 'concepts';
@@ -244,7 +247,7 @@ class CacheHelper {
                 $value = implode(',', $value);
             }
             // Sanitize and add to key
-            $sanitizedValue = preg_replace('/[^a-zA-Z0-9_,-]/', '', (string)$value);
+            $sanitizedValue = preg_replace('/[^a-zA-Z0-9_#,-]/', '', (string)$value);
             if ($sanitizedValue !== '') {
                 $parts[] = "{$key}_{$sanitizedValue}";
             }
