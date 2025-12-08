@@ -124,7 +124,7 @@ function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
     
     return $cache->getOrSet($cacheKey, function() use ($filterRegion, $filterPlatform) {
         return fetchReleasesFromSMW($filterRegion, $filterPlatform);
-    }, CacheHelper::TTL_HOUR);
+    }, CacheHelper::QUERY_TTL);
 }
 
 /**

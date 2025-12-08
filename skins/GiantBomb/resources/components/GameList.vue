@@ -5,9 +5,9 @@
       <p>Loading games...</p>
     </div>
 
-    <div v-else-if="games.length > 0">
+    <div v-else-if="items.length > 0">
       <div class="listing-grid">
-        <div v-for="(game, index) in games" :key="index" class="listing-card">
+        <div v-for="(game, index) in items" :key="index" class="listing-card">
           <a :href="game.url" class="listing-card-link">
             <div v-if="game.img" class="listing-card-image">
               <img :src="game.img" :alt="game.title" loading="lazy" />
@@ -58,9 +58,9 @@
 
       <!-- Pagination Component -->
       <pagination
-        :total-items="paginationData.totalItems"
-        :items-per-page="paginationData.itemsPerPage"
-        :current-page="paginationData.currentPage"
+        :total-items="totalCount"
+        :items-per-page="itemsPerPage"
+        :current-page="currentPage"
         @page-change="handlePageChange"
         :items-per-page-options="[24, 48, 72, 96]"
       />
@@ -76,15 +76,15 @@
 </template>
 
 <script>
-const { ref, toRefs, onMounted, onUnmounted } = require("vue");
-const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
+const { defineComponent, toRefs, onMounted, onUnmounted } = require("vue");
 const Pagination = require("./Pagination.vue");
+const { useListData, FILTER_TYPES } = require("../composables/useListData.js");
 
 /**
  * GameList Component
  * Displays games and handles async filtering
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "GameList",
   components: {
     Pagination,
@@ -101,161 +101,72 @@ module.exports = exports = {
     },
   },
   setup(props) {
-    const { initialData, paginationInfo } = toRefs(props);
-    const games = ref([]);
-    const loading = ref(false);
-    const paginationData = ref({
-      currentPage: 1,
-      totalPages: 1,
-      itemsPerPage: 25,
-      totalItems: 0,
-      startItem: 0,
-      endItem: 0,
+    const propsRefs = toRefs(props);
+
+    // Filter configuration for games
+    const filterConfig = {
+      search: {
+        queryParam: "search",
+        type: FILTER_TYPES.STRING,
+        default: "",
+        omitIfDefault: true,
+      },
+      platform: {
+        queryParam: "platform",
+        type: FILTER_TYPES.STRING,
+        default: "",
+        omitIfDefault: true,
+      },
+      sort: {
+        queryParam: "sort",
+        type: FILTER_TYPES.STRING,
+        default: "title-asc",
+        omitIfDefault: true,
+      },
+    };
+
+    // Pagination configuration for games
+    const paginationConfig = {
+      pageParam: "page",
+      pageSizeParam: "perPage",
+      responseFormat: "nested",
+      responseKey: "pagination",
+    };
+
+    // Use the shared list data composable with games configuration
+    const {
+      items,
+      loading,
+      totalCount,
+      currentPage,
+      totalPages,
+      itemsPerPage,
+      handlePageChange,
+      initializeFromProps,
+      setupFilterListener,
+      teardownFilterListener,
+    } = useListData({
+      actionName: "get-games",
+      dataKey: "games",
+      filterEventName: "games-filter-changed",
+      filterConfig,
+      paginationConfig,
+      hasPagination: true,
     });
 
-    // Handle pagination change from Pagination component
-    const handlePageChange = ({ page, itemsPerPage }) => {
-      // Get current URL params
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
-      // Preserve existing search, platform, and sort params
-      const search = params.get("search") || "";
-      const platform = params.get("platform") || "";
-      const sort = params.get("sort") || "title-asc";
-
-      // Update page param
-      if (page === 1) {
-        params.delete("page");
-      } else {
-        params.set("page", page);
-      }
-
-      // Update itemsPerPage param
-      if (itemsPerPage !== paginationData.value.itemsPerPage) {
-        if (itemsPerPage === 25) {
-          params.delete("perPage");
-        } else {
-          params.set("perPage", itemsPerPage);
-        }
-        // Reset to page 1 when changing items per page
-        params.delete("page");
-        page = 1;
-      }
-
-      // Update URL in browser
-      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
-
-      // Update local pagination data immediately
-      paginationData.value.itemsPerPage = itemsPerPage;
-      paginationData.value.currentPage = page;
-
-      // Fetch games for the new page
-      fetchGames(search, platform, sort, page);
-    };
-
-    // Fetch games from API
-    const fetchGames = async (
-      search = "",
-      platform = "",
-      sort = "title-asc",
-      page = 1,
-    ) => {
-      loading.value = true;
-
-      try {
-        // Build API URL
-        const params = new URLSearchParams();
-        params.set("action", "get-games");
-        if (search) params.set("search", search);
-        if (platform) params.set("platform", platform);
-        if (sort && sort !== "title-asc") params.set("sort", sort);
-        if (page > 1) params.set("page", page);
-        params.set("perPage", paginationData.value.itemsPerPage);
-
-        const url = `${window.location.pathname}?${params.toString()}`;
-
-        const response = await fetch(url, {
-          method: "GET",
-          credentials: "same-origin",
-          headers: {
-            Accept: "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const text = await response.text();
-          console.error("Response body:", text);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          games.value = data.games || [];
-          paginationData.value = data.pagination || {
-            currentPage: 1,
-            totalPages: 1,
-            itemsPerPage: 25,
-            totalItems: 0,
-            startItem: 0,
-            endItem: 0,
-          };
-        } else {
-          console.error("API returned error:", data);
-          games.value = [];
-        }
-      } catch (error) {
-        console.error("Failed to fetch games:", error);
-        // Keep existing data on error
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    // Handle filter change events
-    const handleFilterChange = (event) => {
-      const { search, platform, sort, page } = event.detail;
-      fetchGames(search, platform, sort, page);
-    };
-
     onMounted(() => {
-      // Parse initial server-rendered data
-      try {
-        const decoded = decodeHtmlEntities(initialData.value);
-        games.value = JSON.parse(decoded);
-      } catch (e) {
-        console.error("Failed to parse initial data:", e);
-        games.value = [];
-      }
+      // Initialize from server-rendered props
+      initializeFromProps({
+        initialData: propsRefs.initialData.value,
+        paginationInfo: propsRefs.paginationInfo.value,
+      });
 
-      // Parse pagination info
-      try {
-        const decodedPagination = decodeHtmlEntities(paginationInfo.value);
-        const parsedPagination = JSON.parse(decodedPagination);
-        paginationData.value = {
-          currentPage: parsedPagination.currentPage || 1,
-          totalPages: parsedPagination.totalPages || 1,
-          itemsPerPage: parsedPagination.itemsPerPage || 25,
-          totalItems: parsedPagination.totalItems || 0,
-          startItem:
-            (parsedPagination.currentPage - 1) * parsedPagination.itemsPerPage +
-            1,
-          endItem: Math.min(
-            parsedPagination.currentPage * parsedPagination.itemsPerPage,
-            parsedPagination.totalItems,
-          ),
-        };
-      } catch (e) {
-        console.error("Failed to parse pagination info:", e);
-      }
-
-      // Listen for filter changes
-      window.addEventListener("games-filter-changed", handleFilterChange);
+      // Setup filter event listener
+      setupFilterListener();
     });
 
     onUnmounted(() => {
-      window.removeEventListener("games-filter-changed", handleFilterChange);
+      teardownFilterListener();
     });
 
     // Helper functions for platform display
@@ -282,16 +193,19 @@ module.exports = exports = {
     };
 
     return {
-      games,
+      items,
       loading,
-      paginationData,
+      totalCount,
+      currentPage,
+      totalPages,
+      itemsPerPage,
       handlePageChange,
       getPlatformTitle,
       getPlatformAbbrev,
       getRemainingPlatformsTitles,
     };
   },
-};
+});
 </script>
 
 <style>

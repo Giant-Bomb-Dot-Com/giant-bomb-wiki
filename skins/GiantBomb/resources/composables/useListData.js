@@ -1,7 +1,16 @@
-const { ref, onMounted, onUnmounted } = require("vue");
+const { ref } = require("vue");
 const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
 
 const DEFAULT_PAGE_SIZE = 48;
+
+/**
+ * Filter value types
+ */
+const FILTER_TYPES = {
+  STRING: "string",
+  ARRAY: "array",
+  BOOLEAN: "boolean",
+};
 
 /**
  * useListData Composable
@@ -11,7 +20,9 @@ const DEFAULT_PAGE_SIZE = 48;
  * @param {string} config.actionName - API action name (e.g., 'get-platforms', 'get-concepts')
  * @param {string} config.dataKey - Key in API response containing items (e.g., 'platforms', 'concepts')
  * @param {string} config.filterEventName - Event name to listen for filter changes
- * @param {string} config.defaultSort - Default sort value (e.g., 'release_date', 'alphabetical')
+ * @param {Object} config.filterConfig - Filter configuration object defining filter keys, query params, and types
+ * @param {Object} config.paginationConfig - Pagination configuration object defining param names and response format
+ * @param {string} config.defaultSort - Default sort value (optional, can be set in filterConfig instead)
  * @param {boolean} config.hasPagination - Whether to include pagination support (default: true)
  */
 function useListData(config) {
@@ -19,9 +30,16 @@ function useListData(config) {
     actionName,
     dataKey,
     filterEventName,
-    defaultSort = "alphabetical",
+    filterConfig,
+    paginationConfig,
+    defaultSort, // Optional override for sort default
     hasPagination = true,
   } = config;
+
+  // Override default sort from parameter if provided
+  if (defaultSort && filterConfig && filterConfig.sort) {
+    filterConfig.sort.default = defaultSort;
+  }
 
   // State
   const items = ref([]);
@@ -32,44 +50,195 @@ function useListData(config) {
   const itemsPerPage = ref(DEFAULT_PAGE_SIZE);
 
   /**
-   * Build query string for API request
+   * Get default value for a filter
+   */
+  const getFilterDefault = (filterName) => {
+    const config = filterConfig[filterName];
+    if (!config) return "";
+    return config.default;
+  };
+
+  /**
+   * Parse filter value from event based on type
+   */
+  const parseFilterValue = (value, type) => {
+    switch (type) {
+      case FILTER_TYPES.ARRAY:
+        if (Array.isArray(value)) return value;
+        if (value === null || value === undefined) return [];
+        return [value];
+      case FILTER_TYPES.BOOLEAN:
+        return Boolean(value);
+      case FILTER_TYPES.STRING:
+      default:
+        return value !== null && value !== undefined ? String(value) : "";
+    }
+  };
+
+  /**
+   * Extract filters from event.detail using filterConfig
+   */
+  const extractFiltersFromEvent = (eventDetail) => {
+    const filters = {};
+
+    for (const [filterName, config] of Object.entries(filterConfig)) {
+      const eventKey = config.eventKey || filterName;
+      if (eventDetail[eventKey]) {
+        const rawValue = eventDetail[eventKey];
+        filters[filterName] = parseFilterValue(rawValue, config.type);
+      }
+    }
+
+    return filters;
+  };
+
+  /**
+   * Extract filters from URL parameters using filterConfig
+   */
+  const extractFiltersFromUrl = () => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const filters = {};
+
+    for (const [filterName, config] of Object.entries(filterConfig)) {
+      const queryParam = config.queryParam;
+
+      switch (config.type) {
+        case FILTER_TYPES.ARRAY:
+          // Handle array parameters (e.g., game_title[])
+          filters[filterName] = params.getAll(queryParam) || [];
+          break;
+        case FILTER_TYPES.BOOLEAN:
+          filters[filterName] =
+            params.get(queryParam) === (config.booleanValue || "1");
+          break;
+        case FILTER_TYPES.STRING:
+        default:
+          filters[filterName] = params.get(queryParam) || config.default || "";
+      }
+    }
+
+    return filters;
+  };
+
+  /**
+   * Build query string for API request or URL
+   *
+   * @param {Object} filters - Filter values
+   * @param {number} pageNum - Page number
+   * @param {number} pageSize - Items per page
+   * @param {Object} options - Options object
+   * @param {boolean} options.includeAction - Include action parameter (default: false)
+   * @param {boolean} options.omitDefaultPagination - Omit page=1 and default page size (default: false)
+   * @param {boolean} options.withPrefix - Include '?' prefix (default: false)
+   * @returns {string} Query string
    */
   const buildQueryString = (
     filters = {},
     pageNum = 1,
     pageSize = DEFAULT_PAGE_SIZE,
+    options = {},
   ) => {
-    const queryParts = [];
-    queryParts.push(`action=${actionName}`);
-
     const {
-      letter = "",
-      sort = defaultSort,
-      gameTitles = [],
-      requireAllGames = false,
-    } = filters;
+      includeAction = false,
+      omitDefaultPagination = false,
+      withPrefix = false,
+    } = options;
 
-    if (letter) {
-      queryParts.push(`letter=${encodeURIComponent(letter)}`);
-    }
-    if (sort !== defaultSort) {
-      queryParts.push(`sort=${encodeURIComponent(sort)}`);
-    }
-    if (gameTitles && gameTitles.length > 0) {
-      gameTitles.forEach((gameTitle) => {
-        queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
-      });
-    }
-    if (gameTitles && gameTitles.length > 1 && requireAllGames) {
-      queryParts.push(`require_all_games=1`);
+    const queryParts = [];
+
+    // Add action parameter if requested
+    if (includeAction) {
+      queryParts.push(`action=${actionName}`);
     }
 
+    // Add filter parameters based on filterConfig
+    for (const [filterName, config] of Object.entries(filterConfig)) {
+      const value = filters[filterName];
+      const defaultValue = config.default;
+
+      // Check conditional inclusion
+      if (config.conditionalOn && !config.conditionalOn(filters)) {
+        continue;
+      }
+
+      // Handle different types
+      switch (config.type) {
+        case FILTER_TYPES.ARRAY:
+          if (Array.isArray(value) && value.length > 0) {
+            value.forEach((item) => {
+              queryParts.push(
+                `${config.queryParam}=${encodeURIComponent(item)}`,
+              );
+            });
+          }
+          break;
+
+        case FILTER_TYPES.BOOLEAN:
+          if (value === true) {
+            queryParts.push(
+              `${config.queryParam}=${config.booleanValue || "1"}`,
+            );
+          }
+          break;
+
+        case FILTER_TYPES.STRING:
+        default:
+          if (value && (!config.omitIfDefault || value !== defaultValue)) {
+            queryParts.push(
+              `${config.queryParam}=${encodeURIComponent(value)}`,
+            );
+          }
+          break;
+      }
+    }
+
+    // Add pagination parameters
     if (hasPagination) {
-      queryParts.push(`page=${pageNum}`);
-      queryParts.push(`page_size=${pageSize}`);
+      if (omitDefaultPagination) {
+        // Omit page=1 and default page size from URL
+        if (pageNum > 1) {
+          queryParts.push(`${paginationConfig.pageParam}=${pageNum}`);
+        }
+        if (pageSize !== DEFAULT_PAGE_SIZE) {
+          queryParts.push(`${paginationConfig.pageSizeParam}=${pageSize}`);
+        }
+      } else {
+        // Always include pagination params (for API calls)
+        queryParts.push(`${paginationConfig.pageParam}=${pageNum}`);
+        queryParts.push(`${paginationConfig.pageSizeParam}=${pageSize}`);
+      }
     }
 
-    return queryParts.join("&");
+    const queryString = queryParts.join("&");
+    return withPrefix
+      ? queryString.length > 0
+        ? `?${queryString}`
+        : ""
+      : queryString;
+  };
+
+  /**
+   * Parse pagination from API response
+   */
+  const parsePaginationResponse = (data) => {
+    if (paginationConfig.responseFormat === "nested") {
+      const paginationData = data[paginationConfig.responseKey] || {};
+      return {
+        totalCount: paginationData.totalItems || 0,
+        currentPage: paginationData.currentPage || 1,
+        totalPages: paginationData.totalPages || 1,
+        itemsPerPage: paginationData.itemsPerPage || DEFAULT_PAGE_SIZE,
+      };
+    }
+
+    // Flat response format
+    return {
+      totalCount: data.totalCount || 0,
+      currentPage: data.currentPage || 1,
+      totalPages: data.totalPages || 1,
+      itemsPerPage: data.pageSize || DEFAULT_PAGE_SIZE,
+    };
   };
 
   /**
@@ -83,7 +252,9 @@ function useListData(config) {
     loading.value = true;
 
     try {
-      const queryString = buildQueryString(filters, pageNum, pageSize);
+      const queryString = buildQueryString(filters, pageNum, pageSize, {
+        includeAction: true,
+      });
       const url = `${window.location.pathname}?${queryString}`;
 
       const response = await fetch(url, {
@@ -105,10 +276,11 @@ function useListData(config) {
       if (data.success) {
         items.value = data[dataKey] || [];
         if (hasPagination) {
-          totalCount.value = data.totalCount || 0;
-          currentPage.value = data.currentPage || 1;
-          totalPages.value = data.totalPages || 1;
-          itemsPerPage.value = data.pageSize || DEFAULT_PAGE_SIZE;
+          const pagination = parsePaginationResponse(data);
+          totalCount.value = pagination.totalCount;
+          currentPage.value = pagination.currentPage;
+          totalPages.value = pagination.totalPages;
+          itemsPerPage.value = pagination.itemsPerPage;
         }
       } else {
         console.error("API returned error:", data);
@@ -126,22 +298,10 @@ function useListData(config) {
    * Handle filter change events from filter components
    */
   const handleFilterChange = (event) => {
-    const {
-      letter,
-      sort,
-      game_title: gameTitles,
-      require_all_games: requireAllGames,
-      page: pageNum,
-    } = event.detail;
+    const filters = extractFiltersFromEvent(event.detail);
+    const pageNum = event.detail.page || 1;
 
-    const filters = {
-      letter,
-      sort,
-      gameTitles,
-      requireAllGames: requireAllGames || false,
-    };
-
-    fetchData(filters, pageNum || 1, itemsPerPage.value);
+    fetchData(filters, pageNum, itemsPerPage.value);
   };
 
   /**
@@ -161,43 +321,17 @@ function useListData(config) {
     }
 
     // Get current filters from URL
+    const filters = extractFiltersFromUrl();
+
+    // Update URL
     const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    const letter = params.get("letter") || "";
-    const sort = params.get("sort") || defaultSort;
-    const gameTitles = params.getAll("game_title[]") || [];
-    const requireAllGames = params.get("require_all_games") === "1";
-
-    // Build query string manually to preserve [] notation
-    const queryParts = [];
-    if (letter) {
-      queryParts.push(`letter=${encodeURIComponent(letter)}`);
-    }
-    if (sort !== defaultSort) {
-      queryParts.push(`sort=${encodeURIComponent(sort)}`);
-    }
-    if (gameTitles.length > 0) {
-      gameTitles.forEach((gameTitle) => {
-        queryParts.push(`game_title[]=${encodeURIComponent(gameTitle)}`);
-      });
-    }
-    if (gameTitles.length > 1 && requireAllGames) {
-      queryParts.push(`require_all_games=1`);
-    }
-    queryParts.push(`page=${pageNum}`);
-    queryParts.push(`page_size=${pageSize}`);
-
-    const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
-    const newUrl = `${url.pathname}${queryString}`;
-    window.history.pushState({}, "", newUrl);
+    const queryString = buildQueryString(filters, pageNum, pageSize, {
+      omitDefaultPagination: true,
+      withPrefix: true,
+    });
+    window.history.pushState({}, "", `${url.pathname}${queryString}`);
 
     // Fetch new page
-    const filters = {
-      letter,
-      sort,
-      gameTitles,
-      requireAllGames,
-    };
     fetchData(filters, pageNum, pageSize);
 
     // Scroll to top
@@ -214,6 +348,8 @@ function useListData(config) {
       currentPage: propCurrentPage,
       totalPages: propTotalPages,
       pageSize: propPageSize,
+      // For games-style pagination info
+      paginationInfo,
     } = props;
 
     try {
@@ -221,10 +357,21 @@ function useListData(config) {
       items.value = JSON.parse(decoded);
 
       if (hasPagination) {
-        totalCount.value = parseInt(propTotalCount) || 0;
-        currentPage.value = parseInt(propCurrentPage) || 1;
-        totalPages.value = parseInt(propTotalPages) || 1;
-        itemsPerPage.value = parseInt(propPageSize) || DEFAULT_PAGE_SIZE;
+        // Handle paginationInfo (games style) or flat props (concepts/platforms style)
+        if (paginationInfo) {
+          const decodedPagination = decodeHtmlEntities(paginationInfo);
+          const parsedPagination = JSON.parse(decodedPagination);
+          totalCount.value = parsedPagination.totalItems || 0;
+          currentPage.value = parsedPagination.currentPage || 1;
+          totalPages.value = parsedPagination.totalPages || 1;
+          itemsPerPage.value =
+            parsedPagination.itemsPerPage || DEFAULT_PAGE_SIZE;
+        } else {
+          totalCount.value = parseInt(propTotalCount) || 0;
+          currentPage.value = parseInt(propCurrentPage) || 1;
+          totalPages.value = parseInt(propTotalPages) || 1;
+          itemsPerPage.value = parseInt(propPageSize) || DEFAULT_PAGE_SIZE;
+        }
       }
     } catch (e) {
       console.error("Failed to parse initial data:", e);
@@ -260,10 +407,18 @@ function useListData(config) {
     initializeFromProps,
     setupFilterListener,
     teardownFilterListener,
+    extractFiltersFromUrl,
+
+    // Helpers for components
+    getFilterDefault,
 
     // Constants
     DEFAULT_PAGE_SIZE,
   };
 }
 
-module.exports = { useListData, DEFAULT_PAGE_SIZE };
+module.exports = {
+  useListData,
+  DEFAULT_PAGE_SIZE,
+  FILTER_TYPES,
+};
