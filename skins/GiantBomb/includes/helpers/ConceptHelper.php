@@ -216,6 +216,11 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
                 }
             }
             
+            // Default to title if image caption is not set
+            if (empty($conceptData['caption'])) {
+                $conceptData['caption'] = $conceptData['title'];
+            }
+            
             $concepts[] = $conceptData;
         }
         

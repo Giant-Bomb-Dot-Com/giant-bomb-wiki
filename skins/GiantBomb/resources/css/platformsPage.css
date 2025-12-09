@@ -6,24 +6,3 @@
 
 /* Platform page uses the shared listing-page styles via the class in the template */
 /* Only add platform-specific overrides here */
-
-/* Platform-specific: game count meta field */
-.listing-card-game-count {
-  font-size: 0.8rem;
-  color: #999;
-  font-style: italic;
-  margin-top: 8px;
-}
-
-/* Platform-specific: launch date display */
-.listing-card-date {
-  font-size: 0.8rem;
-  color: #999;
-  font-style: italic;
-}
-
-/* List view overrides for platform page if needed */
-.listing-page.view-list .listing-card-date {
-  font-size: 0.85rem;
-  margin-top: auto;
-}
