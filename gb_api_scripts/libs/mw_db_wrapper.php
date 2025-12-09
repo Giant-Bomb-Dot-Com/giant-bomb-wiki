@@ -95,6 +95,23 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchField();
     }
 
+    public function getImageData(int $id): array
+    {
+        $result = $this->getById('image', 'name, caption, path, mimetype, image_sizes', $id);
+
+        if (empty($result)) {
+            return [];
+        }
+
+        return [
+            'file' => $result->name,
+            'path' => $result->path,
+            'mime' => $result->mimetype,
+            'sizes' => $result->image_sizes,
+            'caption' => $result->caption
+        ];
+    }
+
     public function getCreditsFromDB(int $id)
     {
         $qb = $this->dbConnection->newSelectQueryBuilder()
@@ -198,6 +215,19 @@ class MWDbWrapper implements DbInterface
         else {
             $qb->select(['id', 'name']);
         }
+
+        return $qb->fetchResultSet();
+    }
+
+    public function getPageEditors()
+    {
+        $qb = $this->dbConnection->newSelectQueryBuilder()
+                   ->select(['o.submitter_id','o.image_id','o.release_date','o.release_date_type','o.name','o.description','o.launch_price','o.deck','a2.mw_page_name AS developer','a4.mw_page_name as publisher','a5.mw_page_name AS platform','a7.name as dlc_type'])
+                   ->from('wiki_changeset', 'o')
+                   ->where('o.status = 2 AND o.assoc_id IS NOT NULL')
+                   ->orderBy('o.assoc_type_id', 'ASC')
+                   ->orderBy('o.assoc_id', 'ASC')
+                   ->caller(__METHOD__);
 
         return $qb->fetchResultSet();
     }

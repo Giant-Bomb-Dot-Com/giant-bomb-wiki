@@ -444,8 +444,8 @@ class HtmlToMediaWikiConverter
 
         if ($img) {
             $src = $img->getAttribute('data-src') ?: $img->getAttribute('src');
-            $alt = $img->getAttribute('alt');
-            $width = $img->getAttribute('data-width');
+            $src = str_replace('static.giantbomb.com', 'www.giantbomb.com/a', $src);
+            $src = str_replace('giantbomb1.cbsistatic.com', 'www.giantbomb.com/a', $src);
         }
         else {
             echo "WARNING: Missing img tag in figure element.\r\n";
@@ -453,24 +453,7 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        if ($align == 'right') {
-            $float = 'right';
-        }
-        else if ($align == 'left') {
-            $float = 'left';
-        }
-        else {
-            $float = 'none';
-        }
-
-        // Use full URL in File syntax instead of just filename
-        $mwImage = "[[File:{$src}|thumb|{$float}";
-        if ($alt != 'No Caption Provided') {
-            $mwImage .= "|alt={$alt}|{$alt}";
-        }
-        $mwImage .= "]] ";
-
-        return $mwImage;
+        return $src.' ';
     }
 
     /**
@@ -487,7 +470,10 @@ class HtmlToMediaWikiConverter
             return false;
         }
 
-        return $src;
+        $src = str_replace('static.giantbomb.com', 'www.giantbomb.com/a', $src);
+        $src = str_replace('giantbomb1.cbsistatic.com', 'www.giantbomb.com/a', $src);
+
+        return $src.' ';
     }
 
     /**
@@ -499,22 +485,11 @@ class HtmlToMediaWikiConverter
     public function convertImage(DOMElement $image): string|false
     {
         $src = $image->getAttribute('data-img-src');
-        $align = $image->getAttribute('data-align');
+        
+        $src = str_replace('static.giantbomb.com', 'www.giantbomb.com/a', $src);
+        $src = str_replace('giantbomb1.cbsistatic.com', 'www.giantbomb.com/a', $src);
 
-        if ($align == 'right') {
-            $float = 'right';
-        }
-        else if ($align == 'left') {
-            $float = 'left';
-        }
-        else {
-            $float = 'none';
-        }
-
-        // Use full URL in File syntax instead of just filename
-        $mwImage = "[[File:{$src}|thumb|{$float}]]";
-
-        return $mwImage;
+        return $src.' ';
     }
 
     /**
