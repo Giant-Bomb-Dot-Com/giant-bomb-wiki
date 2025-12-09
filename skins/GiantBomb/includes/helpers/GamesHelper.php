@@ -3,7 +3,9 @@
  * Helper functions for querying games data using SemanticMediaWiki
  */
 
-// Load platform helper functions
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
+
 require_once __DIR__ . '/PlatformHelper.php';
 
 /**
@@ -43,7 +45,8 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 		$queryConditions = '[[Category:Games]]';
 
 		if (!empty($searchQuery)) {
-			$queryConditions .= '[[Has name::~*' . str_replace(['[', ']', '|'], '', $searchQuery) . '*]]';
+			$sanitizedSearch = str_replace(['[', ']', '|', '~'], '', $searchQuery);
+			$queryConditions .= '[[~*' . $sanitizedSearch . '*]]';
 		}
 
 		if (!empty($platformFilter)) {
@@ -166,7 +169,11 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 						$pageData['desc'] = $values[0] ?? '';
 						break;
 					case 'Has image':
-						$pageData['img'] = $values[0] ?? '';
+						$rawImg = $values[0] ?? '';
+						if ( $rawImg !== '' && class_exists( PageHelper::class ) ) {
+							$resolved = PageHelper::resolveWikiImageUrl( $rawImg );
+							$pageData['img'] = $resolved ?? '';
+						}
 						break;
 					case 'Has release date':
 						if (!empty($values[0])) {
@@ -188,6 +195,14 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
                             ];
 						}, $values);
 						break;
+				}
+			}
+
+			// If no image from SMW, try legacy image fallback
+			if ( empty( $pageData['img'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$pageData['img'] = $legacyImage['thumb'];
 				}
 			}
 

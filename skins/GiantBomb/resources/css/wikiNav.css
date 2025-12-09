@@ -27,29 +27,25 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1.25rem;
-    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    background: #2a2a2a;
     border: 1px solid #4a4a4a;
     border-radius: 6px;
     color: #ffffff;
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .wiki-nav__link:hover {
-    background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
+    background: #333;
     border-color: #e63946;
     color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
     text-decoration: none;
 }
 
 .wiki-nav__link:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(230, 57, 70, 0.3);
+    background: #2a2a2a;
 }
 
 .wiki-nav__link--active {

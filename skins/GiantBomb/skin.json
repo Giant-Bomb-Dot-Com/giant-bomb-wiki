@@ -19,7 +19,8 @@
   },
   "AutoloadClasses": {
     "SkinGiantBomb": "includes/SkinGiantBomb.php",
-    "GiantBombTemplate": "includes/GiantBombTemplate.php"
+    "GiantBombTemplate": "includes/GiantBombTemplate.php",
+    "GiantBomb\\Skin\\Helpers\\PageHelper": "includes/helpers/PageHelper.php"
   },
   "ResourceModules": {
     "skins.giantbomb.vueexamplecomponent": {
@@ -39,11 +40,6 @@
         "resources/css/viewToggle.css",
         "resources/css/platformsPage.css"
       ]
-    },
-    "skins.giantbomb.js": {
-      "scripts": ["resources/js/wikiButtonGroup.js"],
-      "dependencies": ["mediawiki.util", "mediawiki.api"],
-      "position": "bottom"
     },
     "skins.giantbomb.externalheader": {
       "scripts": [
