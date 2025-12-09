@@ -7,16 +7,16 @@ require_once __DIR__ . '/../helpers/PlatformHelper.php';
 
 $buttons = [
 	[ 'label' => 'Home', 'url' => '/wiki/Main_Page' ],
-	[ 'label' => 'Games', 'url' => '/wiki/Games' ],
-	[ 'label' => 'Characters', 'url' => '/wiki/Characters' ],
-	[ 'label' => 'Companies', 'url' => '/wiki/Companies' ],
-	[ 'label' => 'Concepts', 'url' => '/wiki/Concepts' ],
-	[ 'label' => 'Franchises', 'url' => '/wiki/Franchises' ],
-	[ 'label' => 'Locations', 'url' => '/wiki/Locations' ],
-	[ 'label' => 'People', 'url' => '/wiki/People' ],
-	[ 'label' => 'Platforms', 'url' => '/wiki/Platforms' ],
-	[ 'label' => 'Objects', 'url' => '/wiki/Objects' ],
-	[ 'label' => 'Accessories', 'url' => '/wiki/Accessories' ],
+	[ 'label' => 'Games', 'url' => '/wiki/Category:Games' ],
+	[ 'label' => 'Characters', 'url' => '/wiki/Category:Characters' ],
+	[ 'label' => 'Companies', 'url' => '/wiki/Category:Companies' ],
+	[ 'label' => 'Concepts', 'url' => '/wiki/Category:Concepts' ],
+	[ 'label' => 'Franchises', 'url' => '/wiki/Category:Franchises' ],
+	[ 'label' => 'Locations', 'url' => '/wiki/Category:Locations' ],
+	[ 'label' => 'People', 'url' => '/wiki/Category:People' ],
+	[ 'label' => 'Platforms', 'url' => '/wiki/Category:Platforms' ],
+	[ 'label' => 'Objects', 'url' => '/wiki/Category:Objects' ],
+	[ 'label' => 'Accessories', 'url' => '/wiki/Category:Accessories' ],
 	[ 'label' => 'Releases', 'url' => '/wiki/Special:NewReleases' ],
 ];
 

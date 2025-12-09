@@ -3,67 +3,6 @@
 use GiantBomb\Skin\Helpers\PageHelper;
 use MediaWiki\MediaWikiServices;
 
-/**
- * Extract release data from wikitext.
- * Game-specific function - only games have releases.
- */
-function gbExtractReleaseData( string $releasesText ): array {
-	$result = [ 'count' => 0, 'items' => [] ];
-	if ( trim( $releasesText ) === '' ) {
-		return $result;
-	}
-
-	$regionMap = [
-		1 => 'United States', 2 => 'United Kingdom', 6 => 'Japan', 11 => 'Australia',
-	];
-
-	preg_match_all( '/\{\{ReleaseSubobject([^}]+)\}\}/s', $releasesText, $releaseMatches );
-	foreach ( $releaseMatches[1] as $releaseContent ) {
-		$release = [
-			'name' => '', 'platform' => '', 'region' => '',
-			'releaseDate' => 'N/A', 'rating' => 'N/A', 'resolutions' => 'N/A',
-			'soundSystems' => 'N/A', 'widescreenSupport' => 'N/A',
-		];
-
-		if ( preg_match( '/\|Name=([^\n|]+)/', $releaseContent, $match ) ) {
-			$release['name'] = trim( $match[1] );
-		}
-		if ( preg_match( '/\|Platform=([^\n|]+)/', $releaseContent, $match ) ) {
-			$platform = trim( $match[1] );
-			$release['platform'] = str_replace( '_', ' ', str_replace( 'Platforms/', '', $platform ) );
-		}
-		if ( preg_match( '/\|Region=([^\n|]+)/', $releaseContent, $match ) ) {
-			$region = trim( $match[1] );
-			$release['region'] = $regionMap[(int)$region] ?? $region;
-		}
-		if ( preg_match( '/\|ReleaseDate=([^\n|]+)/', $releaseContent, $match ) ) {
-			$date = trim( $match[1] );
-			if ( $date !== '' && $date !== 'None' ) {
-				$release['releaseDate'] = $date;
-			}
-		}
-		if ( preg_match( '/\|Rating=([^\n|]+)/', $releaseContent, $match ) ) {
-			$rating = trim( $match[1] );
-			if ( $rating !== '' ) {
-				$release['rating'] = str_replace( '_', ' ', str_replace( 'Ratings/', '', $rating ) );
-			}
-		}
-
-		$displayName = $release['platform'];
-		if ( $displayName !== '' && $release['region'] !== '' ) {
-			$displayName .= ' (' . $release['region'] . ')';
-		} elseif ( $displayName === '' ) {
-			$displayName = $release['name'];
-		}
-		$release['displayName'] = $displayName;
-
-		$result['items'][] = $release;
-	}
-
-	$result['count'] = count( $result['items'] );
-	return $result;
-}
-
 $title = $this->getSkin()->getTitle();
 $pageTitle = $title->getText();
 $pageTitleDB = $title->getDBkey();
@@ -235,7 +174,7 @@ try {
 				: null;
 			$releaseData = $releaseCacheKey ? $wanCache->get( $releaseCacheKey ) : null;
 			if ( !is_array( $releaseData ) ) {
-				$releaseData = gbExtractReleaseData( $releasesText );
+				$releaseData = PageHelper::extractReleaseData( $releasesText );
 				if ( $releaseCacheKey ) {
 					$wanCache->set( $releaseCacheKey, $releaseData, $cacheTtl );
 				}
