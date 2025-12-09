@@ -1,187 +1,9 @@
 <?php
 
+use GiantBomb\Skin\Helpers\PageHelper;
 use MediaWiki\MediaWikiServices;
 
-if ( !defined( 'GB_LEGACY_UPLOAD_HOST' ) ) {
-	define( 'GB_LEGACY_UPLOAD_HOST', 'https://www.giantbomb.com' );
-}
-
-if ( !defined( 'GB_PUBLIC_WIKI_HOST' ) ) {
-	define( 'GB_PUBLIC_WIKI_HOST', 'https://www.giantbomb.com' );
-}
-
-if ( !function_exists( 'gbExtractInfoboxFields' ) ) {
-	function gbExtractInfoboxFields( string $text ): array {
-		if ( !preg_match( '/\{\{[^\n]+(\n.*?\n)\}\}/s', $text, $matches ) ) {
-			return [];
-		}
-		$block = $matches[1];
-		$fields = [];
-		foreach ( preg_split( '/\r?\n/', $block ) as $line ) {
-			if ( preg_match( '/^\|\s*([^=]+?)\s*=(.*)$/', $line, $fieldMatch ) ) {
-				$keyRaw = trim( $fieldMatch[1] );
-				$key = strtolower( $keyRaw );
-				$keyNormalized = preg_replace( '/[^a-z0-9]+/', '', $key );
-				$value = trim( $fieldMatch[2] );
-				$fields[$key] = $value;
-				if ( $keyNormalized !== '' ) {
-					$fields[$keyNormalized] = $value;
-				}
-			}
-		}
-		return $fields;
-	}
-
-	function gbGetFieldValue( array $fields, array $keys ): string {
-		foreach ( $keys as $key ) {
-			$normalized = strtolower( $key );
-			$normalized = preg_replace( '/[^a-z0-9]+/', '', $normalized );
-			if ( isset( $fields[$normalized] ) && trim( $fields[$normalized] ) !== '' ) {
-				return trim( $fields[$normalized] );
-			}
-			if ( isset( $fields[$key] ) && trim( $fields[$key] ) !== '' ) {
-				return trim( $fields[$key] );
-			}
-		}
-		return '';
-	}
-}
-
-if ( !function_exists( 'gbEnsureUrlHasScheme' ) ) {
-	function gbEnsureUrlHasScheme( string $value ): string {
-		$trimmed = trim( $value );
-		if ( $trimmed === '' ) {
-			return '';
-		}
-		if ( preg_match( '#^[a-z][a-z0-9+.-]*://#i', $trimmed ) ) {
-			return $trimmed;
-		}
-		if ( substr( $trimmed, 0, 2 ) === '//' ) {
-			return 'https:' . $trimmed;
-		}
-		return 'https://' . ltrim( $trimmed, '/' );
-	}
-}
-
-if ( !function_exists( 'gbParseLegacyImageData' ) ) {
-	function gbParseLegacyImageData( string $text ): ?array {
-		if ( !preg_match(
-			'/<div[^>]*id=(["\'])imageData\\1[^>]*data-json=(["\'])(.*?)\\2/si',
-			$text,
-			$matches
-		) ) {
-			return null;
-		}
-		$raw = html_entity_decode( $matches[3], ENT_QUOTES | ENT_HTML5 );
-		$raw = trim( $raw );
-		if ( $raw === '' ) {
-			return null;
-		}
-		$data = json_decode( $raw, true );
-		if ( !is_array( $data ) || json_last_error() !== JSON_ERROR_NONE ) {
-			return null;
-		}
-		return $data;
-	}
-
-	function gbChooseLegacySize( array $available, array $preferred ): ?string {
-		foreach ( $preferred as $candidate ) {
-			if ( in_array( $candidate, $available, true ) ) {
-				return $candidate;
-			}
-		}
-		return $available[0] ?? null;
-	}
-
-	function gbBuildLegacyImageUrl( array $entry, array $preferredSizes ): ?string {
-		$file = isset( $entry['file'] ) ? trim( (string)$entry['file'] ) : '';
-		$path = isset( $entry['path'] ) ? trim( (string)$entry['path'] ) : '';
-		$sizes = isset( $entry['sizes'] ) ? (string)$entry['sizes'] : '';
-		if ( $file === '' || $path === '' || $sizes === '' ) {
-			return null;
-		}
-		$availableSizes = array_values(
-			array_filter(
-				array_map( 'trim', explode( ',', $sizes ) ),
-				static fn ( $size ) => $size !== ''
-			)
-		);
-		if ( !$availableSizes ) {
-			return null;
-		}
-		$chosen = gbChooseLegacySize( $availableSizes, $preferredSizes );
-		if ( $chosen === null ) {
-			return null;
-		}
-		$normalizedPath = trim( $path, '/' );
-		$relative = '/a/uploads/' . $chosen . '/' . ( $normalizedPath !== '' ? $normalizedPath . '/' : '' ) . $file;
-		return GB_LEGACY_UPLOAD_HOST . $relative;
-	}
-
-	function gbResolveWikiImageUrl( string $value ): ?string {
-		$trimmed = trim( $value );
-		if ( $trimmed === '' ) {
-			return null;
-		}
-		if ( preg_match( '#^https?://#i', $trimmed ) ) {
-			return $trimmed;
-		}
-		if ( stripos( $trimmed, 'File:' ) !== 0 ) {
-			$trimmed = 'File:' . $trimmed;
-		}
-		$title = Title::newFromText( $trimmed );
-		if ( !$title ) {
-			return null;
-		}
-		$services = MediaWikiServices::getInstance();
-		$file = $services->getRepoGroup()->findFile( $title );
-		if ( !$file ) {
-			return null;
-		}
-		$url = $file->getFullUrl();
-		if ( !is_string( $url ) || $url === '' ) {
-			return null;
-		}
-		return \wfExpandUrl( $url, \PROTO_CANONICAL );
-	}
-}
-
-if ( !function_exists( 'gbSanitizeMetaText' ) ) {
-	function gbSanitizeMetaText( string $text, int $limit = 280 ): string {
-		$plain = trim( preg_replace( '/\s+/', ' ', strip_tags( $text ) ) ?? '' );
-		if ( $plain === '' ) {
-			return '';
-		}
-		if ( mb_strlen( $plain ) <= $limit ) {
-			return $plain;
-		}
-		$cut = mb_substr( $plain, 0, $limit );
-		$space = mb_strrpos( $cut, ' ' );
-		if ( $space !== false && $space >= (int) ( $limit * 0.6 ) ) {
-			$cut = mb_substr( $cut, 0, $space );
-		}
-		return rtrim( $cut, " \t\n\r\0\x0B.,;:–—-_" ) . '…';
-	}
-}
-
-if ( !function_exists( 'gbBuildMetaTag' ) ) {
-	function gbBuildMetaTag( array $attributes ): string {
-		$parts = [];
-		foreach ( $attributes as $name => $value ) {
-			if ( $value === null || $value === '' ) {
-				continue;
-			}
-			$parts[] = htmlspecialchars( $name, ENT_QUOTES, 'UTF-8' ) . '="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ) . '"';
-		}
-		return '<meta ' . implode( ' ', $parts ) . ' />';
-	}
-}
-
-if ( !function_exists( 'gbBuildJsonLdScript' ) ) {
-	function gbBuildJsonLdScript( string $json ): string {
-		return '<script type="application/ld+json">' . $json . '</script>';
-	}
-}
+require_once __DIR__ . '/../helpers/PageHelper.php';
 
 $title = $this->getSkin()->getTitle();
 $pageTitle = $title->getText();
@@ -195,7 +17,7 @@ $page = $wikiPageFactory->newFromTitle( $title );
 $latestRevisionId = $page ? (int)$page->getLatest() : 0;
 
 $locationData = [
-	'name' => str_replace( 'Locations/', '', str_replace( '_', ' ', $pageTitle ) ),
+	'name' => PageHelper::cleanPageName( $pageTitle, 'Locations' ),
 	'url' => '/wiki/' . $pageTitleDB,
 	'image' => '',
 	'backgroundImage' => '',
@@ -227,68 +49,31 @@ try {
 
 	if ( $content ) {
 		$text = $content->getText();
-		$infoboxFields = gbExtractInfoboxFields( $text );
-		$legacyImageData = gbParseLegacyImageData( $text );
+		$infoboxFields = PageHelper::extractInfoboxFields( $text );
+		$legacyImageData = PageHelper::parseLegacyImageData( $text );
+		$wikitext = PageHelper::extractWikitext( $text );
 
-		$wikitext = '';
-		if ( preg_match( '/\}\}(.+)$/s', $text, $matches ) ) {
-			$wikitext = trim( $matches[1] );
-		}
+		$locationData['description'] = PageHelper::parseDescription(
+			$wikitext, $title, $wanCache, $latestRevisionId, 'giantbomb-location-desc', $cacheTtl
+		);
 
-		if ( $wikitext !== '' ) {
-			$descCacheKey = $latestRevisionId > 0 ? $wanCache->makeKey( 'giantbomb-location-desc', $latestRevisionId ) : null;
-			$descData = $descCacheKey ? $wanCache->get( $descCacheKey ) : null;
-			if ( !is_array( $descData ) ) {
-				$descHtml = '';
-				try {
-					$parser = $services->getParser();
-					$parserOptions = ParserOptions::newFromAnon();
-					$parserOutput = $parser->parse( $wikitext, $title, $parserOptions );
-					$descHtml = $parserOutput->getText( [
-						'allowTOC' => false,
-						'enableSectionEditLinks' => false,
-						'wrapperDivClass' => ''
-					] );
-				} catch ( \Throwable $e ) {
-					error_log( 'Failed to parse location wikitext: ' . $e->getMessage() );
-					$descHtml = $wikitext;
-				}
-				$descData = [ 'html' => $descHtml ];
-				if ( $descCacheKey ) {
-					$wanCache->set( $descCacheKey, $descData, $cacheTtl );
-				}
-			}
-			$locationData['description'] = $descData['html'] ?? '';
-		}
+		$locationData['name'] = PageHelper::getFieldValue( $infoboxFields, [ 'name' ] ) ?: $locationData['name'];
+		$locationData['deck'] = PageHelper::getFieldValue( $infoboxFields, [ 'deck' ] );
+		$locationData['image'] = PageHelper::getFieldValue( $infoboxFields, [ 'image', 'infoboximage' ] );
+		$locationData['guid'] = PageHelper::getFieldValue( $infoboxFields, [ 'guid', 'id' ] );
+		$locationData['locationType'] = PageHelper::getFieldValue( $infoboxFields, [ 'type', 'locationtype' ] );
+		$locationData['planet'] = PageHelper::getFieldValue( $infoboxFields, [ 'planet' ] );
+		$locationData['country'] = PageHelper::getFieldValue( $infoboxFields, [ 'country' ] );
+		$locationData['state'] = PageHelper::getFieldValue( $infoboxFields, [ 'state', 'province', 'region' ] );
+		$locationData['city'] = PageHelper::getFieldValue( $infoboxFields, [ 'city' ] );
+		$locationData['population'] = PageHelper::getFieldValue( $infoboxFields, [ 'population' ] );
 
-		$locationData['name'] = gbGetFieldValue( $infoboxFields, [ 'name' ] ) ?: $locationData['name'];
-		$locationData['deck'] = gbGetFieldValue( $infoboxFields, [ 'deck' ] );
-		$locationData['image'] = gbGetFieldValue( $infoboxFields, [ 'image', 'infoboximage' ] );
-		$locationData['guid'] = gbGetFieldValue( $infoboxFields, [ 'guid', 'id' ] );
-		$locationData['locationType'] = gbGetFieldValue( $infoboxFields, [ 'type', 'locationtype' ] );
-		$locationData['planet'] = gbGetFieldValue( $infoboxFields, [ 'planet' ] );
-		$locationData['country'] = gbGetFieldValue( $infoboxFields, [ 'country' ] );
-		$locationData['state'] = gbGetFieldValue( $infoboxFields, [ 'state', 'province', 'region' ] );
-		$locationData['city'] = gbGetFieldValue( $infoboxFields, [ 'city' ] );
-		$locationData['population'] = gbGetFieldValue( $infoboxFields, [ 'population' ] );
-
-		$rawAliases = gbGetFieldValue( $infoboxFields, [ 'aliases', 'alias' ] );
-		if ( $rawAliases === '' && preg_match( '/\| Aliases=([^\n]+)/', $text, $aliasMatches ) ) {
-			$rawAliases = trim( $aliasMatches[1] );
+		$rawAliases = PageHelper::getFieldValue( $infoboxFields, [ 'aliases', 'alias' ] );
+		if ( $rawAliases === '' ) {
+			$rawAliases = PageHelper::parseTemplateField( $text, 'Aliases' );
 		}
-		if ( $rawAliases !== '' ) {
-			$aliases = array_filter(
-				array_map(
-					static function ( $alias ) {
-						$alias = trim( $alias );
-						return $alias !== '' ? str_replace( '_', ' ', $alias ) : null;
-					},
-					explode( ',', $rawAliases )
-				)
-			);
-			$locationData['aliases'] = array_values( $aliases );
-			$locationData['aliasesDisplay'] = implode( ', ', $locationData['aliases'] );
-		}
+		$locationData['aliases'] = PageHelper::parseAliases( $rawAliases );
+		$locationData['aliasesDisplay'] = implode( ', ', $locationData['aliases'] );
 
 		$listFields = [
 			'characters' => 'Characters',
@@ -298,57 +83,17 @@ try {
 			'games' => 'Games',
 			'franchises' => 'Franchises',
 		];
+		$prefixes = [ 'Games', 'Characters', 'Concepts', 'Locations', 'Objects', 'People', 'Franchises', 'Companies' ];
 
 		foreach ( $listFields as $key => $field ) {
-			$rawList = gbGetFieldValue( $infoboxFields, [ strtolower( $field ), $field ] );
-			if ( $rawList === '' && preg_match( '/\| ' . $field . '=([^\n]+)/', $text, $matches ) ) {
-				$rawList = trim( $matches[1] );
-			}
+			$rawList = PageHelper::getFieldValue( $infoboxFields, [ strtolower( $field ), $field ] );
 			if ( $rawList === '' ) {
-				continue;
+				$rawList = PageHelper::parseTemplateField( $text, $field );
 			}
-			$items = array_filter(
-				array_map(
-					static function ( $item ) {
-						$item = trim( $item );
-						if ( $item === '' ) {
-							return null;
-						}
-						$item = preg_replace( '#^(Games|Characters|Concepts|Locations|Objects|People|Franchises|Companies)/#', '', $item );
-						return str_replace( '_', ' ', $item );
-					},
-					explode( ',', $rawList )
-				)
-			);
-			$locationData['relations'][$key] = array_values( $items );
+			$locationData['relations'][$key] = PageHelper::parseListField( $rawList, $prefixes );
 		}
 
-		$resolvedTemplateImage = gbResolveWikiImageUrl( $locationData['image'] );
-		$locationData['image'] = $resolvedTemplateImage ?? '';
-
-		if ( isset( $legacyImageData ) && is_array( $legacyImageData ) ) {
-			if ( $locationData['image'] === '' && isset( $legacyImageData['infobox'] ) ) {
-				$infoboxUrl = gbBuildLegacyImageUrl(
-					$legacyImageData['infobox'],
-					[ 'scale_super', 'screen_kubrick', 'screen_medium', 'scale_large', 'scale_medium' ]
-				);
-				if ( $infoboxUrl !== null ) {
-					$locationData['image'] = $infoboxUrl;
-				}
-			}
-			if ( isset( $legacyImageData['background'] ) ) {
-				$backgroundUrl = gbBuildLegacyImageUrl(
-					$legacyImageData['background'],
-					[ 'screen_kubrick_wide', 'screen_kubrick', 'scale_super', 'scale_large', 'screen_medium' ]
-				);
-				if ( $backgroundUrl !== null ) {
-					$locationData['backgroundImage'] = $backgroundUrl;
-				}
-			}
-			if ( $locationData['image'] === '' && $locationData['backgroundImage'] !== '' ) {
-				$locationData['image'] = $locationData['backgroundImage'];
-			}
-		}
+		PageHelper::resolveImages( $locationData, $legacyImageData );
 	}
 } catch ( \Throwable $e ) {
 	error_log( 'Location page error: ' . $e->getMessage() );
@@ -356,10 +101,7 @@ try {
 
 $stats = [];
 if ( $locationData['locationType'] !== '' ) {
-	$stats[] = [
-		'label' => 'Type',
-		'value' => $locationData['locationType'],
-	];
+	$stats[] = [ 'label' => 'Type', 'value' => $locationData['locationType'] ];
 }
 $locationParts = array_filter( [
 	$locationData['city'],
@@ -368,16 +110,10 @@ $locationParts = array_filter( [
 	$locationData['planet'],
 ] );
 if ( !empty( $locationParts ) ) {
-	$stats[] = [
-		'label' => 'Location',
-		'value' => implode( ', ', array_unique( $locationParts ) ),
-	];
+	$stats[] = [ 'label' => 'Location', 'value' => implode( ', ', array_unique( $locationParts ) ) ];
 }
 if ( $locationData['population'] !== '' ) {
-	$stats[] = [
-		'label' => 'Population',
-		'value' => $locationData['population'],
-	];
+	$stats[] = [ 'label' => 'Population', 'value' => $locationData['population'] ];
 }
 $locationData['stats'] = $stats;
 $locationData['hasStats'] = !empty( $stats );
@@ -385,15 +121,15 @@ $locationData['hasStats'] = !empty( $stats );
 $metaTitle = $locationData['name'] !== ''
 	? $locationData['name'] . ' location - Giant Bomb Wiki'
 	: 'Giant Bomb Wiki';
-$metaDescription = gbSanitizeMetaText( $locationData['deck'] ?? '' );
+$metaDescription = PageHelper::sanitizeMetaText( $locationData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
-	$metaDescription = gbSanitizeMetaText( $locationData['description'] ?? '' );
+	$metaDescription = PageHelper::sanitizeMetaText( $locationData['description'] ?? '' );
 }
 if ( $metaDescription === '' && $locationData['name'] !== '' ) {
-	$metaDescription = 'Explore the Giant Bomb wiki location entry for ' . $locationData['name'] . '.';
+	$metaDescription = $locationData['name'] . ' on Giant Bomb.';
 }
-$metaImage = $locationData['image'] !== '' ? $locationData['image'] : ( $locationData['backgroundImage'] !== '' ? $locationData['backgroundImage'] : null );
-$canonicalUrl = rtrim( GB_PUBLIC_WIKI_HOST, '/' ) . $locationData['url'];
+$metaImage = PageHelper::getMetaImage( $locationData['image'], $locationData['backgroundImage'] );
+$canonicalUrl = rtrim( PageHelper::PUBLIC_WIKI_HOST, '/' ) . $locationData['url'];
 
 $out = $this->getSkin()->getOutput();
 if ( $locationData['name'] !== '' ) {
@@ -405,46 +141,21 @@ if ( $metaDescription !== '' ) {
 }
 $out->setCanonicalUrl( $canonicalUrl );
 
-$ogTags = [
+PageHelper::addOpenGraphTags( $out, [
 	'og:title' => $metaTitle,
 	'og:description' => $metaDescription,
 	'og:url' => $canonicalUrl,
 	'og:site_name' => 'Giant Bomb Wiki',
 	'og:type' => 'place',
 	'og:locale' => 'en_US',
-];
-if ( $metaImage ) {
-	$ogTags['og:image'] = $metaImage;
-}
-foreach ( $ogTags as $property => $content ) {
-	if ( $content === '' || $content === null ) {
-		continue;
-	}
-	$out->addHeadItem(
-		'meta-' . str_replace( ':', '-', $property ),
-		gbBuildMetaTag( [ 'property' => $property, 'content' => $content ] )
-	);
-}
+], $metaImage );
 
-$twitterTags = [
+PageHelper::addTwitterTags( $out, [
 	'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
 	'twitter:title' => $metaTitle,
 	'twitter:description' => $metaDescription,
 	'twitter:site' => '@giantbomb',
-];
-if ( $metaImage ) {
-	$twitterTags['twitter:image'] = $metaImage;
-	$twitterTags['twitter:image:alt'] = $locationData['name'] !== '' ? $locationData['name'] . ' location art' : 'Giant Bomb location cover art';
-}
-foreach ( $twitterTags as $name => $content ) {
-	if ( $content === '' || $content === null ) {
-		continue;
-	}
-	$out->addHeadItem(
-		'meta-' . str_replace( [ ':', '/' ], '-', $name ),
-		gbBuildMetaTag( [ 'name' => $name, 'content' => $content ] )
-	);
-}
+], $metaImage, $locationData['name'] !== '' ? $locationData['name'] . ' location art' : 'Giant Bomb location cover art' );
 
 $schema = [
 	'@context' => 'https://schema.org',
@@ -467,42 +178,14 @@ if ( $locationData['population'] !== '' ) {
 }
 if ( !empty( $locationData['relations']['games'] ) ) {
 	$schema['subjectOf'] = array_map(
-		static fn ( $name ) => [
-			'@type' => 'VideoGame',
-			'name' => $name,
-		],
+		static fn ( $name ) => [ '@type' => 'VideoGame', 'name' => $name ],
 		array_slice( $locationData['relations']['games'], 0, 5 )
 	);
 }
-$schema = array_filter(
-	$schema,
-	static function ( $value ) {
-		if ( $value === null ) {
-			return false;
-		}
-		if ( is_string( $value ) && trim( $value ) === '' ) {
-			return false;
-		}
-		if ( is_array( $value ) && empty( $value ) ) {
-			return false;
-		}
-		return true;
-	}
-);
-$schemaJson = json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-if ( $schemaJson !== false ) {
-	$out->addHeadItem(
-		'structured-data-location',
-		gbBuildJsonLdScript( $schemaJson )
-	);
-}
+PageHelper::addStructuredData( $out, $schema, 'location' );
 
 $templateDir = realpath( __DIR__ . '/../templates' );
 $templateParser = new \MediaWiki\Html\TemplateParser( $templateDir );
-$data = [
-	'location' => $locationData,
-];
+$data = [ 'location' => $locationData ];
 
 echo $templateParser->processTemplate( 'location-page', $data );
-
-
