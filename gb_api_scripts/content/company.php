@@ -144,8 +144,6 @@ class Company extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->image_id,
-            'background_image' => $row->background_image_id,
             'abbreviation' => $row->abbreviation,
             'founded_date' => $row->founded_date,
             'address' => $row->address,
@@ -155,7 +153,12 @@ class Company extends Resource
             'phone' => $row->phone,
             'website' => $row->website,
             'relations' => $relations
-        ]).$desc;
+        ])
+        .$this->getImageDiv([
+            'infobox_image_id' => $row->image_id,
+            'background_image_id' => $row->background_image_id,
+        ])
+        .$desc;
 
         return [
             'title' => $row->mw_page_name,

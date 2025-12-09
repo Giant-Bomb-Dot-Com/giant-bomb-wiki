@@ -40,12 +40,14 @@ interface DbInterface
     public function getAll(string $table, array $fields, int $continue = 0);
     public function getPageName(string $table, int $id);
     public function getImageName(int $id);
+    public function getImageData(int $id): array;
     public function getRelatedPageNames(string $table, array $relationsMap, int $id);
     public function getCreditsFromDB(int $id);
     public function getReleasesFromDB(int $id);
     public function getDLCFromDB(int $id);
     public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0);
     public function getNamesToConvert(string $table, $id = false, $force = false);
+    public function getPageEditors();
     public function updateMediaWikiDescription(string $table, int $id, string $mwDescription);
     public function updateMediaWikiPageName(string $table, int $id, string $mwPageName);
 }
