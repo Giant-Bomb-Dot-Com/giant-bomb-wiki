@@ -22,6 +22,19 @@ require_once __DIR__ . '/CacheHelper.php';
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
     $cache = CacheHelper::getInstance();
     
+    // Validation on searchQuery input 
+    // We process here before building the cache key to increase cache hits
+	$searchQuery = (string) $searchQuery;
+	$searchQuery = trim($searchQuery);
+
+	// Trim searchQuery to 255 characters
+	if (strlen($searchQuery) > 255) {
+		$searchQuery = substr($searchQuery, 0, 255);
+	}
+
+	// Remove special SMW query characters
+	$searchQuery = str_replace(['[[', ']]', '[', ']', '|', '::', '*', '{', '}'], '', $searchQuery);
+    
     $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_GAMES, [
         'searchQuery' => $searchQuery,
         'platformFilter' => $platformFilter,
@@ -51,18 +64,6 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 
     $platformMappings = loadPlatformMappings();
 
-	// Validation on searchQuery input
-	$searchQuery = (string) $searchQuery;
-	$searchQuery = trim($searchQuery);
-
-	// Trim searchQuery to 255 characters
-	if (strlen($searchQuery) > 255) {
-		$searchQuery = substr($searchQuery, 0, 255);
-	}
-
-	// Remove special SMW query characters
-	$searchQuery = str_replace(['[[', ']]', '|', '::', '*', '{', '}'], '', $searchQuery);
-
 	// If searchQuery is now empty after removing special characters, treat as no search filter
 	// (don't return early, just continue with no search filter applied)
 
@@ -74,7 +75,7 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 
 		if (!empty($searchQuery)) {
             // Need to add quotes to match the phrase, otherwise full-text-search runs an OR on each word
-			$queryConditions .= '[[Has name::~*"' . str_replace(['[', ']', '|'], '', $searchQuery) . '"*]]';
+			$queryConditions .= '[[Has name::~*"' . $searchQuery . '"*]]';
 		}
 
 		if (!empty($platformFilter)) {

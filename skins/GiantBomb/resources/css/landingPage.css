@@ -11,15 +11,3 @@
 .games-page .platform-badges {
   margin-top: 8px;
 }
-
-/* Games-specific: Date display */
-.games-page .listing-card-meta {
-  font-size: 0.8rem;
-  color: #999;
-}
-
-/* List view overrides for games page if needed */
-.listing-page.view-list .games-page .listing-card-meta {
-  font-size: 0.85rem;
-  margin-top: auto;
-}

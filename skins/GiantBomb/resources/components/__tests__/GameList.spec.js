@@ -145,7 +145,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 0,
                 startItem: 0,
                 endItem: 0,
@@ -178,7 +178,7 @@ describe("GameList", () => {
       const fetchUrl = fetchSpy.mock.calls[0][0];
       expect(fetchUrl).toContain("action=get-games");
       expect(fetchUrl).toContain("search=zelda");
-      expect(fetchUrl).toContain("perPage=25");
+      expect(fetchUrl).toContain("perPage=48");
       expect(fetchUrl).not.toContain("platform=");
     });
 
@@ -193,7 +193,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 0,
                 startItem: 0,
                 endItem: 0,
@@ -243,7 +243,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 1,
                 startItem: 1,
                 endItem: 1,
@@ -280,7 +280,7 @@ describe("GameList", () => {
       const fetchUrl = fetchSpy.mock.calls[0][0];
       expect(fetchUrl).toContain("action=get-games");
       expect(fetchUrl).toContain("platform=PlayStation");
-      expect(fetchUrl).toContain("perPage=25");
+      expect(fetchUrl).toContain("perPage=48");
 
       const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(1);
@@ -302,7 +302,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 2,
                 startItem: 1,
                 endItem: 2,
@@ -352,7 +352,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 1,
                 startItem: 1,
                 endItem: 1,
@@ -390,7 +390,7 @@ describe("GameList", () => {
       expect(fetchUrl).toContain("action=get-games");
       expect(fetchUrl).toContain("search=zelda");
       expect(fetchUrl).toContain("platform=Nintendo");
-      expect(fetchUrl).toContain("perPage=25");
+      expect(fetchUrl).toContain("perPage=48");
 
       const gameCards = wrapper.findAll(".listing-card");
       expect(gameCards).toHaveLength(1);
@@ -410,7 +410,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 0,
                 startItem: 0,
                 endItem: 0,
@@ -465,7 +465,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 4,
                 startItem: 1,
                 endItem: 4,
@@ -517,7 +517,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 4,
                 startItem: 1,
                 endItem: 4,
@@ -569,7 +569,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 4,
                 startItem: 1,
                 endItem: 4,
@@ -621,7 +621,7 @@ describe("GameList", () => {
               pagination: {
                 currentPage: 1,
                 totalPages: 1,
-                itemsPerPage: 25,
+                itemsPerPage: 48,
                 totalItems: 4,
                 startItem: 1,
                 endItem: 4,

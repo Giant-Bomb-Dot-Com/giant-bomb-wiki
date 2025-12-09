@@ -246,10 +246,11 @@ class CacheHelper {
                 // Handle array values (e.g., game filters)
                 $value = implode(',', $value);
             }
-            // Sanitize and add to key
-            $sanitizedValue = preg_replace('/[^a-zA-Z0-9_#,-]/', '', (string)$value);
-            if ($sanitizedValue !== '') {
-                $parts[] = "{$key}_{$sanitizedValue}";
+            // Url-encode the value to handle special characters
+            $valueStr = (string)$value;
+            if ($valueStr !== '') {
+                $encodedValue = rawurlencode($valueStr);
+                $parts[] = "{$key}_{$encodedValue}";
             }
         }
         
