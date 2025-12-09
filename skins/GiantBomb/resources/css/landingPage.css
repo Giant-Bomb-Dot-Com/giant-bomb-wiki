@@ -14,68 +14,49 @@
   --card-bg: #141414aa;
 }
 
-#landing-page-container {
+.landing-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  hr {
-    margin: 3rem;
-  }
-}
-
-#dynamic-content {
   width: 100%;
 }
 
-/* Header with view toggle */
-.landing-page-header {
+.landing-page__content {
+  width: 100%;
+}
+
+.landing-page__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a3a3a;
 }
 
-.landing-page-header h1 {
+.landing-page__title {
   margin: 0;
   font-size: 2rem;
+  font-weight: 700;
   color: #fff;
 }
 
-/* Two-column layout: main content + sidebar */
-.landing-page-content {
+.landing-page__layout {
   display: grid;
   grid-template-columns: 1fr 280px;
-  gap: 30px;
+  gap: 2rem;
   width: 100%;
 }
 
-.landing-sidebar {
+.landing-page__sidebar {
   order: 2;
 }
 
-.landing-main-wrapper {
+.landing-page__main {
   order: 1;
-  min-width: 0; /* Prevents grid blowout */
+  min-width: 0;
 }
 
-#wiki-buttons {
-  text-align: center;
-  button {
-    padding: var(--button-padding-vertical) var(--button-padding);
-    margin-top: 1rem;
-    color: var(--button-color);
-    border: none;
-    border-radius: var(--button-radius);
-    font-size: var(--button-font-size);
-    cursor: pointer;
-  }
-  button:hover {
-    background: var(--button-bg-hover);
-  }
-  button:active {
-    background: var(--button-bg-active);
-  }
-}
+/* Wiki buttons moved to wikiNav.css */
 
 .landing-page-section-container h1 {
   font-size: var(--section-title-size);
@@ -256,22 +237,22 @@
 
 /* Responsive design */
 @media (max-width: 1024px) {
-  .landing-page-content {
+  .landing-page__layout {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 1.5rem;
   }
 
-  .landing-sidebar {
+  .landing-page__sidebar {
     order: 1;
   }
 
-  .landing-main-wrapper {
+  .landing-page__main {
     order: 2;
   }
 
-  .landing-page-header {
+  .landing-page__header {
     flex-direction: column;
-    gap: 15px;
+    gap: 1rem;
     align-items: flex-start;
   }
 }
