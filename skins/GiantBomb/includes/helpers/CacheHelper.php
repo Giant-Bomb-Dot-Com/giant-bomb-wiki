@@ -246,8 +246,19 @@ class CacheHelper {
                 // Handle array values (e.g., game filters)
                 $value = implode(',', $value);
             }
+            
+            // Skip null values
+            if ($value === null) {
+                continue;
+            }
+            
+            if (is_bool($value)) {
+                $valueStr = $value ? '1' : '0';
+            } else {
+                $valueStr = (string)$value;
+            }
+            
             // Url-encode the value to handle special characters
-            $valueStr = (string)$value;
             if ($valueStr !== '') {
                 $encodedValue = rawurlencode($valueStr);
                 $parts[] = "{$key}_{$encodedValue}";
