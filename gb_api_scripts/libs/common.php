@@ -188,15 +188,26 @@ trait CommonVariablesAndMethods
                     $xml->writeElement('title', trim($page['title'], ' _'));
                     $xml->writeElement('ns', $page['namespace']);
                     $xml->startElement('revision');
+                        if (isset($page['timestamp'])) {
+                            $xml->writeElement('timestamp', $page['timestamp']);
+                        }
                         $xml->startElement('contributor');
-                            $xml->writeElement('username', 'Giantbomb');
-                            $xml->writeElement('id', 1);
-                        $xml->endElement(); 
+                            if (isset($page['username'])) {
+                                $xml->writeElement('username', $page['username']);
+                            }
+                            else {
+                                $xml->writeElement('username', 'Giantbomb');
+                                $xml->writeElement('id', 1);
+                            }
+                        $xml->endElement();
+                        if (isset($page['comment'])) {
+                            $xml->writeElement('comment', $page['comment']);
+                        }
                         $xml->writeElement('model', (array_key_exists('model', $page)) ? $page['model'] : 'wikitext');
                         $xml->writeElement('format', (array_key_exists('format', $page)) ? $page['format'] : 'text/x-wiki');
                         $xml->startElement('text');
                             $xml->writeAttribute('xml:space', 'preserve');
-                            $xml->writeRaw($page['description']);
+                            $xml->writeRaw((array_key_exists('description', $page)) ? $page['description'] : '');
                         $xml->endElement();
                     $xml->endElement();
                 $xml->endElement();
@@ -215,4 +226,5 @@ trait CommonVariablesAndMethods
         echo "\nGenerated $file!";
         echo "\nTotal pages generated: $count";
     }
+
 }

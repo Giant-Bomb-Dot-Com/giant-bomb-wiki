@@ -138,8 +138,6 @@ class Person extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->image_id,
-            'background_image' => $row->background_image_id,
             'last_name' => $row->last_name,
             'gender' => $row->gender,
             'hometown' => $row->hometown,
@@ -148,7 +146,12 @@ class Person extends Resource
             'website' => $row->website,
             'twitter' => $row->twitter,
             'relations' => $relations
-        ]).$desc;
+        ])
+        .$this->getImageDiv([
+            'infobox_image_id' => $row->image_id,
+            'background_image_id' => $row->background_image_id,
+        ])
+        .$desc;
 
         return [
             'title' => $row->mw_page_name,
