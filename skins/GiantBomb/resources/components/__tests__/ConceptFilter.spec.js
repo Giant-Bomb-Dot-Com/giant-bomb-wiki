@@ -125,10 +125,11 @@ describe("ConceptFilter", () => {
       expect(letterSelect.exists()).toBe(true);
 
       const options = letterSelect.findAll("option");
-      expect(options).toHaveLength(27); // "#" + 26 letters
-      expect(options[0].text()).toBe("#");
-      expect(options[1].text()).toBe("A");
-      expect(options[26].text()).toBe("Z");
+      expect(options).toHaveLength(28); // "All" + "#" + 26 letters
+      expect(options[0].text()).toBe("All");
+      expect(options[1].text()).toBe("#");
+      expect(options[2].text()).toBe("A");
+      expect(options[27].text()).toBe("Z");
     });
 
     it("renders sort select with sort options", async () => {
@@ -440,7 +441,7 @@ describe("ConceptFilter", () => {
       await searchInput.setValue("test");
 
       // Wait for debounce
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 1600));
       await wrapper.vm.$nextTick();
 
       expect(global.fetch).toHaveBeenCalled();
