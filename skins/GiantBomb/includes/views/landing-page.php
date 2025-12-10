@@ -21,6 +21,21 @@ $buttons = [
 	'Accessories'
 ];
 
+// Define available category wikitypes
+$wikiTypes = [
+	'All',
+	'Game',
+	'Character',
+	'Company',
+	'Concept',
+	'Franchise',
+	'Location',
+	'Person',
+	'Platform',
+	'Object',
+	'Accessory'
+];
+
 // Get pagination and filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $currentPage = max(1, $request->getInt('page', 1));
@@ -46,6 +61,14 @@ foreach ($buttons as $button) {
     ];
 }
 
+// Populate wikiType from wikiType array
+foreach ($wikiTypes as $type) {
+    $wikiTypeData[] = [
+        'title' => $type,
+        'label' => $type
+    ];
+}
+
 // Calculate pagination data
 $totalPages = max(1, ceil($totalGames / $itemsPerPage));
 $startItem = $totalGames > 0 ? ($currentPage - 1) * $itemsPerPage + 1 : 0;
@@ -54,6 +77,7 @@ $endItem = min($currentPage * $itemsPerPage, $totalGames);
 // Set Mustache data - pass games and platforms as JSON for Vue components
 $data = [
     'buttons' => $buttonData,
+	'wikiTypes' => $wikiTypeData,
     'games' => $games,
     'pagination' => [
         'currentPage' => $currentPage,

@@ -86,8 +86,6 @@ class Platform extends Resource
             'guid' => $guid,
             'aliases' => $row->aliases,
             'deck' => $row->deck,
-            'infobox_image' => $row->image_id,
-            'background_image' => $row->background_image_id,
             'short_name' => $row->short_name,
             'release_date' => $row->release_date,
             'release_date_type' => $row->release_date_type,
@@ -95,7 +93,12 @@ class Platform extends Resource
             'online_support' => $row->online_support,
             'original_price' => $row->original_price,
             'manufacturer_id' => $row->manufacturer_id
-        ]).$desc;
+        ])
+        .$this->getImageDiv([
+            'infobox_image_id' => $row->image_id,
+            'background_image_id' => $row->background_image_id,
+        ])
+        .$desc;
 
         return [
             'title' => $row->mw_page_name,
