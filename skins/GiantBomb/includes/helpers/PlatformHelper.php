@@ -514,8 +514,8 @@ function getGameCountForPlatformFromSMW($platformName) {
 function getPlatformsForGameFromSMW($gamePageName) {
     $cache = CacheHelper::getInstance();
     
-    // Sanitize game name for cache key suffix
-    $safeGameName = preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '_', $gamePageName));
+    // URL-encode game name for cache key suffix to handle special characters
+    $safeGameName = rawurlencode($gamePageName);
     $cacheKey = $cache->buildSimpleKey(CacheHelper::PREFIX_PLATFORMS_FOR_GAME, $safeGameName);
     
     return $cache->getOrSet($cacheKey, function() use ($gamePageName) {
