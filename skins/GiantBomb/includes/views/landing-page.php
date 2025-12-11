@@ -39,7 +39,7 @@ $wikiTypes = [
 // Get pagination and filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $currentPage = max(1, $request->getInt('page', 1));
-$itemsPerPage = max(25, min(100, $request->getInt('perPage', 25)));
+$itemsPerPage = max(24, min(100, $request->getInt('perPage', 48)));
 $searchQuery = trim($request->getText('search', ''));
 $platformFilter = trim($request->getText('platform', ''));
 $sortOrder = $request->getText('sort', 'title-asc');

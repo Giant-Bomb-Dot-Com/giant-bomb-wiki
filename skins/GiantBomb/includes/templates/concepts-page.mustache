@@ -1,20 +1,20 @@
 <div class="page-wrapper">
     {{> header }}
 
-<div class="listing-page platforms-page">
+<div class="listing-page concepts-page">
     <div class="listing-header">
-        <h1>Platforms</h1>
+        <h1>Concepts</h1>
         <div
             data-vue-component="ViewToggle"
-            data-target-container=".platforms-page"
-            data-storage-key="platformViewPreference">
+            data-target-container=".concepts-page"
+            data-storage-key="conceptViewPreference">
         </div>
     </div>
 
     <div class="listing-content">
         <aside class="listing-sidebar">
             <div
-                data-vue-component="PlatformFilter"
+                data-vue-component="ConceptFilter"
                 data-current-letter="{{{currentLetter}}}"
                 data-current-sort="{{{currentSort}}}"
                 data-current-require-all-games="{{{currentRequireAllGames}}}"
@@ -22,14 +22,14 @@
             </div>
             <div
                 data-vue-component="DatabaseAddPrompt"
-                data-object-type="platform"
-                data-link-url="{{{addPlatformUrl}}}">
+                data-object-type="concept"
+                data-link-url="{{{addConceptUrl}}}">
             </div>
         </aside>
 
         <div class="listing-main-wrapper"
-            data-vue-component="PlatformList"
-            data-initial-data="{{{vue.platformsJson}}}"
+            data-vue-component="ConceptList"
+            data-initial-data="{{{vue.conceptsJson}}}"
             data-total-count="{{{totalCount}}}"
             data-current-page="{{{currentPage}}}"
             data-total-pages="{{{totalPages}}}"

@@ -6,22 +6,24 @@
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
 
+// Load cache helper functions
+require_once __DIR__ . '/CacheHelper.php';
+
 /**
  * Query games from SMW with filters, sorting, and pagination
  *
  * @param string $searchQuery Search term to filter by title
  * @param string $platformFilter Platform to filter by
- * @param string $sortOrder Sort order (title-asc, title-desc, date-asc, date-desc)
+ * @param string $sortOrder Sort order (title-asc, title-desc, release-date-asc, release-date-desc)
  * @param int $currentPage Current page number
  * @param int $itemsPerPage Items per page
  * @return array Array with 'games' and 'totalGames' keys
  */
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
-	$games = [];
-	$totalGames = 0;
-    $platformMappings = loadPlatformMappings();
-
-	// Validation on searchQuery input
+    $cache = CacheHelper::getInstance();
+    
+    // Validation on searchQuery input 
+    // We process here before building the cache key to increase cache hits
 	$searchQuery = (string) $searchQuery;
 	$searchQuery = trim($searchQuery);
 
@@ -31,7 +33,36 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 	}
 
 	// Remove special SMW query characters
-	$searchQuery = str_replace(['[[', ']]', '|', '::', '*', '{', '}'], '', $searchQuery);
+	$searchQuery = str_replace(['[[', ']]', '[', ']', '|', '::', '*', '{', '}'], '', $searchQuery);
+    
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_GAMES, [
+        'searchQuery' => $searchQuery,
+        'platformFilter' => $platformFilter,
+        'sortOrder' => $sortOrder,
+        'currentPage' => $currentPage,
+        'itemsPerPage' => $itemsPerPage
+    ]);
+    
+    return $cache->getOrSet($cacheKey, function() use ($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage) {
+        return fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
+    }, CacheHelper::QUERY_TTL);
+}
+
+/**
+ * Internal function to fetch games from SMW (not cached)
+ * 
+ * @param string $searchQuery search query
+ * @param string $platformFilter platform filter
+ * @param string $sortOrder sort order
+ * @param int $currentPage current page number
+ * @param int $itemsPerPage items per page
+ * @return array Query results
+ */
+function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage) {
+    $games = [];
+	$totalGames = 0;
+
+    $platformMappings = loadPlatformMappings();
 
 	// If searchQuery is now empty after removing special characters, treat as no search filter
 	// (don't return early, just continue with no search filter applied)
@@ -43,11 +74,12 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 		$queryConditions = '[[Category:Games]]';
 
 		if (!empty($searchQuery)) {
-			$queryConditions .= '[[Has name::~*' . str_replace(['[', ']', '|'], '', $searchQuery) . '*]]';
+            // Need to add quotes to match the phrase, otherwise full-text-search runs an OR on each word
+			$queryConditions .= '[[Has name::~*"' . $searchQuery . '"*]]';
 		}
 
 		if (!empty($platformFilter)) {
-			$queryConditions .= '[[Has platforms::~*' . str_replace(['[', ']', '|'], '', $platformFilter) . '*]]';
+			$queryConditions .= '[[Has platforms::~*' . str_replace(['[', ']', '|'], '', $platformFilter) . ']]';
 		}
 
 		// Determine sort property and order
@@ -55,17 +87,23 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 		$smwOrder = 'asc';
 		switch ($sortOrder) {
 			case 'title-desc':
+                $smwSort = 'Has name';
 				$smwOrder = 'desc';
 				break;
-			case 'date-desc':
+            case 'title-asc':
+                $smwSort = 'Has name';
+                $smwOrder = 'asc';
+                break;
+			case 'release-date-desc':
 				$smwSort = 'Has release date';
 				$smwOrder = 'desc';
 				break;
-			case 'date-asc':
+			case 'release-date-asc':
 				$smwSort = 'Has release date';
 				$smwOrder = 'asc';
 				break;
 			default:
+                $smwSort = 'Has name';
 				$smwOrder = 'asc';
 		}
 
@@ -150,7 +188,9 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 				$label = $pr->getLabel();
 
 				$values = [];
-				while ($dv = $field->getNextDataValue()) {
+                $dv = null;
+				while ($tempDV = $field->getNextDataValue()) {
+                    $dv = $tempDV;
 					$values[] = $dv->getShortWikiText();
 				}
                 
@@ -166,7 +206,17 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 						$pageData['desc'] = $values[0] ?? '';
 						break;
 					case 'Has image':
-						$pageData['img'] = $values[0] ?? '';
+						if ($dv) {
+                            // For wiki page types (like File:), get URL from the Title object
+                            $dataItem = $dv->getDataItem();
+                            if ($dataItem instanceof \SMW\DIWikiPage) {
+                                $imageTitle = $dataItem->getTitle();
+                                if ($imageTitle) {
+                                    $pageData['img'] = $imageTitle->getFullURL();
+                                    $pageData['img'] = str_replace('http://localhost:8080/wiki/', '', $pageData['img']);
+                                }
+                            }
+                        }
 						break;
 					case 'Has release date':
 						if (!empty($values[0])) {

@@ -25,6 +25,11 @@ class GiantBombTemplate extends BaseTemplate {
             return;
         }
         
+        if ($action === 'get-concepts') {
+            require_once __DIR__ . '/api/concepts-api.php';
+            return;
+        }
+        
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
@@ -35,6 +40,7 @@ class GiantBombTemplate extends BaseTemplate {
                       substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
+        $isConceptsPage = $pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
         error_log("Current page title: " . $pageTitle);
         
 
@@ -70,6 +76,11 @@ class GiantBombTemplate extends BaseTemplate {
             // Show platforms page
 ?>
         <?php include __DIR__ . '/views/platforms-page.php'; ?>
+<?php
+        } elseif ($isConceptsPage) {
+            // Show concepts page
+?>
+        <?php include __DIR__ . '/views/concepts-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages
