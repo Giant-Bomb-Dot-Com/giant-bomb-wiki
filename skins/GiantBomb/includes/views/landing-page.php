@@ -3,8 +3,10 @@ use MediaWiki\Html\TemplateParser;
 use MediaWiki\MediaWikiServices;
 
 // Load helper functions
+require_once __DIR__ . '/../helpers/Constants.php';
 require_once __DIR__ . '/../helpers/GamesHelper.php';
 require_once __DIR__ . '/../helpers/PlatformHelper.php';
+
 
 // Define available category buttons
 $buttons = [
@@ -39,7 +41,7 @@ $wikiTypes = [
 // Get pagination and filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $currentPage = max(1, $request->getInt('page', 1));
-$itemsPerPage = max(24, min(100, $request->getInt('perPage', 48)));
+$itemsPerPage = max(24, min(100, $request->getInt('perPage', DEFAULT_PAGE_SIZE)));
 $searchQuery = trim($request->getText('search', ''));
 $platformFilter = trim($request->getText('platform', ''));
 $sortOrder = $request->getText('sort', 'title-asc');

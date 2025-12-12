@@ -6,6 +6,7 @@
 
 // Load games helper functions
 require_once __DIR__ . '/../helpers/GamesHelper.php';
+require_once __DIR__ . '/../helpers/Constants.php';
 
 $request = RequestContext::getMain()->getRequest();
 $action = $request->getText('action', '');
@@ -20,7 +21,7 @@ if ($action === 'get-games') {
 	$platformFilter = trim($request->getText('platform', ''));
 	$sortOrder = $request->getText('sort', 'title-asc');
 	$currentPage = max(1, $request->getInt('page', 1));
-	$itemsPerPage = max(1, min(100, $request->getInt('perPage', 48)));
+	$itemsPerPage = max(1, min(100, $request->getInt('perPage', DEFAULT_PAGE_SIZE)));
 
 	// Query games using helper function
 	$result = queryGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);

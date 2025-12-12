@@ -14,9 +14,6 @@ require_once __DIR__ . '/PlatformHelper.php';
 // Load date helper functions
 require_once __DIR__ . '/DateHelper.php';
 
-// Load cache helper
-require_once __DIR__ . '/CacheHelper.php';
-
 /**
  * Group releases by time period based on date specificity
  * 
@@ -103,32 +100,16 @@ function processDateForGrouping($timestamp, $specificity) {
 /**
  * Query releases from Semantic MediaWiki with optional filters
  * 
- * Results are cached based on query parameters for improved performance.
- * 
  * @param string $filterRegion Optional region filter
  * @param string $filterPlatform Optional platform filter
  * @return array Array of release data
  */
 function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
-    $cache = CacheHelper::getInstance();
-    
-    // Include today's date in cache key since the query is date-based
-    $today = date('Y-m-d');
-    
-    // Build cache key from query parameters
-    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_RELEASES, [
-        'date' => $today,
-        'region' => $filterRegion,
-        'platform' => $filterPlatform
-    ]);
-    
-    return $cache->getOrSet($cacheKey, function() use ($filterRegion, $filterPlatform) {
-        return fetchReleasesFromSMW($filterRegion, $filterPlatform);
-    }, CacheHelper::QUERY_TTL);
+    return fetchReleasesFromSMW($filterRegion, $filterPlatform);
 }
 
 /**
- * Internal function to fetch releases from SMW (not cached)
+ * Internal function to fetch releases from SMW
  * 
  * @param string $filterRegion Optional region filter
  * @param string $filterPlatform Optional platform filter

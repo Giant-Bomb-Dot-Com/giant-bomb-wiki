@@ -6,9 +6,6 @@
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
 
-// Load cache helper functions
-require_once __DIR__ . '/CacheHelper.php';
-
 /**
  * Query games from SMW with filters, sorting, and pagination
  *
@@ -20,10 +17,8 @@ require_once __DIR__ . '/CacheHelper.php';
  * @return array Array with 'games' and 'totalGames' keys
  */
 function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder = 'title-asc', $currentPage = 1, $itemsPerPage = 25) {
-    $cache = CacheHelper::getInstance();
     
     // Validation on searchQuery input 
-    // We process here before building the cache key to increase cache hits
 	$searchQuery = (string) $searchQuery;
 	$searchQuery = trim($searchQuery);
 
@@ -35,21 +30,11 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 	// Remove special SMW query characters
 	$searchQuery = str_replace(['[[', ']]', '[', ']', '|', '::', '*', '{', '}'], '', $searchQuery);
     
-    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_GAMES, [
-        'searchQuery' => $searchQuery,
-        'platformFilter' => $platformFilter,
-        'sortOrder' => $sortOrder,
-        'currentPage' => $currentPage,
-        'itemsPerPage' => $itemsPerPage
-    ]);
-    
-    return $cache->getOrSet($cacheKey, function() use ($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage) {
-        return fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
-    }, CacheHelper::QUERY_TTL);
+    return fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
 }
 
 /**
- * Internal function to fetch games from SMW (not cached)
+ * Internal function to fetch games from SMW
  * 
  * @param string $searchQuery search query
  * @param string $platformFilter platform filter
