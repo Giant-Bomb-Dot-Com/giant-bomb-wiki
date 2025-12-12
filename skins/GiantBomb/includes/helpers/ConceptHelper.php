@@ -5,6 +5,8 @@
  * Provides utility functions for looking up concepts data from Semantic MediaWiki
  */
 
+require_once __DIR__ . '/QueryHelper.php';
+ 
 /**
  * Query concepts from Semantic MediaWiki with optional filters
  * 
@@ -56,13 +58,13 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
             if ($requireAllGames && count($filterGameTitles) > 1) {
                 // AND logic: Add separate Has games:: condition for each selected game
                 foreach ($filterGameTitles as $filterGameTitle) {
-                    $safeGameTitle = str_replace(['[', ']', '|'], '', $filterGameTitle);
+                    $safeGameTitle = removeSpecialSMWQueryCharacters($filterGameTitle);
                     $queryConditions .= '[[Has games::' . $safeGameTitle . ']]';
                 }
             } else {
                 // OR logic: Add Has games:: condition with multiple OR conditions
                 $safeGameTitles = array_map(function($title) {
-                    return str_replace(['[', ']', '|'], '', $title);
+                    return removeSpecialSMWQueryCharacters($title);
                 }, $filterGameTitles);
                 $queryConditions .= '[[Has games::' . implode('||', $safeGameTitles) . ']]';
             }

@@ -5,6 +5,7 @@
 
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
+require_once __DIR__ . '/QueryHelper.php';
 
 /**
  * Query games from SMW with filters, sorting, and pagination
@@ -28,7 +29,7 @@ function queryGamesFromSMW($searchQuery = '', $platformFilter = '', $sortOrder =
 	}
 
 	// Remove special SMW query characters
-	$searchQuery = str_replace(['[[', ']]', '[', ']', '|', '::', '*', '{', '}'], '', $searchQuery);
+	$searchQuery = removeSpecialSMWQueryCharacters($searchQuery);
     
     return fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
 }
@@ -64,7 +65,7 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 		}
 
 		if (!empty($platformFilter)) {
-			$queryConditions .= '[[Has platforms::~*' . str_replace(['[', ']', '|'], '', $platformFilter) . ']]';
+			$queryConditions .= '[[Has platforms::~*' . removeSpecialSMWQueryCharacters($platformFilter) . ']]';
 		}
 
 		// Determine sort property and order
