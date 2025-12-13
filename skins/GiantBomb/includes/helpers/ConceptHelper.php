@@ -4,7 +4,9 @@
  * 
  * Provides utility functions for looking up concepts data from Semantic MediaWiki
  */
-
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
+ 
 require_once __DIR__ . '/QueryHelper.php';
  
 /**
@@ -180,23 +182,25 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
                         $conceptData['deck'] = $values[0] ?? '';
                         break;
                     case 'Has image':
-                        if ($dv) {
-                            // For wiki page types (like File:), get URL from the Title object
-                            $dataItem = $dv->getDataItem();
-                            if ($dataItem instanceof \SMW\DIWikiPage) {
-                                $imageTitle = $dataItem->getTitle();
-                                if ($imageTitle) {
-                                    $conceptData['image'] = $imageTitle->getFullURL();
-                                    $conceptData['image'] = str_replace('http://localhost:8080/wiki/', '', $conceptData['image']);
-                                }
-                            }
-                        }
+                        $rawImg = $values[0] ?? '';
+						if ( $rawImg !== '' && class_exists( PageHelper::class ) ) {
+							$resolved = PageHelper::resolveWikiImageUrl( $rawImg );
+							$conceptData['image'] = $resolved ?? '';
+						}
                         break;
                     case 'Has caption':
                         $conceptData['caption'] = $values[0] ?? '';
                         break;
                 }
             }
+            
+            // If no image from SMW, try legacy image fallback
+			if ( empty( $conceptData['image'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$conceptData['image'] = $legacyImage['thumb'];
+				}
+			}
             
             // Default to title if image caption is not set
             if (empty($conceptData['caption'])) {

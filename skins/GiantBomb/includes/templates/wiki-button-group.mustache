@@ -1,5 +1,9 @@
-<section id="wiki-buttons" class="wiki-section">
-    {{#buttons}}
-        <button class="red-gradient wiki-btn" data-title="{{title}}">{{label}}</button>
-    {{/buttons}}
-</section>
+<nav class="wiki-nav">
+	<ul class="wiki-nav__list">
+		{{#buttons}}
+		<li class="wiki-nav__item">
+			<a href="{{url}}" class="wiki-nav__link{{#isActive}} wiki-nav__link--active{{/isActive}}">{{label}}</a>
+		</li>
+		{{/buttons}}
+	</ul>
+</nav>

@@ -34,7 +34,7 @@ class RecordMapper {
 			return null;
 		}
 
-		$href = $title->getFullURL();
+		$href = $title->getLocalURL();
 		$slug = $title->getPrefixedURL();
 
 		$objectId = 'wiki:' . $pageId;
@@ -67,6 +67,12 @@ class RecordMapper {
 		}
 		if ( $record['thumbnail'] === null ) {
 			$record['thumbnail'] = self::getThumbnailForTitle( $title );
+		}
+		if ( $record['thumbnail'] === null ) {
+			$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+			if ( $legacyImage !== null ) {
+				$record['thumbnail'] = $legacyImage['thumb'] ?? $legacyImage['full'];
+			}
 		}
 		if ( $record['excerpt'] === null || $record['excerpt'] === '' ) {
 			$fromExtract = self::getExcerptForTitle( $title );
@@ -242,6 +248,8 @@ class RecordMapper {
 			'latest' => $latest ? $latest->getTimestamp() : null,
 		];
 	}
+
+	// Legacy image helper methods were deduplicated into LegacyImageHelper.
 
 	private static function runApiQuery( array $params ): ?array {
 		$fauxRequest = new FauxRequest( $params );

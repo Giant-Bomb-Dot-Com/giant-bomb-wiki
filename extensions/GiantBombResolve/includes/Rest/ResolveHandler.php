@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\GiantBombResolve\Rest;
 use ApiMain;
 use FauxRequest;
 use MediaWiki\Config\Config;
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\Handler;
@@ -17,7 +18,6 @@ use Title;
 use User;
 
 class ResolveHandler extends SimpleHandler {
-
 	private const GUID_PATTERN = '/^(\d{3,4})-(\d{1,12})$/';
 
 	/** @var Config */
@@ -194,6 +194,28 @@ class ResolveHandler extends SimpleHandler {
 			if ( $title ) {
 				$data['title'] = $title->getText();
 				$data['prefixedTitle'] = $title->getPrefixedText();
+				if (
+					in_array( 'image', $fields, true ) &&
+					( !isset( $data['image'] ) || $data['image'] === null )
+				) {
+					$fallbackImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+					if ( $fallbackImage !== null ) {
+						$fullUrl = $fallbackImage['full'] ?? $fallbackImage['thumb'];
+						$thumbUrl = $fallbackImage['thumb'] ?? $fallbackImage['full'];
+						if ( $fullUrl !== null || $thumbUrl !== null ) {
+							$data['image'] = [
+								'title' => $fallbackImage['caption'] ?? $fallbackImage['file'],
+								'descriptionUrl' => $fullUrl,
+								'url' => $fullUrl,
+								'width' => null,
+								'height' => null,
+								'thumbUrl' => $thumbUrl,
+								'thumbWidth' => null,
+								'thumbHeight' => null,
+							];
+						}
+					}
+				}
 			}
 		}
 

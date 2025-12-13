@@ -7,6 +7,9 @@ use MediaWiki\MediaWikiServices;
  * with caching support for performance.
  */
 
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
+ 
 // Load date helper functions
 require_once __DIR__ . '/DateHelper.php';
 
@@ -613,9 +616,21 @@ function processPlatformQueryResults($results) {
             // Handle image (complex structure)
             if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
                 $image = $printouts['Has image'][0];
-                $imageUrl = $image['fullurl'] ?? '';
-                $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $imageUrl);
+                $imageUrl = $image['fulltext'] ?? '';
+                if ( $imageUrl !== '' && class_exists( PageHelper::class ) ) {
+                    $resolved = PageHelper::resolveWikiImageUrl( $imageUrl );
+                    $platformData['image'] = $resolved ?? '';
+                }
             }
+            
+            // If no image from SMW, try legacy image fallback
+			if ( empty( $platformData['image'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$title = Title::newFromText( $pageName );
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$platformData['image'] = $legacyImage['thumb'];
+				}
+			}
 
             $platformData['gameCount'] = getGameCountForPlatform($pageName);
 

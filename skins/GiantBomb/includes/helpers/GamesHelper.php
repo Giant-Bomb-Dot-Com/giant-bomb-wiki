@@ -3,7 +3,9 @@
  * Helper functions for querying games data using SemanticMediaWiki
  */
 
-// Load platform helper functions
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
+
 require_once __DIR__ . '/PlatformHelper.php';
 require_once __DIR__ . '/QueryHelper.php';
 
@@ -192,17 +194,11 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 						$pageData['desc'] = $values[0] ?? '';
 						break;
 					case 'Has image':
-						if ($dv) {
-                            // For wiki page types (like File:), get URL from the Title object
-                            $dataItem = $dv->getDataItem();
-                            if ($dataItem instanceof \SMW\DIWikiPage) {
-                                $imageTitle = $dataItem->getTitle();
-                                if ($imageTitle) {
-                                    $pageData['img'] = $imageTitle->getFullURL();
-                                    $pageData['img'] = str_replace('http://localhost:8080/wiki/', '', $pageData['img']);
-                                }
-                            }
-                        }
+						$rawImg = $values[0] ?? '';
+						if ( $rawImg !== '' && class_exists( PageHelper::class ) ) {
+							$resolved = PageHelper::resolveWikiImageUrl( $rawImg );
+							$pageData['img'] = $resolved ?? '';
+						}
 						break;
 					case 'Has release date':
 						if (!empty($values[0])) {
@@ -224,6 +220,14 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
                             ];
 						}, $values);
 						break;
+				}
+			}
+
+			// If no image from SMW, try legacy image fallback
+			if ( empty( $pageData['img'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$pageData['img'] = $legacyImage['thumb'];
 				}
 			}
 
