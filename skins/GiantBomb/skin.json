@@ -34,11 +34,11 @@
         "resources/css/wikiNav.css",
         "resources/css/landingPage.css",
         "resources/css/gamePage.css",
-        "resources/css/newReleasesPage.css",
+        "resources/css/listingPage.css",
         "resources/css/filters.css",
-        "resources/css/itemGrid.css",
-        "resources/css/viewToggle.css",
-        "resources/css/platformsPage.css"
+        "resources/css/newReleasesPage.css",
+        "resources/css/platformsPage.css",
+        "resources/css/conceptsPage.css"
       ]
     },
     "skins.giantbomb.externalheader": {
@@ -64,6 +64,8 @@
         "resources/components/Pagination.vue",
         "resources/components/PlatformFilter.vue",
         "resources/components/PlatformList.vue",
+        "resources/components/ConceptFilter.vue",
+        "resources/components/ConceptList.vue",
         "resources/components/FilterContainer.vue",
         "resources/components/FilterDropdown.vue",
         "resources/components/FilterInput.vue",
@@ -71,6 +73,7 @@
         "resources/composables/index.js",
         "resources/composables/useFilters.js",
         "resources/composables/useSearch.js",
+        "resources/composables/useListData.js",
         "resources/helpers/countryFlags.js",
         "resources/helpers/htmlUtils.js",
         "resources/data/countryFlags.json"

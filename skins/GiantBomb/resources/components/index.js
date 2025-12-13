@@ -20,6 +20,8 @@ const components = {
   PlatformFilter: require("./PlatformFilter.vue"),
   PlatformList: require("./PlatformList.vue"),
   DatabaseAddPrompt: require("./DatabaseAddPrompt.vue"),
+  ConceptFilter: require("./ConceptFilter.vue"),
+  ConceptList: require("./ConceptList.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

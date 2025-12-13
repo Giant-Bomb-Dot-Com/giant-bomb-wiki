@@ -97,12 +97,12 @@ const FilterDropdown = require("./FilterDropdown.vue");
 const SearchableMultiSelect = require("./SearchableMultiSelect.vue");
 
 /**
- * PlatformFilter Component
- * Handles filtering of platforms by letter, sorting, and games
+ * ConceptFilter Component
+ * Handles filtering of concepts by letter, sorting, and games
  * Note: FilterContainer, FilterDropdown, and SearchableMultiSelect are globally registered
  */
 module.exports = exports = defineComponent({
-  name: "PlatformFilter",
+  name: "ConceptFilter",
   components: {
     FilterContainer,
     FilterDropdown,
@@ -115,7 +115,7 @@ module.exports = exports = defineComponent({
     },
     currentSort: {
       type: String,
-      default: "release_date",
+      default: "alphabetical",
     },
     currentRequireAllGames: {
       type: Boolean,
@@ -136,7 +136,6 @@ module.exports = exports = defineComponent({
 
     // Sort options
     const sortOptions = [
-      { value: "release_date", label: "Release Date" },
       { value: "alphabetical", label: "Alphabetical" },
       { value: "last_edited", label: "Last Edited" },
       { value: "last_created", label: "Last Created" },
@@ -144,7 +143,7 @@ module.exports = exports = defineComponent({
 
     // Filter state
     const selectedLetter = ref("");
-    const selectedSort = ref("release_date");
+    const selectedSort = ref("alphabetical");
     const selectedGames = ref([]);
     const requireAllGames = ref(false);
 
@@ -153,9 +152,9 @@ module.exports = exports = defineComponent({
     const pageSize = url.searchParams.get("page_size") || 48;
     // Use filters composable
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
-      useFilters("platforms-filter-changed", {
+      useFilters("concepts-filter-changed", {
         letter: "",
-        sort: "release_date",
+        sort: "alphabetical",
         game_title: [],
         require_all_games: false,
         page: 1,
@@ -195,7 +194,7 @@ module.exports = exports = defineComponent({
     const hasActiveFilters = computed(() => {
       return (
         selectedLetter.value !== "" ||
-        selectedSort.value !== "release_date" ||
+        selectedSort.value !== "alphabetical" ||
         selectedGames.value.length > 0
       );
     });
@@ -214,12 +213,12 @@ module.exports = exports = defineComponent({
 
     const clearFilters = () => {
       selectedLetter.value = "";
-      selectedSort.value = "release_date";
+      selectedSort.value = "alphabetical";
       selectedGames.value = [];
       requireAllGames.value = false;
       clearFiltersBase({
         letter: "",
-        sort: "release_date",
+        sort: "alphabetical",
         game_title: [],
         require_all_games: false,
         page: 1,
