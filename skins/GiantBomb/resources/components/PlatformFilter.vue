@@ -327,8 +327,8 @@ module.exports = exports = defineComponent({
 
 .game-image {
   flex-shrink: 0;
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   border-radius: 4px;
   background: #2a2a2a;

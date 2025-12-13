@@ -1,9 +1,8 @@
 /**
  * Game Page Styles
- * Modern, responsive layout for game detail pages
  */
 
-.game-page {
+.wiki-page {
   background-color: transparent;
   min-height: 100vh;
 }
@@ -34,7 +33,6 @@
   width: 200px;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .game-hero__cover .game-image-viewer {
@@ -283,8 +281,7 @@
 
 .game-tag:hover {
   background: #e0e0e0;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: #e63946;
 }
 
 /* Tag Variants */
@@ -583,10 +580,8 @@
 }
 
 .game-subpage__link:hover {
-  background: #4caf50;
-  color: #ffffff;
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  border-color: #e63946;
+  color: #e63946;
 }
 
 .game-subpage__icon {
@@ -622,9 +617,8 @@
 }
 
 .game-quick-link__link:hover {
-  background: #1a1a2e;
-  color: #ffffff;
-  transform: translateX(4px);
+  border-color: #e63946;
+  color: #e63946;
 }
 
 /* Reviews Section */
