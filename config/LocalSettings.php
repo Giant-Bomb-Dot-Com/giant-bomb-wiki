@@ -159,17 +159,17 @@ $wgExternalDataSources['gb_api_dump'] = [
     'password' => getenv("MARIADB_PASSWORD")
 ];
 
-$wgExternalDatabases['external_db'] = [ 
-    'class' => 'DatabaseLoadBalancer', 
-    'hosts' => [ 
-        [ 
+$wgExternalDatabases['external_db'] = [
+    'class' => 'DatabaseLoadBalancer',
+    'hosts' => [
+        [
             'type' => 'mysql',
-            'host' => getenv( 'EXTERNAL_DB_HOST' ), 
+            'host' => getenv( 'EXTERNAL_DB_HOST' ),
             'dbname' => getenv( 'EXTERNAL_DB_NAME' ),
             'user' => getenv( 'EXTERNAL_DB_USER' ),
-            'password' => getenv( 'EXTERNAL_DB_PASSWORD' ) 
-        ] 
-    ] 
+            'password' => getenv( 'EXTERNAL_DB_PASSWORD' )
+        ]
+    ]
 ];
 
 
@@ -389,5 +389,10 @@ $smwgQMaxLimit = 15000;
 #Allow a large range of conditions in SMW queries
 $smwgQMaxSize = 100;
 
-#Allow custom favicon location 
+#Allow custom favicon location
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
+
+# Scribunto is a default Mediawiki extension that permits scripting languages in Mediawiki pages
+$wgScribuntoDefaultEngine = 'luastandalone';
+$wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB

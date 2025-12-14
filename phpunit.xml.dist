@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/phpunit/bootstrap.php"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+		 colors="true"
+		 backupGlobals="false"
+		 convertDeprecationsToExceptions="true"
+		 convertErrorsToExceptions="true"
+		 convertNoticesToExceptions="true"
+		 convertWarningsToExceptions="true"
+		 forceCoversAnnotation="true"
+		 failOnWarning="true"
+		 stopOnFailure="false"
+		 failOnRisky="true"
+		 beStrictAboutTestsThatDoNotTestAnything="true"
+		 beStrictAboutOutputDuringTests="true"
+		 verbose="false"
+		 printerClass="MediaWikiPHPUnitResultPrinter"
+		 stderr="true">
+	<!-- Output only to stderr to avoid "Headers already sent" problems -->
+	<php>
+		<ini name="memory_limit" value="-1" />
+		<ini name="max_execution_time" value="0" />
+	</php>
+	<testsuites>
+		<testsuite name="core:unit">
+			<directory>tests/phpunit/unit</directory>
+		</testsuite>
+		<testsuite name="extensions:unit">
+			<file>tests/phpunit/suites/ExtensionsUnitTestSuite.php</file>
+		</testsuite>
+		<testsuite name="skins:unit">
+			<file>tests/phpunit/suites/SkinsUnitTestSuite.php</file>
+		</testsuite>
+		<testsuite name="includes">
+			<directory>tests/phpunit/includes</directory>
+		</testsuite>
+		<testsuite name="parsertests">
+			<file>tests/phpunit/suites/CoreParserTestSuite.php</file>
+			<file>tests/phpunit/suites/ExtensionsParserTestSuite.php</file>
+		</testsuite>
+		<testsuite name="skins">
+			<directory>tests/phpunit/structure</directory>
+			<file>tests/phpunit/suites/ExtensionsTestSuite.php</file>
+		</testsuite>
+		<!-- As there is a class Maintenance, we cannot use the name "maintenance" directly -->
+		<testsuite name="maintenance_suite">
+			<directory>tests/phpunit/maintenance</directory>
+		</testsuite>
+		<testsuite name="structure">
+			<directory>tests/phpunit/structure</directory>
+		</testsuite>
+		<testsuite name="tests">
+			<directory>tests/phpunit/tests</directory>
+		</testsuite>
+		<testsuite name="extensions">
+			<directory>tests/phpunit/structure</directory>
+			<file>tests/phpunit/suites/ExtensionsTestSuite.php</file>
+			<file>tests/phpunit/suites/ExtensionsParserTestSuite.php</file>
+		</testsuite>
+		<testsuite name="integration">
+			<directory>tests/phpunit/integration</directory>
+		</testsuite>
+		<testsuite name="docs">
+			<directory>tests/phpunit/docs</directory>
+		</testsuite>
+	</testsuites>
+	<groups>
+		<exclude>
+			<group>Broken</group>
+		</exclude>
+	</groups>
+	<coverage includeUncoveredFiles="false">
+		<include>
+			<directory suffix=".php">includes</directory>
+			<directory suffix=".php">languages</directory>
+			<directory suffix=".php">maintenance</directory>
+			<directory suffix=".php">extensions</directory>
+			<directory suffix=".php">skins</directory>
+		</include>
+		<exclude>
+			<directory suffix=".php">languages/messages</directory>
+			<directory suffix=".php">maintenance/benchmarks</directory>
+			<directory suffix=".php">extensions/*/tests</directory>
+			<directory suffix=".php">skins/*/tests</directory>
+		</exclude>
+	</coverage>
+	<listeners>
+		<listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+			<arguments>
+				<array>
+					<element key="slowThreshold">
+						<integer>100</integer>
+					</element>
+					<element key="reportLength">
+						<integer>10</integer>
+					</element>
+				</array>
+			</arguments>
+		</listener>
+	</listeners>
+	<extensions>
+		<extension class="MediaWikiLoggerPHPUnitExtension" />
+		<extension class="MediaWikiTeardownPHPUnitExtension" />
+	</extensions>
+</phpunit>
