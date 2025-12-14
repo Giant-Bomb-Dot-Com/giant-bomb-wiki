@@ -1,232 +1,37 @@
-.new-releases-page {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+/**
+ * Release-specific styles
+ * Extends shared listing styles from listingPage.css
+ * Uses .new-releases-page for page-specific overrides while keeping .listing-* classes for shared behavior
+ */
 
-.releases-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
+/* Release page uses portrait aspect ratio cards by default via listing-card-image--portrait class */
+/* Only add release-specific overrides here */
 
-.releases-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.releases-content {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 30px;
-}
-
-.releases-sidebar {
-  order: 2;
-}
-
-.releases-main-wrapper {
-  order: 1;
-  min-width: 0; /* Prevents grid blowout */
-}
-
-.week-group {
-  margin-bottom: 40px;
-}
-
-.week-label {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #444;
-}
-
-/* Default Grid View */
-.releases-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
-}
-
-.release-card {
-  border-radius: 8px;
-}
-
-.release-card-link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-.release-card-link:hover .release-title {
-  text-decoration: underline;
-}
-
-.release-image {
-  width: 100%;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-  background: #44446e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-
-.release-card:hover .release-image {
-  border-color: #44446e;
-}
-
-.release-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  transition: transform 0.2s;
-}
-
-.release-card:hover .release-image img {
-  transform: scale(0.9);
-}
-
-.release-image-placeholder {
-  font-size: 4rem;
-  color: #555;
-}
-
-.release-info {
-  padding: 15px 5px;
-}
-
-.release-title {
-  font-size: 1rem;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
-}
-
-.release-date {
+/* Release-specific: date display */
+.listing-card-release-date {
   display: flex;
   font-size: 0.85rem;
   color: #999;
   margin-bottom: 10px;
 }
 
-.release-platforms {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+/* Release card title is slightly smaller */
+.new-releases-page .listing-card-title {
+  font-size: 1rem;
 }
 
-.platform-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #ccc;
+/* List view overrides for release page */
+.new-releases-page.view-list .listing-card-title {
+  font-size: 1rem;
+  margin: 0 0 6px 0;
 }
 
-.no-releases {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
-  font-size: 1.2rem;
+.new-releases-page.view-list .listing-card-release-date {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
 }
 
-/* List View Styles - now in viewToggle.css */
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .new-releases-page {
-    padding: 10px;
-  }
-
-  .releases-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-
-  .releases-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .releases-content {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .releases-sidebar {
-    order: 1;
-  }
-
-  .releases-main-wrapper {
-    order: 2;
-  }
-
-  /* Force list view on mobile */
-  .releases-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .release-card {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .release-card-link {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 15px;
-  }
-
-  .release-image {
-    width: 120px;
-    min-width: 120px;
-    aspect-ratio: 3/4;
-    flex-shrink: 0;
-  }
-
-  .release-info {
-    flex: 1;
-    padding: 10px 10px 10px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .release-title {
-    font-size: 1rem;
-    margin: 0 0 6px 0;
-    -webkit-line-clamp: 3;
-  }
-
-  .release-date {
-    font-size: 0.8rem;
-    margin-bottom: 8px;
-  }
-
-  .platform-badge {
-    font-size: 0.7rem;
-    padding: 3px 6px;
-  }
-
-  .week-group {
-    margin-bottom: 30px;
-  }
-
-  .week-label {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-  }
+.new-releases-page.view-list .platform-badge {
+  font-size: 0.7rem;
+  padding: 3px 6px;
 }

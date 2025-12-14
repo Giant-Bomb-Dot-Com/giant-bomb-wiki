@@ -105,9 +105,9 @@ describe("GameFilter", () => {
       expect(options[1].text()).toBe("Title (Z-A)");
       expect(options[1].element.value).toBe("title-desc");
       expect(options[2].text()).toBe("Newest First");
-      expect(options[2].element.value).toBe("date-desc");
+      expect(options[2].element.value).toBe("release-date-desc");
       expect(options[3].text()).toBe("Oldest First");
-      expect(options[3].element.value).toBe("date-asc");
+      expect(options[3].element.value).toBe("release-date-asc");
     });
   });
 
@@ -149,10 +149,10 @@ describe("GameFilter", () => {
       });
 
       const sortSelect = wrapper.find("#sort-filter");
-      await sortSelect.setValue("date-desc");
+      await sortSelect.setValue("release-date-desc");
 
       // Verify the component state updated
-      expect(wrapper.vm.selectedSort).toBe("date-desc");
+      expect(wrapper.vm.selectedSort).toBe("release-date-desc");
 
       // Verify event was dispatched with correct details
       expect(window.dispatchEvent).toHaveBeenCalledWith(
@@ -161,7 +161,7 @@ describe("GameFilter", () => {
           detail: {
             search: "",
             platform: "",
-            sort: "date-desc",
+            sort: "release-date-desc",
             page: 1,
           },
         }),
@@ -214,7 +214,7 @@ describe("GameFilter", () => {
       window.history.replaceState(
         {},
         "",
-        "?search=test&platform=PC&sort=date-desc",
+        "?search=test&platform=PC&sort=release-date-desc",
       );
 
       wrapper = mount(GameFilter, {
@@ -228,7 +228,7 @@ describe("GameFilter", () => {
       // Verify filters are loaded from URL
       expect(wrapper.vm.searchQuery).toBe("test");
       expect(wrapper.vm.selectedPlatform).toBe("PC");
-      expect(wrapper.vm.selectedSort).toBe("date-desc");
+      expect(wrapper.vm.selectedSort).toBe("release-date-desc");
 
       const clearButton = wrapper.find(".clear-filters-btn");
       expect(clearButton.exists()).toBe(true);
@@ -294,7 +294,7 @@ describe("GameFilter", () => {
       });
 
       const sortSelect = wrapper.find("#sort-filter");
-      await sortSelect.setValue("date-desc");
+      await sortSelect.setValue("release-date-desc");
       await sortSelect.trigger("change");
 
       // Verify CustomEvent was dispatched
@@ -304,7 +304,7 @@ describe("GameFilter", () => {
       expect(event.detail).toEqual({
         search: "",
         platform: "",
-        sort: "date-desc",
+        sort: "release-date-desc",
         page: 1,
       });
     });
@@ -348,7 +348,7 @@ describe("GameFilter", () => {
       window.history.replaceState(
         {},
         "",
-        "?search=test&platform=PC&sort=date-desc",
+        "?search=test&platform=PC&sort=release-date-desc",
       );
 
       wrapper = mount(GameFilter, {

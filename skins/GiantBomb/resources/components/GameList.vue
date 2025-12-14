@@ -1,36 +1,39 @@
 <template>
-  <main class="games-main">
-    <div v-if="loading" class="item-loading">
+  <main class="listing-main">
+    <div v-if="loading" class="listing-loading">
       <div class="loading-spinner"></div>
       <p>Loading games...</p>
     </div>
 
-    <div v-else-if="games.length > 0">
-      <div class="game-grid">
-        <a
-          v-for="(game, index) in games"
-          :key="index"
-          :href="game.url"
-          class="game-card-link"
-        >
-          <div class="game-card">
-            <div class="game-image">
+    <div v-else-if="items.length > 0">
+      <div class="listing-grid">
+        <div v-for="(game, index) in items" :key="index" class="listing-card">
+          <a :href="game.url" class="listing-card-link">
+            <div v-if="game.img" class="listing-card-image">
+              <img :src="game.img" :alt="game.title" loading="lazy" />
+            </div>
+            <div
+              v-else
+              class="listing-card-image listing-card-image-placeholder"
+            >
               <img
-                v-if="game.img"
-                :src="game.img"
-                :alt="game.title"
+                src="https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png"
+                alt="Giant Bomb Default Image"
                 loading="lazy"
               />
-              <div v-else class="game-image-placeholder">
-                <span class="game-placeholder-icon">🎮</span>
-              </div>
             </div>
-            <div class="game-info">
-              <h3 class="game-title">{{ game.title }}</h3>
-              <p v-if="game.date" class="game-date">{{ game.date }}</p>
+
+            <div class="listing-card-info">
+              <h3 class="listing-card-title">{{ game.title }}</h3>
+              <div v-if="game.date" class="listing-card-meta">
+                {{ game.date }}
+              </div>
+              <div v-if="game.desc" class="listing-card-deck">
+                {{ game.desc }}
+              </div>
               <div
                 v-if="game.platforms && game.platforms.length > 0"
-                class="item-platforms"
+                class="platform-badges"
               >
                 <span
                   v-for="(platform, idx) in game.platforms.slice(0, 3)"
@@ -48,24 +51,24 @@
                   +{{ game.platforms.length - 3 }}
                 </span>
               </div>
-              <p v-if="game.desc" class="game-desc">{{ game.desc }}</p>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
 
       <!-- Pagination Component -->
-      <Pagination
-        :total-items="paginationData.totalItems"
-        :items-per-page="paginationData.itemsPerPage"
-        :current-page="paginationData.currentPage"
+      <pagination
+        :total-items="totalCount"
+        :items-per-page="itemsPerPage"
+        :current-page="currentPage"
         @page-change="handlePageChange"
+        :items-per-page-options="[24, 48, 72, 96]"
       />
     </div>
 
-    <div v-else class="empty-state">
+    <div v-else class="listing-empty">
       <p>No games found matching your filters.</p>
-      <p class="empty-state-hint">
+      <p class="listing-empty-hint">
         Try adjusting your filters or clearing them.
       </p>
     </div>
@@ -73,15 +76,15 @@
 </template>
 
 <script>
-const { ref, toRefs, onMounted, onUnmounted } = require("vue");
-const { decodeHtmlEntities } = require("../helpers/htmlUtils.js");
+const { defineComponent, toRefs, onMounted, onUnmounted } = require("vue");
 const Pagination = require("./Pagination.vue");
+const { useListData, FILTER_TYPES } = require("../composables/useListData.js");
 
 /**
  * GameList Component
  * Displays games and handles async filtering
  */
-module.exports = exports = {
+module.exports = exports = defineComponent({
   name: "GameList",
   components: {
     Pagination,
@@ -98,161 +101,72 @@ module.exports = exports = {
     },
   },
   setup(props) {
-    const { initialData, paginationInfo } = toRefs(props);
-    const games = ref([]);
-    const loading = ref(false);
-    const paginationData = ref({
-      currentPage: 1,
-      totalPages: 1,
-      itemsPerPage: 25,
-      totalItems: 0,
-      startItem: 0,
-      endItem: 0,
+    const propsRefs = toRefs(props);
+
+    // Filter configuration for games
+    const filterConfig = {
+      search: {
+        queryParam: "search",
+        type: FILTER_TYPES.STRING,
+        default: "",
+        omitIfDefault: true,
+      },
+      platform: {
+        queryParam: "platform",
+        type: FILTER_TYPES.STRING,
+        default: "",
+        omitIfDefault: true,
+      },
+      sort: {
+        queryParam: "sort",
+        type: FILTER_TYPES.STRING,
+        default: "title-asc",
+        omitIfDefault: true,
+      },
+    };
+
+    // Pagination configuration for games
+    const paginationConfig = {
+      pageParam: "page",
+      pageSizeParam: "perPage",
+      responseFormat: "nested",
+      responseKey: "pagination",
+    };
+
+    // Use the shared list data composable with games configuration
+    const {
+      items,
+      loading,
+      totalCount,
+      currentPage,
+      totalPages,
+      itemsPerPage,
+      handlePageChange,
+      initializeFromProps,
+      setupFilterListener,
+      teardownFilterListener,
+    } = useListData({
+      actionName: "get-games",
+      dataKey: "games",
+      filterEventName: "games-filter-changed",
+      filterConfig,
+      paginationConfig,
+      hasPagination: true,
     });
 
-    // Handle pagination change from Pagination component
-    const handlePageChange = ({ page, itemsPerPage }) => {
-      // Get current URL params
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-
-      // Preserve existing search, platform, and sort params
-      const search = params.get("search") || "";
-      const platform = params.get("platform") || "";
-      const sort = params.get("sort") || "title-asc";
-
-      // Update page param
-      if (page === 1) {
-        params.delete("page");
-      } else {
-        params.set("page", page);
-      }
-
-      // Update itemsPerPage param
-      if (itemsPerPage !== paginationData.value.itemsPerPage) {
-        if (itemsPerPage === 25) {
-          params.delete("perPage");
-        } else {
-          params.set("perPage", itemsPerPage);
-        }
-        // Reset to page 1 when changing items per page
-        params.delete("page");
-        page = 1;
-      }
-
-      // Update URL in browser
-      window.history.pushState({}, "", `${url.pathname}?${params.toString()}`);
-
-      // Update local pagination data immediately
-      paginationData.value.itemsPerPage = itemsPerPage;
-      paginationData.value.currentPage = page;
-
-      // Fetch games for the new page
-      fetchGames(search, platform, sort, page);
-    };
-
-    // Fetch games from API
-    const fetchGames = async (
-      search = "",
-      platform = "",
-      sort = "title-asc",
-      page = 1,
-    ) => {
-      loading.value = true;
-
-      try {
-        // Build API URL
-        const params = new URLSearchParams();
-        params.set("action", "get-games");
-        if (search) params.set("search", search);
-        if (platform) params.set("platform", platform);
-        if (sort && sort !== "title-asc") params.set("sort", sort);
-        if (page > 1) params.set("page", page);
-        params.set("perPage", paginationData.value.itemsPerPage);
-
-        const url = `${window.location.pathname}?${params.toString()}`;
-
-        const response = await fetch(url, {
-          method: "GET",
-          credentials: "same-origin",
-          headers: {
-            Accept: "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const text = await response.text();
-          console.error("Response body:", text);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          games.value = data.games || [];
-          paginationData.value = data.pagination || {
-            currentPage: 1,
-            totalPages: 1,
-            itemsPerPage: 25,
-            totalItems: 0,
-            startItem: 0,
-            endItem: 0,
-          };
-        } else {
-          console.error("API returned error:", data);
-          games.value = [];
-        }
-      } catch (error) {
-        console.error("Failed to fetch games:", error);
-        // Keep existing data on error
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    // Handle filter change events
-    const handleFilterChange = (event) => {
-      const { search, platform, sort, page } = event.detail;
-      fetchGames(search, platform, sort, page);
-    };
-
     onMounted(() => {
-      // Parse initial server-rendered data
-      try {
-        const decoded = decodeHtmlEntities(initialData.value);
-        games.value = JSON.parse(decoded);
-      } catch (e) {
-        console.error("Failed to parse initial data:", e);
-        games.value = [];
-      }
+      // Initialize from server-rendered props
+      initializeFromProps({
+        initialData: propsRefs.initialData.value,
+        paginationInfo: propsRefs.paginationInfo.value,
+      });
 
-      // Parse pagination info
-      try {
-        const decodedPagination = decodeHtmlEntities(paginationInfo.value);
-        const parsedPagination = JSON.parse(decodedPagination);
-        paginationData.value = {
-          currentPage: parsedPagination.currentPage || 1,
-          totalPages: parsedPagination.totalPages || 1,
-          itemsPerPage: parsedPagination.itemsPerPage || 25,
-          totalItems: parsedPagination.totalItems || 0,
-          startItem:
-            (parsedPagination.currentPage - 1) * parsedPagination.itemsPerPage +
-            1,
-          endItem: Math.min(
-            parsedPagination.currentPage * parsedPagination.itemsPerPage,
-            parsedPagination.totalItems,
-          ),
-        };
-      } catch (e) {
-        console.error("Failed to parse pagination info:", e);
-      }
-
-      // Listen for filter changes
-      window.addEventListener("games-filter-changed", handleFilterChange);
+      // Setup filter event listener
+      setupFilterListener();
     });
 
     onUnmounted(() => {
-      window.removeEventListener("games-filter-changed", handleFilterChange);
+      teardownFilterListener();
     });
 
     // Helper functions for platform display
@@ -279,39 +193,27 @@ module.exports = exports = {
     };
 
     return {
-      games,
+      items,
       loading,
-      paginationData,
+      totalCount,
+      currentPage,
+      totalPages,
+      itemsPerPage,
       handlePageChange,
       getPlatformTitle,
       getPlatformAbbrev,
       getRemainingPlatformsTitles,
     };
   },
-};
+});
 </script>
 
 <style>
-/* Shared grid/list styles are in itemGrid.css */
-
-/* Component-specific styles */
-.games-count {
-  font-size: 0.9rem;
-  color: #999;
-  margin: 0;
-}
-
-.game-image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-}
-
-.game-placeholder-icon {
-  font-size: 4rem;
-  opacity: 0.3;
+/* All shared styles are now in listingPage.css */
+/* Component-specific styles only below */
+.listing-empty-hint {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 0.5rem;
 }
 </style>

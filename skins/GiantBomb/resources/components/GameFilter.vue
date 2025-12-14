@@ -20,7 +20,7 @@
       v-model="selectedPlatform"
       :options="platforms"
       placeholder="All Platforms"
-      value-key="name"
+      value-key="displayName"
       label-key="displayName"
       @update:model-value="applyFilters"
     ></filter-dropdown>
@@ -77,8 +77,8 @@ module.exports = exports = defineComponent({
     const sortOptions = [
       { value: "title-asc", label: "Title (A-Z)" },
       { value: "title-desc", label: "Title (Z-A)" },
-      { value: "date-desc", label: "Newest First" },
-      { value: "date-asc", label: "Oldest First" },
+      { value: "release-date-desc", label: "Newest First" },
+      { value: "release-date-asc", label: "Oldest First" },
     ];
 
     // Use filters composable
