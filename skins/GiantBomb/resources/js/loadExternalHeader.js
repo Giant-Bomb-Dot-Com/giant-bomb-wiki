@@ -89,7 +89,7 @@
           js: data.js || "",
           timestamp: Date.now(),
           version: data.version,
-        })
+        }),
       );
     } catch (err) {
       // Ignore storage failures
@@ -127,7 +127,8 @@
   }
 
   function renderHeader(attempts) {
-    const remaining = typeof attempts === "number" ? attempts : MAX_RENDER_ATTEMPTS;
+    const remaining =
+      typeof attempts === "number" ? attempts : MAX_RENDER_ATTEMPTS;
     if (
       typeof window.GiantBombHeader !== "undefined" &&
       window.GiantBombHeader &&
@@ -250,12 +251,15 @@
     })
     .catch(function (err) {
       console.error("Failed to load Giant Bomb header assets", err);
-      const stale = loadFromStorage({ version: cacheVersion, allowStale: true });
+      const stale = loadFromStorage({
+        version: cacheVersion,
+        allowStale: true,
+      });
       if (stale) {
         console.warn("Using stale cached Giant Bomb header assets");
         applyAssets(stale);
         return;
       }
-    hideEmptyContainer();
+      hideEmptyContainer();
     });
 })();
