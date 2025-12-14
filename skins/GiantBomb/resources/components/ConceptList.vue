@@ -2,19 +2,19 @@
   <main class="listing-main">
     <div v-if="loading" class="listing-loading">
       <div class="loading-spinner"></div>
-      <p>Loading platforms...</p>
+      <p>Loading concepts...</p>
     </div>
 
     <div v-else-if="items.length > 0">
       <div class="listing-grid">
         <div
-          v-for="(platform, index) in items"
+          v-for="(concept, index) in items"
           :key="index"
           class="listing-card"
         >
-          <a :href="platform.url" class="listing-card-link">
-            <div v-if="platform.image" class="listing-card-image">
-              <img :src="platform.image" :alt="platform.title" loading="lazy" />
+          <a :href="concept.url" class="listing-card-link">
+            <div v-if="concept.image" class="listing-card-image">
+              <img :src="concept.image" :alt="concept.caption" loading="lazy" />
             </div>
             <div
               v-else
@@ -28,21 +28,9 @@
             </div>
 
             <div class="listing-card-info">
-              <h3 class="listing-card-title">{{ platform.title }}</h3>
-              <div v-if="platform.deck" class="listing-card-deck">
-                {{ platform.deck }}
-              </div>
-              <div
-                v-if="platform.releaseDateFormatted"
-                class="listing-card-meta listing-card-date"
-              >
-                Launched on {{ platform.releaseDateFormatted }}
-              </div>
-              <div
-                v-if="platform.gameCount"
-                class="listing-card-meta listing-card-game-count"
-              >
-                Games: {{ platform.gameCount }}
+              <h3 class="listing-card-title">{{ concept.title }}</h3>
+              <div v-if="concept.deck" class="listing-card-deck">
+                {{ concept.deck }}
               </div>
             </div>
           </a>
@@ -60,7 +48,7 @@
     </div>
 
     <div v-else class="listing-empty">
-      <p>No platforms found for the selected filters.</p>
+      <p>No concepts found for the selected filters.</p>
     </div>
   </main>
 </template>
@@ -75,11 +63,11 @@ const {
 } = require("../composables/useListData.js");
 
 /**
- * PlatformList Component
- * Displays platforms and handles async filtering and pagination
+ * ConceptList Component
+ * Displays concepts and handles async filtering and pagination
  */
 module.exports = exports = defineComponent({
-  name: "PlatformList",
+  name: "ConceptList",
   components: {
     Pagination,
   },
@@ -108,7 +96,7 @@ module.exports = exports = defineComponent({
   setup(props) {
     const propsRefs = toRefs(props);
 
-    // Filter configuration for platforms
+    // Filter configuration for concepts
     const filterConfig = {
       letter: {
         queryParam: "letter",
@@ -119,7 +107,7 @@ module.exports = exports = defineComponent({
       sort: {
         queryParam: "sort",
         type: FILTER_TYPES.STRING,
-        default: "release_date",
+        default: "alphabetical",
         omitIfDefault: true,
       },
       gameTitles: {
@@ -140,14 +128,14 @@ module.exports = exports = defineComponent({
       },
     };
 
-    // Pagination configuration for platforms
+    // Pagination configuration for concepts
     const paginationConfig = {
       pageParam: "page",
       pageSizeParam: "page_size",
       responseFormat: "flat",
     };
 
-    // Use the shared list data composable with platforms configuration
+    // Use the shared list data composable with concepts configuration
     const {
       items,
       loading,
@@ -159,12 +147,12 @@ module.exports = exports = defineComponent({
       setupFilterListener,
       teardownFilterListener,
     } = useListData({
-      actionName: "get-platforms",
-      dataKey: "platforms",
-      filterEventName: "platforms-filter-changed",
+      actionName: "get-concepts",
+      dataKey: "concepts",
+      filterEventName: "concepts-filter-changed",
       filterConfig,
       paginationConfig,
-      defaultSort: "release_date",
+      defaultSort: "alphabetical",
       hasPagination: true,
     });
 

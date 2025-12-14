@@ -1,36 +1,28 @@
 const { mount } = require("@vue/test-utils");
-const PlatformList = require("../PlatformList.vue");
+const ConceptList = require("../ConceptList.vue");
 
-describe("PlatformList", () => {
-  const mockPlatforms = [
+describe("ConceptList", () => {
+  const mockConcepts = [
     {
-      title: "PlayStation 5",
-      shortName: "PS5",
-      url: "/wiki/PlayStation_5",
+      title: "Action",
+      url: "/wiki/Concepts/Action",
       image:
-        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970349-ps5.jpg",
-      deck: "Sony's next-generation console",
-      releaseDateTimestamp: 1605099600,
-      releaseDateFormatted: "November 12, 2020",
-      dateSpecificity: "full",
-      gameCount: 450,
+        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970349-action.jpg",
+      deck: "Games focused on physical challenges",
+      caption: "Action",
     },
     {
-      title: "Xbox Series X",
-      shortName: "XSX",
-      url: "/wiki/Xbox_Series_X",
+      title: "Adventure",
+      url: "/wiki/Concepts/Adventure",
       image:
-        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970350-xsx.jpg",
-      deck: "Microsoft's flagship console",
-      releaseDateTimestamp: 1605014400,
-      releaseDateFormatted: "November 10, 2020",
-      dateSpecificity: "full",
-      gameCount: 380,
+        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970350-adventure.jpg",
+      deck: "Games emphasizing exploration and puzzle-solving",
+      caption: "Adventure",
     },
   ];
 
   const defaultProps = {
-    initialData: JSON.stringify(mockPlatforms),
+    initialData: JSON.stringify(mockConcepts),
     totalCount: "2",
     currentPage: "1",
     totalPages: "1",
@@ -43,7 +35,7 @@ describe("PlatformList", () => {
     // Clear all mocks before each test
     jest.clearAllMocks();
 
-    // Suppress expected "Failed to fetch platforms" and jsdom navigation errors
+    // Suppress expected "Failed to fetch concepts" and jsdom navigation errors
     // These occur in tests that don't mock fetch or navigation
     consoleErrorSpy = jest
       .spyOn(console, "error")
@@ -55,10 +47,10 @@ describe("PlatformList", () => {
         ) {
           return;
         }
-        // Suppress "Failed to fetch platforms" errors
+        // Suppress "Failed to fetch concepts" errors
         if (
           typeof message === "string" &&
-          message.includes("Failed to fetch platforms")
+          message.includes("Failed to fetch concepts")
         ) {
           return; // Suppress this specific error
         }
@@ -72,8 +64,8 @@ describe("PlatformList", () => {
     // Mock window.location
     delete window.location;
     window.location = {
-      pathname: "/wiki/Platforms",
-      href: "http://localhost:8080/wiki/Platforms",
+      pathname: "/wiki/Concepts",
+      href: "http://localhost:8080/wiki/Concepts",
       origin: "http://localhost:8080",
       search: "",
     };
@@ -94,46 +86,40 @@ describe("PlatformList", () => {
   });
 
   describe("Initial Render", () => {
-    it("renders platforms grid", async () => {
-      const wrapper = mount(PlatformList, {
+    it("renders concepts grid", async () => {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      const platformsGrid = wrapper.find(".listing-grid");
-      expect(platformsGrid.exists()).toBe(true);
+      const conceptsGrid = wrapper.find(".listing-grid");
+      expect(conceptsGrid.exists()).toBe(true);
 
-      const platformCards = wrapper.findAll(".listing-card");
-      expect(platformCards).toHaveLength(2);
+      const conceptCards = wrapper.findAll(".listing-card");
+      expect(conceptCards).toHaveLength(2);
     });
 
-    it("displays platform information correctly", async () => {
-      const wrapper = mount(PlatformList, {
+    it("displays concept information correctly", async () => {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      const firstPlatform = wrapper.findAll(".listing-card")[0];
-      const title = firstPlatform.find(".listing-card-title");
-      expect(title.text()).toBe("PlayStation 5");
+      const firstConcept = wrapper.findAll(".listing-card")[0];
+      const title = firstConcept.find(".listing-card-title");
+      expect(title.text()).toBe("Action");
 
-      const deck = firstPlatform.find(".listing-card-deck");
-      expect(deck.text()).toBe("Sony's next-generation console");
+      const deck = firstConcept.find(".listing-card-deck");
+      expect(deck.text()).toBe("Games focused on physical challenges");
 
-      const date = firstPlatform.find(".listing-card-date");
-      expect(date.text()).toContain("November 12, 2020");
-
-      const gameCount = firstPlatform.find(".listing-card-game-count");
-      expect(gameCount.text()).toBe("Games: 450");
-
-      const link = firstPlatform.find(".listing-card-link");
-      expect(link.attributes("href")).toBe("/wiki/PlayStation_5");
+      const link = firstConcept.find(".listing-card-link");
+      expect(link.attributes("href")).toBe("/wiki/Concepts/Action");
     });
 
-    it("displays platform images", async () => {
-      const wrapper = mount(PlatformList, {
+    it("displays concept images", async () => {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -142,24 +128,22 @@ describe("PlatformList", () => {
       const images = wrapper.findAll(".listing-card-image img");
       expect(images).toHaveLength(2);
       expect(images[0].attributes("src")).toBe(
-        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970349-ps5.jpg",
+        "https://www.giantbomb.com/a/uploads/scale_small/0/3699/2970349-action.jpg",
       );
-      expect(images[0].attributes("alt")).toBe("PlayStation 5");
+      expect(images[0].attributes("alt")).toBe("Action");
     });
 
     it("displays placeholder image when no image is provided", async () => {
       const noImageData = [
         {
-          title: "Platform Without Image",
-          url: "/wiki/Platform_Without_Image",
+          title: "Concept Without Image",
+          url: "/wiki/Concepts/Concept_Without_Image",
           image: null,
-          deck: "A platform without an image",
-          releaseDateFormatted: "January 1, 2000",
-          gameCount: 10,
+          deck: "A concept without an image",
         },
       ];
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
           initialData: JSON.stringify(noImageData),
           totalCount: "1",
@@ -178,7 +162,7 @@ describe("PlatformList", () => {
     });
 
     it("displays deck when provided", async () => {
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -186,22 +170,20 @@ describe("PlatformList", () => {
 
       const decks = wrapper.findAll(".listing-card-deck");
       expect(decks).toHaveLength(2);
-      expect(decks[0].text()).toBe("Sony's next-generation console");
+      expect(decks[0].text()).toBe("Games focused on physical challenges");
     });
 
     it("does not display deck when not provided", async () => {
       const noDeckData = [
         {
-          title: "Platform Without Deck",
-          url: "/wiki/Platform_Without_Deck",
+          title: "Concept Without Deck",
+          url: "/wiki/Concepts/Concept_Without_Deck",
           image: "https://example.com/test.jpg",
           deck: null,
-          releaseDateFormatted: "January 1, 2000",
-          gameCount: 10,
         },
       ];
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
           initialData: JSON.stringify(noDeckData),
           totalCount: "1",
@@ -215,38 +197,11 @@ describe("PlatformList", () => {
       const deck = wrapper.find(".listing-card-deck");
       expect(deck.exists()).toBe(false);
     });
-
-    it("does not display game count when not provided", async () => {
-      const noGameCountData = [
-        {
-          title: "Platform Without Game Count",
-          url: "/wiki/Platform_Without_Game_Count",
-          image: "https://example.com/test.jpg",
-          deck: "A platform",
-          releaseDateFormatted: "January 1, 2000",
-          gameCount: null,
-        },
-      ];
-
-      const wrapper = mount(PlatformList, {
-        props: {
-          initialData: JSON.stringify(noGameCountData),
-          totalCount: "1",
-          currentPage: "1",
-          totalPages: "1",
-        },
-      });
-
-      await wrapper.vm.$nextTick();
-
-      const gameCount = wrapper.find(".listing-card-game-count");
-      expect(gameCount.exists()).toBe(false);
-    });
   });
 
   describe("Loading State", () => {
-    it("displays loading state when fetching platforms", async () => {
-      const wrapper = mount(PlatformList, {
+    it("displays loading state when fetching concepts", async () => {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -262,11 +217,11 @@ describe("PlatformList", () => {
       const spinner = wrapper.find(".loading-spinner");
       expect(spinner.exists()).toBe(true);
 
-      expect(loadingDiv.text()).toContain("Loading platforms...");
+      expect(loadingDiv.text()).toContain("Loading concepts...");
     });
 
-    it("hides platform content when loading", async () => {
-      const wrapper = mount(PlatformList, {
+    it("hides concept content when loading", async () => {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -276,14 +231,14 @@ describe("PlatformList", () => {
       wrapper.vm.loading = true;
       await wrapper.vm.$nextTick();
 
-      const platformsGrid = wrapper.find(".listing-grid");
-      expect(platformsGrid.exists()).toBe(false);
+      const conceptsGrid = wrapper.find(".listing-grid");
+      expect(conceptsGrid.exists()).toBe(false);
     });
   });
 
   describe("Empty State", () => {
-    it("displays no platforms message when platforms array is empty", async () => {
-      const wrapper = mount(PlatformList, {
+    it("displays no concepts message when concepts array is empty", async () => {
+      const wrapper = mount(ConceptList, {
         props: {
           initialData: "[]",
           totalCount: "0",
@@ -294,19 +249,19 @@ describe("PlatformList", () => {
 
       await wrapper.vm.$nextTick();
 
-      const noPlatforms = wrapper.find(".listing-empty");
-      expect(noPlatforms.exists()).toBe(true);
-      expect(noPlatforms.text()).toContain(
-        "No platforms found for the selected filters.",
+      const noConcepts = wrapper.find(".listing-empty");
+      expect(noConcepts.exists()).toBe(true);
+      expect(noConcepts.text()).toContain(
+        "No concepts found for the selected filters.",
       );
     });
   });
 
   describe("Pagination", () => {
     it("displays pagination when total pages is greater than 1", async () => {
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "50",
           currentPage: "2",
           totalPages: "5",
@@ -325,13 +280,13 @@ describe("PlatformList", () => {
     });
 
     it("shows pagination even when total pages is 1", async () => {
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      // PlatformList always renders the Pagination component
+      // ConceptList always renders the Pagination component
       // The Pagination component itself handles single-page display
       const pagination = wrapper.find(".pagination");
       expect(pagination.exists()).toBe(true);
@@ -342,9 +297,9 @@ describe("PlatformList", () => {
     });
 
     it("disables previous button on first page", async () => {
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "50",
           currentPage: "1",
           totalPages: "5",
@@ -358,9 +313,9 @@ describe("PlatformList", () => {
     });
 
     it("disables next button on last page", async () => {
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "96", // 96 items / 48 per page = 2 pages
           currentPage: "2",
           totalPages: "2",
@@ -373,19 +328,17 @@ describe("PlatformList", () => {
       expect(nextButton.attributes("disabled")).toBeDefined();
     });
 
-    it("fetches platforms when next page is clicked", async () => {
+    it("fetches concepts when next page is clicked", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          platforms: [
+          concepts: [
             {
-              title: "Nintendo Switch",
-              url: "/wiki/Nintendo_Switch",
-              image: "https://example.com/switch.jpg",
-              deck: "Nintendo's hybrid console",
-              releaseDateFormatted: "March 3, 2017",
-              gameCount: 800,
+              title: "RPG",
+              url: "/wiki/Concepts/RPG",
+              image: "https://example.com/rpg.jpg",
+              deck: "Role-playing games",
             },
           ],
           totalCount: 50,
@@ -395,9 +348,9 @@ describe("PlatformList", () => {
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "50",
           currentPage: "1",
           totalPages: "5",
@@ -413,7 +366,7 @@ describe("PlatformList", () => {
       await wrapper.vm.$nextTick();
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("action=get-platforms"),
+        expect.stringContaining("action=get-concepts"),
         expect.any(Object),
       );
       expect(global.fetch).toHaveBeenCalledWith(
@@ -427,7 +380,7 @@ describe("PlatformList", () => {
         ok: true,
         json: async () => ({
           success: true,
-          platforms: mockPlatforms,
+          concepts: mockConcepts,
           totalCount: 240, // 240 / 48 = 5 pages
           currentPage: 3,
           totalPages: 5,
@@ -435,9 +388,9 @@ describe("PlatformList", () => {
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "240", // 240 / 48 = 5 pages
           currentPage: "2",
           totalPages: "5",
@@ -464,7 +417,7 @@ describe("PlatformList", () => {
         ok: true,
         json: async () => ({
           success: true,
-          platforms: mockPlatforms,
+          concepts: mockConcepts,
           totalCount: 50,
           currentPage: 2,
           totalPages: 5,
@@ -472,9 +425,9 @@ describe("PlatformList", () => {
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
-          initialData: JSON.stringify(mockPlatforms),
+          initialData: JSON.stringify(mockConcepts),
           totalCount: "50",
           currentPage: "1",
           totalPages: "5",
@@ -502,14 +455,12 @@ describe("PlatformList", () => {
         ok: true,
         json: async () => ({
           success: true,
-          platforms: [
+          concepts: [
             {
-              title: "Filtered Platform",
-              url: "/wiki/Filtered_Platform",
+              title: "Filtered Concept",
+              url: "/wiki/Concepts/Filtered_Concept",
               image: "https://example.com/filtered.jpg",
-              deck: "A filtered platform",
-              releaseDateFormatted: "January 1, 2020",
-              gameCount: 100,
+              deck: "A filtered concept",
             },
           ],
           totalCount: 1,
@@ -518,17 +469,17 @@ describe("PlatformList", () => {
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
       // Dispatch filter change event
-      const event = new CustomEvent("platforms-filter-changed", {
+      const event = new CustomEvent("concepts-filter-changed", {
         detail: {
           letter: "A",
-          sort: "alphabetical",
+          sort: "last_edited",
           game_title: [],
           require_all_games: false,
           page: 1,
@@ -545,24 +496,22 @@ describe("PlatformList", () => {
         expect.any(Object),
       );
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("sort=alphabetical"),
+        expect.stringContaining("sort=last_edited"),
         expect.any(Object),
       );
     });
 
-    it("updates platforms after successful fetch", async () => {
-      const newPlatforms = [
+    it("updates concepts after successful fetch", async () => {
+      const newConcepts = [
         {
-          title: "New Platform",
-          url: "/wiki/New_Platform",
+          title: "New Concept",
+          url: "/wiki/Concepts/New_Concept",
           image: "https://example.com/new.jpg",
-          deck: "A new platform",
-          releaseDateFormatted: "December 1, 2024",
-          gameCount: 50,
+          deck: "A new concept",
         },
       ];
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -581,7 +530,7 @@ describe("PlatformList", () => {
           ok: true,
           json: async () => ({
             success: true,
-            platforms: newPlatforms,
+            concepts: newConcepts,
             totalCount: 1,
             currentPage: 1,
             totalPages: 1,
@@ -589,10 +538,10 @@ describe("PlatformList", () => {
         }),
       );
 
-      const event = new CustomEvent("platforms-filter-changed", {
+      const event = new CustomEvent("concepts-filter-changed", {
         detail: {
           letter: "N",
-          sort: "release_date",
+          sort: "last_edited",
           game_title: [],
           require_all_games: false,
           page: 1,
@@ -613,7 +562,7 @@ describe("PlatformList", () => {
 
       // Verify fetch was called with correct parameters
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("action=get-platforms"),
+        expect.stringContaining("action=get-concepts"),
         expect.any(Object),
       );
       expect(global.fetch).toHaveBeenCalledWith(
@@ -634,12 +583,12 @@ describe("PlatformList", () => {
 
       // Verify the component's internal state was updated
       expect(wrapper.vm.items).toHaveLength(1);
-      expect(wrapper.vm.items[0].title).toBe("New Platform");
+      expect(wrapper.vm.items[0].title).toBe("New Concept");
 
       // Verify the DOM was updated
-      const platformCards = wrapper.findAll(".listing-card");
-      expect(platformCards).toHaveLength(1);
-      expect(platformCards[0].text()).toContain("New Platform");
+      const conceptCards = wrapper.findAll(".listing-card");
+      expect(conceptCards).toHaveLength(1);
+      expect(conceptCards[0].text()).toContain("New Concept");
     });
 
     it("handles game title filters", async () => {
@@ -647,23 +596,23 @@ describe("PlatformList", () => {
         ok: true,
         json: async () => ({
           success: true,
-          platforms: mockPlatforms,
+          concepts: mockConcepts,
           totalCount: 2,
           currentPage: 1,
           totalPages: 1,
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      const event = new CustomEvent("platforms-filter-changed", {
+      const event = new CustomEvent("concepts-filter-changed", {
         detail: {
           letter: "",
-          sort: "release_date",
+          sort: "alphabetical",
           game_title: ["Games/Test_Game", "Games/Another_Game"],
           require_all_games: true,
           page: 1,
@@ -689,14 +638,19 @@ describe("PlatformList", () => {
         text: async () => "Server error",
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      const event = new CustomEvent("platforms-filter-changed", {
-        detail: { letter: "", sort: "release_date", game_title: [], page: 1 },
+      const event = new CustomEvent("concepts-filter-changed", {
+        detail: {
+          letter: "",
+          sort: "alphabetical",
+          game_title: [],
+          page: 1,
+        },
       });
       window.dispatchEvent(event);
 
@@ -706,8 +660,8 @@ describe("PlatformList", () => {
       expect(consoleErrorSpy).toHaveBeenCalled();
 
       // Should keep existing data on error
-      const platformCards = wrapper.findAll(".listing-card");
-      expect(platformCards).toHaveLength(2);
+      const conceptCards = wrapper.findAll(".listing-card");
+      expect(conceptCards).toHaveLength(2);
 
       consoleErrorSpy.mockRestore();
     });
@@ -723,14 +677,19 @@ describe("PlatformList", () => {
         }),
       });
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
       await wrapper.vm.$nextTick();
 
-      const event = new CustomEvent("platforms-filter-changed", {
-        detail: { letter: "", sort: "release_date", game_title: [], page: 1 },
+      const event = new CustomEvent("concepts-filter-changed", {
+        detail: {
+          letter: "",
+          sort: "alphabetical",
+          game_title: [],
+          page: 1,
+        },
       });
       window.dispatchEvent(event);
 
@@ -750,16 +709,14 @@ describe("PlatformList", () => {
     it("decodes HTML entities in initial data", async () => {
       const encodedData = [
         {
-          title: "Platform &amp; Test",
-          url: "/wiki/Platform_%26_Test",
+          title: "Concept &amp; Test",
+          url: "/wiki/Concepts/Concept_%26_Test",
           image: "https://example.com/test.jpg",
-          deck: "A platform &amp; test",
-          releaseDateFormatted: "January 1, 2020",
-          gameCount: 10,
+          deck: "A concept &amp; test",
         },
       ];
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
           initialData: JSON.stringify(encodedData),
           totalCount: "1",
@@ -771,16 +728,16 @@ describe("PlatformList", () => {
       await wrapper.vm.$nextTick();
 
       const title = wrapper.find(".listing-card-title");
-      expect(title.text()).toBe("Platform & Test");
+      expect(title.text()).toBe("Concept & Test");
 
       const deck = wrapper.find(".listing-card-deck");
-      expect(deck.text()).toBe("A platform & test");
+      expect(deck.text()).toBe("A concept & test");
     });
 
     it("handles invalid JSON gracefully", async () => {
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: {
           initialData: "invalid json",
           totalCount: "0",
@@ -796,8 +753,8 @@ describe("PlatformList", () => {
         expect.any(Error),
       );
 
-      const noPlatforms = wrapper.find(".listing-empty");
-      expect(noPlatforms.exists()).toBe(true);
+      const noConcepts = wrapper.find(".listing-empty");
+      expect(noConcepts.exists()).toBe(true);
 
       consoleErrorSpy.mockRestore();
     });
@@ -807,7 +764,7 @@ describe("PlatformList", () => {
     it("removes event listener on unmount", async () => {
       const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
 
-      const wrapper = mount(PlatformList, {
+      const wrapper = mount(ConceptList, {
         props: defaultProps,
       });
 
@@ -816,7 +773,7 @@ describe("PlatformList", () => {
       wrapper.unmount();
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        "platforms-filter-changed",
+        "concepts-filter-changed",
         expect.any(Function),
       );
 

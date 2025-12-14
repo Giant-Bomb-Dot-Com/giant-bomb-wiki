@@ -1,33 +1,33 @@
 <div class="page-wrapper">
 	{{> header }}
 
-	<div class="landing-page">
-		{{> wiki-button-group }}
+    <div class="landing-nav">
+        {{> wiki-button-group }}
+    </div>
 
-		<div class="landing-page__content">
-			<div class="landing-page__header">
-				<h1 class="landing-page__title">All Games</h1>
-				<div
-					data-vue-component="ViewToggle"
-					data-target-container=".landing-page__main"
-					data-storage-key="gamesViewPreference">
-				</div>
-			</div>
+<div class="listing-page games-page">
+    <div class="listing-header">
+        <h1>All Games</h1>
+        <div
+            data-vue-component="ViewToggle"
+            data-target-container=".games-page"
+            data-storage-key="gamesViewPreference">
+        </div>
+    </div>
 
-			<div class="landing-page__layout">
-				<aside class="landing-page__sidebar">
-					<div
-						data-vue-component="GameFilter"
-						data-platforms-data="{{{vue.platformsJson}}}">
-					</div>
-				</aside>
+    <div class="listing-content">
+        <aside class="listing-sidebar">
+            <div
+                data-vue-component="GameFilter"
+                data-platforms-data="{{{vue.platformsJson}}}">
+            </div>
+        </aside>
 
-				<main class="landing-page__main"
-					data-vue-component="GameList"
-					data-initial-data="{{{vue.gamesJson}}}"
-					data-pagination-info="{{{vue.paginationJson}}}">
-				</main>
-			</div>
-		</div>
-	</div>
+        <div class="listing-main-wrapper"
+            data-vue-component="GameList"
+            data-initial-data="{{{vue.gamesJson}}}"
+            data-pagination-info="{{{vue.paginationJson}}}">
+        </div>
+    </div>
+</div>
 </div>

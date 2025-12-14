@@ -7,6 +7,8 @@
  */
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
 
 // Load platform helper functions
 require_once __DIR__ . '/PlatformHelper.php';
@@ -61,8 +63,7 @@ function groupReleasesByPeriod($releases) {
  * @param string $specificity The specificity of the date: "full", "month", "quarter", or "year"
  * @return array The group key, label, and sort key
  */
-
- function processDateForGrouping($timestamp, $specificity) {
+function processDateForGrouping($timestamp, $specificity) {
 
     if ($specificity === 'full') {
         // Calculate the Sunday that starts the week containing this date
@@ -106,6 +107,17 @@ function groupReleasesByPeriod($releases) {
  * @return array Array of release data
  */
 function queryReleasesFromSMW($filterRegion = '', $filterPlatform = '') {
+    return fetchReleasesFromSMW($filterRegion, $filterPlatform);
+}
+
+/**
+ * Internal function to fetch releases from SMW
+ * 
+ * @param string $filterRegion Optional region filter
+ * @param string $filterPlatform Optional platform filter
+ * @return array Array of release data
+ */
+function fetchReleasesFromSMW($filterRegion, $filterPlatform) {
     $releases = [];
     try {
         // Calculate date range: today to one month in the future
@@ -218,11 +230,24 @@ function processReleaseQueryResults($results) {
                 $releaseData['region'] = $region;
             }
             
+            // Handle image (complex structure)
             if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
                 $image = $printouts['Has image'][0];
-                $releaseData['image'] = $image['fullurl'] ?? '';
-                $releaseData['image'] = str_replace('http://localhost:8080/wiki/', '', $releaseData['image']);
+                $imageUrl = $image['fulltext'] ?? '';
+                if ( $imageUrl !== '' && class_exists( PageHelper::class ) ) {
+                    $resolved = PageHelper::resolveWikiImageUrl( $imageUrl );
+                    $releaseData['image'] = $resolved ?? '';
+                }
             }
+            
+            // If no image from SMW, try legacy image fallback
+			if ( empty( $releaseData['image'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$title = Title::newFromText( $pageName );
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$releaseData['image'] = $legacyImage['thumb'];
+				}
+			}
             
             // Create unique key for deduplication
             $platformsKey = isset($releaseData['platforms']) 
@@ -245,4 +270,3 @@ function processReleaseQueryResults($results) {
     
     return $releases;
 }
-

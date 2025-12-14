@@ -7,8 +7,11 @@ use MediaWiki\MediaWikiServices;
  * with caching support for performance.
  */
 
- // Load date helper functions
- require_once __DIR__ . '/DateHelper.php';
+use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use GiantBomb\Skin\Helpers\PageHelper;
+ 
+// Load date helper functions
+require_once __DIR__ . '/DateHelper.php';
 
 /**
  * Safely extract a string value from SMW printout data
@@ -49,27 +52,25 @@ function loadPlatformMappings() {
     $cache = MediaWiki\MediaWikiServices::getInstance()->getMainWANObjectCache();
     $cacheKey = $cache->makeKey('platforms', 'abbreviations', 'v1');
     
-    // Check if we have cached data
     $cachedData = $cache->get($cacheKey);
     if ($cachedData !== false) {
         error_log("✓ Platform mappings: CACHE HIT (using cached data)");
         return $cachedData;
     }
-    
+
     error_log("⚠ Platform mappings: CACHE MISS (querying database)");
-    
+
     return $cache->getWithSetCallback(
         $cacheKey,
         $cache::TTL_DAY,
         function() {
             $platforms = [];
-            
             // Query SMW for all platforms
             $queryConditions = '[[Category:Platforms]]';
             $printouts = '|?Has name|?Has short name';
             $params = '|limit=500';
             $fullQuery = $queryConditions . $printouts . $params;
-            
+        
             try {
                 $api = new ApiMain(
                     new DerivativeRequest(
@@ -83,7 +84,7 @@ function loadPlatformMappings() {
                     ),
                     true
                 );
-                
+            
                 $api->execute();
                 $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
                 
@@ -106,7 +107,6 @@ function loadPlatformMappings() {
                         }
                     }
                 }
-                
                 error_log("✓ Platform mappings: Loaded " . count($platforms) . " entries from database (now cached for 24 hours)");
             } catch (Exception $e) {
                 error_log("✗ Platform query failed: " . $e->getMessage());
@@ -186,14 +186,14 @@ function getPlatformData($platformName) {
 function getAllPlatforms() {
     $cache = MediaWiki\MediaWikiServices::getInstance()->getMainWANObjectCache();
     $cacheKey = $cache->makeKey('platforms', 'list-all', 'v1');
-    
+
     // Check if we have cached data
     $cachedData = $cache->get($cacheKey);
     if ($cachedData !== false) {
         error_log("✓ Platform list: CACHE HIT (using cached data)");
         return $cachedData;
     }
-    
+
     error_log("⚠ Platform list: CACHE MISS (querying database)");
     
     return $cache->getWithSetCallback(
@@ -221,18 +221,17 @@ function getAllPlatforms() {
                     ),
                     true
                 );
-                
+
                 $api->execute();
                 $result = $api->getResult()->getResultData(null, ['Strip' => 'all']);
-                
+
                 if (isset($result['query']['results'])) {
                     foreach ($result['query']['results'] as $pageName => $data) {
                         $printouts = $data['printouts'];
                         $cleanName = str_replace('Platforms/', '', $pageName);
-
+                        
                         $displayName = extractPrintoutString($printouts, 'Has name', $cleanName);
                         $abbrev = extractPrintoutString($printouts, 'Has short name');
-
                         $platforms[] = [
                             'name' => $cleanName,
                             'displayName' => $displayName,
@@ -240,12 +239,12 @@ function getAllPlatforms() {
                         ];
                     }
                 }
-                
+
                 error_log("✓ Platform dropdown list: Loaded " . count($platforms) . " platforms (now cached for 24 hours)");
             } catch (Exception $e) {
                 error_log("✗ Platform dropdown query failed: " . $e->getMessage());
             }
-            
+
             return $platforms;
         }
     );
@@ -254,6 +253,7 @@ function getAllPlatforms() {
 
 /**
  * Query platforms from Semantic MediaWiki with optional filters
+ * 
  * 
  * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
  * @param array $filterGameTitles Optional array of game title filters
@@ -264,6 +264,13 @@ function getAllPlatforms() {
  * @return array Array with 'platforms', 'totalCount', 'currentPage', 'totalPages'
  */
 function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'release_date', $page = 1, $limit = 48, $requireAllGames = false) {
+    return fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
+}
+
+/**
+ * Internal function to fetch platforms from SMW (not cached)
+ */
+function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
     $platforms = [];
     $totalCount = 0;
     
@@ -307,13 +314,21 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
                     }
                 }
                 
-                // Only add condition if we found common platforms
-                if (!empty($allGamePlatforms)) {
-                    $platformNames = array_map(function($p) {
-                        return str_replace('"', '\"', $p);
-                    }, $allGamePlatforms);
-                    $queryConditions .= '[[Has name::' . implode('||', $platformNames) . ']]';
+                // If no platforms match all games, then we return empty data
+                if (empty($allGamePlatforms)) {
+                    return [
+                        'platforms' => [],
+                        'totalCount' => 0,
+                        'currentPage' => $page,
+                        'totalPages' => 0,
+                        'pageSize' => $limit,
+                    ];
                 }
+                
+                $platformNames = array_map(function($p) {
+                    return str_replace('"', '\"', $p);
+                }, $allGamePlatforms);
+                $queryConditions .= '[[Has name::' . implode('||', $platformNames) . ']]';
             } else {
                 // OR logic: Find platforms linked to ANY selected game (default behavior)
                 $allPlatforms = [];
@@ -340,7 +355,7 @@ function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort
         
         $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
         
-        // Set sort order using switch statement
+        // Set sort order
         switch ($sort) {
             case 'release_date':
                 $params = '|sort=Has release date|order=desc';
@@ -504,10 +519,17 @@ function getGameCountForPlatformFromSMW($platformName) {
 /**
  * Get the platforms for a given game from Semantic MediaWiki
  * 
- * @param string $gameTitle The game page name
+ * @param string $gamePageName The game page name
  * @return array Array of platform names
  */
 function getPlatformsForGameFromSMW($gamePageName) {
+    return fetchPlatformsForGameFromSMW($gamePageName);
+}
+
+/**
+ * Internal function to fetch platforms for a game (not cached)
+ */
+function fetchPlatformsForGameFromSMW($gamePageName) {
     $platforms = [];
     try {
         $queryConditions = '[[Category:Games]][[' . $gamePageName . ']]';
@@ -548,7 +570,7 @@ function getPlatformsForGameFromSMW($gamePageName) {
 }
 
 /**
- * Process the results of the platform query from Semantic MediaWiki and returns an array of platform data
+ * Process the results of the platform query from Semantic MediaWiki
  * 
  * @param array $results The results of the platform query from Semantic MediaWiki
  * @return array Array of platform data with 'url', 'title', 'shortName', 'deck', 'releaseDate', 'releaseDateFormatted', 'image' keys
@@ -594,9 +616,21 @@ function processPlatformQueryResults($results) {
             // Handle image (complex structure)
             if (isset($printouts['Has image']) && count($printouts['Has image']) > 0) {
                 $image = $printouts['Has image'][0];
-                $imageUrl = $image['fullurl'] ?? '';
-                $platformData['image'] = str_replace('http://localhost:8080/wiki/', '', $imageUrl);
+                $imageUrl = $image['fulltext'] ?? '';
+                if ( $imageUrl !== '' && class_exists( PageHelper::class ) ) {
+                    $resolved = PageHelper::resolveWikiImageUrl( $imageUrl );
+                    $platformData['image'] = $resolved ?? '';
+                }
             }
+            
+            // If no image from SMW, try legacy image fallback
+			if ( empty( $platformData['image'] ) && class_exists( LegacyImageHelper::class ) ) {
+				$title = Title::newFromText( $pageName );
+				$legacyImage = LegacyImageHelper::findLegacyImageForTitle( $title );
+				if ( $legacyImage && !empty( $legacyImage['thumb'] ) ) {
+					$platformData['image'] = $legacyImage['thumb'];
+				}
+			}
 
             $platformData['gameCount'] = getGameCountForPlatform($pageName);
 
@@ -615,9 +649,15 @@ function processPlatformQueryResults($results) {
  * @return int Total number of platforms
  */
 function getPlatformCountFromSMW($filterLetter = '', $filterGameTitles = [], $requireAllGames = false) {
+    return fetchPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames);
+}
+
+/**
+ * Internal function to fetch platform count
+ */
+function fetchPlatformCountFromSMW($filterLetter, $filterGameTitles, $requireAllGames) {
     $totalCount = 0;
     try {
-        
         $countQuery = '[[Category:Platforms]]';
         
         if (!empty($filterLetter)) {
