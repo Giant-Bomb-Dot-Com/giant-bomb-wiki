@@ -1,0 +1,135 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="wiki-page person-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#person.backgroundImage}}, url('{{person.backgroundImage}}'){{/person.backgroundImage}}{{^person.backgroundImage}}{{#person.image}}, url('{{person.image}}'){{/person.image}}{{/person.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#person.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{person.image}}"
+						data-alt-text="{{person.name}} portrait">
+					</div>
+				</div>
+				{{/person.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{person.name}}</h1>
+
+					{{#person.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{person.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/person.aliasesDisplay}}
+
+					{{#person.deck}}
+					<p class="game-hero__description">{{person.deck}}</p>
+					{{/person.deck}}
+
+					{{#person.hasStats}}
+					<div class="game-hero__metadata person-hero__stats">
+						{{#person.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/person.stats}}
+					</div>
+					{{/person.hasStats}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content person-content">
+			<div class="game-main">
+				{{#person.description}}
+				<div class="game-wiki-content">
+					{{{person.description}}}
+				</div>
+				{{/person.description}}
+
+				{{#person.relations.games.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Notable games</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.games}}
+					</ul>
+				</section>
+				{{/person.relations.games.0}}
+
+				{{#person.relations.franchises.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Franchises</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.franchises}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.franchises}}
+					</ul>
+				</section>
+				{{/person.relations.franchises.0}}
+
+				{{#person.relations.characters.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Characters created</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.characters}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.characters}}
+					</ul>
+				</section>
+				{{/person.relations.characters.0}}
+
+				{{#person.relations.concepts.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Concepts</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.concepts}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.concepts}}
+					</ul>
+				</section>
+				{{/person.relations.concepts.0}}
+
+				{{#person.relations.locations.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Locations</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.locations}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.locations}}
+					</ul>
+				</section>
+				{{/person.relations.locations.0}}
+
+				{{#person.relations.objects.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Objects</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.objects}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.objects}}
+					</ul>
+				</section>
+				{{/person.relations.objects.0}}
+
+				{{#person.relations.people.0}}
+				<section class="game-sidebar-section person-section">
+					<h2 class="game-sidebar-section__title">Related people</h2>
+					<ul class="game-detail-list">
+						{{#person.relations.people}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/person.relations.people}}
+					</ul>
+				</section>
+				{{/person.relations.people.0}}
+			</div>
+		</div>
+	</div>
+</div>
+

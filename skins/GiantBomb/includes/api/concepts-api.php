@@ -6,11 +6,10 @@
 
 // Load concepts helper functions
 require_once __DIR__ . '/../helpers/ConceptHelper.php';
+require_once __DIR__ . '/../helpers/Constants.php';
 
 $request = RequestContext::getMain()->getRequest();
 $action = $request->getText('action', '');
-
-const PAGE_SIZE = 48;
 
 if ($action === 'get-concepts') {
     // Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
@@ -22,7 +21,7 @@ if ($action === 'get-concepts') {
     $requireAllGames = $request->getBool('require_all_games', false);
     $sort = $request->getText('sort', 'alphabetical');
     $page = $request->getInt('page', 1);
-    $pageSize = $request->getInt('page_size', PAGE_SIZE);
+    $pageSize = $request->getInt('page_size', DEFAULT_PAGE_SIZE);
     
     $result = queryConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $pageSize, $requireAllGames);
     

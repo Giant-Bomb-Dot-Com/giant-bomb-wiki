@@ -19,7 +19,7 @@
       v-model="selectedPlatform"
       :options="platforms"
       placeholder="All Platforms"
-      value-key="name"
+      value-key="displayName"
       label-key="displayName"
       @update:model-value="onFilterChange"
     ></filter-dropdown>

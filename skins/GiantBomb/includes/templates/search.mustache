@@ -1,14 +1,17 @@
-<div id="gb-search" class="gb-search">    
-    <div class="search-form">        
-        <select id="search_dropdown" class="search_dropdown">
-            {{#wikiTypes}}
-                <option data-title="{{title}}">{{label}}</option>
-            {{/wikiTypes}}
-        </select>        
-        <input
-            id="gb-search-bar"
-            v-model="searchText"
-            type="text"
-            placeholder="" /><button id="gb-search-btn" class="gb-search-btn">🔎︎</button>            
-    </div>
+<div class="wiki-search">
+	<form class="wiki-search__form" onsubmit="return false;">
+		<select id="search_dropdown" class="wiki-search__dropdown">
+			{{#wikiTypes}}
+			<option data-title="{{title}}">{{label}}</option>
+			{{/wikiTypes}}
+		</select>
+		<div class="wiki-search__input-wrapper">
+			<input
+				id="gb-search-bar"
+				type="text"
+				class="wiki-search__input"
+				placeholder="Search the wiki..." />
+			<button id="gb-search-btn" type="button" class="wiki-search__btn">Search</button>
+		</div>
+	</form>
 </div>

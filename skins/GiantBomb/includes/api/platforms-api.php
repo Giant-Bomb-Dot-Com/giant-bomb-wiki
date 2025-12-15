@@ -6,11 +6,10 @@
 
 // Load platform helper functions
 require_once __DIR__ . '/../helpers/PlatformHelper.php';
+require_once __DIR__ . '/../helpers/Constants.php';
 
 $request = RequestContext::getMain()->getRequest();
 $action = $request->getText('action', '');
-
-const PAGE_SIZE = 48;
 
 if ($action === 'get-platforms') {
     // Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
@@ -22,7 +21,7 @@ if ($action === 'get-platforms') {
     $requireAllGames = $request->getBool('require_all_games', false);
     $sort = $request->getText('sort', 'release_date');
     $page = $request->getInt('page', 1);
-    $pageSize = $request->getInt('page_size', PAGE_SIZE);
+    $pageSize = $request->getInt('page_size', DEFAULT_PAGE_SIZE);
     
     $result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $pageSize, $requireAllGames);
     

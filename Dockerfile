@@ -60,18 +60,16 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # Custom extensions packaged with the image
-COPY ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
-RUN chown -R www-data:www-data /var/www/html/extensions/GiantBombResolve
+COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 
 # So can be docker exec after build
-COPY installwiki.sh /installwiki.sh
-RUN chmod 755 /installwiki.sh
+COPY --chmod=755 installwiki.sh /installwiki.sh
 
 # START CONTAINER
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
 COPY .htaccess /var/www/html/.htaccess
 
+COPY --chown=www-data:www-data phpunit.xml.dist /var/www/html/phpunit.xml.dist
+COPY --chmod=755 scripts/wiki-admin.sh /usr/local/bin/wiki-admin
 COPY entrypoint.sh /entrypoint.sh
-COPY scripts/wiki-admin.sh /usr/local/bin/wiki-admin
-RUN chmod 755 /usr/local/bin/wiki-admin
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
