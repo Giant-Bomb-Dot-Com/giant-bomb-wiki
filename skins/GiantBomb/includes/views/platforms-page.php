@@ -8,11 +8,10 @@ use MediaWiki\MediaWikiServices;
  */
 
 require_once __DIR__ . '/../helpers/PlatformHelper.php';
+require_once __DIR__ . '/../helpers/Constants.php';
 
 // Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
 http_response_code(200);
-
-const PAGE_SIZE = 48;
 
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
@@ -21,7 +20,7 @@ $filterGameTitles = $request->getArray('game_title');
 $requireAllGames = $request->getBool('require_all_games', false);
 $sort = $request->getText('sort', 'release_date');
 $page = $request->getInt('page', 1);
-$pageSize = $request->getInt('page_size', PAGE_SIZE);
+$pageSize = $request->getInt('page_size', DEFAULT_PAGE_SIZE);
 
 // Query platforms using helper function
 $result = queryPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $pageSize, $requireAllGames);

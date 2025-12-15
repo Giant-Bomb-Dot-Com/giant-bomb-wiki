@@ -1,0 +1,98 @@
+<div class="page-wrapper">
+	{{> header }}
+
+	<div class="wiki-page character-page">
+		<div class="game-hero" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)){{#character.backgroundImage}}, url('{{character.backgroundImage}}'){{/character.backgroundImage}}{{^character.backgroundImage}}{{#character.image}}, url('{{character.image}}'){{/character.image}}{{/character.backgroundImage}};">
+			<div class="game-hero__container">
+				{{#character.image}}
+				<div class="game-hero__cover">
+					<div
+						data-vue-component="GameImageViewer"
+						data-image-url="{{character.image}}"
+						data-alt-text="{{character.name}} artwork">
+					</div>
+				</div>
+				{{/character.image}}
+
+				<div class="game-hero__info">
+					<h1 class="game-hero__title">{{character.name}}</h1>
+
+					{{#character.aliasesDisplay}}
+					<div class="game-hero__metadata">
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">Also known as</span>
+							<span class="game-hero__meta-value">{{character.aliasesDisplay}}</span>
+						</div>
+					</div>
+					{{/character.aliasesDisplay}}
+
+					{{#character.deck}}
+					<p class="game-hero__description">{{character.deck}}</p>
+					{{/character.deck}}
+
+					{{#character.hasStats}}
+					<div class="game-hero__metadata character-hero__stats">
+						{{#character.stats}}
+						<div class="game-hero__meta-item">
+							<span class="game-hero__meta-label">{{label}}</span>
+							<span class="game-hero__meta-value">{{value}}</span>
+						</div>
+						{{/character.stats}}
+					</div>
+					{{/character.hasStats}}
+
+					{{#character.franchises}}
+					<div class="game-hero__metadata">
+						<span class="game-hero__meta-label">Franchises</span>
+						<span class="game-hero__meta-value">{{.}}</span>
+					</div>
+					{{/character.franchises}}
+				</div>
+			</div>
+		</div>
+
+		<div class="game-content character-content">
+			<div class="game-main">
+				{{#character.description}}
+				<div class="game-wiki-content">
+					{{{character.description}}}
+				</div>
+				{{/character.description}}
+
+				{{#character.games.0}}
+				<section class="game-sidebar-section character-section">
+					<h2 class="game-sidebar-section__title">Notable games</h2>
+					<ul class="game-detail-list">
+						{{#character.games}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/character.games}}
+					</ul>
+				</section>
+				{{/character.games.0}}
+
+				{{#character.friends.0}}
+				<section class="game-sidebar-section character-section">
+					<h2 class="game-sidebar-section__title">Allies</h2>
+					<ul class="game-detail-list">
+						{{#character.friends}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/character.friends}}
+					</ul>
+				</section>
+				{{/character.friends.0}}
+
+				{{#character.enemies.0}}
+				<section class="game-sidebar-section character-section">
+					<h2 class="game-sidebar-section__title">Rivals</h2>
+					<ul class="game-detail-list">
+						{{#character.enemies}}
+						<li class="game-detail-list__item">{{.}}</li>
+						{{/character.enemies}}
+					</ul>
+				</section>
+				{{/character.enemies.0}}
+			</div>
+		</div>
+	</div>
+</div>
+
