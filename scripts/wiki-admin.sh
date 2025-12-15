@@ -131,7 +131,7 @@ case "${cmd}" in
     #   cache-purge --prefix=platforms       Purge platforms cache
     #   cache-purge --list                   List known cache prefixes
     #   cache-purge --clear                  Clear entire APCu cache
-    run_php --conf "$CONF_PATH" "$MW_ROOT/skins/GiantBomb/includes/maintenance/PurgeGiantBombCache.php" "$@"
+    run_php --conf "$CONF_PATH" "$MW_ROOT/skins/GiantBomb/includes/maintenance/PurgeGiantBombSMWCache.php" "$@"
     ;;
 
   *)
