@@ -7,7 +7,7 @@
  * fetch fresh data using the new version number.
  * 
  * Usage from within the MediaWiki container:
- *   php maintenance/run.php /var/www/html/skins/GiantBomb/includes/maintenance/PurgeGiantBombCache.php
+ *   php maintenance/run.php /var/www/html/skins/GiantBomb/includes/maintenance/PurgeGiantBombSMWCache.php
  * 
  * Options:
  *   --all         Purge all known cache prefixes (increment all versions)
@@ -17,11 +17,11 @@
  *   --list        List known cache prefixes
  * 
  * Examples:
- *   php maintenance/run.php .../PurgeGiantBombCache.php --all
- *   php maintenance/run.php .../PurgeGiantBombCache.php --prefix=games
- *   php maintenance/run.php .../PurgeGiantBombCache.php --prefix=platforms --prefix=concepts
- *   php maintenance/run.php .../PurgeGiantBombCache.php --key=games-v1-currentPage_1-itemsPerPage_48
- *   php maintenance/run.php .../PurgeGiantBombCache.php --list
+ *   php maintenance/run.php .../PurgeGiantBombSMWCache.php --all
+ *   php maintenance/run.php .../PurgeGiantBombSMWCache.php --prefix=games
+ *   php maintenance/run.php .../PurgeGiantBombSMWCache.php --prefix=platforms --prefix=concepts
+ *   php maintenance/run.php .../PurgeGiantBombSMWCache.php --key=games-v1-currentPage_1-itemsPerPage_48
+ *   php maintenance/run.php .../PurgeGiantBombSMWCache.php --list
  */
 
 $IP = getenv('MW_INSTALL_PATH');
@@ -33,7 +33,7 @@ require_once "$IP/maintenance/Maintenance.php";
 // Load the CacheHelper
 require_once dirname(__DIR__) . '/helpers/CacheHelper.php';
 
-class PurgeGiantBombCache extends Maintenance {
+class PurgeGiantBombSMWCache extends Maintenance {
     public function __construct() {
         parent::__construct();
         $this->addDescription('Purge GiantBomb skin cache entries by incrementing version numbers');
@@ -186,6 +186,6 @@ class PurgeGiantBombCache extends Maintenance {
     }
 }
 
-$maintClass = PurgeGiantBombCache::class;
+$maintClass = PurgeGiantBombSMWCache::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
 
