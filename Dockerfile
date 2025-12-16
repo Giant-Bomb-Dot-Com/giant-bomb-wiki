@@ -69,7 +69,6 @@ COPY --chmod=755 installwiki.sh /installwiki.sh
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
 COPY .htaccess /var/www/html/.htaccess
 
-COPY --chown=www-data:www-data phpunit.xml.dist /var/www/html/phpunit.xml.dist
 COPY --chmod=755 scripts/wiki-admin.sh /usr/local/bin/wiki-admin
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
