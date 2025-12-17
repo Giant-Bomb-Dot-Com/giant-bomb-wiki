@@ -1,0 +1,42 @@
+<div class="page-wrapper">
+    {{> header }}
+
+<div class="listing-page peoples-page">
+    <div class="listing-header">
+        <h1>People</h1>
+        <div
+            data-vue-component="ViewToggle"
+            data-target-container=".peoples-page"
+            data-storage-key="peopleViewPreference">
+        </div>
+    </div>
+
+    <div class="listing-content">
+        <aside class="listing-sidebar">
+            <div
+                data-vue-component="PeopleFilter"
+                data-current-letter="{{{currentLetter}}}"
+                data-current-sort="{{{currentSort}}}"
+                data-current-require-all-games="{{{currentRequireAllGames}}}"
+                data-current-games="{{{currentGames}}}">
+            </div>
+            <div
+                data-vue-component="DatabaseAddPrompt"
+                data-object-type="person"
+                data-link-url="{{{addPersonUrl}}}">
+            </div>
+        </aside>
+
+        <div class="listing-main-wrapper"
+            data-vue-component="PeopleList"
+            data-initial-data="{{{vue.peopleJson}}}"
+            data-total-count="{{{totalCount}}}"
+            data-current-page="{{{currentPage}}}"
+            data-total-pages="{{{totalPages}}}"
+            data-page-size="{{{pageSize}}}">
+        </div>
+    </div>
+</div>
+</div>
+
+
