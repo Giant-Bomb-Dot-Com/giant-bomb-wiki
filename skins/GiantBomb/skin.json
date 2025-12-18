@@ -79,7 +79,8 @@
         "resources/composables/useListData.js",
         "resources/helpers/countryFlags.js",
         "resources/helpers/htmlUtils.js",
-        "resources/data/countryFlags.json"
+        "resources/data/countryFlags.json",
+        "resources/helpers/displayUtils.js"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }

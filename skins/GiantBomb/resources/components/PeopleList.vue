@@ -28,6 +28,10 @@
               <div v-if="person.deck" class="listing-card-deck">
                 {{ person.deck }}
               </div>
+              <div v-if="person.games && person.games.length > 0">
+                Credited in {{ person.games.length }}
+                {{ person.games.length === 1 ? "game" : "games" }}
+              </div>
             </div>
           </a>
         </div>
