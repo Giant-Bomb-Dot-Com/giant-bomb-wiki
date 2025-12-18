@@ -121,7 +121,8 @@ function fetchPeopleFromSMW($filterLetter, $filterGameTitles, $sort, $page, $lim
 			'?Has name',
 			'?Has deck',
 			'?Has image',
-			'?Has caption'
+			'?Has caption',
+            '?Has games'
 		];
 
 		list($queryString, $params, $printouts) = \SMWQueryProcessor::getComponentsFromFunctionParams(
@@ -150,6 +151,7 @@ function fetchPeopleFromSMW($filterLetter, $filterGameTitles, $sort, $page, $lim
 			$personData['deck'] = '';
 			$personData['image'] = '';
 			$personData['caption'] = '';
+			$personData['games'] = [];
 
 			for ($i = 1; $i < count($row); $i++) {
 				$field = $row[$i];
@@ -179,6 +181,11 @@ function fetchPeopleFromSMW($filterLetter, $filterGameTitles, $sort, $page, $lim
 						break;
 					case 'Has caption':
 						$personData['caption'] = $values[0] ?? '';
+						break;
+					case 'Has games':
+						$personData['games'] = array_map(function($game) {
+							return str_replace('Games/', '', $game);
+						}, $values);
 						break;
 				}
 			}
