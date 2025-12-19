@@ -107,7 +107,7 @@ module.exports = exports = defineComponent({
       sort: {
         queryParam: "sort",
         type: FILTER_TYPES.STRING,
-        default: "alphabetical",
+        default: "",
         omitIfDefault: true,
       },
       gameTitles: {
@@ -150,7 +150,7 @@ module.exports = exports = defineComponent({
       filterEventName: "people-filter-changed",
       filterConfig,
       paginationConfig,
-      defaultSort: "alphabetical",
+      defaultSort: "",
       hasPagination: true,
     });
 

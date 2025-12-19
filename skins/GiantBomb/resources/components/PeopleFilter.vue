@@ -115,7 +115,7 @@ module.exports = exports = defineComponent({
     },
     currentSort: {
       type: String,
-      default: "alphabetical",
+      default: "",
     },
     currentRequireAllGames: {
       type: Boolean,
@@ -136,6 +136,7 @@ module.exports = exports = defineComponent({
 
     // Sort options
     const sortOptions = [
+      { value: "", label: "Default" },
       { value: "alphabetical", label: "Alphabetical" },
       { value: "last_edited", label: "Last Edited" },
       { value: "last_created", label: "Last Created" },
@@ -143,7 +144,7 @@ module.exports = exports = defineComponent({
 
     // Filter state
     const selectedLetter = ref("");
-    const selectedSort = ref("alphabetical");
+    const selectedSort = ref("");
     const selectedGames = ref([]);
     const requireAllGames = ref(false);
 
@@ -154,7 +155,7 @@ module.exports = exports = defineComponent({
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
       useFilters("people-filter-changed", {
         letter: "",
-        sort: "alphabetical",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,
@@ -193,7 +194,7 @@ module.exports = exports = defineComponent({
     const hasActiveFilters = computed(() => {
       return (
         selectedLetter.value !== "" ||
-        selectedSort.value !== "alphabetical" ||
+        selectedSort.value !== "" ||
         selectedGames.value.length > 0
       );
     });
@@ -212,12 +213,12 @@ module.exports = exports = defineComponent({
 
     const clearFilters = () => {
       selectedLetter.value = "";
-      selectedSort.value = "alphabetical";
+      selectedSort.value = "";
       selectedGames.value = [];
       requireAllGames.value = false;
       clearFiltersBase({
         letter: "",
-        sort: "alphabetical",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,

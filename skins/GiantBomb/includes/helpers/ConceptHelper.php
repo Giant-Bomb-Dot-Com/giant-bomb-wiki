@@ -14,13 +14,13 @@ require_once __DIR__ . '/QueryHelper.php';
  * 
  * @param string $filterLetter Optional letter filter (A-Z or # for numbers)
  * @param array $filterGameTitles Optional array of game title filters
- * @param string $sort Sort method ('alphabetical', 'last_edited', 'last_created')
+ * @param string $sort Sort method ('', 'alphabetical', 'last_edited', 'last_created')
  * @param int $page Current page number (1-based)
  * @param int $limit Results per page
  * @param bool $requireAllGames If true, concepts must be linked to ALL games (AND logic). If false, ANY game (OR logic)
  * @return array Array with 'concepts', 'totalCount', 'currentPage', 'totalPages'
  */
-function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'alphabetical', $page = 1, $limit = 48, $requireAllGames = false) {
+function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = '', $page = 1, $limit = 48, $requireAllGames = false) {
     return fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
 }
 
@@ -73,8 +73,8 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
         }
         
         // Determine sort property and order
-        $smwSort = 'Has name';
-        $smwOrder = 'asc';
+        $smwSort = '';
+        $smwOrder = '';
         switch ($sort) {
             case 'alphabetical':
                 $smwSort = 'Has name';
@@ -87,10 +87,6 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
             case 'last_created':
                 $smwSort = 'Creation date';
                 $smwOrder = 'desc';
-                break;
-            default:
-                $smwSort = 'Has name';
-                $smwOrder = 'asc';
                 break;
         }
         
@@ -123,13 +119,18 @@ function fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $l
             $queryConditions,
             'limit=' . $limit,
             'offset=' . $offset,
-            'sort=' . $smwSort,
-            'order=' . $smwOrder,
             '?Has name',
             '?Has deck',
             '?Has image',
             '?Has caption'
         ];
+        
+        if (!empty($smwSort)) {
+            $rawParams[] = 'sort=' . $smwSort;
+        }
+        if (!empty($smwOrder)) {
+            $rawParams[] = 'order=' . $smwOrder;
+        }
         
         // Execute query
         list($queryString, $params, $printouts) = \SMWQueryProcessor::getComponentsFromFunctionParams(

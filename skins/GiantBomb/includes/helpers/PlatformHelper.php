@@ -263,7 +263,7 @@ function getAllPlatforms() {
  * @param bool $requireAllGames If true, platforms must be linked to ALL games (AND logic). If false, ANY game (OR logic)
  * @return array Array with 'platforms', 'totalCount', 'currentPage', 'totalPages'
  */
-function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'release_date', $page = 1, $limit = 48, $requireAllGames = false) {
+function queryPlatformsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = '', $page = 1, $limit = 48, $requireAllGames = false) {
     return fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
 }
 
@@ -355,6 +355,7 @@ function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $
         
         $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
         
+        $params = '';
         // Set sort order
         switch ($sort) {
             case 'release_date':
@@ -368,9 +369,6 @@ function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $
                 break;
             case 'last_created':
                 $params = '|sort=Creation date|order=desc';
-                break;
-            default:
-                $params = '|sort=Has release date|order=desc';
                 break;
         }
         
