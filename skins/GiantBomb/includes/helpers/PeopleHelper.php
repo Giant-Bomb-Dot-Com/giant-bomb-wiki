@@ -3,7 +3,7 @@
  * People Helper
  *
  * Provides utility functions for looking up people data from Semantic MediaWiki.
- * Mirrors the Concepts listing patterns (letter + game filters, sorting, pagination).
+ * Filtering support (letter + game filters, sorting, pagination).
  */
 use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
 use GiantBomb\Skin\Helpers\PageHelper;
@@ -48,7 +48,7 @@ function fetchPeopleFromSMW($filterLetter, $filterGameTitles, $sort, $page, $lim
 			}
 		}
 
-		// Add game filters (Has games is set by Template:Person)
+		// Add game filters
 		if (!empty($filterGameTitles) && is_array($filterGameTitles)) {
 			if ($requireAllGames && count($filterGameTitles) > 1) {
 				// AND logic: Add separate Has games:: condition for each selected game
