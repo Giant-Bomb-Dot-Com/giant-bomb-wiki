@@ -107,7 +107,7 @@ module.exports = exports = defineComponent({
       sort: {
         queryParam: "sort",
         type: FILTER_TYPES.STRING,
-        default: "alphabetical",
+        default: "",
         omitIfDefault: true,
       },
       gameTitles: {
@@ -152,7 +152,7 @@ module.exports = exports = defineComponent({
       filterEventName: "concepts-filter-changed",
       filterConfig,
       paginationConfig,
-      defaultSort: "alphabetical",
+      defaultSort: "",
       hasPagination: true,
     });
 

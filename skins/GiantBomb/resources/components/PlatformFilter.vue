@@ -116,7 +116,7 @@ module.exports = exports = defineComponent({
     },
     currentSort: {
       type: String,
-      default: "release_date",
+      default: "",
     },
     currentRequireAllGames: {
       type: Boolean,
@@ -137,6 +137,7 @@ module.exports = exports = defineComponent({
 
     // Sort options
     const sortOptions = [
+      { value: "", label: "Default" },
       { value: "release_date", label: "Release Date" },
       { value: "alphabetical", label: "Alphabetical" },
       { value: "last_edited", label: "Last Edited" },
@@ -145,7 +146,7 @@ module.exports = exports = defineComponent({
 
     // Filter state
     const selectedLetter = ref("");
-    const selectedSort = ref("release_date");
+    const selectedSort = ref("");
     const selectedGames = ref([]);
     const requireAllGames = ref(false);
 
@@ -156,7 +157,7 @@ module.exports = exports = defineComponent({
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
       useFilters("platforms-filter-changed", {
         letter: "",
-        sort: "release_date",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,
@@ -196,7 +197,7 @@ module.exports = exports = defineComponent({
     const hasActiveFilters = computed(() => {
       return (
         selectedLetter.value !== "" ||
-        selectedSort.value !== "release_date" ||
+        selectedSort.value !== "" ||
         selectedGames.value.length > 0
       );
     });
@@ -215,12 +216,12 @@ module.exports = exports = defineComponent({
 
     const clearFilters = () => {
       selectedLetter.value = "";
-      selectedSort.value = "release_date";
+      selectedSort.value = "";
       selectedGames.value = [];
       requireAllGames.value = false;
       clearFiltersBase({
         letter: "",
-        sort: "release_date",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,
