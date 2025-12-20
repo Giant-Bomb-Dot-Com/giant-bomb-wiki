@@ -71,10 +71,11 @@ module.exports = exports = defineComponent({
     const platforms = ref([]);
     const searchQuery = ref("");
     const selectedPlatform = ref("");
-    const selectedSort = ref("title-asc");
+    const selectedSort = ref("");
 
     // Sort options
     const sortOptions = [
+      { value: "", label: "Default" },
       { value: "title-asc", label: "Title (A-Z)" },
       { value: "title-desc", label: "Title (Z-A)" },
       { value: "release-date-desc", label: "Newest First" },
@@ -86,7 +87,7 @@ module.exports = exports = defineComponent({
       useFilters("games-filter-changed", {
         search: "",
         platform: "",
-        sort: "title-asc",
+        sort: "",
         page: 1,
       });
 
@@ -94,7 +95,7 @@ module.exports = exports = defineComponent({
       return (
         searchQuery.value !== "" ||
         selectedPlatform.value !== "" ||
-        selectedSort.value !== "title-asc"
+        selectedSort.value !== ""
       );
     });
 
@@ -110,12 +111,12 @@ module.exports = exports = defineComponent({
     const clearFilters = () => {
       searchQuery.value = "";
       selectedPlatform.value = "";
-      selectedSort.value = "title-asc";
+      selectedSort.value = "";
 
       clearFiltersBase({
         search: "",
         platform: "",
-        sort: "title-asc",
+        sort: "",
         page: 1,
       });
     };
@@ -134,7 +135,7 @@ module.exports = exports = defineComponent({
       const urlParams = new URLSearchParams(window.location.search);
       searchQuery.value = urlParams.get("search") || "";
       selectedPlatform.value = urlParams.get("platform") || "";
-      selectedSort.value = urlParams.get("sort") || "title-asc";
+      selectedSort.value = urlParams.get("sort") || "";
     });
 
     return {

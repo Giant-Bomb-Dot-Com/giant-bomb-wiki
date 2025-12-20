@@ -87,7 +87,7 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 
 		// Determine sort property and order
 		$smwSort = '';
-		$smwOrder = 'asc';
+		$smwOrder = '';
 		switch ($sortOrder) {
 			case 'title-desc':
                 $smwSort = 'Has name';
@@ -105,9 +105,6 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 				$smwSort = 'Has release date';
 				$smwOrder = 'asc';
 				break;
-			default:
-                $smwSort = 'Has name';
-				$smwOrder = 'asc';
 		}
 
 		// Calculate offset
@@ -118,7 +115,6 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 			$queryConditions,
 			'limit=' . $itemsPerPage,
 			'offset=' . $offset,
-			'order=' . $smwOrder,
 			'?Has name',
 			'?Has deck',
 			'?Has image',
@@ -129,6 +125,9 @@ function fetchGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPa
 		if (!empty($smwSort)) {
 			$rawParams[] = 'sort=' . $smwSort;
 		}
+        if (!empty($smwOrder)) {
+            $rawParams[] = 'order=' . $smwOrder;
+        }
 
 		// Execute query
 		list($queryString, $params, $printouts) = \SMWQueryProcessor::getComponentsFromFunctionParams(

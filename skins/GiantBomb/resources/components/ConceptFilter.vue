@@ -71,7 +71,7 @@
                 v-if="game.platforms && game.platforms.length > 0"
                 class="filter-search-game__platforms"
               >
-                ({{ formatPlatforms(game.platforms) }})
+                ({{ formatPlatformsProxy(game.platforms) }})
               </span>
             </div>
           </div>
@@ -95,6 +95,7 @@ const { useSearch } = require("../composables/useSearch.js");
 const FilterContainer = require("./FilterContainer.vue");
 const FilterDropdown = require("./FilterDropdown.vue");
 const SearchableMultiSelect = require("./SearchableMultiSelect.vue");
+const { formatPlatforms } = require("../helpers/displayUtils.js");
 
 /**
  * ConceptFilter Component
@@ -115,7 +116,7 @@ module.exports = exports = defineComponent({
     },
     currentSort: {
       type: String,
-      default: "alphabetical",
+      default: "",
     },
     currentRequireAllGames: {
       type: Boolean,
@@ -136,6 +137,7 @@ module.exports = exports = defineComponent({
 
     // Sort options
     const sortOptions = [
+      { value: "", label: "Default" },
       { value: "alphabetical", label: "Alphabetical" },
       { value: "last_edited", label: "Last Edited" },
       { value: "last_created", label: "Last Created" },
@@ -143,7 +145,7 @@ module.exports = exports = defineComponent({
 
     // Filter state
     const selectedLetter = ref("");
-    const selectedSort = ref("alphabetical");
+    const selectedSort = ref("");
     const selectedGames = ref([]);
     const requireAllGames = ref(false);
 
@@ -154,7 +156,7 @@ module.exports = exports = defineComponent({
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
       useFilters("concepts-filter-changed", {
         letter: "",
-        sort: "alphabetical",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,
@@ -194,7 +196,7 @@ module.exports = exports = defineComponent({
     const hasActiveFilters = computed(() => {
       return (
         selectedLetter.value !== "" ||
-        selectedSort.value !== "alphabetical" ||
+        selectedSort.value !== "" ||
         selectedGames.value.length > 0
       );
     });
@@ -213,16 +215,20 @@ module.exports = exports = defineComponent({
 
     const clearFilters = () => {
       selectedLetter.value = "";
-      selectedSort.value = "alphabetical";
+      selectedSort.value = "";
       selectedGames.value = [];
       requireAllGames.value = false;
       clearFiltersBase({
         letter: "",
-        sort: "alphabetical",
+        sort: "",
         game_title: [],
         require_all_games: false,
         page: 1,
       });
+    };
+
+    const formatPlatformsProxy = (platforms) => {
+      return formatPlatforms(platforms);
     };
 
     const lastSearchQuery = ref("");
@@ -236,22 +242,6 @@ module.exports = exports = defineComponent({
       if (lastSearchQuery.value) {
         loadMore(lastSearchQuery.value);
       }
-    };
-
-    const formatPlatforms = (platforms) => {
-      if (!platforms || platforms.length === 0) return "";
-
-      const displayCount = 3;
-      const shown = platforms
-        .slice(0, displayCount)
-        .map((p) => p.abbrev)
-        .join(", ");
-      const remaining = platforms.length - displayCount;
-
-      if (remaining > 0) {
-        return `${shown} +${remaining} more`;
-      }
-      return shown;
     };
 
     const onImageError = (e) => {
@@ -309,8 +299,8 @@ module.exports = exports = defineComponent({
       clearFilters,
       handleSearch,
       handleLoadMore,
-      formatPlatforms,
       onImageError,
+      formatPlatformsProxy,
     };
   },
 });

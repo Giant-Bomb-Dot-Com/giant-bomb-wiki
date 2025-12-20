@@ -38,7 +38,8 @@
         "resources/css/filters.css",
         "resources/css/newReleasesPage.css",
         "resources/css/platformsPage.css",
-        "resources/css/conceptsPage.css"
+        "resources/css/conceptsPage.css",
+        "resources/css/peoplesPage.css"
       ]
     },
     "skins.giantbomb.externalheader": {
@@ -66,6 +67,8 @@
         "resources/components/PlatformList.vue",
         "resources/components/ConceptFilter.vue",
         "resources/components/ConceptList.vue",
+        "resources/components/PeopleFilter.vue",
+        "resources/components/PeopleList.vue",
         "resources/components/FilterContainer.vue",
         "resources/components/FilterDropdown.vue",
         "resources/components/FilterInput.vue",
@@ -76,7 +79,8 @@
         "resources/composables/useListData.js",
         "resources/helpers/countryFlags.js",
         "resources/helpers/htmlUtils.js",
-        "resources/data/countryFlags.json"
+        "resources/data/countryFlags.json",
+        "resources/helpers/displayUtils.js"
       ],
       "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }
