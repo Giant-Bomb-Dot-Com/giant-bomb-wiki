@@ -59,11 +59,18 @@ RUN cd /var/www/html \
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
+# Directory for logging
+RUN mkdir -p -m 740 /var/log/mediawiki && \
+    chown -R www-data:www-data /var/log/mediawiki
+
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 
-# So can be docker exec after build
+# Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh
+
+# Configurations for test suites
+COPY --chown=www-data:www-data phpunit.xml.dist /var/www/html/phpunit.xml.dist
 
 # START CONTAINER
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
