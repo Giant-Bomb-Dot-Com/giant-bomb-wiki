@@ -1,0 +1,8 @@
+/**
+ * People-specific styles
+ * Extends shared listing styles from listingPage.css
+ * Uses .peoples-page for page-specific overrides while keeping .listing-* classes for shared behavior
+ */
+
+/* People page uses the shared listing-page styles via the class in the template */
+/* Only add people-specific overrides here if needed */

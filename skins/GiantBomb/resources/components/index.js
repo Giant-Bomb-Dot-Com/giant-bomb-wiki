@@ -22,6 +22,8 @@ const components = {
   DatabaseAddPrompt: require("./DatabaseAddPrompt.vue"),
   ConceptFilter: require("./ConceptFilter.vue"),
   ConceptList: require("./ConceptList.vue"),
+  PeopleFilter: require("./PeopleFilter.vue"),
+  PeopleList: require("./PeopleList.vue"),
 };
 
 // Wait for DOM to be ready before mounting components

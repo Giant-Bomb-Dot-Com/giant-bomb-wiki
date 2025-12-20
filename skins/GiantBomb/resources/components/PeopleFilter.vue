@@ -98,12 +98,11 @@ const SearchableMultiSelect = require("./SearchableMultiSelect.vue");
 const { formatPlatforms } = require("../helpers/displayUtils.js");
 
 /**
- * PlatformFilter Component
- * Handles filtering of platforms by letter, sorting, and games
- * Note: FilterContainer, FilterDropdown, and SearchableMultiSelect are globally registered
+ * PeopleFilter Component
+ * Handles filtering of people by letter, sorting, and games
  */
 module.exports = exports = defineComponent({
-  name: "PlatformFilter",
+  name: "PeopleFilter",
   components: {
     FilterContainer,
     FilterDropdown,
@@ -138,7 +137,6 @@ module.exports = exports = defineComponent({
     // Sort options
     const sortOptions = [
       { value: "", label: "Default" },
-      { value: "release_date", label: "Release Date" },
       { value: "alphabetical", label: "Alphabetical" },
       { value: "last_edited", label: "Last Edited" },
       { value: "last_created", label: "Last Created" },
@@ -153,9 +151,9 @@ module.exports = exports = defineComponent({
     // Get current page size from URL
     const url = new URL(window.location.origin + window.location.pathname);
     const pageSize = url.searchParams.get("page_size") || 48;
-    // Use filters composable
+
     const { applyFilters: applyFiltersBase, clearFilters: clearFiltersBase } =
-      useFilters("platforms-filter-changed", {
+      useFilters("people-filter-changed", {
         letter: "",
         sort: "",
         game_title: [],
@@ -184,7 +182,6 @@ module.exports = exports = defineComponent({
       };
     };
 
-    // Use search composable
     const {
       searchResults,
       isSearching,
@@ -228,10 +225,6 @@ module.exports = exports = defineComponent({
       });
     };
 
-    const formatPlatformsProxy = (platforms) => {
-      return formatPlatforms(platforms);
-    };
-
     const lastSearchQuery = ref("");
 
     const handleSearch = (query) => {
@@ -251,8 +244,11 @@ module.exports = exports = defineComponent({
         '<div class="filter-search-game__image-placeholder"><span>?</span></div>';
     };
 
+    const formatPlatformsProxy = (platforms) => {
+      return formatPlatforms(platforms);
+    };
+
     onMounted(() => {
-      // Read current filter values from props or URL
       const urlParams = new URLSearchParams(window.location.search);
       selectedLetter.value = urlParams.get("letter") || currentLetter.value;
       selectedSort.value = urlParams.get("sort") || currentSort.value;
@@ -260,7 +256,6 @@ module.exports = exports = defineComponent({
         urlParams.get("require_all_games") === "1" ||
         currentRequireAllGames.value === true;
 
-      // Read multiple game_title parameters from URL
       const gameTitles = urlParams.getAll("game_title[]");
       if (gameTitles.length > 0) {
         selectedGames.value = gameTitles.map((searchName) => ({
@@ -268,7 +263,6 @@ module.exports = exports = defineComponent({
           title: searchName.replace("Games/", " "),
         }));
       } else if (currentGames.value) {
-        // Fallback to props if no game titles in URL
         const currentGamesArray = currentGames.value.split("||");
         selectedGames.value = currentGamesArray.map((game) => ({
           searchName: game,
@@ -277,7 +271,6 @@ module.exports = exports = defineComponent({
       }
     });
 
-    // Watch for requireAllGames changes to trigger filter update
     watch(requireAllGames, () => {
       if (selectedGames.value.length > 1) {
         onFilterChange();

@@ -1,6 +1,6 @@
 # The Giant Bomb Wiki
 
-A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki.
+A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.5.
 
 ## Quick Start (Recommended)
 
@@ -195,6 +195,25 @@ pnpm install
 ```
 
 This will install packages defined in the [pnpm workspace config file](pnpm-workspace.yaml).
+
+### [PHP Testing](#php-testing)
+
+#### Testing Mediawiki Tests
+
+Install the wiki first
+
+```
+docker compose exec wiki composer install
+docker compose exec wiki composer phpunit:unit
+```
+
+#### Testing GB Tests
+
+```
+composer phpunit -- gb-tests
+```
+
+To execute only a single file, pass the path the test after the double hyphen.
 
 ### E2E Testing
 

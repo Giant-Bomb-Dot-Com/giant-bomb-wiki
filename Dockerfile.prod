@@ -56,11 +56,15 @@ RUN cd /var/www/html \
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
+# Directory for logging
+RUN mkdir -p -m 740 /var/log/mediawiki && \
+    chown -R www-data:www-data /var/log/mediawiki
+
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 COPY --chown=www-data:www-data ./extensions/AlgoliaSearch /var/www/html/extensions/AlgoliaSearch
 
-# So can be docker exec after build
+# Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh
 
 # START CONTAINER - PRODUCTION: Copy config and skin into image

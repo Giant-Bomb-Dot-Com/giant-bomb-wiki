@@ -26,7 +26,7 @@ else
     docker cp smw-rebuild.sh $WIKI_CONTAINER:/smw-rebuild.sh
     docker exec $WIKI_CONTAINER chmod 755 /installwikidata.sh
     docker exec $WIKI_CONTAINER chmod 755 /smw-rebuild.sh
-    docker exec $WIKI_CONTAINER /bin/bash installwikidata.sh
-    docker rm $WIKI_CONTAINER:/data/fulldatadump.xml
+    docker exec $WIKI_CONTAINER /bin/bash /installwikidata.sh
+    docker exec $WIKI_CONTAINER rm /data/fulldatadump.xml
     echo "✓ Full data backup installed"
 fi

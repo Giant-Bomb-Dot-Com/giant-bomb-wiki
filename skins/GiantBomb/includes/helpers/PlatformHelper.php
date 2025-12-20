@@ -343,6 +343,7 @@ function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $
         
         $printouts = '|?Has name|?Has short name|?Has image|?Has deck|?Has release date|?Has release date type';
         
+        $params = '';
         // Set sort order
         switch ($sort) {
             case 'release_date':
@@ -356,9 +357,6 @@ function fetchPlatformsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $
                 break;
             case 'last_created':
                 $params = '|sort=Creation date|order=desc';
-                break;
-            default:
-                $params = '|sort=Has release date|order=desc';
                 break;
         }
         

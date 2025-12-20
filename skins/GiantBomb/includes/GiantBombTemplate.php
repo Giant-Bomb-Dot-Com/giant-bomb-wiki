@@ -24,6 +24,11 @@ class GiantBombTemplate extends BaseTemplate {
             require_once __DIR__ . '/api/concepts-api.php';
             return;
         }
+
+        if ($action === 'get-people') {
+            require_once __DIR__ . '/api/peoples-api.php';
+            return;
+        }
         
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
@@ -54,6 +59,7 @@ class GiantBombTemplate extends BaseTemplate {
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
         $isConceptsPage = $pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
+        $isPeoplePage = $pageTitle === 'People' || $pageTitle === 'People/';
         error_log("Current page title: " . $pageTitle);
         
 
@@ -135,6 +141,11 @@ class GiantBombTemplate extends BaseTemplate {
             // Show concepts page
 ?>
         <?php include __DIR__ . '/views/concepts-page.php'; ?>
+<?php
+        } elseif ($isPeoplePage) {
+            // Show people page
+?>
+        <?php include __DIR__ . '/views/peoples-page.php'; ?>
 <?php
         } else {
             // Show normal wiki content for other pages
