@@ -19,7 +19,7 @@ if ($action === 'get-platforms') {
     $filterLetter = $request->getText('letter', '');
     $filterGameTitles = $request->getArray('game_title');
     $requireAllGames = $request->getBool('require_all_games', false);
-    $sort = $request->getText('sort', 'release_date');
+    $sort = $request->getText('sort', '');
     $page = $request->getInt('page', 1);
     $pageSize = $request->getInt('page_size', DEFAULT_PAGE_SIZE);
     

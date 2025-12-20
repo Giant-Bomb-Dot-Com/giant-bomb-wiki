@@ -382,9 +382,9 @@ if ( $wikiEnv === 'dev' ) {
 }
 
 #Allow more results with SMW query
-$smwgQUpperbound = 15000;
-$smwgQMaxInlineLimit = 15000;
-$smwgQMaxLimit = 15000;
+$smwgQUpperbound = 200000;
+$smwgQMaxInlineLimit = 200000;
+$smwgQMaxLimit = 200000;
 
 #Allow a large range of conditions in SMW queries
 $smwgQMaxSize = 100;

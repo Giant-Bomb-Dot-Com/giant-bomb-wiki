@@ -43,7 +43,7 @@ $currentPage = max(1, $request->getInt('page', 1));
 $itemsPerPage = max(24, min(100, $request->getInt('perPage', DEFAULT_PAGE_SIZE)));
 $searchQuery = trim($request->getText('search', ''));
 $platformFilter = trim($request->getText('platform', ''));
-$sortOrder = $request->getText('sort', 'title-asc');
+$sortOrder = $request->getText('sort', '');
 
 $result = queryGamesFromSMW($searchQuery, $platformFilter, $sortOrder, $currentPage, $itemsPerPage);
 $games = $result['games'];

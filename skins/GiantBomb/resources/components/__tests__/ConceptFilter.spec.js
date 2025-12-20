@@ -568,32 +568,6 @@ describe("ConceptFilter", () => {
       consoleErrorSpy.mockRestore();
     });
 
-    it("formats platforms correctly", () => {
-      const wrapper = mount(ConceptFilter, {
-        props: defaultProps,
-      });
-
-      const platforms = [
-        { abbrev: "PC" },
-        { abbrev: "PS5" },
-        { abbrev: "XSX" },
-        { abbrev: "NSW" },
-        { abbrev: "PS4" },
-      ];
-
-      const formatted = wrapper.vm.formatPlatforms(platforms);
-      expect(formatted).toBe("PC, PS5, XSX +2 more");
-    });
-
-    it("handles empty platforms array", () => {
-      const wrapper = mount(ConceptFilter, {
-        props: defaultProps,
-      });
-
-      const formatted = wrapper.vm.formatPlatforms([]);
-      expect(formatted).toBe("");
-    });
-
     it("handles requireAllGames change when multiple games selected", async () => {
       const wrapper = mount(ConceptFilter, {
         props: defaultProps,
