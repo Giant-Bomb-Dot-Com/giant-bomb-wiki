@@ -120,7 +120,7 @@ module.exports = exports = defineComponent({
       sort: {
         queryParam: "sort",
         type: FILTER_TYPES.STRING,
-        default: "title-asc",
+        default: "",
         omitIfDefault: true,
       },
     };
