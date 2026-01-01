@@ -34,6 +34,7 @@ services:
       - ./skins:/var/www/html/skins:cached
       # Extensions
       - ./extensions/AlgoliaSearch:/var/www/html/extensions/AlgoliaSearch:cached
+      - ./extensions/GiantBombApi:/var/www/html/extensions/GiantBombApi:cached
       #These lines cause these skins not to be mounted to volume
       - /var/www/html/skins/Vector
       - ./config:/config

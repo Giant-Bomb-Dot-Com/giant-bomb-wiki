@@ -1,0 +1,25 @@
+{
+  "name": "GiantBombApi",
+  "version": "0.1.0",
+  "author": "Giant Bomb Engineering",
+  "descriptionmsg": "Provides a REST API for the contents of the Wiki.",
+  "license-name": "GPL-2.0-or-later",
+  "type": "api",
+  "requires": {
+    "MediaWiki": ">=1.40.0",
+    "platform": {
+      "php": ">= 7.2"
+    }
+  },
+  "AutoloadNamespaces": {
+    "MediaWiki\\Extension\\GiantBombApi\\": "includes/"
+  },
+  "RestRoutes": [
+    {
+      "path": "/api/v0/games",
+      "method": "GET",
+      "class": "MediaWiki\\Extension\\GiantBombApi\\Handlers\\GamesHandler"
+    }
+  ],
+  "manifest_version": 2
+}

@@ -303,6 +303,7 @@ wfLoadExtension( 'WikiEditor' );
 
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
+wfLoadExtension( 'GiantBombApi' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
 

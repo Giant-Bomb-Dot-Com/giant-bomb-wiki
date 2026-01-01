@@ -64,6 +64,7 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
     chown -R www-data:www-data /var/log/mediawiki
 
 # Custom extensions packaged with the image
+COPY --chown=www-data:www-data ./extensions/GiantBombApi /var/www/html/extensions/GiantBombApi
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
