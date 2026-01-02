@@ -9,6 +9,9 @@
     "MediaWiki": ">=1.40.0",
     "platform": {
       "php": ">= 7.2"
+    },
+    "extensions": {
+      "SemanticMediaWiki": "*"
     }
   },
   "AutoloadNamespaces": {
