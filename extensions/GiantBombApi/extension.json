@@ -15,13 +15,13 @@
     }
   },
   "AutoloadNamespaces": {
-    "MediaWiki\\Extension\\GiantBombApi\\": "includes/"
+    "GiantBombApi\\": "includes/"
   },
   "RestRoutes": [
     {
       "path": "/api/v0/games",
       "method": "GET",
-      "class": "MediaWiki\\Extension\\GiantBombApi\\Handlers\\GamesHandler"
+      "class": "GiantBombApi\\Handlers\\GamesHandler"
     }
   ],
   "manifest_version": 2

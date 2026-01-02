@@ -1,74 +1,55 @@
 <?php
 
-namespace MediaWiki\Extension\GiantBombApi\Handlers;
+namespace GiantBombApi\Handlers;
 
-use Wikimedia\ParamValidator\ParamValidator;
+use GiantBombApi\Datastore\GamesDatastore;
+use GiantBombApi\Datastore\SortOrder;
 use MediaWiki\Rest\SimpleHandler;
+use Wikimedia\ParamValidator\ParamValidator;
 
 // TODO: move this to a constants file
-const DEFAULT_PAGE_SIZE = 48;
+const DEFAULT_LIMIT = 100;
 
 /**
  * Handles requests to the GET /games endpoint.
  */
 class GamesHandler extends SimpleHandler {
 
-    private const VALID_SORT_VALUES = [
-        '',
-        'release-date-asc',
-        'release-date-desc',
-        'title-asc',
-        'title-desc',
-    ];
-
-    public function getParamSettings() {
+    public function getParamSettings(): array {
         return [
-            'search' => [
+            'limit' => [
                 self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
             ],
-            'platform' => [
+            'offset' => [
                 self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
             ],
             'sort' => [
                 self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => self::VALID_SORT_VALUES,
-                ParamValidator::PARAM_REQUIRED => false,
-            ],
-            'page' => [
-                self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => 'integer',
-                ParamValidator::PARAM_REQUIRED => false,
-            ],
-            'perPage' => [
-                self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => 'integer',
+                ParamValidator::PARAM_TYPE => 'string',
                 ParamValidator::PARAM_REQUIRED => false,
             ],
         ];
     }
 
-    public function needsWriteAccess() {
+    public function needsWriteAccess(): bool {
         return false;
     }
 
-    /**
-     * Run the handler, fetching a list of games.
-     */
-    public function run() {
+    public function run(): array {
         $queryParams = $this->getValidatedParams();
-        $searchQuery = trim($queryParams['search'] ?? '');
-        $platformFilter = trim($queryParams['platform'] ?? '');
-        $sortOrder = trim($queryParams['sort'] ?? '');
-        $currentPage = max(1, $queryParams['page'] ?? 1);
-        $itemsPerPage = max(1, min(100, $queryParams['perPage'] ?? DEFAULT_PAGE_SIZE));
+        $limit = $queryParams['limit'] ?? DEFAULT_LIMIT;
+        $offset = $queryParams['offset'] ?? 0;
+        $sort = strtolower(trim($queryParams['sort'] ?? ''));
 
-        print_r($queryParams);
-        die();
+        $results = GamesDatastore::getGames(SortOrder::from($sort), $limit, $offset);
 
-        return [ 'success' => 1 ];
+        return [
+            'results' => $results,
+            'number_of_total_results' => 0,
+        ];
     }
 }
