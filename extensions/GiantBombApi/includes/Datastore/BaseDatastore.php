@@ -122,6 +122,16 @@ class BaseDatastore {
     }
 
     /**
+     * Convert a page title to a human-readable one, removing the prefix and
+     * converting underscores to spaces.
+     * @param string $title Title to format.
+     * @return string Formatted title.
+     */
+    public static function humanizeTitle( string $title ): string {
+        return str_replace('_', ' ', substr($title, strpos($title, '/') + 1));
+    }
+
+    /**
      * Parse a page property values into an API-friendly format.
      * @param string $label Label of the property.
      * @param array $values The values stored in the property.
@@ -138,7 +148,7 @@ class BaseDatastore {
 
             case 'Has platforms':
                 return array_map(
-                    fn ($p) => PageHelper::humanizeTitle($p),
+                    fn ($p) => self::humanizeTitle($p),
                     $values
                 );
                 break;
