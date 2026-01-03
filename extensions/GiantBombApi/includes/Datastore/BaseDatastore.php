@@ -17,15 +17,21 @@ class BaseDatastore {
      * Get a list of resources based off a category of pages and their properties.
      * @param string $category Title of the category to fetch pages for.
      * @param array $properties List of properties to extract from the pages.
+     * @param array $filters List of filters to apply to the query.
      * @param SortOrder $sortOrder Order of the pages.
      * @param int $limit Amount of pages to fetch.
      * @param int $offset Page count offset.
      * @return array Array containing the list of results and the total number of pages.
      */
-    protected static function getResources( string $category, array $properties, SortOrder $sortOrder, int $limit, int $offset ): array {
+    protected static function getResources( string $category, array $properties, array $filters, SortOrder $sortOrder, int $limit, int $offset ): array {
         $store = SMW\StoreFactory::getStore(); // TODO: is this a MW service that can be dependency injected?
 
         $queryConditions = '[[Category:' . $category . ']]';
+        foreach ($filters as $key => $value) {
+            // TODO: more complex filter conditions (letter, games, etc.)
+            $queryConditions .= '[[Has ' . $key . '::~*"' . self::sanitizeFilterValue($value) . '"*]]';
+        }
+
         $queryParams = [
             $queryConditions,
             'limit=' . $limit,
@@ -168,6 +174,15 @@ class BaseDatastore {
         }
 
         return null;
+    }
+
+    /**
+     * Remove any special SMW characters from text being used in a filter.
+     * @param string $value Text to sanitize.
+     * @return strung The sanitized value.
+     */
+    protected static function sanitizeFilterValue( string $value ): string {
+        return str_replace(['[[', ']]', '[', ']', '|', '::', '*', '{', '}'], '', $value);
     }
 
     /**
