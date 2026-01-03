@@ -29,7 +29,7 @@ class GamesHandler extends SimpleHandler {
             ],
             'sort' => [
                 self::PARAM_SOURCE => 'query',
-                ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_TYPE => SortOrder::values(),
                 ParamValidator::PARAM_REQUIRED => false,
             ],
         ];
@@ -43,13 +43,13 @@ class GamesHandler extends SimpleHandler {
         $queryParams = $this->getValidatedParams();
         $limit = $queryParams['limit'] ?? DEFAULT_LIMIT;
         $offset = $queryParams['offset'] ?? 0;
-        $sort = strtolower(trim($queryParams['sort'] ?? ''));
+        $sort = SortOrder::from($queryParams['sort'] ?? '');
 
-        $results = GamesDatastore::getGames(SortOrder::from($sort), $limit, $offset);
+        list($results, $totalCount) = GamesDatastore::getGames($sort, $limit, $offset);
 
         return [
             'results' => $results,
-            'number_of_total_results' => 0,
+            'number_of_total_results' => $totalCount,
         ];
     }
 }
