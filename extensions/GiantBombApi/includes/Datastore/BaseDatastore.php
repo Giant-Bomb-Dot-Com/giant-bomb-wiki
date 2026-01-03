@@ -75,9 +75,9 @@ class BaseDatastore {
 
             $pageData = [
                 'id' => $subject->getSerialization(),
+                'title' => self::humanizeTitle($title->getText()),
                 'url' => '/wiki/' . $title->getPrefixedDBkey(),
             ];
-
             foreach ($properties as $property) {
                 $name = self::sanitizePropertyName($property);
                 $pageData[$name] = null;
@@ -100,9 +100,24 @@ class BaseDatastore {
             $results[] = $pageData;
         }
 
+        // Get total count
+        list($countQueryString, $countParamsProcessed, $countPrintouts) = SMWQueryProcessor::getComponentsFromFunctionParams(
+            [$queryConditions, 'format=count'],
+            false
+        );
+        $countQuery = SMWQueryProcessor::createQuery(
+            $countQueryString,
+            SMWQueryProcessor::getProcessedParams($countParamsProcessed),
+            SMWQueryProcessor::INLINE_QUERY,
+            'count',
+            $countPrintouts
+        );
+        $countResult = $store->getQueryResult($countQuery);
+        $totalAvailable = $countResult->getCountValue() ?: 0;
+
         return [
             $results,
-            123, // TODO: total results
+            $totalAvailable,
         ];
     }
 
@@ -154,5 +169,4 @@ class BaseDatastore {
     protected static function sanitizePropertyName( string $property ): string {
         return strtolower(str_replace(' ', '_', $property));
     }
-
 }

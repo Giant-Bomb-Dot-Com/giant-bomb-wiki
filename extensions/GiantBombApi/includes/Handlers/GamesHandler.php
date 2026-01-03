@@ -49,7 +49,7 @@ class GamesHandler extends SimpleHandler {
 
         return [
             'results' => $results,
-            'number_of_total_results' => $totalCount,
+            'total_results' => $totalCount,
         ];
     }
 }
