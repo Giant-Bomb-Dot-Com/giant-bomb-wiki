@@ -20,7 +20,6 @@ class GiantBombTemplate extends BaseTemplate {
             return;
         }
         
-        
         if ($action === 'get-concepts') {
             require_once __DIR__ . '/api/concepts-api.php';
             return;

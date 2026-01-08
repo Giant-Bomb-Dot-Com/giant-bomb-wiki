@@ -3,11 +3,14 @@
  * Concepts Helper
  * 
  * Provides utility functions for looking up concepts data from Semantic MediaWiki
+ * with caching support for performance.
  */
+
+require_once __DIR__ . '/CacheHelper.php';
+require_once __DIR__ . '/QueryHelper.php';
+
 use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
 use GiantBomb\Skin\Helpers\PageHelper;
- 
-require_once __DIR__ . '/QueryHelper.php';
  
 /**
  * Query concepts from Semantic MediaWiki with optional filters
@@ -20,12 +23,27 @@ require_once __DIR__ . '/QueryHelper.php';
  * @param bool $requireAllGames If true, concepts must be linked to ALL games (AND logic). If false, ANY game (OR logic)
  * @return array Array with 'concepts', 'totalCount', 'currentPage', 'totalPages'
  */
-function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = '', $page = 1, $limit = 48, $requireAllGames = false) {
-    return fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
+function queryConceptsFromSMW($filterLetter = '', $filterGameTitles = [], $sort = 'alphabetical', $page = 1, $limit = 48, $requireAllGames = false) {
+    $cache = CacheHelper::getInstance();
+    
+    // Build cache key from query parameters
+    $cacheKey = $cache->buildQueryKey(CacheHelper::PREFIX_CONCEPTS, [
+        'letter' => $filterLetter,
+        'games' => $filterGameTitles,
+        'sort' => $sort,
+        'page' => $page,
+        'limit' => $limit,
+        'requireAll' => $requireAllGames ? '1' : '0'
+    ]);
+    
+    // Try to get from cache, or compute and store
+    return $cache->getOrSet($cacheKey, function() use ($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames) {
+        return fetchConceptsFromSMW($filterLetter, $filterGameTitles, $sort, $page, $limit, $requireAllGames);
+    }, CacheHelper::QUERY_TTL);
 }
 
 /**
- * Internal function to fetch concepts from SMW
+ * Internal function to fetch concepts from SMW (not cached)
  * 
  * @param string $filterLetter Optional letter filter
  * @param array $filterGameTitles Optional game title filters
