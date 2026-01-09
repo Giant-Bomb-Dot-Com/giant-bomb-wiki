@@ -60,6 +60,10 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 RUN mkdir -p -m 740 /var/log/mediawiki && \
     chown -R www-data:www-data /var/log/mediawiki
 
+# Cache directories for localisation and file cache
+RUN mkdir -p -m 755 /var/www/html/cache/html && \
+    chown -R www-data:www-data /var/www/html/cache
+
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 COPY --chown=www-data:www-data ./extensions/AlgoliaSearch /var/www/html/extensions/AlgoliaSearch
