@@ -1,0 +1,149 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||| Guid (property=Has guid)
+||| Aliases (property=Has aliases)
+||| Image (property=Has image)
+||| Caption (property=Has caption)
+||| Deck (property=Has deck)
+||| ReleaseDate (property=Has release date)
+||| ReleaseDateType (property=Has release date type)
+||| Characters (property=Has characters)
+||| Concepts (property=Has concepts)
+||| Developers (property=Has developers)
+||| Franchises (property=Has franchise)
+||| Games (property=Has similar games)
+||| Genres (property=Has genres)
+||| Locations (property=Has locations)
+||| Objects (property=Has objects)
+||| Platforms (property=Has platforms)
+||| Publishers (property=Has publishers)
+||| Themes (property=Has themes)
+}}
+==Documentation==
+This template creates a full game page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+The page structure follows the classic Giant Bomb wiki design:
+* Hero section with cover image, title, platforms, and deck
+* Tab navigation for sub-pages
+* Two-column layout with wiki content on left and game details sidebar on right
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+| Name || Display name of the game
+|-
+| Guid || Giant Bomb API identifier
+|-
+| Aliases || Alternative names (comma-separated)
+|-
+| Image || Cover image filename
+|-
+| Deck || Short description shown in hero
+|-
+| ReleaseDate || Original release date
+|-
+| Platforms || Platform names (comma-separated)
+|-
+| Developers || Developer companies (comma-separated)
+|-
+| Publishers || Publisher companies (comma-separated)
+|-
+| Genres || Game genres (comma-separated)
+|-
+| Themes || Game themes (comma-separated)
+|-
+| Franchises || Franchise this game belongs to
+|-
+| Characters || Characters in the game (comma-separated)
+|-
+| Concepts || Concepts in the game (comma-separated)
+|-
+| Locations || Locations in the game (comma-separated)
+|-
+| Objects || Objects in the game (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Game
+| Name = Doom
+| Guid = 3030-4725
+| Deck = Revolutionary first-person shooter...
+| ReleaseDate = 1993-12-10
+| Platforms = Platforms/PC, Platforms/PlayStation
+| Developers = Companies/id Software
+| Publishers = Companies/id Software
+| Genres = Genres/First Person Shooter
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{GameEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+====================
+Store all template parameters as semantic properties.
+Single-value properties use #set directly.
+Multi-value properties (comma-separated) use #arraymap.
+
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
+}}{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchise=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has similar games=@@}}
+}}{{#arraymap:{{{Genres|}}}|,|@@|{{#set:Has genres=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}{{#arraymap:{{{Platforms|}}}|,|@@|{{#set:Has platforms=@@}}
+}}{{#arraymap:{{{Publishers|}}}|,|@@|{{#set:Has publishers=@@}}
+}}{{#arraymap:{{{Themes|}}}|,|@@|{{#set:Has themes=@@}}
+}}<!--
+
+Page Setup
+==========
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Games|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+==============
+--><div class="gb-game-page">
+<div class="gb-game-hero">
+<div class="gb-game-hero-container">
+<div class="gb-game-hero-cover"></div>
+<div class="gb-game-hero-info">
+<div class="gb-game-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-game-hero-meta"><span class="gb-game-hero-type">GAME</span> &#187; {{#if:{{{ReleaseDate|}}}|Released {{{ReleaseDate}}}|}}</div>
+<div class="gb-game-hero-platforms">{{#arraymap:{{{Platforms|}}}|,|@@|<span class="gb-game-hero-platform">[[@@]]</span>| }}</div>
+<div class="gb-game-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-game-tabs">
+<div class="gb-game-tabs-container">
+<div class="gb-game-tabs-nav">
+<span class="gb-game-tabs-tab gb-game-tabs-tab--active">Game</span>
+<span class="gb-game-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-game-tabs-tab">[[{{FULLPAGENAME}}/Reviews|Reviews]]</span>
+<span class="gb-game-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=edit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-game-content">
+<div class="gb-game-main">
+<div class="gb-game-wiki-content">
+</includeonly>

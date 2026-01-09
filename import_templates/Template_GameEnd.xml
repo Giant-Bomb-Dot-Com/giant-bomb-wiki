@@ -1,0 +1,36 @@
+﻿<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd" version="0.11" xml:lang="en">
+  <siteinfo>
+    <sitename>gb</sitename>
+    <dbname>gb_wiki</dbname>
+    <base>http://localhost:8080/wiki/Main_Page</base>
+    <generator>MediaWiki 1.43.5</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="10" case="first-letter">Template</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Template:GameEnd</title>
+    <ns>10</ns>
+    <revision>
+      <timestamp>2026-01-08T00:00:00Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">&lt;noinclude&gt;
+==Documentation==
+This template closes the game page layout and renders the sidebar.
+Must be used at the end of a game page after all wiki content.
+
+===Usage===
+Place at the very end of the game page content:
+&lt;pre&gt;
+{{GameEnd}}
+&lt;/pre&gt;
+&lt;/noinclude&gt;&lt;includeonly&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="gb-game-sidebar"&gt;{{GameSidebar}}&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/includeonly&gt;</text>
+    </revision>
+  </page>
+</mediawiki>

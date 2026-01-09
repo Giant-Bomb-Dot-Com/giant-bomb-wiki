@@ -71,6 +71,9 @@ COPY --chmod=755 installwiki.sh /installwiki.sh
 COPY --chown=www-data:www-data ./config/LocalSettings.php /var/www/html/LocalSettings.php
 COPY --chown=www-data:www-data ./skins/GiantBomb /var/www/html/skins/GiantBomb
 
+# Template import scripts for game pages
+COPY --chown=www-data:www-data ./import_templates /var/www/html/import_templates
+
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
 COPY .htaccess /var/www/html/.htaccess
 
