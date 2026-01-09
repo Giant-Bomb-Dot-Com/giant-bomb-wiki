@@ -1,0 +1,84 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd" version="0.11" xml:lang="en">
+  <siteinfo>
+    <sitename>gb</sitename>
+    <dbname>gb_wiki</dbname>
+    <base>http://localhost:8080/wiki/Main_Page</base>
+    <generator>MediaWiki 1.43.5</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="10" case="first-letter">Template</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Template:GameSidebar</title>
+    <ns>10</ns>
+    <revision>
+      <timestamp>2026-01-08T00:00:00Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">&lt;noinclude&gt;
+==Documentation==
+This template renders the sidebar for game pages using SMW queries.
+Automatically included by {{GameEnd}}.
+
+===Displays===
+* Game details (name, release date, platforms, etc.)
+* Similar games
+* Related content (characters, locations, concepts, objects)
+&lt;/noinclude&gt;&lt;includeonly&gt;&lt;div class="gb-sidebar-section gb-sidebar-details"&gt;
+&lt;h3 class="gb-sidebar-section__title"&gt;Game details&lt;/h3&gt;
+&lt;table class="gb-sidebar-details__table"&gt;
+&lt;tr&gt;
+&lt;td class="gb-sidebar-details__label"&gt;Name&lt;/td&gt;
+&lt;td class="gb-sidebar-details__value"&gt;[[{{FULLPAGENAME}}|{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}]]&lt;/td&gt;
+&lt;/tr&gt;
+{{#show:{{FULLPAGENAME}}|?Has release date|format=plainlist|link=none|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;First release date&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;}}
+{{#show:{{FULLPAGENAME}}|?Has platforms|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Platform&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=&lt;br/&gt;}}
+{{#show:{{FULLPAGENAME}}|?Has developers|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Developer&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=&lt;br/&gt;}}
+{{#show:{{FULLPAGENAME}}|?Has publishers|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Publisher&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=&lt;br/&gt;}}
+{{#show:{{FULLPAGENAME}}|?Has genres|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Genre&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=, }}
+{{#show:{{FULLPAGENAME}}|?Has themes|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Theme&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=, }}
+{{#show:{{FULLPAGENAME}}|?Has franchise|format=plainlist|link=all|default=|intro=&lt;tr&gt;&lt;td class="gb-sidebar-details__label"&gt;Franchise&lt;/td&gt;&lt;td class="gb-sidebar-details__value"&gt;|outro=&lt;/td&gt;&lt;/tr&gt;|sep=, }}
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div class="gb-sidebar-section gb-sidebar-similar"&gt;
+&lt;h3 class="gb-sidebar-section__title gb-sidebar-section__title--highlight"&gt;Similar&lt;/h3&gt;
+&lt;ul class="gb-sidebar-similar__list"&gt;
+{{#show:{{FULLPAGENAME}}|?Has similar games|format=ul|link=all|default=&lt;li class="gb-sidebar-similar__item" style="color:#666;font-style:italic"&gt;None listed&lt;/li&gt;|template=GameSidebarSimilarItem}}
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class="gb-sidebar-section gb-sidebar-related"&gt;
+&lt;div class="gb-sidebar-related__tabs" id="sidebar-related-tabs"&gt;
+&lt;span class="gb-sidebar-related__tab gb-sidebar-related__tab--active" data-tab="characters"&gt;Characters&lt;/span&gt;
+&lt;span class="gb-sidebar-related__tab" data-tab="locations"&gt;Locations&lt;/span&gt;
+&lt;span class="gb-sidebar-related__tab" data-tab="concepts"&gt;Concepts&lt;/span&gt;
+&lt;span class="gb-sidebar-related__tab" data-tab="objects"&gt;Objects&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div class="gb-sidebar-related__content" id="sidebar-related-content"&gt;
+&lt;ul class="gb-sidebar-related__list gb-sidebar-related__list--active" data-tab-content="characters"&gt;
+{{#show:{{FULLPAGENAME}}|?Has characters|format=ul|link=all|default=&lt;li style="color:#666;font-style:italic;padding:1rem"&gt;None listed&lt;/li&gt;}}
+&lt;/ul&gt;
+
+&lt;ul class="gb-sidebar-related__list" data-tab-content="locations"&gt;
+{{#show:{{FULLPAGENAME}}|?Has locations|format=ul|link=all|default=&lt;li style="color:#666;font-style:italic;padding:1rem"&gt;None listed&lt;/li&gt;}}
+&lt;/ul&gt;
+
+&lt;ul class="gb-sidebar-related__list" data-tab-content="concepts"&gt;
+{{#show:{{FULLPAGENAME}}|?Has concepts|format=ul|link=all|default=&lt;li style="color:#666;font-style:italic;padding:1rem"&gt;None listed&lt;/li&gt;}}
+&lt;/ul&gt;
+
+&lt;ul class="gb-sidebar-related__list" data-tab-content="objects"&gt;
+{{#show:{{FULLPAGENAME}}|?Has objects|format=ul|link=all|default=&lt;li style="color:#666;font-style:italic;padding:1rem"&gt;None listed&lt;/li&gt;}}
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/includeonly&gt;</text>
+    </revision>
+  </page>
+</mediawiki>

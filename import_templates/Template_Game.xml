@@ -1,0 +1,91 @@
+﻿<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd" version="0.11" xml:lang="en">
+  <siteinfo>
+    <sitename>gb</sitename>
+    <dbname>gb_wiki</dbname>
+    <base>http://localhost:8080/wiki/Main_Page</base>
+    <generator>MediaWiki 1.43.5</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="10" case="first-letter">Template</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Template:Game</title>
+    <ns>10</ns>
+    <revision>
+      <timestamp>2026-01-08T00:00:00Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">&lt;noinclude&gt;
+==Documentation==
+This template creates a full game page layout with hero section, tabs, wiki content, and sidebar.
+All data is rendered server-side using Semantic MediaWiki.
+
+===Usage===
+&lt;pre&gt;
+{{Game
+| Name=Game Title
+| Guid=3030-12345
+| Image=Cover.jpg
+| Deck=Short description
+| ReleaseDate=1993-12-10
+| Platforms=PC, PlayStation
+| Developers=Developer Name
+| Publishers=Publisher Name
+| Genres=Action, Adventure
+| Themes=Sci-Fi
+| Franchise=Franchise Name
+| Characters=Character1, Character2
+| Concepts=Concept1, Concept2
+| Locations=Location1, Location2
+| Objects=Object1, Object2
+}}
+
+== Overview ==
+Wiki content here...
+
+== Gameplay ==
+More content...
+
+{{GameEnd}}
+&lt;/pre&gt;
+&lt;/noinclude&gt;&lt;includeonly&gt;__NOTOC__{{#set:Has name={{{Name|{{SUBPAGENAME}}}}}}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}|}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}|}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}|}}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}|}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}|}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}|}}{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType}}}}}|}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}| }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}| }}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}| }}{{#arraymap:{{{Franchise|}}}|,|@@|{{#set:Has franchise=@@}}| }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has similar games=@@}}| }}{{#arraymap:{{{Genres|}}}|,|@@|{{#set:Has genres=@@}}| }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}| }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}| }}{{#arraymap:{{{Platforms|}}}|,|@@|{{#set:Has platforms=@@}}| }}{{#arraymap:{{{Publishers|}}}|,|@@|{{#set:Has publishers=@@}}| }}{{#arraymap:{{{Themes|}}}|,|@@|{{#set:Has themes=@@}}| }}{{DISPLAYTITLE:{{{Name|{{SUBPAGENAME}}}}}}}[[Category:Games|{{SUBPAGENAME}}]]&lt;div class="gb-game-page"&gt;
+&lt;div class="gb-game-hero"&gt;
+&lt;div class="gb-game-hero__container"&gt;
+&lt;div class="gb-game-hero__cover"&gt;{{#if:{{{Image|}}}|[[File:{{{Image}}}|200px|link=|alt={{{Name|{{SUBPAGENAME}}}}} cover]]|}}&lt;/div&gt;
+&lt;div class="gb-game-hero__info"&gt;
+&lt;div class="gb-game-hero__title"&gt;{{{Name|{{SUBPAGENAME}}}}}&lt;/div&gt;
+&lt;div class="gb-game-hero__meta"&gt;
+&lt;span class="gb-game-hero__type"&gt;GAME&lt;/span&gt; » {{#if:{{{ReleaseDate|}}}|Released {{{ReleaseDate}}}|}}
+&lt;/div&gt;
+&lt;div class="gb-game-hero__platforms"&gt;{{#arraymap:{{{Platforms|}}}|,|@@|&lt;span class="gb-game-hero__platform"&gt;@@&lt;/span&gt;| }}&lt;/div&gt;
+{{#if:{{{Deck|}}}|&lt;div class="gb-game-hero__deck"&gt;{{{Deck}}}&lt;/div&gt;|}}
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="gb-game-tabs"&gt;
+&lt;div class="gb-game-tabs__container"&gt;
+&lt;div class="gb-game-tabs__nav"&gt;
+&lt;span class="gb-game-tabs__tab gb-game-tabs__tab--active"&gt;Game Wiki&lt;/span&gt;
+&lt;span class="gb-game-tabs__tab"&gt;[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="gb-game-content"&gt;
+&lt;div class="gb-game-main"&gt;
+__TOC__
+&lt;div class="gb-game-edit-info"&gt;
+&lt;span&gt;[[Special:EditPage/{{FULLPAGENAME}}|Edit this page]]&lt;/span&gt;
+&lt;span&gt;[[Special:PageHistory/{{FULLPAGENAME}}|View full history]]&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="gb-game-wiki-content"&gt;
+&lt;/includeonly&gt;</text>
+    </revision>
+  </page>
+</mediawiki>
