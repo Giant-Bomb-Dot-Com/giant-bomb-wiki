@@ -138,8 +138,10 @@ $wgSharedTables[] = "actor";
 # CACHING
 # =============================================================================
 
-# Localisation cache - use file system instead of database
+# File cache directory (used for anonymous page cache in prod)
 $wgCacheDirectory = "$IP/cache";
+
+# Localisation cache - use filesystem for faster interface message loading
 $wgLocalisationCacheConf['store'] = 'file';
 
 $wgMainCacheType = CACHE_ACCEL;
