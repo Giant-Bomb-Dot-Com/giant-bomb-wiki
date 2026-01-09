@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Formats a sidebar related item as a list item with link.
+Used by GameSidebar for characters, locations, concepts, objects tabs.
+</noinclude><includeonly><li class="gb-sidebar-related__item">[[{{{1}}}|{{StripPrefix|{{{1}}}}}]]</li></includeonly>

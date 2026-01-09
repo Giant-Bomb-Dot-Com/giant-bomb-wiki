@@ -1,0 +1,33 @@
+<noinclude>
+==Documentation==
+Closes the game page layout and renders the sidebar.
+
+Place this at the end of game page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Game
+| Name = Example Game
+| Deck = Short description...
+| Platforms = Platforms/PC, Platforms/PlayStation
+...
+}}
+
+== Overview ==
+Wiki content here...
+
+== Gameplay ==
+More content...
+
+{{GameEnd}}
+</pre>
+
+===Structure===
+This template closes the following divs opened by <code><nowiki>{{Game}}</nowiki></code>:
+* <code>.gb-game-wiki-content</code>
+* <code>.gb-game-main</code>
+
+Then renders the sidebar via <code><nowiki>{{GameSidebar}}</nowiki></code> and closes:
+* <code>.gb-game-content</code>
+* <code>.gb-game-page</code>
+</noinclude><includeonly></div></div><div class="gb-game-sidebar">{{GameSidebar}}</div></div></div></includeonly>

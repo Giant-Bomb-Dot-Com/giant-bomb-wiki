@@ -1,0 +1,12 @@
+[mysqld]
+max_allowed_packet = 1G
+net_buffer_length = 1M
+connect_timeout = 60
+wait_timeout = 28800
+interactive_timeout = 28800
+net_read_timeout = 600
+net_write_timeout = 600
+
+[client]
+max_allowed_packet = 1G
+net_buffer_length = 1M
