@@ -15,7 +15,7 @@ WIKI_CONTAINER=$(docker compose -f docker-compose.snapshot.yml ps -q wiki)
 if [ "$SMW" = "1" ]; then
     echo "Rebuilding SMW data..."
     echo "⏳ This can hours to run as well"
-    docker exec $WIKI_CONTAINER /bin/bash smw-rebuild.sh
+    docker exec $WIKI_CONTAINER /bin/bash /smw-rebuild.sh
     echo "✓ SMW Rebuild Complete"
 else
     echo "Importing wiki data..."
