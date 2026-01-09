@@ -138,6 +138,10 @@ $wgSharedTables[] = "actor";
 # CACHING
 # =============================================================================
 
+# Localisation cache - use file system instead of database
+$wgCacheDirectory = "$IP/cache";
+$wgLocalisationCacheConf['store'] = 'file';
+
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
 $wgParserCacheType = CACHE_DB;
