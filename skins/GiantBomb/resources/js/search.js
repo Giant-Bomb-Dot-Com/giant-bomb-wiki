@@ -1,8 +1,8 @@
 // Search bar functionality - only initialize if elements exist
-(function() {
+(function () {
   var searchBar = document.getElementById("gb-search-bar");
   var searchBtn = document.getElementById("gb-search-btn");
-  
+
   if (searchBar) {
     searchBar.addEventListener("keypress", function (event) {
       if (event.key === "Enter") {
@@ -10,7 +10,7 @@
       }
     });
   }
-  
+
   if (searchBtn) {
     searchBtn.addEventListener("click", function () {
       var bar = document.getElementById("gb-search-bar");
