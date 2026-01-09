@@ -1,0 +1,25 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd" version="0.11" xml:lang="en">
+  <siteinfo>
+    <sitename>gb</sitename>
+    <dbname>gb_wiki</dbname>
+    <base>http://localhost:8080/wiki/Main_Page</base>
+    <generator>MediaWiki 1.43.5</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="10" case="first-letter">Template</namespace>
+    </namespaces>
+  </siteinfo>
+
+  <page>
+    <title>Template:GameSidebarSimilarItem</title>
+    <ns>10</ns>
+    <revision>
+      <timestamp>2026-01-08T00:00:00Z</timestamp>
+      <contributor><username>Admin</username><id>1</id></contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">&lt;noinclude&gt;Helper template for similar game items in sidebar.&lt;/noinclude&gt;&lt;includeonly&gt;&lt;li class="gb-sidebar-similar__item"&gt;{{{1|}}}&lt;/li&gt;&lt;/includeonly&gt;</text>
+    </revision>
+  </page>
+
+</mediawiki>
