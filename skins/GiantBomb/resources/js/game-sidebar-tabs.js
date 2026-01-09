@@ -71,50 +71,54 @@
             '.gb-game-details a, .gb-sidebar-related-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a'
         );
         
-        targetLinks.forEach( link => {
+        for ( const link of targetLinks ) {
             let text = link.textContent;
-            prefixes.forEach( prefix => {
+            for ( const prefix of prefixes ) {
                 if ( text.startsWith( prefix ) ) {
                     text = text.replace( prefix, '' );
+                    break;
                 }
-            });
+            }
             link.textContent = text.replace( /_/g, ' ' );
-        });
+        }
         
-        document.querySelectorAll( '.gb-game-hero-platform' ).forEach( span => {
+        for ( const span of document.querySelectorAll( '.gb-game-hero-platform' ) ) {
             let text = span.textContent;
-            prefixes.forEach( prefix => {
+            for ( const prefix of prefixes ) {
                 if ( text.startsWith( prefix ) ) {
                     text = text.replace( prefix, '' );
+                    break;
                 }
-            });
+            }
             span.textContent = text.replace( /_/g, ' ' );
-        });
+        }
     };
 
     const initSidebarTabs = () => {
-        document.querySelectorAll( '.gb-sidebar-related-tabs' ).forEach( container => {
+        for ( const container of document.querySelectorAll( '.gb-sidebar-related-tabs' ) ) {
             const tabs = container.querySelectorAll( '.gb-sidebar-related-tab' );
             const section = container.closest( '.gb-sidebar-section' );
-            if ( !section ) return;
+            if ( !section ) continue;
             
             const panels = section.querySelector( '.gb-sidebar-related-content' )
                 ?.querySelectorAll( '.gb-sidebar-related-list' );
-            if ( !panels ) return;
+            if ( !panels ) continue;
             
-            tabs.forEach( tab => {
+            for ( const tab of tabs ) {
                 tab.addEventListener( 'click', () => {
                     const targetId = tab.getAttribute( 'data-target' );
                     
-                    tabs.forEach( t => t.classList.remove( 'gb-sidebar-related-tab--active' ) );
+                    for ( const t of tabs ) {
+                        t.classList.remove( 'gb-sidebar-related-tab--active' );
+                    }
                     tab.classList.add( 'gb-sidebar-related-tab--active' );
                     
-                    panels.forEach( panel => {
+                    for ( const panel of panels ) {
                         panel.classList.toggle( 'gb-sidebar-related-list--active', panel.id === targetId );
-                    });
+                    }
                 });
-            });
-        });
+            }
+        }
     };
 
     const init = () => {
