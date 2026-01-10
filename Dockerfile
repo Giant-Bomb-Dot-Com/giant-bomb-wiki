@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.5
+FROM mediawiki:1.43.6
 
 # This Dockerfile is for development and CI environments where configuration
 # files are mounted as volumes. For production deployments, use Dockerfile.prod
