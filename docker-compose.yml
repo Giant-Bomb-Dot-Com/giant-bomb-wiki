@@ -42,7 +42,7 @@ services:
       - ./tests:/var/www/html/gb-tests
     environment:
       - MV_ENV=dev
-      - COMPOSER_ROOT_VERSION=1.43.5
+      - COMPOSER_ROOT_VERSION=1.43.6
     restart: unless-stopped
 
 volumes:
