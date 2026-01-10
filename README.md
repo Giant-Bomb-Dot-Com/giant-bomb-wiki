@@ -1,6 +1,6 @@
 # The Giant Bomb Wiki
 
-A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.5.
+A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.6.
 
 ## Quick Start (Recommended)
 
@@ -19,7 +19,7 @@ This uses a pre-built database snapshot with 5 wiki pages ready for development!
 ## What's Included
 
 - **5 wiki pages** ready for development (working on skins, templates, etc.)
-- **MediaWiki 1.43.5** with Semantic MediaWiki
+- **MediaWiki 1.43.6** with Semantic MediaWiki 6.0.1
 - **Custom GiantBomb skin** with game landing page
 - **Optional: 86,147 games** from Giant Bomb API (for generating new wiki pages)
 
