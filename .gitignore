@@ -14,3 +14,6 @@ gb_api_scripts/import_xml/
 .DS_Store
 gcs_key.json
 .env
+
+docs/
+gb_api_scripts/import_xml/*.xml

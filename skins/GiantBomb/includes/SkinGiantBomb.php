@@ -49,11 +49,18 @@ class SkinGiantBomb extends SkinTemplate {
 
         $pageTitle = $title->getText();
         
-        // Only process game pages rendered via templates
+        // Process game or character pages rendered via templates
         $isGamePage = strpos( $pageTitle, 'Games/' ) === 0 && 
                       substr_count( $pageTitle, '/' ) === 1;
+        $isCharacterPage = strpos( $pageTitle, 'Characters/' ) === 0 && 
+                           substr_count( $pageTitle, '/' ) === 1;
         
-        if ( !$isGamePage ) {
+        if ( !$isGamePage && !$isCharacterPage ) {
+            return;
+        }
+        
+        if ( $isCharacterPage ) {
+            self::addCharacterSeoTags( $out, $title, $pageTitle );
             return;
         }
 
@@ -201,5 +208,60 @@ class SkinGiantBomb extends SkinTemplate {
         }
         
         return null;
+    }
+
+    /**
+     * Add SEO meta tags for character pages.
+     */
+    private static function addCharacterSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
+        $store = \SMW\StoreFactory::getStore();
+        $subject = \SMW\DIWikiPage::newFromTitle( $title );
+        
+        $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' ) 
+                    ?: str_replace( 'Characters/', '', $pageTitle );
+        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
+        
+        $metaDescription = $deck;
+        if ( $metaDescription === '' ) {
+            $metaDescription = $characterName . ' - Character info and appearances on Giant Bomb Wiki.';
+        }
+        
+        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
+        
+        $canonicalUrl = $title->getFullURL();
+        $metaImage = self::getGameCoverImage( $title ); // Reuses same image extraction
+        
+        PageHelper::addOpenGraphTags( $out, [
+            'og:title' => $characterName . ' - Giant Bomb Wiki',
+            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
+            'og:url' => $canonicalUrl,
+            'og:site_name' => 'Giant Bomb Wiki',
+            'og:type' => 'profile',
+            'og:locale' => 'en_US',
+        ], $metaImage );
+        
+        PageHelper::addTwitterTags( $out, [
+            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
+            'twitter:title' => $characterName . ' - Giant Bomb Wiki',
+            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
+            'twitter:site' => '@giantbomb',
+        ], $metaImage, $characterName );
+        
+        $jsonLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => $characterName,
+            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
+            'url' => $canonicalUrl,
+        ];
+        
+        if ( $metaImage ) {
+            $jsonLd['image'] = $metaImage;
+        }
+        
+        $out->addHeadItem(
+            'jsonld-character',
+            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
+        );
     }
 }

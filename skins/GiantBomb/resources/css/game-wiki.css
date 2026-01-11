@@ -1,5 +1,5 @@
 /**
- * Classic Giant Bomb Wiki - Game Page Styles
+ * Giant Bomb Wiki - Game Page Styles
  */
 
 /* ============================================
@@ -15,7 +15,7 @@
     --gb-text-dim: #888;
     --gb-accent: #6BA4D9;
     --gb-white: #fff;
-    
+
     background-color: var(--gb-bg-dark);
     color: var(--gb-text);
     min-height: 100vh;
@@ -262,7 +262,7 @@
     align-items: center;
 }
 
-.gb-wiki-actions > p {
+.gb-wiki-actions>p {
     display: contents;
 }
 
@@ -316,7 +316,8 @@
 
 /* Main content */
 .gb-game-main {
-    min-width: 0; /* Prevent grid blowout */
+    min-width: 0;
+    /* Prevent grid blowout */
 }
 
 /* Sidebar */
@@ -676,6 +677,7 @@
    RESPONSIVE: Tablet and below (900px)
    ============================================ */
 @media (max-width: 900px) {
+
     /* Mobile: Single column, sidebar moves above content */
     .gb-game-content {
         grid-template-columns: 1fr;
@@ -683,7 +685,8 @@
     }
 
     .gb-game-sidebar {
-        order: -1; /* Move sidebar before main content */
+        order: -1;
+        /* Move sidebar before main content */
     }
 
     .gb-game-main {
@@ -731,6 +734,7 @@
    RESPONSIVE: Phone (600px)
    ============================================ */
 @media (max-width: 600px) {
+
     /* Hide wiki actions on mobile */
     .gb-wiki-actions {
         display: none;
@@ -789,6 +793,7 @@
    RESPONSIVE: Small phone (420px - iPhone SE)
    ============================================ */
 @media (max-width: 420px) {
+
     /* Even less padding */
     .gb-game-content {
         padding: 0.75rem;
@@ -898,18 +903,10 @@
     display: none;
 }
 
-/* Category links at bottom */
+/* Hide footer elements */
+.wiki-game-page .printfooter,
 .wiki-game-page #catlinks {
-    background: #252525;
-    border: 1px solid #333;
-    padding: 0.75rem 1rem;
-    margin: 2rem 1.5rem;
-    border-radius: 4px;
-    max-width: 1200px;
-}
-
-.wiki-game-page #catlinks a {
-    color: #6BA4D9;
+    display: none;
 }
 
 /* ============================================
@@ -1070,7 +1067,7 @@
 .gb-sidebar-related-list {
     display: none;
     margin: 0;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
     list-style: none;
 }
 
@@ -1078,10 +1075,9 @@
     display: block;
 }
 
-/* Style individual list items */
 .gb-sidebar-related-list li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #333;
+    padding: 0.25rem 0;
+    border-bottom: none;
 }
 
 .gb-sidebar-related-list li:last-child {
@@ -1089,12 +1085,7 @@
 }
 
 .gb-sidebar-related-item {
-    padding: 0.6rem 1rem;
-    border-bottom: 1px solid #333;
-}
-
-.gb-sidebar-related-item:last-child {
-    border-bottom: none;
+    padding: 0.25rem 0;
 }
 
 .gb-sidebar-related-item a,
@@ -1109,15 +1100,10 @@
     text-decoration: underline;
 }
 
-/* Handle SMW inline output format - make each value display as block */
+/* Handle SMW inline output format */
 .gb-sidebar-related-list .smw-value {
     display: block;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid #333;
-}
-
-.gb-sidebar-related-list .smw-value:last-child {
-    border-bottom: none;
+    padding: 0.15rem 0;
 }
 
 /* Hide the commas SMW adds between values */

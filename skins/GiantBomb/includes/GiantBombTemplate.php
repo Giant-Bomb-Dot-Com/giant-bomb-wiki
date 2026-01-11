@@ -45,7 +45,11 @@ class GiantBombTemplate extends BaseTemplate {
                       substr_count($pageTitle, '/') === 1;
         $isPlatformPage = strpos($pageTitle, 'Platforms/') === 0 &&
                           substr_count($pageTitle, '/') === 1;
-        $isCharacterPage = strpos($pageTitle, 'Characters/') === 0 &&
+        // Character pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomCharacterPage = true to revert to custom PHP rendering
+        $useCustomCharacterPage = false;
+        $isCharacterPage = $useCustomCharacterPage &&
+                           strpos($pageTitle, 'Characters/') === 0 &&
                            substr_count($pageTitle, '/') === 1;
         $isConceptPage = strpos($pageTitle, 'Concepts/') === 0 &&
                          substr_count($pageTitle, '/') === 1;
@@ -156,29 +160,39 @@ class GiantBombTemplate extends BaseTemplate {
             // Show normal wiki content for other pages
             // This includes game pages when rendered via templates (MediaWiki way)
             
-            // Check if this is a template-rendered game page
+            // Check if this is a template-rendered game or character page
             $isTemplateGamePage = strpos($pageTitle, 'Games/') === 0 &&
                                   substr_count($pageTitle, '/') === 1;
+            $isTemplateCharacterPage = strpos($pageTitle, 'Characters/') === 0 &&
+                                       substr_count($pageTitle, '/') === 1;
+            $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage;
+            
+            $contentClasses = ['mw-body'];
+            if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
+            if ($isTemplateGamePage) $contentClasses[] = 'wiki-game-page';
+            if ($isTemplateCharacterPage) $contentClasses[] = 'wiki-character-page';
 ?>
         <div class="page-wrapper">
             <?php include __DIR__ . '/partials/header.php'; ?>
             
-            <div id="content" class="mw-body<?php echo $isTemplateGamePage ? ' wiki-game-page' : ''; ?>" role="main">
+            <div id="content" class="<?php echo implode(' ', $contentClasses); ?>" role="main">
                 <a id="top"></a>
                 <div id="siteNotice"><?php $this->html( 'sitenotice' ) ?></div>
-                <?php if (!$isTemplateGamePage) { ?>
+                <?php if (!$isTemplateContentPage) { ?>
                 <h1 id="firstHeading" class="firstHeading"><?php $this->html( 'title' ) ?></h1>
                 <?php } ?>
                 <div id="bodyContent" class="mw-body-content">
+                    <?php if (!$isTemplateContentPage) { ?>
                     <div id="siteSub"><?php $this->msg( 'tagline' ) ?></div>
                     <div id="contentSub"><?php $this->html( 'subtitle' ) ?></div>
+                    <?php } ?>
                     <?php if ( $this->data['undelete'] ) { ?>
                         <div id="contentSub2"><?php $this->html( 'undelete' ) ?></div>
                     <?php } ?>
                     <?php if ( $this->data['newtalk'] ) { ?>
                         <div class="usermessage"><?php $this->html( 'newtalk' ) ?></div>
                     <?php } ?>
-                    <?php if (!$isTemplateGamePage) { ?>
+                    <?php if (!$isTemplateContentPage) { ?>
                     <div id="jump-to-nav" class="mw-jump">
                         <?php $this->msg( 'jumpto' ) ?>
                         <a href="#mw-navigation"><?php $this->msg( 'jumptonavigation' ) ?></a>,
