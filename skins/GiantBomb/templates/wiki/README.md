@@ -5,12 +5,14 @@ Wikitext templates that render game pages server-side using MediaWiki's native t
 ## The MediaWiki Way
 
 This approach follows standard MediaWiki patterns:
+
 1. **Templates** define page structure and layout using wikitext
 2. **CSS** handles all styling
 3. **SMW queries** pull related data for the sidebar
 4. **Standard MediaWiki rendering** handles caching, parsing, and output
 
 Benefits:
+
 - Editable through wiki interface
 - Cacheable via MediaWiki's parser cache
 - Extensible without PHP changes
@@ -19,12 +21,12 @@ Benefits:
 
 ## Files
 
-| Template | Purpose |
-|----------|---------|
-| `Template_Game.wikitext` | Opens game page layout (hero, tabs, content area), sets SMW properties |
-| `Template_GameEnd.wikitext` | Closes layout and renders sidebar |
-| `Template_GameSidebar.wikitext` | Sidebar with game details via SMW queries |
-| `Template_StripPrefix.wikitext` | Helper for stripping namespace prefixes |
+| Template                        | Purpose                                                                |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| `Template_Game.wikitext`        | Opens game page layout (hero, tabs, content area), sets SMW properties |
+| `Template_GameEnd.wikitext`     | Closes layout and renders sidebar                                      |
+| `Template_GameSidebar.wikitext` | Sidebar with game details via SMW queries                              |
+| `Template_StripPrefix.wikitext` | Helper for stripping namespace prefixes                                |
 
 ## Page Structure
 
@@ -55,6 +57,7 @@ More content...
 ## Data Model
 
 SMW properties set by `{{Game}}`:
+
 - `Has name`, `Has guid`, `Has deck`, `Has release date`
 - `Has platforms`, `Has developers`, `Has publishers` (multi-value)
 - `Has genres`, `Has themes`, `Has franchise` (multi-value)
@@ -67,6 +70,7 @@ Values use wiki page paths (e.g., `Companies/id_Software`) which link to their r
 CSS: `skins/GiantBomb/resources/css/game-wiki.css`
 
 Key classes:
+
 - `.gb-game-page` - Main container
 - `.gb-game-hero` - Hero section
 - `.gb-game-content` - Two-column grid

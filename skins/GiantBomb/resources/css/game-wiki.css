@@ -6,329 +6,331 @@
    CSS CUSTOM PROPERTIES
    ============================================ */
 .gb-game-page {
-    --gb-bg-dark: #1c1c1c;
-    --gb-bg-card: #252525;
-    --gb-bg-elevated: #333;
-    --gb-border: #333;
-    --gb-text: #e0e0e0;
-    --gb-text-muted: #aaa;
-    --gb-text-dim: #888;
-    --gb-accent: #6BA4D9;
-    --gb-white: #fff;
+  --gb-bg-dark: #1c1c1c;
+  --gb-bg-card: #252525;
+  --gb-bg-elevated: #333;
+  --gb-border: #333;
+  --gb-text: #e0e0e0;
+  --gb-text-muted: #aaa;
+  --gb-text-dim: #888;
+  --gb-accent: #6ba4d9;
+  --gb-white: #fff;
 
-    background-color: var(--gb-bg-dark);
-    color: var(--gb-text);
-    min-height: 100vh;
+  background-color: var(--gb-bg-dark);
+  color: var(--gb-text);
+  min-height: 100vh;
 }
 
 /* ============================================
    HERO SECTION
    ============================================ */
 .gb-game-hero {
-    position: relative;
-    background-size: cover;
-    background-position: center top;
-    padding: 2rem 0;
-    margin-bottom: 0;
+  position: relative;
+  background-size: cover;
+  background-position: center top;
+  padding: 2rem 0;
+  margin-bottom: 0;
 }
 
 .gb-game-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom,
-            rgba(28, 28, 28, 0.7) 0%,
-            rgba(28, 28, 28, 0.85) 60%,
-            rgba(28, 28, 28, 1) 100%);
-    z-index: 1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 28, 28, 0.7) 0%,
+    rgba(28, 28, 28, 0.85) 60%,
+    rgba(28, 28, 28, 1) 100%
+  );
+  z-index: 1;
 }
 
 .gb-game-hero-container {
-    position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    align-items: flex-start;
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
 }
 
 /* Cover Image */
 .gb-game-hero-cover {
-    flex-shrink: 0;
-    width: 200px;
+  flex-shrink: 0;
+  width: 200px;
 }
 
 /* Hero Info */
 .gb-game-hero-info {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .gb-game-hero-cover img {
-    width: 100%;
-    height: auto;
-    border: 3px solid var(--gb-border);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: auto;
+  border: 3px solid var(--gb-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .gb-game-hero-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-    /* Style as h1 but without triggering MW heading behavior */
-    display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+  /* Style as h1 but without triggering MW heading behavior */
+  display: block;
 }
 
 .gb-game-hero-meta {
-    font-size: 0.95rem;
-    color: #aaa;
-    margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-bottom: 0.75rem;
 }
 
 .gb-game-hero-meta a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-game-hero-meta a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .gb-game-hero-type {
-    color: #6BA4D9;
-    text-transform: uppercase;
-    font-weight: 600;
+  color: #6ba4d9;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 /* Platforms */
 .gb-game-hero-platforms {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .gb-game-hero-platform {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.25rem 0.6rem;
-    border-radius: 3px;
-    font-size: 0.85rem;
-    color: #ccc;
-    text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: #ccc;
+  text-decoration: none;
 }
 
 .gb-game-hero-platform:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
 }
 
 /* Deck */
 .gb-game-hero-deck {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #fff;
-    line-height: 1.5;
-    margin: 1rem 0 0 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.5;
+  margin: 1rem 0 0 0;
 }
 
 /* TOC Styling - works anywhere in game page */
 .gb-game-page #toc,
 .gb-game-page .toc {
-    background: #252525;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .gb-game-page #toc h2,
 .gb-game-page .toc h2 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.1rem;
-    color: #fff;
-    border: none;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: #fff;
+  border: none;
 }
 
 .gb-game-page #toc ul,
 .gb-game-page .toc ul {
-    margin: 0;
-    padding-left: 1.25rem;
+  margin: 0;
+  padding-left: 1.25rem;
 }
 
 .gb-game-page #toc li,
 .gb-game-page .toc li {
-    margin: 0.25rem 0;
+  margin: 0.25rem 0;
 }
 
 .gb-game-page #toc a,
 .gb-game-page .toc a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-game-page #toc a:hover,
 .gb-game-page .toc a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* ============================================
    TAB NAVIGATION
    ============================================ */
 .gb-game-tabs {
-    background: #252525;
-    border-bottom: 3px solid #6BA4D9;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  background: #252525;
+  border-bottom: 3px solid #6ba4d9;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .gb-game-tabs-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Kill any stray p tags MediaWiki adds */
 .gb-game-tabs-nav p {
-    display: contents;
-    margin: 0;
-    padding: 0;
+  display: contents;
+  margin: 0;
+  padding: 0;
 }
 
 .gb-game-tabs-nav {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .gb-game-tabs-tab {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.85rem 1.25rem;
-    color: #aaa;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -3px;
-    transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all 0.2s ease;
 }
 
 /* Links inside tabs */
 .gb-game-tabs-tab a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 .gb-game-tabs-tab:hover,
 .gb-game-tabs-tab a:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .gb-game-tabs-tab--active {
-    color: #fff;
-    background: #6BA4D9;
-    border-bottom-color: #6BA4D9;
+  color: #fff;
+  background: #6ba4d9;
+  border-bottom-color: #6ba4d9;
 }
 
 .gb-game-tabs-tab--active:hover {
-    background: #6BA4D9;
+  background: #6ba4d9;
 }
 
 /* Wiki Actions (Edit, History, etc.) */
 .gb-wiki-actions {
-    display: flex;
-    gap: 1rem;
-    margin-left: auto;
-    align-items: center;
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+  align-items: center;
 }
 
-.gb-wiki-actions>p {
-    display: contents;
+.gb-wiki-actions > p {
+  display: contents;
 }
 
 .gb-wiki-action {
-    font-size: 0.85rem;
-    color: #888;
+  font-size: 0.85rem;
+  color: #888;
 }
 
 .gb-wiki-action a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-wiki-action a:hover {
-    color: #fff;
-    text-decoration: underline;
+  color: #fff;
+  text-decoration: underline;
 }
 
 /* Section edit links */
 .mw-editsection {
-    font-size: 0.8rem;
-    font-weight: normal;
-    margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: 0.5rem;
 }
 
 .mw-editsection a {
-    color: #6BA4D9;
+  color: #6ba4d9;
 }
 
 .mw-editsection a:hover {
-    color: #fff;
+  color: #fff;
 }
 
 .mw-editsection-bracket {
-    color: #555;
+  color: #555;
 }
 
 /* ============================================
    CONTENT LAYOUT - Two Column with Position
    ============================================ */
 .gb-game-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    /* CSS Grid for two-column layout with mobile reordering */
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 2rem;
-    align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  /* CSS Grid for two-column layout with mobile reordering */
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
 }
 
 /* Main content */
 .gb-game-main {
-    min-width: 0;
-    /* Prevent grid blowout */
+  min-width: 0;
+  /* Prevent grid blowout */
 }
 
 /* Sidebar */
 .gb-game-sidebar {
-    width: 100%;
+  width: 100%;
 }
 
 /* Hide any rogue <p> tags that MediaWiki adds */
-.gb-game-content>p:empty,
-.gb-game-content>br {
-    display: none;
+.gb-game-content > p:empty,
+.gb-game-content > br {
+  display: none;
 }
 
 /* ============================================
@@ -337,337 +339,337 @@
 
 /* Edit History Line */
 .gb-game-edit-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #333;
-    margin-bottom: 1.5rem;
-    font-size: 0.85rem;
-    color: #888;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #333;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: #888;
 }
 
 .gb-game-edit-info a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-game-edit-info a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Wiki Content */
 .gb-game-wiki-content {
-    line-height: 1.7;
-    font-size: 0.95rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
 }
 
 .gb-game-wiki-content h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #fff;
-    margin: 2rem 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
 }
 
 .gb-game-wiki-content h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-    margin: 1.5rem 0 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 1.5rem 0 0.75rem;
 }
 
 .gb-game-wiki-content p {
-    margin: 0 0 1rem;
-    color: #ccc;
+  margin: 0 0 1rem;
+  color: #ccc;
 }
 
 .gb-game-wiki-content a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-game-wiki-content a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .gb-game-wiki-content ul,
 .gb-game-wiki-content ol {
-    margin: 0 0 1rem 1.5rem;
-    color: #ccc;
+  margin: 0 0 1rem 1.5rem;
+  color: #ccc;
 }
 
 .gb-game-wiki-content li {
-    margin-bottom: 0.35rem;
+  margin-bottom: 0.35rem;
 }
 
 /* Inline Images */
 .gb-game-wiki-content .thumb {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 .gb-game-wiki-content .thumb.tright {
-    float: right;
-    margin: 0 0 1rem 1.5rem;
-    clear: right;
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  clear: right;
 }
 
 .gb-game-wiki-content .thumb.tleft {
-    float: left;
-    margin: 0 1.5rem 1rem 0;
-    clear: left;
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  clear: left;
 }
 
 .gb-game-wiki-content .thumbinner {
-    background: #252525;
-    border: 1px solid #333;
-    padding: 0.5rem;
+  background: #252525;
+  border: 1px solid #333;
+  padding: 0.5rem;
 }
 
 .gb-game-wiki-content .thumbcaption {
-    font-size: 0.85rem;
-    color: #999;
-    font-style: italic;
-    text-align: center;
-    padding-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding-top: 0.5rem;
 }
 
 /* ============================================
    SIDEBAR (RIGHT)
    ============================================ */
 .gb-game-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 /* Sidebar Section */
 .gb-sidebar-section {
-    background: #252525;
-    border-radius: 4px;
-    overflow: hidden;
+  background: #252525;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .gb-sidebar-section-header {
-    background: #333;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #fff;
-    margin: 0;
+  background: #333;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
 }
 
 .gb-sidebar-section-content {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 /* Game Details Table */
 .gb-game-details {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .gb-game-details dt {
-    color: #888;
-    font-size: 0.85rem;
-    font-weight: 400;
-    padding: 0.6rem 0 0.25rem;
-    border-top: 1px solid #333;
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 400;
+  padding: 0.6rem 0 0.25rem;
+  border-top: 1px solid #333;
 }
 
 .gb-game-details dt:first-child {
-    border-top: none;
-    padding-top: 0;
+  border-top: none;
+  padding-top: 0;
 }
 
 .gb-game-details dd {
-    margin: 0;
-    padding: 0 0 0.5rem;
-    color: #fff;
-    font-size: 0.9rem;
+  margin: 0;
+  padding: 0 0 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
 }
 
 .gb-game-details dd a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-game-details dd a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .gb-game-details dd ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .gb-game-details dd li {
-    margin: 0.15rem 0;
+  margin: 0.15rem 0;
 }
 
 /* Latest Images Grid */
 .gb-images-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
 }
 
 .gb-images-grid-item {
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 3px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 3px;
 }
 
 .gb-images-grid-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.2s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
 }
 
 .gb-images-grid-item:hover img {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .gb-images-link {
-    display: block;
-    text-align: center;
-    padding: 0.75rem;
-    background: #333;
-    color: #6BA4D9;
-    text-decoration: none;
-    font-size: 0.85rem;
+  display: block;
+  text-align: center;
+  padding: 0.75rem;
+  background: #333;
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.85rem;
 }
 
 .gb-images-link:hover {
-    background: #3a3a3a;
+  background: #3a3a3a;
 }
 
 /* User Reviews */
 .gb-user-reviews {
-    text-align: center;
+  text-align: center;
 }
 
 .gb-user-reviews-stars {
-    font-size: 1.5rem;
-    color: #6BA4D9;
-    margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #6ba4d9;
+  margin-bottom: 0.5rem;
 }
 
 .gb-user-reviews-score {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
 }
 
 .gb-user-reviews-count {
-    font-size: 0.85rem;
-    color: #888;
+  font-size: 0.85rem;
+  color: #888;
 }
 
 /* Features / Multiplayer Checkboxes */
 .gb-features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
 }
 
 .gb-feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: #888;
-    padding: 0.25rem 0.5rem;
-    background: #1c1c1c;
-    border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #888;
+  padding: 0.25rem 0.5rem;
+  background: #1c1c1c;
+  border-radius: 3px;
 }
 
 .gb-feature-item--enabled {
-    color: #fff;
+  color: #fff;
 }
 
 .gb-feature-item-check {
-    width: 14px;
-    height: 14px;
-    border: 1px solid #555;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #555;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
 }
 
 .gb-feature-item--enabled .gb-feature-item-check {
-    background: #6BA4D9;
-    border-color: #6BA4D9;
-    color: #000;
+  background: #6ba4d9;
+  border-color: #6ba4d9;
+  color: #000;
 }
 
 /* Similar Games List */
 .gb-similar-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .gb-similar-list-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #333;
 }
 
 .gb-similar-list-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .gb-similar-list-img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 3px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
 }
 
 .gb-similar-list-name {
-    color: #6BA4D9;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .gb-similar-list-name:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Related Tabs (Characters, Locations, etc.) */
 .gb-related-tabs {
-    display: flex;
-    border-bottom: 2px solid #333;
-    margin-bottom: 0;
+  display: flex;
+  border-bottom: 2px solid #333;
+  margin-bottom: 0;
 }
 
 .gb-related-tabs-tab {
-    flex: 1;
-    padding: 0.6rem 0.5rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #888;
-    text-decoration: none;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+  flex: 1;
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .gb-related-tabs-tab:hover {
-    color: #fff;
+  color: #fff;
 }
 
 .gb-related-tabs-tab--active {
-    color: #fff;
-    background: #6BA4D9;
+  color: #fff;
+  background: #6ba4d9;
 }
 
 /* ============================================
@@ -677,203 +679,200 @@
    RESPONSIVE: Tablet and below (900px)
    ============================================ */
 @media (max-width: 900px) {
+  /* Mobile: Single column, sidebar moves above content */
+  .gb-game-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 
-    /* Mobile: Single column, sidebar moves above content */
-    .gb-game-content {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
+  .gb-game-sidebar {
+    order: -1;
+    /* Move sidebar before main content */
+  }
 
-    .gb-game-sidebar {
-        order: -1;
-        /* Move sidebar before main content */
-    }
+  .gb-game-main {
+    order: 0;
+  }
 
-    .gb-game-main {
-        order: 0;
-    }
+  /* Hero stacks vertically on mobile */
+  .gb-game-hero-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-    /* Hero stacks vertically on mobile */
-    .gb-game-hero-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+  .gb-game-hero-cover {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
 
-    .gb-game-hero-cover {
-        width: 150px;
-        margin-bottom: 1rem;
-    }
+  .gb-game-hero-info {
+    width: 100%;
+  }
 
-    .gb-game-hero-info {
-        width: 100%;
-    }
+  .gb-game-hero-platforms {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 
-    .gb-game-hero-platforms {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+  .gb-game-tabs-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    .gb-game-tabs-nav {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Tables: horizontal scroll */
-    .gb-game-wiki-content .wikitable,
-    .gb-game-page table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        max-width: 100%;
-    }
+  /* Tables: horizontal scroll */
+  .gb-game-wiki-content .wikitable,
+  .gb-game-page table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
 }
 
 /* ============================================
    RESPONSIVE: Phone (600px)
    ============================================ */
 @media (max-width: 600px) {
+  /* Hide wiki actions on mobile */
+  .gb-wiki-actions {
+    display: none;
+  }
 
-    /* Hide wiki actions on mobile */
-    .gb-wiki-actions {
-        display: none;
-    }
+  /* Reduce page padding */
+  .gb-game-content {
+    padding: 1rem;
+  }
 
-    /* Reduce page padding */
-    .gb-game-content {
-        padding: 1rem;
-    }
+  .gb-game-hero {
+    padding: 1rem;
+  }
 
-    .gb-game-hero {
-        padding: 1rem;
-    }
+  .gb-game-hero-container {
+    padding: 0 0.5rem;
+    gap: 1rem;
+  }
 
-    .gb-game-hero-container {
-        padding: 0 0.5rem;
-        gap: 1rem;
-    }
+  /* Hero title smaller */
+  .gb-game-hero-title {
+    font-size: 1.75rem;
+  }
 
-    /* Hero title smaller */
-    .gb-game-hero-title {
-        font-size: 1.75rem;
-    }
+  /* Platforms wrap better */
+  .gb-game-hero-platform {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
 
-    /* Platforms wrap better */
-    .gb-game-hero-platform {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.5rem;
-    }
+  /* Images: full width, no float */
+  .gb-game-page .gb-game-main img,
+  .gb-game-page .gb-game-wiki-content img {
+    float: none;
+    display: block;
+    max-width: 100%;
+    margin: 1rem auto;
+    clear: both;
+  }
 
-    /* Images: full width, no float */
-    .gb-game-page .gb-game-main img,
-    .gb-game-page .gb-game-wiki-content img {
-        float: none;
-        display: block;
-        max-width: 100%;
-        margin: 1rem auto;
-        clear: both;
-    }
+  /* Thumbs also full width */
+  .gb-game-page .gb-game-wiki-content .thumb {
+    float: none;
+    margin: 1rem auto;
+    max-width: 100%;
+  }
 
-    /* Thumbs also full width */
-    .gb-game-page .gb-game-wiki-content .thumb {
-        float: none;
-        margin: 1rem auto;
-        max-width: 100%;
-    }
-
-    /* Related tabs: smaller text */
-    .gb-sidebar-related-tab {
-        font-size: 0.65rem;
-        padding: 0.5rem 0.25rem;
-    }
+  /* Related tabs: smaller text */
+  .gb-sidebar-related-tab {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.25rem;
+  }
 }
 
 /* ============================================
    RESPONSIVE: Small phone (420px - iPhone SE)
    ============================================ */
 @media (max-width: 420px) {
+  /* Even less padding */
+  .gb-game-content {
+    padding: 0.75rem;
+  }
 
-    /* Even less padding */
-    .gb-game-content {
-        padding: 0.75rem;
-    }
+  .gb-game-hero {
+    padding: 0.75rem;
+  }
 
-    .gb-game-hero {
-        padding: 0.75rem;
-    }
+  .gb-game-hero-container {
+    padding: 0;
+    gap: 0.5rem;
+  }
 
-    .gb-game-hero-container {
-        padding: 0;
-        gap: 0.5rem;
-    }
+  /* Smaller cover on tiny screens */
+  .gb-game-hero-cover {
+    width: 120px;
+  }
 
-    /* Smaller cover on tiny screens */
-    .gb-game-hero-cover {
-        width: 120px;
-    }
+  .gb-game-hero-title {
+    font-size: 1.5rem;
+  }
 
-    .gb-game-hero-title {
-        font-size: 1.5rem;
-    }
+  .gb-game-hero-meta {
+    font-size: 0.8rem;
+  }
 
-    .gb-game-hero-meta {
-        font-size: 0.8rem;
-    }
+  .gb-game-hero-deck {
+    font-size: 0.85rem;
+  }
 
-    .gb-game-hero-deck {
-        font-size: 0.85rem;
-    }
+  /* Related tabs: even smaller, or stack */
+  .gb-sidebar-related-tabs {
+    flex-wrap: wrap;
+  }
 
-    /* Related tabs: even smaller, or stack */
-    .gb-sidebar-related-tabs {
-        flex-wrap: wrap;
-    }
+  .gb-sidebar-related-tab {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.35rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 
-    .gb-sidebar-related-tab {
-        font-size: 0.6rem;
-        padding: 0.4rem 0.35rem;
-        flex: 1 1 auto;
-        min-width: 0;
-    }
+  /* Sidebar section padding */
+  .gb-sidebar-section-content {
+    padding: 0.75rem;
+  }
 
-    /* Sidebar section padding */
-    .gb-sidebar-section-content {
-        padding: 0.75rem;
-    }
+  /* Game details tighter */
+  .gb-game-details dt {
+    font-size: 0.75rem;
+  }
 
-    /* Game details tighter */
-    .gb-game-details dt {
-        font-size: 0.75rem;
-    }
-
-    .gb-game-details dd {
-        font-size: 0.85rem;
-    }
+  .gb-game-details dd {
+    font-size: 0.85rem;
+  }
 }
 
 /* ============================================
    INFOBOX OVERRIDE (hide default, use sidebar)
    ============================================ */
 .gb-game-page .infobox {
-    display: none;
+  display: none;
 }
 
 /* ============================================
    EDIT SECTION LINKS
    ============================================ */
 .gb-game-wiki-content .mw-editsection {
-    font-size: 0.8rem;
-    font-weight: normal;
-    margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: 0.5rem;
 }
 
 .gb-game-wiki-content .mw-editsection a {
-    color: #666;
+  color: #666;
 }
 
 .gb-game-wiki-content .mw-editsection a:hover {
-    color: #6BA4D9;
+  color: #6ba4d9;
 }
 
 /* ============================================
@@ -882,31 +881,31 @@
    MediaWiki template system
    ============================================ */
 .wiki-game-page {
-    background-color: #1c1c1c;
-    padding: 0;
-    max-width: none;
+  background-color: #1c1c1c;
+  padding: 0;
+  max-width: none;
 }
 
 .wiki-game-page #bodyContent {
-    max-width: none;
-    padding: 0;
+  max-width: none;
+  padding: 0;
 }
 
 .wiki-game-page .mw-parser-output {
-    /* Let the template control the layout */
+  /* Let the template control the layout */
 }
 
 /* Hide standard MW elements when using GB template layout */
-.wiki-game-page>.mw-body-content>#siteSub,
-.wiki-game-page>.mw-body-content>#contentSub,
-.wiki-game-page>.mw-body-content>.mw-jump {
-    display: none;
+.wiki-game-page > .mw-body-content > #siteSub,
+.wiki-game-page > .mw-body-content > #contentSub,
+.wiki-game-page > .mw-body-content > .mw-jump {
+  display: none;
 }
 
 /* Hide footer elements */
 .wiki-game-page .printfooter,
 .wiki-game-page #catlinks {
-    display: none;
+  display: none;
 }
 
 /* ============================================
@@ -914,104 +913,104 @@
    ============================================ */
 .smw-ask-result-table,
 .smw-table-cell {
-    background: transparent;
+  background: transparent;
 }
 
 /* Format SMW list outputs */
 .gb-game-details .smw-value,
 .gb-game-details .smw-row {
-    display: inline;
+  display: inline;
 }
 
 /* ============================================
    SIDEBAR DETAILS TABLE (new template)
    ============================================ */
 .gb-sidebar-details {
-    padding: 0;
+  padding: 0;
 }
 
 .gb-sidebar-section-title {
-    background: #333;
-    color: #fff;
-    margin: 0;
-    padding: 0.85rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
+  background: #333;
+  color: #fff;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .gb-sidebar-section-title--highlight {
-    background: #6BA4D9;
-    color: #1c1c1c;
+  background: #6ba4d9;
+  color: #1c1c1c;
 }
 
 .gb-sidebar-details-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
 }
 
 .gb-sidebar-details-table tr {
-    border-bottom: 1px solid #333;
+  border-bottom: 1px solid #333;
 }
 
 .gb-sidebar-details-table tr:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .gb-sidebar-details-label {
-    color: #6BA4D9;
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 0.75rem 1rem;
-    vertical-align: top;
-    width: 40%;
+  color: #6ba4d9;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  width: 40%;
 }
 
 .gb-sidebar-details-value {
-    color: #6BA4D9;
-    font-size: 0.9rem;
-    padding: 0.75rem 1rem 0.75rem 0;
-    vertical-align: top;
+  color: #6ba4d9;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem 0.75rem 0;
+  vertical-align: top;
 }
 
 .gb-sidebar-details-value a {
-    color: #6BA4D9;
-    text-decoration: none;
+  color: #6ba4d9;
+  text-decoration: none;
 }
 
 .gb-sidebar-details-value a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* ============================================
    SIDEBAR SIMILAR GAMES (new template)
    ============================================ */
 .gb-sidebar-similar-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .gb-sidebar-similar-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 1rem;
-    border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid #333;
 }
 
 .gb-sidebar-similar-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .gb-sidebar-similar-item a {
-    color: #6BA4D9;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .gb-sidebar-similar-item a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* ============================================
@@ -1019,111 +1018,111 @@
    ============================================ */
 /* Kill stray p tags in sidebar related tabs */
 .gb-sidebar-related-tabs p {
-    display: contents;
-    margin: 0;
+  display: contents;
+  margin: 0;
 }
 
 .gb-sidebar-related-tabs {
-    display: flex;
-    flex-direction: row;
-    background: #333;
-    margin: 0;
-    padding: 0;
+  display: flex;
+  flex-direction: row;
+  background: #333;
+  margin: 0;
+  padding: 0;
 }
 
 .gb-sidebar-related-tab {
-    flex: 1;
-    padding: 0.65rem 0.5rem;
-    text-align: center;
-    font-size: 0.75rem;
-    color: #aaa;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.15s ease;
+  flex: 1;
+  padding: 0.65rem 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .gb-sidebar-related-tab:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .gb-sidebar-related-tab--active {
-    color: #fff;
-    background: #6BA4D9;
+  color: #fff;
+  background: #6ba4d9;
 }
 
 .gb-sidebar-related-content {
-    min-height: 120px;
-    padding: 0;
+  min-height: 120px;
+  padding: 0;
 }
 
 /* Kill stray p tags in content */
 .gb-sidebar-related-content p {
-    display: contents;
-    margin: 0;
+  display: contents;
+  margin: 0;
 }
 
 .gb-sidebar-related-list {
-    display: none;
-    margin: 0;
-    padding: 0.5rem 0.75rem;
-    list-style: none;
+  display: none;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  list-style: none;
 }
 
 .gb-sidebar-related-list--active {
-    display: block;
+  display: block;
 }
 
 .gb-sidebar-related-list li {
-    padding: 0.25rem 0;
-    border-bottom: none;
+  padding: 0.25rem 0;
+  border-bottom: none;
 }
 
 .gb-sidebar-related-list li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .gb-sidebar-related-item {
-    padding: 0.25rem 0;
+  padding: 0.25rem 0;
 }
 
 .gb-sidebar-related-item a,
 .gb-sidebar-related-list a {
-    color: #6BA4D9;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .gb-sidebar-related-item a:hover,
 .gb-sidebar-related-list a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Handle SMW inline output format */
 .gb-sidebar-related-list .smw-value {
-    display: block;
-    padding: 0.15rem 0;
+  display: block;
+  padding: 0.15rem 0;
 }
 
 /* Hide the commas SMW adds between values */
 .gb-sidebar-related-list .smw-field {
-    font-size: 0;
+  font-size: 0;
 }
 
 .gb-sidebar-related-list .smw-field .smw-value {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 /* Empty state for lists */
 .gb-sidebar-similar-list:empty::after,
 .gb-sidebar-related-list:empty::after {
-    content: "None listed";
-    display: block;
-    padding: 1rem;
-    color: #666;
-    font-size: 0.85rem;
-    font-style: italic;
+  content: "None listed";
+  display: block;
+  padding: 1rem;
+  color: #666;
+  font-size: 0.85rem;
+  font-style: italic;
 }
 
 /* ============================================
@@ -1133,127 +1132,132 @@
 body.skin-giantbomb .gb-game-page table,
 body.skin-giantbomb .gb-game-wiki-content table,
 body.skin-giantbomb .wiki-game-page .mw-parser-output table {
-    background-color: #1c1c1c;
-    border-color: #333;
-    color: #ccc;
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1rem 0;
+  background-color: #1c1c1c;
+  border-color: #333;
+  color: #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
 }
 
 body.skin-giantbomb .gb-game-page .wikitable,
 body.skin-giantbomb .gb-game-wiki-content .wikitable,
 body.skin-giantbomb .wiki-game-page .mw-parser-output .wikitable {
-    background-color: #1c1c1c;
-    border: 1px solid #333;
+  background-color: #1c1c1c;
+  border: 1px solid #333;
 }
 
 body.skin-giantbomb .gb-game-page table th,
 body.skin-giantbomb .gb-game-wiki-content table th,
 body.skin-giantbomb .wiki-game-page .mw-parser-output table th {
-    background-color: #252525;
-    color: #fff;
-    border-color: #333;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    font-weight: 600;
+  background-color: #252525;
+  color: #fff;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
 }
 
 body.skin-giantbomb .gb-game-page table td,
 body.skin-giantbomb .gb-game-wiki-content table td,
 body.skin-giantbomb .wiki-game-page .mw-parser-output table td {
-    background-color: transparent;
-    border-color: #333;
-    padding: 0.75rem 1rem;
-    vertical-align: top;
+  background-color: transparent;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+  vertical-align: top;
 }
 
 body.skin-giantbomb .gb-game-page table tr:nth-child(even) td,
-body.skin-giantbomb .wiki-game-page .mw-parser-output table tr:nth-child(even) td {
-    background-color: rgba(255, 255, 255, 0.02);
+body.skin-giantbomb
+  .wiki-game-page
+  .mw-parser-output
+  table
+  tr:nth-child(even)
+  td {
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 /* ============================================
    INLINE IMAGES - Float and wrap with text
    ============================================ */
 /* Images that aren't in thumbs should float right by default */
-.gb-game-wiki-content>p>a.image,
-.gb-game-wiki-content>a.image,
-.wiki-game-page .mw-parser-output>p>a.image,
-.wiki-game-page .mw-parser-output>a.image {
-    float: right;
-    margin: 0 0 1rem 1.5rem;
-    clear: right;
+.gb-game-wiki-content > p > a.image,
+.gb-game-wiki-content > a.image,
+.wiki-game-page .mw-parser-output > p > a.image,
+.wiki-game-page .mw-parser-output > a.image {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  clear: right;
 }
 
 /* Handle images inside table cells */
 .gb-game-wiki-content td a.image,
 .wiki-game-page .mw-parser-output td a.image {
-    float: left;
-    margin: 0 1rem 0.5rem 0;
+  float: left;
+  margin: 0 1rem 0.5rem 0;
 }
 
 /* Ensure images have proper max width */
 .gb-game-wiki-content img,
 .wiki-game-page .mw-parser-output img {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Large standalone images in content */
 .gb-game-wiki-content .floatright,
 .wiki-game-page .mw-parser-output .floatright {
-    float: right;
-    clear: right;
-    margin: 0 0 1rem 1.5rem;
+  float: right;
+  clear: right;
+  margin: 0 0 1rem 1.5rem;
 }
 
 .gb-game-wiki-content .floatleft,
 .wiki-game-page .mw-parser-output .floatleft {
-    float: left;
-    clear: left;
-    margin: 0 1.5rem 1rem 0;
+  float: left;
+  clear: left;
+  margin: 0 1.5rem 1rem 0;
 }
 
 /* Image thumbnails */
 .gb-game-wiki-content .thumb,
 .wiki-game-page .mw-parser-output .thumb {
-    background: #252525;
-    border: 1px solid #333;
-    padding: 0.5rem;
-    margin: 1rem 0;
-    max-width: 350px;
+  background: #252525;
+  border: 1px solid #333;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  max-width: 350px;
 }
 
 .gb-game-wiki-content .thumb.tright,
 .wiki-game-page .mw-parser-output .thumb.tright {
-    float: right;
-    clear: right;
-    margin: 0 0 1rem 1.5rem;
+  float: right;
+  clear: right;
+  margin: 0 0 1rem 1.5rem;
 }
 
 .gb-game-wiki-content .thumb.tleft,
 .wiki-game-page .mw-parser-output .thumb.tleft {
-    float: left;
-    clear: left;
-    margin: 0 1.5rem 1rem 0;
+  float: left;
+  clear: left;
+  margin: 0 1.5rem 1rem 0;
 }
 
 .gb-game-wiki-content .thumbinner,
 .wiki-game-page .mw-parser-output .thumbinner {
-    background: transparent;
-    border: none;
-    padding: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .gb-game-wiki-content .thumbcaption,
 .wiki-game-page .mw-parser-output .thumbcaption {
-    font-size: 0.85rem;
-    color: #999;
-    font-style: italic;
-    text-align: center;
-    padding-top: 0.5rem;
-    line-height: 1.4;
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding-top: 0.5rem;
+  line-height: 1.4;
 }
 
 /* Clear floats after sections */
@@ -1261,7 +1265,7 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output table tr:nth-child(even) t
 .gb-game-wiki-content h3,
 .wiki-game-page .mw-parser-output h2,
 .wiki-game-page .mw-parser-output h3 {
-    clear: both;
+  clear: both;
 }
 
 /* ============================================
@@ -1270,15 +1274,15 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output table tr:nth-child(even) t
 /* Style heading-like text that appears in tables (===Fist===) */
 .gb-game-wiki-content td,
 .wiki-game-page .mw-parser-output td {
-    color: #ccc;
-    line-height: 1.7;
+  color: #ccc;
+  line-height: 1.7;
 }
 
 /* Bold links in tables */
 .gb-game-wiki-content td b a,
 .wiki-game-page .mw-parser-output td b a {
-    color: #6BA4D9;
-    font-size: 1.1rem;
+  color: #6ba4d9;
+  font-size: 1.1rem;
 }
 
 /* Damage info styling */
@@ -1286,7 +1290,7 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output table tr:nth-child(even) t
 .wiki-game-page .mw-parser-output td strong,
 .gb-game-wiki-content td b,
 .wiki-game-page .mw-parser-output td b {
-    color: #fff;
+  color: #fff;
 }
 
 /* ============================================
@@ -1295,65 +1299,65 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output table tr:nth-child(even) t
 /* Remove any light backgrounds from common MW elements */
 body.skin-giantbomb .gb-game-page .mw-parser-output,
 body.skin-giantbomb .wiki-game-page .mw-parser-output {
-    background: transparent;
+  background: transparent;
 }
 
 /* Pre-formatted text */
 .gb-game-wiki-content pre,
 .wiki-game-page .mw-parser-output pre {
-    background: #252525;
-    border: 1px solid #333;
-    color: #ccc;
-    padding: 1rem;
-    overflow-x: auto;
+  background: #252525;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 1rem;
+  overflow-x: auto;
 }
 
 /* Code blocks */
 .gb-game-wiki-content code,
 .wiki-game-page .mw-parser-output code {
-    background: #252525;
-    color: #6BA4D9;
-    padding: 0.15rem 0.4rem;
-    border-radius: 3px;
-    font-family: 'Monaco', 'Consolas', monospace;
-    font-size: 0.9em;
+  background: #252525;
+  color: #6ba4d9;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-family: "Monaco", "Consolas", monospace;
+  font-size: 0.9em;
 }
 
 /* Blockquotes */
 .gb-game-wiki-content blockquote,
 .wiki-game-page .mw-parser-output blockquote {
-    border-left: 3px solid #6BA4D9;
-    margin: 1rem 0;
-    padding: 0.5rem 0 0.5rem 1rem;
-    color: #aaa;
-    font-style: italic;
+  border-left: 3px solid #6ba4d9;
+  margin: 1rem 0;
+  padding: 0.5rem 0 0.5rem 1rem;
+  color: #aaa;
+  font-style: italic;
 }
 
 /* Definition lists */
 .gb-game-wiki-content dl,
 .wiki-game-page .mw-parser-output dl {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 .gb-game-wiki-content dt,
 .wiki-game-page .mw-parser-output dt {
-    color: #fff;
-    font-weight: 600;
-    margin-top: 0.5rem;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 .gb-game-wiki-content dd,
 .wiki-game-page .mw-parser-output dd {
-    color: #ccc;
-    margin-left: 1.5rem;
+  color: #ccc;
+  margin-left: 1.5rem;
 }
 
 /* Horizontal rules */
 .gb-game-wiki-content hr,
 .wiki-game-page .mw-parser-output hr {
-    border: none;
-    border-top: 1px solid #333;
-    margin: 2rem 0;
+  border: none;
+  border-top: 1px solid #333;
+  margin: 2rem 0;
 }
 
 /* Message boxes / notices */
@@ -1363,11 +1367,10 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output {
 .wiki-game-page .mw-parser-output .mbox-small,
 body.skin-giantbomb .wiki-game-page .mw-parser-output .ambox,
 body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
-    background: #252525;
-    border-color: #333;
-    color: #ccc;
+  background: #252525;
+  border-color: #333;
+  color: #ccc;
 }
-
 
 /* HERO LAYOUT FIX moved to before media queries */
 
@@ -1377,39 +1380,39 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
    ============================================ */
 /* Default: images in .gb-game-main float left with text wrap */
 .gb-game-main img {
-    float: left;
-    margin: 0 1.5rem 1rem 0;
-    max-width: 350px;
-    max-height: 350px;
-    height: auto;
-    width: auto;
-    clear: left;
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  max-width: 350px;
+  max-height: 350px;
+  height: auto;
+  width: auto;
+  clear: left;
 }
 
 /* Images in table cells - smaller, still float left */
 .gb-game-main td img,
 .gb-game-main .wikitable td img {
-    float: left;
-    margin: 0 1rem 0.5rem 0;
-    max-width: 280px;
-    max-height: 280px;
-    clear: none;
+  float: left;
+  margin: 0 1rem 0.5rem 0;
+  max-width: 280px;
+  max-height: 280px;
+  clear: none;
 }
 
 /* Clear floats after headings */
 .gb-game-main h2,
 .gb-game-main h3,
 .gb-game-main h4 {
-    clear: both;
+  clear: both;
 }
 
 /* Hero cover image - higher specificity to override content image rules */
 .gb-game-page .gb-game-hero .gb-game-hero-cover img {
-    float: none;
-    margin: 0;
-    max-width: none;
-    max-height: none;
-    width: 100%;
-    height: auto;
-    clear: none;
+  float: none;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: auto;
+  clear: none;
 }

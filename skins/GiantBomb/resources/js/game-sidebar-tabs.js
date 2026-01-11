@@ -36,7 +36,9 @@
 
       if (imageData.infobox?.file && imageData.infobox?.path) {
         const coverUrl = `${GB_IMAGE_BASE}scale_super/${imageData.infobox.path}${imageData.infobox.file}`;
-        const coverContainer = document.querySelector(".gb-game-hero-cover, .gb-character-hero-cover");
+        const coverContainer = document.querySelector(
+          ".gb-game-hero-cover, .gb-character-hero-cover",
+        );
 
         if (coverContainer) {
           let coverImg = coverContainer.querySelector("img");
@@ -46,14 +48,17 @@
           }
           coverImg.src = coverUrl;
           coverImg.alt =
-            document.querySelector(".gb-game-hero-title, .gb-character-hero-title")?.textContent ||
-            "Cover image";
+            document.querySelector(
+              ".gb-game-hero-title, .gb-character-hero-title",
+            )?.textContent || "Cover image";
         }
       }
 
       if (imageData.background?.file && imageData.background?.path) {
         const bgUrl = `${GB_IMAGE_BASE}screen_kubrick_wide/${imageData.background.path}${imageData.background.file}`;
-        const heroSection = document.querySelector(".gb-game-hero, .gb-character-hero");
+        const heroSection = document.querySelector(
+          ".gb-game-hero, .gb-character-hero",
+        );
 
         if (heroSection) {
           heroSection.style.backgroundImage = `url(${bgUrl})`;
@@ -141,7 +146,7 @@
 
   const initAccordions = () => {
     const isMobile = window.innerWidth <= 900;
-    
+
     for (const accordion of document.querySelectorAll(".gb-accordion")) {
       const header = accordion.querySelector(".gb-accordion-header");
       if (!header) continue;
