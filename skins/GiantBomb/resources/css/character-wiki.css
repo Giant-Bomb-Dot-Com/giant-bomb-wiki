@@ -1,0 +1,699 @@
+/**
+ * Giant Bomb Wiki - Character Page Styles
+ * 
+ * Extends game-wiki.css patterns for character pages.
+ * Reuses sidebar classes (.gb-sidebar-*) which are shared.
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (same as game pages)
+   ============================================ */
+.gb-character-page {
+  --gb-bg-dark: #1c1c1c;
+  --gb-bg-card: #252525;
+  --gb-bg-elevated: #333;
+  --gb-border: #333;
+  --gb-text: #e0e0e0;
+  --gb-text-muted: #aaa;
+  --gb-text-dim: #888;
+  --gb-accent: #6ba4d9;
+  --gb-white: #fff;
+
+  background-color: var(--gb-bg-dark);
+  color: var(--gb-text);
+  min-height: 100vh;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.gb-character-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center top;
+  padding: 2rem 0;
+  margin-bottom: 0;
+}
+
+.gb-character-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 28, 28, 0.7) 0%,
+    rgba(28, 28, 28, 0.85) 60%,
+    rgba(28, 28, 28, 1) 100%
+  );
+  z-index: 1;
+}
+
+.gb-character-hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.gb-character-hero-cover {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.gb-character-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gb-character-hero-cover img {
+  width: 100%;
+  height: auto;
+  border: 3px solid var(--gb-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.gb-character-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+  display: block;
+}
+
+.gb-character-hero-meta {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-bottom: 0.75rem;
+}
+
+.gb-character-hero-meta a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-character-hero-meta a:hover {
+  text-decoration: underline;
+}
+
+.gb-character-hero-type {
+  color: #6ba4d9;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.gb-character-hero-deck {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.5;
+  margin: 1rem 0 0 0;
+}
+
+/* ============================================
+   TAB NAVIGATION
+   ============================================ */
+.gb-character-tabs {
+  background: #252525;
+  border-bottom: 3px solid #6ba4d9;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.gb-character-tabs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gb-character-tabs-nav p {
+  display: contents;
+  margin: 0;
+  padding: 0;
+}
+
+.gb-character-tabs-nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gb-character-tabs-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all 0.2s ease;
+}
+
+.gb-character-tabs-tab a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gb-character-tabs-tab:hover,
+.gb-character-tabs-tab a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.gb-character-tabs-tab--active {
+  color: #fff;
+  background: #6ba4d9;
+  border-bottom-color: #6ba4d9;
+}
+
+.gb-character-tabs-tab--active:hover {
+  background: #6ba4d9;
+}
+
+/* ============================================
+   CONTENT LAYOUT
+   ============================================ */
+.gb-character-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.gb-character-main {
+  min-width: 0;
+}
+
+.gb-character-sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gb-character-content > p:empty,
+.gb-character-content > br {
+  display: none;
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+.gb-character-wiki-content {
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.gb-character-wiki-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.gb-character-wiki-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.gb-character-wiki-content p {
+  margin: 0 0 1rem;
+  color: #ccc;
+}
+
+.gb-character-wiki-content a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-character-wiki-content a:hover {
+  text-decoration: underline;
+}
+
+.gb-character-wiki-content ul,
+.gb-character-wiki-content ol {
+  margin: 0 0 1rem 1.5rem;
+  color: #ccc;
+}
+
+.gb-character-wiki-content li {
+  margin-bottom: 0.35rem;
+}
+
+/* Inline Images */
+.gb-character-wiki-content .thumb {
+  margin: 1rem 0;
+}
+
+.gb-character-wiki-content .thumb.tright {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  clear: right;
+}
+
+.gb-character-wiki-content .thumb.tleft {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  clear: left;
+}
+
+.gb-character-wiki-content .thumbinner {
+  background: #252525;
+  border: 1px solid #333;
+  padding: 0.5rem;
+}
+
+.gb-character-wiki-content .thumbcaption {
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+/* ============================================
+   CHARACTER DETAILS (sidebar)
+   ============================================ */
+.gb-character-details {
+  margin: 0;
+  padding: 0;
+}
+
+.gb-character-details dt {
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 400;
+  padding: 0.6rem 0 0.25rem;
+  border-top: 1px solid #333;
+}
+
+.gb-character-details dt:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.gb-character-details dd {
+  margin: 0;
+  padding: 0 0 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.gb-character-details dd a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-character-details dd a:hover {
+  text-decoration: underline;
+}
+
+.gb-character-details dd ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gb-character-details dd li {
+  margin: 0.15rem 0;
+}
+
+/* ============================================
+   TOC Styling
+   ============================================ */
+.gb-character-page #toc,
+.gb-character-page .toc {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gb-character-page #toc h2,
+.gb-character-page .toc h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: #fff;
+  border: none;
+}
+
+.gb-character-page #toc ul,
+.gb-character-page .toc ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.gb-character-page #toc li,
+.gb-character-page .toc li {
+  margin: 0.25rem 0;
+}
+
+.gb-character-page #toc a,
+.gb-character-page .toc a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-character-page #toc a:hover,
+.gb-character-page .toc a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   CONTENT IMAGES
+   ============================================ */
+.gb-character-main img {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  max-width: 350px;
+  max-height: 350px;
+  height: auto;
+  width: auto;
+  clear: left;
+}
+
+.gb-character-main td img,
+.gb-character-main .wikitable td img {
+  float: left;
+  margin: 0 1rem 0.5rem 0;
+  max-width: 280px;
+  max-height: 280px;
+  clear: none;
+}
+
+.gb-character-main h2,
+.gb-character-main h3,
+.gb-character-main h4 {
+  clear: both;
+}
+
+/* Hero cover image override */
+.gb-character-page .gb-character-hero .gb-character-hero-cover img {
+  float: none;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: auto;
+  clear: none;
+}
+
+/* ============================================
+   WIKI TABLES
+   ============================================ */
+body.skin-giantbomb .gb-character-page table,
+body.skin-giantbomb .gb-character-wiki-content table {
+  background-color: #1c1c1c;
+  border-color: #333;
+  color: #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+body.skin-giantbomb .gb-character-page .wikitable,
+body.skin-giantbomb .gb-character-wiki-content .wikitable {
+  background-color: #1c1c1c;
+  border: 1px solid #333;
+}
+
+body.skin-giantbomb .gb-character-page table th,
+body.skin-giantbomb .gb-character-wiki-content table th {
+  background-color: #252525;
+  color: #fff;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+body.skin-giantbomb .gb-character-page table td,
+body.skin-giantbomb .gb-character-wiki-content table td {
+  background-color: transparent;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+}
+
+body.skin-giantbomb .gb-character-page table tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* ============================================
+   HIDE FOOTER ELEMENTS
+   ============================================ */
+.wiki-character-page .printfooter,
+.wiki-character-page #catlinks {
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .gb-character-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gb-character-sidebar {
+    order: -1;
+  }
+
+  .gb-character-main {
+    order: 0;
+  }
+
+  .gb-character-hero-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .gb-character-hero-cover {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .gb-character-hero-info {
+    width: 100%;
+  }
+
+  .gb-character-tabs-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gb-character-wiki-content .wikitable,
+  .gb-character-page table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .gb-character-page .gb-wiki-actions {
+    display: none;
+  }
+
+  .gb-character-content {
+    padding: 1rem;
+  }
+
+  .gb-character-hero {
+    padding: 1rem;
+  }
+
+  .gb-character-hero-container {
+    padding: 0 0.5rem;
+    gap: 1rem;
+  }
+
+  .gb-character-hero-title {
+    font-size: 1.75rem;
+  }
+
+  .gb-character-page .gb-character-main img,
+  .gb-character-page .gb-character-wiki-content img {
+    float: none;
+    display: block;
+    max-width: 100%;
+    margin: 1rem auto;
+    clear: both;
+  }
+
+  .gb-character-page .gb-character-wiki-content .thumb {
+    float: none;
+    margin: 1rem auto;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .gb-character-content {
+    padding: 0.75rem;
+  }
+
+  .gb-character-hero {
+    padding: 0.75rem;
+  }
+
+  .gb-character-hero-container {
+    padding: 0;
+    gap: 0.5rem;
+  }
+
+  .gb-character-hero-cover {
+    width: 120px;
+  }
+
+  .gb-character-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .gb-character-hero-meta {
+    font-size: 0.8rem;
+  }
+
+  .gb-character-hero-deck {
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================
+   ACCORDION SIDEBAR
+   ============================================ */
+.gb-sidebar-accordions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gb-accordion {
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #252525;
+  overflow: hidden;
+}
+
+.gb-accordion-header {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(to bottom, #333, #2a2a2a);
+  border: none;
+  border-bottom: 1px solid #444;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+
+.gb-accordion-header:hover {
+  background: linear-gradient(to bottom, #3a3a3a, #333);
+}
+
+.gb-accordion-header::after {
+  content: "+";
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #888;
+  transition: transform 0.2s ease;
+}
+
+.gb-accordion--open .gb-accordion-header::after {
+  content: "−";
+}
+
+.gb-accordion-content {
+  display: none;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  list-style: none;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.gb-accordion--open .gb-accordion-content {
+  display: block;
+}
+
+.gb-accordion-content li {
+  display: block;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.gb-accordion-content li:last-child {
+  border-bottom: none;
+}
+
+.gb-accordion-content a {
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.gb-accordion-content a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile: all closed by default */
+@media (max-width: 900px) {
+  .gb-accordion--open .gb-accordion-content {
+    display: none;
+  }
+
+  .gb-accordion--open.gb-accordion--active .gb-accordion-content,
+  .gb-accordion--active .gb-accordion-content {
+    display: block;
+  }
+
+  .gb-accordion--open .gb-accordion-header::after {
+    content: "+";
+  }
+
+  .gb-accordion--active .gb-accordion-header::after {
+    content: "−";
+  }
+}
+
+/* ============================================
+   INFOBOX OVERRIDE
+   ============================================ */
+.gb-character-page .infobox {
+  display: none;
+}

@@ -1,0 +1,7 @@
+<noinclude>
+==Documentation==
+Formats a sidebar list item with a link, stripping the namespace prefix for display.
+Used by GameSidebar for developers, publishers, genres, etc.
+
+Usage: Called by SMW queries with template parameter.
+</noinclude><includeonly>[[{{{1}}}|{{StripPrefix|{{{1}}}}}]]</includeonly>

@@ -1,0 +1,205 @@
+<noinclude>
+==Documentation==
+Renders the character page sidebar with structured data pulled from Semantic MediaWiki properties.
+
+This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki></code>.
+
+===Sections===
+# '''Character details''' - Name, real name, gender, birthday, death, franchises, aliases
+# '''Related content''' - Tabbed interface showing Games, Friends, Enemies, Concepts
+
+===SMW Properties Used===
+* <code>Has name</code> - Character name
+* <code>Has real name</code> - Real name
+* <code>Has gender</code> - Gender
+* <code>Has birthday</code> - Birth date
+* <code>Has death</code> - Death date
+* <code>Has franchise</code> - Franchise links
+* <code>Has aliases</code> - Alternative names
+* <code>Has games</code> - Game appearances
+* <code>Has friends</code> - Allied characters
+* <code>Has enemies</code> - Enemy characters
+* <code>Has concepts</code> - Related concepts
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Character details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-character-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has real name
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Real name</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has gender
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Gender</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has birthday
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Birthday</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has death
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Died</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has franchise
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Franchise</dt><dd>
+  |outro=</dd>
+  |sep=<br/>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Games</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has games
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Friends</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has friends
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Enemies</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has enemies
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has concepts
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Locations</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has locations
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Objects</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has objects
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">People</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has people
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

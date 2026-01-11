@@ -5,6 +5,10 @@
   "description": "A custom MediaWiki skin for the Giant Bomb Wiki.",
   "license-name": "MIT",
   "type": "skin",
+  "Hooks": {
+    "ParserAfterTidy": "SkinGiantBomb::onParserAfterTidy",
+    "BeforePageDisplay": "SkinGiantBomb::onBeforePageDisplay"
+  },
   "ValidSkinNames": {
     "giantbomb": {
       "class": "SkinGiantBomb",
@@ -39,13 +43,15 @@
         "resources/css/newReleasesPage.css",
         "resources/css/platformsPage.css",
         "resources/css/conceptsPage.css",
-        "resources/css/peoplesPage.css"
+        "resources/css/peoplesPage.css",
+        "resources/css/game-wiki.css",
+        "resources/css/character-wiki.css"
       ]
     },
-    "skins.giantbomb.externalheader": {
+    "skins.giantbomb.wikijs": {
       "scripts": [
-        "resources/js/loadExternalHeader.js",
-        "resources/js/search.js"
+        "resources/js/search.js",
+        "resources/js/game-sidebar-tabs.js"
       ],
       "position": "top"
     },

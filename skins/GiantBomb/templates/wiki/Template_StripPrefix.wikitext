@@ -1,0 +1,7 @@
+<noinclude>
+==Documentation==
+Strips common wiki prefixes (Companies/, Platforms/, etc.) from page names for cleaner display.
+
+Usage: <code><nowiki>{{StripPrefix|Companies/id_Software}}</nowiki></code> outputs: id Software
+
+</noinclude><includeonly>{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{{1|}}}|Companies/|}}|Platforms/|}}|Genres/|}}|Themes/|}}|Franchises/|}}|Characters/|}}|Concepts/|}}|Locations/|}}|Objects/|}}</includeonly>
