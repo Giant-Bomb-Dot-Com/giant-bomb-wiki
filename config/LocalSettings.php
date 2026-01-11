@@ -17,30 +17,18 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 $wikiEnv = getenv('MV_ENV') ?: ($_ENV['MV_ENV'] ?? 'dev');
 
-## Uncomment this to disable output compression
-# $wgDisableOutputCompression = true;
-
+$wgMemoryLimit = "2G";
 $wgSitename = "gb";
 $wgMetaNamespace = "Gb";
 
-## The URL base path to the directory containing the wiki;
-## defaults for all runtime URL paths are based off of this.
-## For more information on customizing the URLs
-## (like /w/index.php/Page_title to /wiki/Page_title) please see:
-## https://www.mediawiki.org/wiki/Manual:Short_URL
+# URL Configuration
 $wgScriptPath = "";
 $wgArticlePath = "/wiki/$1";
 $wgUsePathInfo = false;
-
-## The protocol and server name to use in fully-qualified URLs
 $wgServer = "http://localhost:8080";
 
-# SMW config file directory
+# SMW config directory
 $smwgConfigFileDir = getenv('SMW_CONFIG_DIR') ?: '/var/www/html/images/smw-config';
-
-# Load SMW upgrade key from the persisted setup file when available
-# This ensures the running service uses the same upgrade key that
-# `setupStore.php` wrote to the shared GCS location.
 $smwSetupInfoFile = rtrim( $smwgConfigFileDir, '/' ) . '/.smw.json';
 if ( is_readable( $smwSetupInfoFile ) ) {
     $smwSetupInfo = json_decode( @file_get_contents( $smwSetupInfoFile ), true );
@@ -49,10 +37,9 @@ if ( is_readable( $smwSetupInfoFile ) ) {
     }
 }
 
-## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-# Env-driven base origin/path for reverse-proxy hosting under a subpath
+# Env-driven base origin/path for reverse-proxy hosting
 $appBaseOrigin = getenv('APP_BASE_ORIGIN');
 $appBasePath = getenv('APP_BASE_PATH');
 if ( $appBaseOrigin ) {
@@ -63,94 +50,73 @@ if ( $appBasePath !== false && $appBasePath !== null && $appBasePath !== '' ) {
     $wgResourceBasePath = $wgScriptPath;
 }
 
-# explicit for ResourceLoader and canonical URLs when running behind a proxy
-$wgCanonicalServer = $wgServer;
+$canonicalServerEnv = getenv('CANONICAL_SERVER');
+if ( $canonicalServerEnv !== false && $canonicalServerEnv !== null && trim($canonicalServerEnv) !== '' ) {
+    $wgCanonicalServer = trim($canonicalServerEnv);
+} else {
+    $wgCanonicalServer = $wgServer;
+}
 $wgLoadScript = "$wgScriptPath/load.php";
 $wgStylePath = "$wgResourceBasePath/skins";
 
-## The URL paths to the logo.  Make sure you change this from the default,
-## or else you'll overwrite your logo when you upgrade!
 $wgLogos = [
 	'1x' => "$wgResourceBasePath/resources/assets/change-your-logo.svg",
 	'icon' => "$wgResourceBasePath/resources/assets/change-your-logo-icon.svg",
 ];
 
-## UPO means: this is also a user preference option
-
+# Email (disabled)
 $wgEnableEmail = false;
-$wgEnableUserEmail = true; # UPO
-
+$wgEnableUserEmail = true;
 $wgEmergencyContact = "";
 $wgPasswordSender = "";
-
-$wgEnotifUserTalk = false; # UPO
-$wgEnotifWatchlist = false; # UPO
+$wgEnotifUserTalk = false;
+$wgEnotifWatchlist = false;
 $wgEmailAuthentication = true;
 
-## Database settings
+# Database
 $wgDBtype = "mysql";
 $wgDBserver = "db";
 $wgDBname = getenv("MARIADB_DATABASE");
 $wgDBuser = getenv("MARIADB_USER");
 $wgDBpassword = getenv("MARIADB_PASSWORD");
 
-# Cloud SQL connector (Unix socket) support via env CLOUDSQL_INSTANCE
+
+# Cloud SQL socket support
 $cloudSqlInstance = getenv('CLOUDSQL_INSTANCE');
 if ( $cloudSqlInstance ) {
-    # Use Cloud SQL Unix socket. mysqli/PDO accept host:socket form.
     $socketPath = '/cloudsql/' . $cloudSqlInstance;
     $wgDBserver = 'localhost:' . $socketPath;
     $wgDBsocket = $socketPath;
 }
 
-# Always allow DB env overrides (useful for socket-based connections)
-$dbNameEnvUnconditional = getenv('DB_NAME');
-if ( $dbNameEnvUnconditional ) {
-    $wgDBname = $dbNameEnvUnconditional;
-}
-$dbUserEnvUnconditional = getenv('DB_USER');
-if ( $dbUserEnvUnconditional ) {
-    $wgDBuser = $dbUserEnvUnconditional;
-}
-$dbPasswordEnvUnconditional = getenv('DB_PASSWORD');
-if ( $dbPasswordEnvUnconditional ) {
-    $wgDBpassword = $dbPasswordEnvUnconditional;
-}
-
-# Final guard to ensure database name is a non-empty string
-if ( !is_string( $wgDBname ) || trim( (string)$wgDBname ) === '' ) {
-    $fallbackDbName = getenv('DB_NAME');
-    if ( is_string( $fallbackDbName ) && trim( $fallbackDbName ) !== '' ) {
-        $wgDBname = $fallbackDbName;
-    } else {
-        # Last-resort default to avoid empty string (MediaWiki requires non-empty or null)
-        $wgDBname = 'mediawiki';
-    }
-}
-
-# Optional DB overrides for Cloud SQL / external DB via env
+# DB env overrides (DB_* takes precedence over MARIADB_*)
 $dbHost = getenv('DB_HOST');
 if ( $dbHost ) {
     $wgDBserver = $dbHost;
-    $dbPortEnv = getenv('DB_PORT');
-    if ( $dbPortEnv ) {
-        $wgDBport = intval($dbPortEnv);
-    }
-    $dbNameEnv = getenv('DB_NAME');
-    if ( $dbNameEnv ) {
-        $wgDBname = $dbNameEnv;
-    }
-    $dbUserEnv = getenv('DB_USER');
-    if ( $dbUserEnv ) {
-        $wgDBuser = $dbUserEnv;
-    }
-    $dbPasswordEnv = getenv('DB_PASSWORD');
-    if ( $dbPasswordEnv ) {
-        $wgDBpassword = $dbPasswordEnv;
-    }
+}
+$dbPort = getenv('DB_PORT');
+if ( $dbPort ) {
+    $wgDBport = intval($dbPort);
+}
+$dbName = getenv('DB_NAME');
+if ( $dbName ) {
+    $wgDBname = $dbName;
+}
+$dbUser = getenv('DB_USER');
+if ( $dbUser ) {
+    $wgDBuser = $dbUser;
+}
+$dbPassword = getenv('DB_PASSWORD');
+if ( $dbPassword ) {
+    $wgDBpassword = $dbPassword;
 }
 
-## Database settings for gb_api_dump
+# Fallback if DB name is still empty
+if ( !$wgDBname || trim($wgDBname) === '' ) {
+    $wgDBname = 'mediawiki';
+}
+
+# External DB for gb_api_dump
 $wgExternalDataSources['gb_api_dump'] = [
     'server' => 'db',
     'type' => 'mysql',
@@ -172,30 +138,57 @@ $wgExternalDatabases['external_db'] = [
     ]
 ];
 
-
-# MySQL specific settings
 $wgDBprefix = "";
 $wgDBssl = false;
-
-# MySQL table options to use during installation or update
 $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
-
-# Shared database table
-# This has no effect unless $wgSharedDB is also set.
 $wgSharedTables[] = "actor";
 
-## Shared memory settings
+# =============================================================================
+# CACHING
+# =============================================================================
+
+# File cache directory (used for anonymous page cache in prod)
+$wgCacheDirectory = "$IP/cache";
+
+# Localisation cache - use filesystem for faster interface message loading
+$wgLocalisationCacheConf['store'] = 'file';
+
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
+$wgParserCacheType = CACHE_DB;
+$wgParserCacheExpireTime = 86400 * 7;
+$wgMessageCacheType = CACHE_ACCEL;
+$wgSessionCacheType = CACHE_DB;
+$wgEnableSidebarCache = true;
+$wgSidebarCacheExpiry = 86400;
 
-## To enable image uploads, make sure the 'images' directory
-## is writable, then set this to true:
+if ( $wikiEnv === 'prod' ) {
+    $wgUseFileCache = true;
+    $wgFileCacheDirectory = "$IP/cache/html";
+    $wgShowIPinHeader = false;
+    $wgFileCacheDepth = 2;
+}
+
+$wgResourceLoaderMaxage = [
+    'versioned' => 30 * 24 * 60 * 60,
+    'unversioned' => 5 * 60,
+];
+$wgResourceLoaderUniqueVersion = '20260111-v2';
+$wgUseETag = true;
+$wgInvalidateCacheOnLocalSettingsChange = true;
+
+# Jobs disabled on page views - run via cron/systemd instead
+$wgJobRunRate = 0;
+
+# =============================================================================
+# UPLOADS & IMAGES
+# =============================================================================
+
 $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
 if ($wikiEnv == 'prod') {
-    # Mounted gcs bucket for images
     $uploadsSubdir = getenv('UPLOADS_SUBDIR');
     if ( $uploadsSubdir ) {
         $wgUploadDirectory = '/var/www/html/images/' . trim($uploadsSubdir, "/");
@@ -206,28 +199,25 @@ if ($wikiEnv == 'prod') {
     }
 }
 
-# Allow external images
 $wgAddImgTagWhitelist = true;
 $wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
-
-# Allow external images from Giant Bomb in MediaWiki image syntax
-$wgAllowExternalImagesFrom = ['https://www.giantbomb.com/'];
-
-# InstantCommons allows wiki to use images from https://commons.wikimedia.org
+$wgAllowExternalImagesFrom = [
+    'https://www.giantbomb.com/',
+    'http://www.giantbomb.com/',
+    'https://giantbomb.com/',
+    'http://giantbomb.com/',
+];
 $wgUseInstantCommons = false;
 
-# Periodically send a pingback to https://www.mediawiki.org/ with basic data
-# about this MediaWiki instance. The Wikimedia Foundation shares this data
-# with MediaWiki developers to help guide future development efforts.
+# =============================================================================
+# GENERAL SETTINGS
+# =============================================================================
+
 $wgPingback = false;
-
-# Site language code, should be one of the list in ./includes/languages/data/Names.php
 $wgLanguageCode = "en";
-
-# Time zone
 $wgLocaltimezone = "UTC";
 
-# Cookie scope configuration (env-driven)
+# Cookie config
 $cookieDomain = getenv('COOKIE_DOMAIN');
 if ( $cookieDomain ) {
     $wgCookieDomain = $cookieDomain;
@@ -241,51 +231,27 @@ if ( $wikiEnv === 'prod' ) {
     $wgCookieSecure = true;
 }
 
-## Set $wgCacheDirectory to a writable directory on the web server
-## to make your wiki go slightly faster. The directory should not
-## be publicly accessible from the web.
-#$wgCacheDirectory = "$IP/cache";
-
 $wgSecretKey = getenv('MW_SK');
-
-# Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
-
-# Site upgrade key. Must be set to a string (default provided) to turn on the
-# web installer while LocalSettings.php is in place
 $wgUpgradeKey = getenv('MW_UK');
 
-## For attaching licensing metadata to pages, and displaying an
-## appropriate copyright notice / icon. GNU Free Documentation
-## License and Creative Commons licenses are supported so far.
-$wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
+# License
+$wgRightsPage = "";
 $wgRightsUrl = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
 $wgRightsText = "Creative Commons Attribution-NonCommercial-ShareAlike";
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-nc-sa.png";
 
-# Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
-
-# The following permissions were set based on your choice in the installer
 $wgGroupPermissions["*"]["edit"] = false;
 
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "giantbomb";
+# =============================================================================
+# SKINS & EXTENSIONS
+# =============================================================================
 
-# Enabled skins.
-# The following skins were automatically enabled:
+$wgDefaultSkin = "giantbomb";
 wfLoadSkin( 'GiantBomb' );
 wfLoadSkin( 'Vector' );
 
-
-# End of automatically generated settings.
-# Add more configuration options below.
-
-# Enabled extensions. Most of the extensions are enabled by adding
-# wfLoadExtension( 'ExtensionName' );
-# to LocalSettings.php. Check specific extension documentation for more details.
-# The following extensions were automatically enabled:
 wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
@@ -300,11 +266,14 @@ wfLoadExtension( 'TemplateStyles' );
 wfLoadExtension( 'TemplateStylesExtender' );
 wfLoadExtension( 'TextExtracts' );
 wfLoadExtension( 'WikiEditor' );
-
 wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
+
+# =============================================================================
+# GIANTBOMB RESOLVE
+# =============================================================================
 
 $wgGiantBombResolveFields = [
 	'displaytitle',
@@ -324,12 +293,29 @@ $gbResolveBaseOrigin = getenv( 'MW_GIANTBOMB_RESOLVE_BASE_ORIGIN' );
 if ( $gbResolveBaseOrigin !== false && $gbResolveBaseOrigin !== null && trim( $gbResolveBaseOrigin ) !== '' ) {
 	$wgGiantBombResolveBaseOrigin = trim( $gbResolveBaseOrigin );
 }
+
+# =============================================================================
+# SEMANTIC MEDIAWIKI
+# =============================================================================
+
 enableSemantics();
+
+$smwgMainCacheType = CACHE_ACCEL;
+$smwgQueryResultCacheType = CACHE_ACCEL;
+$smwgQueryResultCacheLifetime = 3600;
+$smwgFactboxUseCache = true;
+$smwgFactboxCacheRefreshOnPurge = true;
+$smwgAutoRefreshOnPurge = true;
+$smwgEnabledQueryDependencyLinksStore = true;
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
 $wgPopupsReferencePreviewsBetaFeature = false;
 $wgPageFormsUseDisplayTitle = false;
+
+# =============================================================================
+# ALGOLIA
+# =============================================================================
 
 $wgAlgoliaSearchEnabled = false;
 $algoliaEnabled = getenv( 'ALGOLIA_SEARCH_ENABLED' );
@@ -354,45 +340,57 @@ if ( $algoliaIndex !== false && $algoliaIndex !== null && trim( $algoliaIndex ) 
 	$wgAlgoliaIndexName = 'gb_content';
 }
 
-# Turn on subpages
+# =============================================================================
+# MISC
+# =============================================================================
+
 $wgNamespacesWithSubpages[NS_MAIN] = true;
 $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
-
-# Allows the use of DISPLAYTITLE magic keyword
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
-
-# Enable full-text search
 $smwgEnabledFulltextSearch = true;
-
-# Enable creation date property
 $smwgPageSpecialProperties[] = '_CDAT';
 
-# Remove before prod push
-$wgShowExceptionDetails = true;
-$wgDevelopmentWarnings = true;
-error_reporting( -1 );
-ini_set( 'display_errors', 1 );
-
-# Development mode settings - skip SMW upgrade key check
-# This allows connecting to any database (local or production) without upgrade key issues
+# Dev mode settings
 if ( $wikiEnv === 'dev' ) {
-    // Skip SMW upgrade key check in dev to allow connecting to any database
+    $wgShowExceptionDetails = true;
+    $wgDevelopmentWarnings = true;
+    error_reporting( -1 );
+    ini_set( 'display_errors', 1 );
     $smwgIgnoreUpgradeKeyCheck = true;
 }
 
-#Allow more results with SMW query
+# SMW query limits
 $smwgQUpperbound = 200000;
 $smwgQMaxInlineLimit = 200000;
 $smwgQMaxLimit = 200000;
-
-#Allow a large range of conditions in SMW queries
 $smwgQMaxSize = 100;
 
-#Allow custom favicon location
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 
-# Scribunto is a default Mediawiki extension that permits scripting languages in Mediawiki pages
+# Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200;
+
+# Auto-append {{GameEnd}} to game pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Games/' ) === 0 ) {
+        if ( preg_match( '/\{\{Game\s*[\|\}]/i', $text ) && stripos( $text, '{{GameEnd}}' ) === false ) {
+            $text .= "\n{{GameEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{CharacterEnd}} to character pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
+        if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
+            $text .= "\n{{CharacterEnd}}";
+        }
+    }
+    return true;
+};

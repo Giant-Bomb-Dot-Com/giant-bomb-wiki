@@ -1,14 +1,23 @@
-document
-  .getElementById("gb-search-bar")
-  .addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      searchGBWiki($(this).val());
-    }
-  });
+// Search bar functionality - only initialize if elements exist
+(function () {
+  var searchBar = document.getElementById("gb-search-bar");
+  var searchBtn = document.getElementById("gb-search-btn");
 
-document.getElementById("gb-search-btn").addEventListener("click", function () {
-  searchGBWiki(document.getElementById("gb-search-bar").value);
-});
+  if (searchBar) {
+    searchBar.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        searchGBWiki(this.value);
+      }
+    });
+  }
+
+  if (searchBtn) {
+    searchBtn.addEventListener("click", function () {
+      var bar = document.getElementById("gb-search-bar");
+      if (bar) searchGBWiki(bar.value);
+    });
+  }
+})();
 
 function searchGBWiki(searchText) {
   let uri = "/search?type=wiki&q=" + encodeURIComponent(searchText);
