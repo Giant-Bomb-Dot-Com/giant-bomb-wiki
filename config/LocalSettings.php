@@ -173,7 +173,7 @@ $wgResourceLoaderMaxage = [
     'versioned' => 30 * 24 * 60 * 60,
     'unversioned' => 5 * 60,
 ];
-$wgResourceLoaderUniqueVersion = '20260109-v1';
+$wgResourceLoaderUniqueVersion = '20260111-v2';
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
@@ -201,7 +201,12 @@ if ($wikiEnv == 'prod') {
 
 $wgAddImgTagWhitelist = true;
 $wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
-$wgAllowExternalImagesFrom = ['https://www.giantbomb.com/'];
+$wgAllowExternalImagesFrom = [
+    'https://www.giantbomb.com/',
+    'http://www.giantbomb.com/',
+    'https://giantbomb.com/',
+    'http://giantbomb.com/',
+];
 $wgUseInstantCommons = false;
 
 # =============================================================================
@@ -374,6 +379,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     if ( $title && strpos( $title->getText(), 'Games/' ) === 0 ) {
         if ( preg_match( '/\{\{Game\s*[\|\}]/i', $text ) && stripos( $text, '{{GameEnd}}' ) === false ) {
             $text .= "\n{{GameEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{CharacterEnd}} to character pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
+        if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
+            $text .= "\n{{CharacterEnd}}";
         }
     }
     return true;

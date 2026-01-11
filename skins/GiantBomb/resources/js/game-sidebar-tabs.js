@@ -36,7 +36,7 @@
 
       if (imageData.infobox?.file && imageData.infobox?.path) {
         const coverUrl = `${GB_IMAGE_BASE}scale_super/${imageData.infobox.path}${imageData.infobox.file}`;
-        const coverContainer = document.querySelector(".gb-game-hero-cover");
+        const coverContainer = document.querySelector(".gb-game-hero-cover, .gb-character-hero-cover");
 
         if (coverContainer) {
           let coverImg = coverContainer.querySelector("img");
@@ -46,14 +46,14 @@
           }
           coverImg.src = coverUrl;
           coverImg.alt =
-            document.querySelector(".gb-game-hero-title")?.textContent ||
-            "Game cover";
+            document.querySelector(".gb-game-hero-title, .gb-character-hero-title")?.textContent ||
+            "Cover image";
         }
       }
 
       if (imageData.background?.file && imageData.background?.path) {
         const bgUrl = `${GB_IMAGE_BASE}screen_kubrick_wide/${imageData.background.path}${imageData.background.file}`;
-        const heroSection = document.querySelector(".gb-game-hero");
+        const heroSection = document.querySelector(".gb-game-hero, .gb-character-hero");
 
         if (heroSection) {
           heroSection.style.backgroundImage = `url(${bgUrl})`;
@@ -75,11 +75,12 @@
       "Concepts/",
       "Locations/",
       "Objects/",
+      "People/",
       "Games/",
     ];
 
     const targetLinks = document.querySelectorAll(
-      ".gb-game-details a, .gb-sidebar-related-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a",
+      ".gb-game-details a, .gb-character-details a, .gb-sidebar-related-content a, .gb-accordion-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a",
     );
 
     for (const link of targetLinks) {
@@ -138,10 +139,33 @@
     }
   };
 
+  const initAccordions = () => {
+    const isMobile = window.innerWidth <= 900;
+    
+    for (const accordion of document.querySelectorAll(".gb-accordion")) {
+      const header = accordion.querySelector(".gb-accordion-header");
+      if (!header) continue;
+
+      // On mobile, close all by default (remove --open, don't add --active)
+      if (isMobile && accordion.classList.contains("gb-accordion--open")) {
+        // Keep --open class for CSS but don't activate
+      }
+
+      header.addEventListener("click", () => {
+        accordion.classList.toggle("gb-accordion--active");
+        // On desktop, also toggle --open for non-JS styling
+        if (!isMobile) {
+          accordion.classList.toggle("gb-accordion--open");
+        }
+      });
+    }
+  };
+
   const init = () => {
     initHeroImages();
     stripPrefixesFromLinks();
     initSidebarTabs();
+    initAccordions();
   };
 
   if (document.readyState === "loading") {

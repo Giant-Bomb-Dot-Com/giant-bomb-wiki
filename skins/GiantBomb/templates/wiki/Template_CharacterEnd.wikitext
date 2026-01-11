@@ -1,0 +1,33 @@
+<noinclude>
+==Documentation==
+Closes the character page layout and renders the sidebar.
+
+Place this at the end of character page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Character
+| Name = Example Character
+| Deck = Short description...
+| Games = Games/Example_Game
+...
+}}
+
+== Overview ==
+Wiki content here...
+
+== History ==
+More content...
+
+{{CharacterEnd}}
+</pre>
+
+===Structure===
+This template closes the following divs opened by <code><nowiki>{{Character}}</nowiki></code>:
+* <code>.gb-character-wiki-content</code>
+* <code>.gb-character-main</code>
+
+Then renders the sidebar via <code><nowiki>{{CharacterSidebar}}</nowiki></code> and closes:
+* <code>.gb-character-content</code>
+* <code>.gb-character-page</code>
+</noinclude><includeonly></div></div><div class="gb-character-sidebar">{{CharacterSidebar}}</div></div></div></includeonly>
