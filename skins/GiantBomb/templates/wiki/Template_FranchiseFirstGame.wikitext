@@ -1,0 +1,10 @@
+<noinclude>
+==Documentation==
+Helper template for rendering the "First game" row in the franchise sidebar.
+Called by SMW #ask query in FranchiseSidebar template.
+
+===Parameters===
+* <code>1</code> - Page title (full path like Games/Doom)
+* <code>name</code> - Game display name
+</noinclude><includeonly><dt>First game</dt>
+<dd>[[{{{1}}}|{{{name|{{#titleparts:{{{1}}}|1|2}}}}}]]</dd></includeonly>

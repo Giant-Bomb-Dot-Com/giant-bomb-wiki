@@ -1,67 +1,45 @@
 <noinclude>
 ==Documentation==
-Renders the game page sidebar with structured data pulled from Semantic MediaWiki properties.
+Renders the franchise page sidebar with structured data pulled from Semantic MediaWiki properties.
 
-This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></code>.
+This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki></code>.
 
 ===Sections===
-# '''Game details''' - Name, release date, platforms, developer, publisher, genre, theme, franchise, aliases
+# '''Franchise details''' - Name, game count, first game, aliases
 # '''Related content''' - Accordion sections for Characters, Locations, Concepts, Objects, People
 
 ===SMW Properties Used===
-* <code>Has name</code> - Game title
-* <code>Has release date</code> - Release date
-* <code>Has platforms</code> - Platform links
-* <code>Has developers</code> - Developer company links
-* <code>Has publishers</code> - Publisher company links
-* <code>Has genres</code> - Genre links
-* <code>Has themes</code> - Theme links
-* <code>Has franchise</code> - Franchise link
+* <code>Has name</code> - Franchise title
 * <code>Has aliases</code> - Alternative names
+* <code>Has games</code> - Game links (also queried via inverse)
 * <code>Has characters</code> - Character links
 * <code>Has locations</code> - Location links
 * <code>Has concepts</code> - Concept links
 * <code>Has objects</code> - Object links
 </noinclude><includeonly>
+<div class="gb-franchise-sidebar">
 <div class="gb-sidebar-section">
-<div class="gb-sidebar-section-header">Game details</div>
+<div class="gb-sidebar-section-header">Franchise details</div>
 <div class="gb-sidebar-section-content">
-<dl class="gb-game-details">
+<dl class="gb-franchise-details">
 
 <dt>Name</dt>
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
-{{#show:{{FULLPAGENAME}}
-  |?Has release date
-  |format=list
-  |link=none
-  |default=
-  |intro=<dt>Release date</dt><dd>
-  |outro=</dd>
-}}
+<dt>Appears in</dt>
+<dd>{{#ask: [[Has franchise::{{FULLPAGENAME}}]]
+  |format=count
+}} games</dd>
 
-<dt>Platform</dt>
-<dd>{{#show:{{FULLPAGENAME}}|?Has platforms|format=list|link=all|sep=<br/>|limit=50}}</dd>
-
-<dt>Developer</dt>
-<dd>{{#show:{{FULLPAGENAME}}|?Has developers|format=list|link=all|sep=<br/>|limit=20}}</dd>
-
-<dt>Publisher</dt>
-<dd>{{#show:{{FULLPAGENAME}}|?Has publishers|format=list|link=all|sep=<br/>|limit=20}}</dd>
-
-<dt>Genre</dt>
-<dd>{{#show:{{FULLPAGENAME}}|?Has genres|format=list|link=all|sep=<br/>|limit=20}}</dd>
-
-<dt>Theme</dt>
-<dd>{{#show:{{FULLPAGENAME}}|?Has themes|format=list|link=all|sep=<br/>|limit=20}}</dd>
-
-{{#show:{{FULLPAGENAME}}
-  |?Has franchise
-  |format=list
+{{#ask: [[Has franchise::{{FULLPAGENAME}}]]
+  |?Has name=name
+  |format=template
+  |template=FranchiseFirstGame
   |link=all
+  |limit=1
+  |sort=Has release date
+  |order=asc
   |default=
-  |intro=<dt>Franchise</dt><dd>
-  |outro=</dd>
 }}
 
 {{#show:{{FULLPAGENAME}}
@@ -72,6 +50,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
   |intro=<dt>Aliases</dt><dd>
   |outro=</dd>
 }}
+
 </dl>
 </div>
 </div>
@@ -158,5 +137,6 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 </ul>
 </div>
 
+</div>
 </div>
 </includeonly>

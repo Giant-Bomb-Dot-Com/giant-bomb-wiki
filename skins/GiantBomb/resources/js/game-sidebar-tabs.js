@@ -37,7 +37,7 @@
       if (imageData.infobox?.file && imageData.infobox?.path) {
         const coverUrl = `${GB_IMAGE_BASE}scale_super/${imageData.infobox.path}${imageData.infobox.file}`;
         const coverContainer = document.querySelector(
-          ".gb-game-hero-cover, .gb-character-hero-cover",
+          ".gb-game-hero-cover, .gb-character-hero-cover, .gb-franchise-hero-cover",
         );
 
         if (coverContainer) {
@@ -49,7 +49,7 @@
           coverImg.src = coverUrl;
           coverImg.alt =
             document.querySelector(
-              ".gb-game-hero-title, .gb-character-hero-title",
+              ".gb-game-hero-title, .gb-character-hero-title, .gb-franchise-hero-title",
             )?.textContent || "Cover image";
         }
       }
@@ -57,7 +57,7 @@
       if (imageData.background?.file && imageData.background?.path) {
         const bgUrl = `${GB_IMAGE_BASE}screen_kubrick_wide/${imageData.background.path}${imageData.background.file}`;
         const heroSection = document.querySelector(
-          ".gb-game-hero, .gb-character-hero",
+          ".gb-game-hero, .gb-character-hero, .gb-franchise-hero",
         );
 
         if (heroSection) {
@@ -85,7 +85,7 @@
     ];
 
     const targetLinks = document.querySelectorAll(
-      ".gb-game-details a, .gb-character-details a, .gb-sidebar-related-content a, .gb-accordion-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a",
+      ".gb-game-details a, .gb-character-details a, .gb-franchise-details a, .gb-sidebar-related-content a, .gb-accordion-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a, .gb-franchise-game-title a",
     );
 
     for (const link of targetLinks) {
