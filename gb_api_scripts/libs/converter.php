@@ -196,7 +196,8 @@ class HtmlToMediaWikiConverter
                 $pContent .= $this->dom->saveHTML($child);
             }
             
-            $newTextNode = $this->dom->createTextNode($pContent . "\n");
+            // Use double newlines for proper paragraph separation in MediaWiki
+            $newTextNode = $this->dom->createTextNode($pContent . "\n\n");
 
             $parent->insertBefore($newTextNode, $pTag);
             $parent->removeChild($pTag);
