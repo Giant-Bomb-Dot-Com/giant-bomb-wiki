@@ -1,0 +1,45 @@
+<noinclude>
+==Documentation==
+Closes the franchise page layout opened by <code><nowiki>{{Franchise}}</nowiki></code> and renders the sidebar.
+
+Must be placed at the end of a franchise page after all wiki content.
+
+===Usage===
+<pre>
+{{Franchise
+| Name = The Legend of Zelda
+| Deck = Short description...
+}}
+
+== Overview ==
+Wiki content here...
+
+{{FranchiseEnd}}
+</pre>
+</noinclude><includeonly>
+</div>
+<div class="gb-franchise-games-section">
+<div class="gb-franchise-games-header">
+<span class="gb-franchise-games-tab gb-franchise-games-tab--active">Games</span>
+</div>
+<div class="gb-franchise-games-list">
+{{#ask: [[Has franchise::{{FULLPAGENAME}}]]
+  |?Has name=name
+  |?Has release date=date
+  |?Has platforms=platforms
+  |?Has image=image
+  |format=template
+  |template=FranchiseGameItem
+  |link=none
+  |limit=50
+  |sort=Has release date
+  |order=asc
+  |default=<div class="gb-franchise-game-item gb-franchise-game-item--empty"><em>No games found in this franchise</em></div>
+}}
+</div>
+</div>
+</div>
+{{FranchiseSidebar}}
+</div>
+</div>
+</includeonly>

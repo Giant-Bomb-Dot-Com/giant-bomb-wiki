@@ -46,6 +46,7 @@
         "resources/css/peoplesPage.css",
         "resources/css/game-wiki.css",
         "resources/css/character-wiki.css",
+        "resources/css/franchise-wiki.css",
         "resources/css/editor.css"
       ]
     },

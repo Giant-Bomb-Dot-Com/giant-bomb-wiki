@@ -1,0 +1,19 @@
+<noinclude>
+==Documentation==
+Helper template for rendering individual game items in the franchise games list.
+Called by SMW #ask query in FranchiseEnd template.
+
+===Parameters===
+* <code>1</code> - Page title (full path like Games/Doom)
+* <code>name</code> - Game display name
+* <code>date</code> - Release date
+* <code>platforms</code> - Comma-separated platform names
+* <code>image</code> - Cover image filename
+</noinclude><includeonly><div class="gb-franchise-game-item">
+<div class="gb-franchise-game-cover">[[{{{1}}}|<span class="gb-franchise-game-cover-placeholder"></span>]]</div>
+<div class="gb-franchise-game-info">
+<div class="gb-franchise-game-title">[[{{{1}}}|{{{name|{{#titleparts:{{{1}}}|1|2}}}}}]]</div>
+<div class="gb-franchise-game-date">{{#if:{{{date|}}}|{{{date}}}|}}</div>
+</div>
+<div class="gb-franchise-game-platforms">{{#arraymap:{{{platforms|}}}|,|@@|<span class="gb-franchise-game-platform">@@</span>|}}</div>
+</div></includeonly>
