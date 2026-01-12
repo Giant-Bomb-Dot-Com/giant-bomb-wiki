@@ -12,6 +12,14 @@ body {
   background: linear-gradient(90deg, #ae1818 0%, #9b1616 100%);
 }
 
+a:link {
+  color: #6ba4d9;
+}
+
+a:visited {
+  color: #666;
+}
+
 .wikitable {
   background-color: var(--background-color-neutral-subtle, #9198a1);
   color: var(--color-base, #202122);
