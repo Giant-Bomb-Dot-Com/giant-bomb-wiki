@@ -173,7 +173,7 @@ $wgResourceLoaderMaxage = [
     'versioned' => 30 * 24 * 60 * 60,
     'unversioned' => 5 * 60,
 ];
-$wgResourceLoaderUniqueVersion = '20260111-v2';
+$wgResourceLoaderUniqueVersion = '20260111-v3';
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
@@ -390,6 +390,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
         if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
             $text .= "\n{{CharacterEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{FranchiseEnd}} to franchise pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Franchises/' ) === 0 ) {
+        if ( preg_match( '/\{\{Franchise\s*[\|\}]/i', $text ) && stripos( $text, '{{FranchiseEnd}}' ) === false ) {
+            $text .= "\n{{FranchiseEnd}}";
         }
     }
     return true;

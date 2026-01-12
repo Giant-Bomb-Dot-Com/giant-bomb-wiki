@@ -55,7 +55,11 @@ class GiantBombTemplate extends BaseTemplate {
                          substr_count($pageTitle, '/') === 1;
         $isCompanyPage = strpos($pageTitle, 'Companies/') === 0 &&
                          substr_count($pageTitle, '/') === 1;
-        $isFranchisePage = strpos($pageTitle, 'Franchises/') === 0 &&
+        // Franchise pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomFranchisePage = true to revert to custom PHP rendering
+        $useCustomFranchisePage = false;
+        $isFranchisePage = $useCustomFranchisePage &&
+                           strpos($pageTitle, 'Franchises/') === 0 &&
                            substr_count($pageTitle, '/') === 1;
         $isPersonPage = strpos($pageTitle, 'People/') === 0 &&
                         substr_count($pageTitle, '/') === 1;
@@ -160,17 +164,20 @@ class GiantBombTemplate extends BaseTemplate {
             // Show normal wiki content for other pages
             // This includes game pages when rendered via templates (MediaWiki way)
             
-            // Check if this is a template-rendered game or character page
+            // Check if this is a template-rendered game, character, or franchise page
             $isTemplateGamePage = strpos($pageTitle, 'Games/') === 0 &&
                                   substr_count($pageTitle, '/') === 1;
             $isTemplateCharacterPage = strpos($pageTitle, 'Characters/') === 0 &&
                                        substr_count($pageTitle, '/') === 1;
-            $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage;
+            $isTemplateFranchisePage = strpos($pageTitle, 'Franchises/') === 0 &&
+                                       substr_count($pageTitle, '/') === 1;
+            $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage || $isTemplateFranchisePage;
             
             $contentClasses = ['mw-body'];
             if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
             if ($isTemplateGamePage) $contentClasses[] = 'wiki-game-page';
             if ($isTemplateCharacterPage) $contentClasses[] = 'wiki-character-page';
+            if ($isTemplateFranchisePage) $contentClasses[] = 'wiki-franchise-page';
 ?>
         <div class="page-wrapper">
             <?php include __DIR__ . '/partials/header.php'; ?>

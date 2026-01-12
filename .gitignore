@@ -6,6 +6,7 @@ logs/
 mountpoint/
 gb_api_scripts/images/
 gb_api_scripts/import_xml/
+import_templates/import_franchise_bundle.php
 
 .idea/
 .vscode/*

@@ -40,6 +40,9 @@ services:
       - ./data:/data/
       - wiki-data:/var/www/html/images
       - ./tests:/var/www/html/gb-tests
+      # Import scripts
+      - ./import_templates:/var/www/html/import_templates:cached
+      - ./gb_api_scripts:/var/www/html/gb_api_scripts:cached
     environment:
       - MV_ENV=dev
       - COMPOSER_ROOT_VERSION=1.43.6
