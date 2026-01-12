@@ -1,11 +1,12 @@
 <?php
 class GiantBombTemplate extends BaseTemplate {
     public function execute() {
-        // Google Tag Manager noscript fallback (must be immediately after <body>)
+        // Google Tag Manager noscript fallback
         $gtmId = getenv( 'GTM_CONTAINER_ID' );
         if ( $gtmId ) {
             echo '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=' . 
-                 htmlspecialchars( $gtmId ) . '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
+                 htmlspecialchars( $gtmId ) . '" height="0" width="0" ' .
+                 'style="display:none;visibility:hidden"></iframe></noscript>';
         }
         
         // Handle API requests first
