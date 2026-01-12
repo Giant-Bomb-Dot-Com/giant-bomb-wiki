@@ -182,6 +182,11 @@ docker compose -f docker-compose.snapshot.yml down -v
   }}
   ```
 
+## Templates
+
+- You will need to run the templates from import_templates if you haven't already:
+  | - php maintenance/run.php import_templates/import_all_templates.php
+
 ## [Tests](#Tests)
 
 ### [Package Manager](#Package-Manager)
