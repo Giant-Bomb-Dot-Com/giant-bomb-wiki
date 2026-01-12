@@ -173,7 +173,7 @@ $wgResourceLoaderMaxage = [
     'versioned' => 30 * 24 * 60 * 60,
     'unversioned' => 5 * 60,
 ];
-$wgResourceLoaderUniqueVersion = '20260111-v3';
+$wgResourceLoaderUniqueVersion = '20260112-v1';
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
