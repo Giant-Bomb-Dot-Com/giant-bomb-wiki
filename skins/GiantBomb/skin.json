@@ -45,7 +45,8 @@
         "resources/css/conceptsPage.css",
         "resources/css/peoplesPage.css",
         "resources/css/game-wiki.css",
-        "resources/css/character-wiki.css"
+        "resources/css/character-wiki.css",
+        "resources/css/editor.css"
       ]
     },
     "skins.giantbomb.wikijs": {

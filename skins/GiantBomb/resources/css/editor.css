@@ -1,0 +1,31 @@
+/* Edit / Form tables */
+.mw-body-content .createbox .mw-parser-output .formtable input,
+.mw-body-content #pfForm .createboxInput,
+.mw-body-content .editOptions,
+.mw-body-content .mw-editform .wikiEditor-ui-text textarea {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.mw-body-content #pfForm .select2-selection__choice {
+  background-color: #1a1a1a;
+}
+
+.mw-body-content .mw-editform .ext-WikiEditor-ResizingDragBar {
+  background: #6ba4d9;
+}
+
+.mw-body-content .mw-editform .wikiEditor-ui .wikiEditor-ui-view {
+  border: none;
+}
+
+.mw-body-content .mw-editform .editOptions {
+  background: #252525;
+}
+
+.mw-body-content .editOptions input {
+  background: #1a1a1a;
+  color: #ffffff;
+}
