@@ -12,7 +12,7 @@
 |||| Death (property=Has death)
 |||| Concepts (property=Has concepts)
 |||| Enemies (property=Has enemies)
-|||| Franchises (property=Has franchise)
+|||| Franchises (property=Has franchises)
 |||| Friends (property=Has friends)
 |||| Games (property=Has games)
 |||| Locations (property=Has locations)
@@ -92,7 +92,7 @@ Your wiki content here...
 }}{{#if:{{{Death|}}}|{{#set:Has death={{{Death}}}}}
 }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
 }}{{#arraymap:{{{Enemies|}}}|,|@@|{{#set:Has enemies=@@}}
-}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchise=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
 }}{{#arraymap:{{{Friends|}}}|,|@@|{{#set:Has friends=@@}}
 }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}

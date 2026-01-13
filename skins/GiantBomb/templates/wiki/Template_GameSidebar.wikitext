@@ -16,7 +16,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 * <code>Has publishers</code> - Publisher company links
 * <code>Has genres</code> - Genre links
 * <code>Has themes</code> - Theme links
-* <code>Has franchise</code> - Franchise link
+* <code>Has franchises</code> - Franchise link
 * <code>Has aliases</code> - Alternative names
 * <code>Has characters</code> - Character links
 * <code>Has locations</code> - Location links
@@ -56,7 +56,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 <dd>{{#show:{{FULLPAGENAME}}|?Has themes|format=list|link=all|sep=<br/>|limit=20}}</dd>
 
 {{#show:{{FULLPAGENAME}}
-  |?Has franchise
+  |?Has franchises
   |format=list
   |link=all
   |default=
