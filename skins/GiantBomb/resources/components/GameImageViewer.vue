@@ -1,7 +1,7 @@
 <template>
   <div class="game-image-viewer">
     <div class="game-image-container" @click="toggleFullscreen">
-      <img :src="imageUrl" :alt="altText" class="game-image" />
+      <img :src="imageUrl" :alt="altText" class="game-image" loading="lazy" decoding="async" />
       <div class="game-image-overlay">
         <span class="game-image-icon">🔍</span>
         <span class="game-image-hint">Click to view full size</span>

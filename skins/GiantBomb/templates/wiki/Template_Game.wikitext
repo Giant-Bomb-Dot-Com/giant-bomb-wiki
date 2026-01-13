@@ -11,7 +11,7 @@
 ||| Characters (property=Has characters)
 ||| Concepts (property=Has concepts)
 ||| Developers (property=Has developers)
-||| Franchises (property=Has franchise)
+||| Franchises (property=Has franchises)
 ||| Games (property=Has similar games)
 ||| Genres (property=Has genres)
 ||| Locations (property=Has locations)
@@ -104,7 +104,7 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
 }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
 }}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}
-}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchise=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
 }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has similar games=@@}}
 }}{{#arraymap:{{{Genres|}}}|,|@@|{{#set:Has genres=@@}}
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}

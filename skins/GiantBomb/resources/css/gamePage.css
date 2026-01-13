@@ -31,8 +31,21 @@
 .game-hero__cover {
   flex-shrink: 0;
   width: 200px;
+  /* Reserve space for cover image to prevent CLS */
+  aspect-ratio: 3/4;
+  min-height: 267px;
+  /* Fallback for browsers without aspect-ratio */
   border-radius: 4px;
   overflow: hidden;
+  background: #2a2a2a;
+  /* Placeholder color while loading */
+}
+
+/* Skeleton loading state for Vue components */
+.game-hero__cover [data-vue-component] {
+  width: 100%;
+  height: 100%;
+  min-height: 267px;
 }
 
 .game-hero__cover .game-image-viewer {
