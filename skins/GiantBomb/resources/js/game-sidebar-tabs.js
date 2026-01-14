@@ -199,12 +199,31 @@
     }
   };
 
+  /**
+   * Make the games count in sidebar clickable to scroll to Games section
+   */
+  const initGamesLink = () => {
+    const gamesLink = document.querySelector('.gb-games-link');
+    if (!gamesLink) return;
+
+    const targetId = gamesLink.dataset.target;
+    if (!targetId) return;
+
+    const targetSection = document.getElementById(targetId);
+    if (!targetSection) return;
+
+    gamesLink.addEventListener('click', () => {
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  };
+
   const init = () => {
     initHeroImages();
     stripPrefixesFromLinks();
     initSidebarTabs();
     initAccordions();
     initFranchiseGamesTab();
+    initGamesLink();
   };
 
   if (document.readyState === "loading") {

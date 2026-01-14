@@ -637,3 +637,14 @@
     font-size: 0.9rem;
   }
 }
+
+/* Games link in sidebar */
+.gb-games-link {
+  color: #f26522;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.gb-games-link:hover {
+  color: #ff8844;
+}
