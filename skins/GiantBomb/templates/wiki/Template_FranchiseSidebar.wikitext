@@ -27,9 +27,10 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
 <dt>Appears in</dt>
-<dd><span class="gb-games-link" data-target="Games">{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+<dd>{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
   |format=count
-}} games</span></dd>
+}} games</dd>
+<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</dd>
 
 {{#ask: [[Has franchises::{{FULLPAGENAME}}]]
   |?Has name=name
