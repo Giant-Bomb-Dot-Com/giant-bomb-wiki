@@ -27,11 +27,11 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
 <dt>Appears in</dt>
-<dd>{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+<dd>{{#ask: [[Has franchise::{{FULLPAGENAME}}]] OR [[Has franchises::{{FULLPAGENAME}}]] OR [[Has franchise::~*{{#replace:{{SUBPAGENAME}}|_| }}*]] OR [[Has franchises::~*{{#replace:{{SUBPAGENAME}}|_| }}*]]
   |format=count
 }} games</dd>
 
-{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+{{#ask: [[Has franchise::{{FULLPAGENAME}}]] OR [[Has franchises::{{FULLPAGENAME}}]] OR [[Has franchise::~*{{#replace:{{SUBPAGENAME}}|_| }}*]] OR [[Has franchises::~*{{#replace:{{SUBPAGENAME}}|_| }}*]]
   |?Has name=name
   |format=template
   |template=FranchiseFirstGame
