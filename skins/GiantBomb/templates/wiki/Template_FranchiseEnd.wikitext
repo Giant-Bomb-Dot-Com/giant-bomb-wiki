@@ -23,7 +23,7 @@ Wiki content here...
 <span class="gb-franchise-games-tab gb-franchise-games-tab--active">Games</span>
 </div>
 <div class="gb-franchise-games-list">
-{{#ask: [[Has franchise::{{FULLPAGENAME}}]] OR [[Has franchises::{{FULLPAGENAME}}]] OR [[Has franchise::~*{{#replace:{{SUBPAGENAME}}|_| }}*]] OR [[Has franchises::~*{{#replace:{{SUBPAGENAME}}|_| }}*]]
+{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
   |?Has name=name
   |?Has release date=date
   |?Has platforms=platforms
