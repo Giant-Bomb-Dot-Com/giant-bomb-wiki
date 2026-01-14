@@ -89,8 +89,8 @@ try {
 }
 
 $metaTitle = $conceptData['name'] !== ''
-	? $conceptData['name'] . ' concept - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $conceptData['name'] . ' (Concept) - Giant Bomb Video Game Wiki'
+	: 'Giant Bomb Video Game Wiki';
 $metaDescription = PageHelper::sanitizeMetaText( $conceptData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $conceptData['description'] ?? '' );

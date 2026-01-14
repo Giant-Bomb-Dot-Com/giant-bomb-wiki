@@ -207,7 +207,7 @@ static $gameMetaApplied = false;
 if ( !$gameMetaApplied ) {
 	$gameMetaApplied = true;
 	$out = $this->getSkin()->getOutput();
-	$metaTitle = $gameData['name'] !== '' ? $gameData['name'] . ' - Giant Bomb Wiki' : 'Giant Bomb Wiki';
+	$metaTitle = $gameData['name'] !== '' ? $gameData['name'] . ' (Game) - Giant Bomb Video Game Wiki' : 'Giant Bomb Video Game Wiki';
 	$metaDescription = PageHelper::sanitizeMetaText( $gameData['deck'] ?? '' );
 	if ( $metaDescription === '' ) {
 		$metaDescription = PageHelper::sanitizeMetaText( $gameData['description'] ?? '' );

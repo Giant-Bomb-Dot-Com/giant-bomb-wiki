@@ -173,7 +173,26 @@ $wgResourceLoaderMaxage = [
     'versioned' => 30 * 24 * 60 * 60,
     'unversioned' => 5 * 60,
 ];
-$wgResourceLoaderUniqueVersion = '20260112-v1';
+
+# In dev, use timestamp-based version to auto-bust cache on container restart
+# In prod, use a static version string that gets updated on deploys
+if ( $wikiEnv === 'dev' ) {
+    # Generate version from container start time (cached in APCu for consistency within session)
+    if ( function_exists( 'apcu_fetch' ) ) {
+        $devCacheVersion = apcu_fetch('dev_cache_version');
+        if ( $devCacheVersion === false ) {
+            $devCacheVersion = date('YmdHis');
+            apcu_store('dev_cache_version', $devCacheVersion, 86400);
+        }
+    } else {
+        # Fallback if APCu not available - use current date (changes daily)
+        $devCacheVersion = date('Ymd');
+    }
+    $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
+} else {
+    $wgResourceLoaderUniqueVersion = '20260112-v1';
+}
+
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
@@ -358,6 +377,15 @@ if ( $wikiEnv === 'dev' ) {
     error_reporting( -1 );
     ini_set( 'display_errors', 1 );
     $smwgIgnoreUpgradeKeyCheck = true;
+    
+    # Disable/reduce caching in dev for faster iteration
+    $wgParserCacheExpireTime = 0;  # Disable parser cache
+    $wgEnableSidebarCache = false;
+    $wgResourceLoaderMaxage = [
+        'versioned' => 0,
+        'unversioned' => 0,
+    ];
+    $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
 
 # SMW query limits

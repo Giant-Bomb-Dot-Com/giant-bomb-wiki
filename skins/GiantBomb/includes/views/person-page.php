@@ -133,8 +133,8 @@ $personData['stats'] = $stats;
 $personData['hasStats'] = !empty( $stats );
 
 $metaTitle = $personData['name'] !== ''
-	? $personData['name'] . ' - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $personData['name'] . ' (Person) - Giant Bomb Video Game Wiki'
+	: 'Giant Bomb Video Game Wiki';
 $metaDescription = PageHelper::sanitizeMetaText( $personData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $personData['description'] ?? '' );

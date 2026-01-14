@@ -11,4 +11,10 @@ if [ -f /var/.installed ] && [ -f /config/LocalSettings.php ] && [ ! -f /var/www
     echo "Copied /config/LocalSettings.php to /var/www/html/"
 fi
 
+# Run dev startup script if in dev mode and script exists
+if [ "$MV_ENV" = "dev" ] && [ -f /docker/dev-startup.sh ]; then
+    echo "Running dev startup script..."
+    /bin/bash /docker/dev-startup.sh &
+fi
+
 exec apache2-foreground

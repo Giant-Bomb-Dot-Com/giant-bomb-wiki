@@ -18,12 +18,12 @@ Wiki content here...
 </pre>
 </noinclude><includeonly>
 </div>
-<div class="gb-franchise-games-section">
+<div id="Games" class="gb-franchise-games-section">
 <div class="gb-franchise-games-header">
 <span class="gb-franchise-games-tab gb-franchise-games-tab--active">Games</span>
 </div>
 <div class="gb-franchise-games-list">
-{{#ask: [[Has franchise::{{FULLPAGENAME}}]]
+{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
   |?Has name=name
   |?Has release date=date
   |?Has platforms=platforms
