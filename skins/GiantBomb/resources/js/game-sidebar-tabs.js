@@ -144,6 +144,39 @@
     }
   };
 
+  /**
+   * Add Games tab to franchise pages
+   * MediaWiki strips anchor-only links from wikitext, so we add this via JS
+   */
+  const initFranchiseGamesTab = () => {
+    const tabsNav = document.querySelector('.gb-franchise-tabs-nav');
+    if (!tabsNav) return;
+
+    const gamesSection = document.getElementById('Games');
+    if (!gamesSection) return;
+
+    // Check if Games tab already exists
+    if (tabsNav.querySelector('a[href="#Games"]')) return;
+
+    // Find the Images tab to insert before it
+    const imagesTab = Array.from(tabsNav.querySelectorAll('.gb-franchise-tabs-tab'))
+      .find(tab => tab.textContent.includes('Images') || tab.querySelector('a[href*="/Images"]'));
+
+    if (imagesTab) {
+      const gamesTab = document.createElement('span');
+      gamesTab.className = 'gb-franchise-tabs-tab';
+      const gamesLink = document.createElement('a');
+      gamesLink.href = '#Games';
+      gamesLink.textContent = 'Games';
+      gamesLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        gamesSection.scrollIntoView({ behavior: 'smooth' });
+      });
+      gamesTab.appendChild(gamesLink);
+      tabsNav.insertBefore(gamesTab, imagesTab);
+    }
+  };
+
   const initAccordions = () => {
     const isMobile = window.innerWidth <= 900;
 
@@ -171,6 +204,7 @@
     stripPrefixesFromLinks();
     initSidebarTabs();
     initAccordions();
+    initFranchiseGamesTab();
   };
 
   if (document.readyState === "loading") {

@@ -60,7 +60,7 @@ SMW properties set by `{{Game}}`:
 
 - `Has name`, `Has guid`, `Has deck`, `Has release date`
 - `Has platforms`, `Has developers`, `Has publishers` (multi-value)
-- `Has genres`, `Has themes`, `Has franchise` (multi-value)
+- `Has genres`, `Has themes`, `Has franchises` (multi-value)
 - `Has characters`, `Has concepts`, `Has locations`, `Has objects` (multi-value)
 
 Values use wiki page paths (e.g., `Companies/id_Software`) which link to their respective pages.

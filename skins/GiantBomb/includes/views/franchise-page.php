@@ -88,8 +88,8 @@ try {
 }
 
 $metaTitle = $franchiseData['name'] !== ''
-	? $franchiseData['name'] . ' franchise - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $franchiseData['name'] . ' (Franchise) - Giant Bomb Video Game Wiki'
+	: 'Giant Bomb Video Game Wiki';
 $metaDescription = PageHelper::sanitizeMetaText( $franchiseData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $franchiseData['description'] ?? '' );

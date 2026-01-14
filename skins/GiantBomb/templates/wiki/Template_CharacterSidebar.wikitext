@@ -14,7 +14,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 * <code>Has gender</code> - Gender
 * <code>Has birthday</code> - Birth date
 * <code>Has death</code> - Death date
-* <code>Has franchise</code> - Franchise links
+* <code>Has franchises</code> - Franchise links
 * <code>Has aliases</code> - Alternative names
 * <code>Has games</code> - Game appearances
 * <code>Has friends</code> - Allied characters
@@ -66,7 +66,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 }}
 
 {{#show:{{FULLPAGENAME}}
-  |?Has franchise
+  |?Has franchises
   |format=list
   |link=all
   |default=

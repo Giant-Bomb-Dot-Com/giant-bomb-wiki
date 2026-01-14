@@ -89,7 +89,7 @@ Your wiki content here...
 <div class="gb-franchise-tabs">
 <div class="gb-franchise-tabs-container">
 <div class="gb-franchise-tabs-nav">
-<span class="gb-franchise-tabs-tab gb-franchise-tabs-tab--active">Franchise</span>
+<span class="gb-franchise-tabs-tab gb-franchise-tabs-tab--active">Franchise Wiki</span>
 <span class="gb-franchise-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
 <span class="gb-franchise-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
 </div>

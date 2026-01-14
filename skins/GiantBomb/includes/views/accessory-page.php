@@ -120,8 +120,8 @@ $accessoryData['stats'] = $stats;
 $accessoryData['hasStats'] = !empty( $stats );
 
 $metaTitle = $accessoryData['name'] !== ''
-	? $accessoryData['name'] . ' accessory - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $accessoryData['name'] . ' (Accessory) - Giant Bomb Video Game Wiki'
+	: 'Giant Bomb Video Game Wiki';
 $metaDescription = PageHelper::sanitizeMetaText( $accessoryData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $accessoryData['description'] ?? '' );
