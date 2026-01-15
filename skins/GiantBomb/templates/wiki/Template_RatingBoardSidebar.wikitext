@@ -1,0 +1,42 @@
+<noinclude>
+==Documentation==
+Renders the rating board page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{RatingBoardEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Rating Board details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-ratingboard-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+<dt>Ratings</dt>
+<dd>{{#ask: [[Has rating board::{{FULLPAGENAME}}]] [[Category:Game Ratings]]
+  |format=count
+}}</dd>
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Ratings</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has rating board::{{FULLPAGENAME}}]] [[Category:Game Ratings]]
+  |?Has name
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

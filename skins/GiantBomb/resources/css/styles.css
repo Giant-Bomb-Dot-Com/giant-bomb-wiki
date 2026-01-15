@@ -346,3 +346,16 @@ a:visited {
 .gb-sidebar-accordions {
   min-height: 200px;
 }
+
+/* ============================================
+   SEO STRUCTURED DATA
+   ============================================ */
+
+/* Visually hidden but crawler-accessible for Schema.org FAQ markup */
+.gb-seo-faq {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

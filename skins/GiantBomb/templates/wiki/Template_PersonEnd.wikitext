@@ -1,0 +1,18 @@
+<noinclude>
+==Documentation==
+Closes the person page layout and renders the sidebar.
+Place this at the end of person page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Person
+| Name = Example Person
+| Deck = Short description...
+}}
+
+== Overview ==
+Wiki content here...
+
+{{PersonEnd}}
+</pre>
+</noinclude><includeonly></div></div><div class="gb-person-sidebar">{{PersonSidebar}}</div></div></div></includeonly>

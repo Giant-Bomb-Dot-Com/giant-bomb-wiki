@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the object page layout and renders the sidebar.
+Place this at the end of object page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-object-sidebar">{{ObjectSidebar}}</div></div></div></includeonly>

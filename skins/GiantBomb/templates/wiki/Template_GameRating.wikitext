@@ -1,0 +1,85 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| RatingBoard (property=Has rating board)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a game rating page layout.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Game Ratings are specific age/content ratings issued by rating boards (e.g., M - Mature, E - Everyone, T - Teen).
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the rating (e.g., "M - Mature")
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| RatingBoard || The rating board that issues this rating (e.g., ESRB)
+|-
+|| Image || Rating image/badge
+|-
+|| Deck || Short description
+|}
+
+===Usage===
+<pre>
+{{GameRating
+| Name = M - Mature
+| Guid = 3065-5
+| RatingBoard = RatingBoards/ESRB
+| Deck = Content suitable for ages 17 and up...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{GameRatingEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{RatingBoard|}}}|{{#set:Has rating board={{{RatingBoard}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Game Rating) - Giant Bomb Video Game Wiki}}[[Category:Game Ratings|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-gamerating-page" itemscope itemtype="https://schema.org/Rating">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Rating" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What does {{{Name|}}} rating mean?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game content rating. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What age is {{{Name|}}} rated for?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a rating from {{{RatingBoard|}}}. {{{Deck|}}}" /></div></div></div>
+<div class="gb-gamerating-hero">
+<div class="gb-gamerating-hero-container">
+<div class="gb-gamerating-hero-cover"></div>
+<div class="gb-gamerating-hero-info">
+<div class="gb-gamerating-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-gamerating-hero-meta"><span class="gb-gamerating-hero-type">GAME RATING</span>{{#if:{{{RatingBoard|}}}|<span class="gb-gamerating-hero-board">by [[{{{RatingBoard}}}]]</span>|}}</div>
+<div class="gb-gamerating-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-gamerating-tabs">
+<div class="gb-gamerating-tabs-container">
+<div class="gb-gamerating-tabs-nav">
+<span class="gb-gamerating-tabs-tab gb-gamerating-tabs-tab--active">Game Rating</span>
+<span class="gb-gamerating-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-gamerating-content">
+<div class="gb-gamerating-main">
+<div class="gb-gamerating-wiki-content">
+</includeonly>

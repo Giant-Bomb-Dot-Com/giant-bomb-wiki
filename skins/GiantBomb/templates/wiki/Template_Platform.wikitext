@@ -1,0 +1,116 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| ShortName (property=Has short name)
+||||| ReleaseDate (property=Has release date)
+||||| InstallBase (property=Has install base)
+||||| OnlineSupport (property=Has online support)
+||||| OriginalPrice (property=Has original price)
+||||| Manufacturer (property=Has manufacturer)
+}}
+==Documentation==
+This template creates a full platform page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Platforms are gaming hardware systems - consoles, handhelds, computers, and other devices that run games.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the platform
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Platform image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| ShortName || Abbreviation (e.g., PS5, XSX, NSW)
+|-
+|| ReleaseDate || Platform release date
+|-
+|| InstallBase || Number of units sold
+|-
+|| OnlineSupport || Online service name (e.g., PlayStation Network)
+|-
+|| OriginalPrice || Launch price
+|-
+|| Manufacturer || Company that made the platform (page link)
+|}
+
+===Usage===
+<pre>
+{{Platform
+| Name = PlayStation 5
+| Guid = 3045-176
+| Deck = Sony's ninth-generation home console...
+| ShortName = PS5
+| ReleaseDate = 2020-11-12
+| InstallBase = 50 million
+| OnlineSupport = PlayStation Network
+| OriginalPrice = $499
+| Manufacturer = Companies/Sony
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{PlatformEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{ShortName|}}}|{{#set:Has short name={{{ShortName}}}}}
+}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
+}}{{#if:{{{InstallBase|}}}|{{#set:Has install base={{{InstallBase}}}}}
+}}{{#if:{{{OnlineSupport|}}}|{{#set:Has online support={{{OnlineSupport}}}}}
+}}{{#if:{{{OriginalPrice|}}}|{{#set:Has original price={{{OriginalPrice}}}}}
+}}{{#if:{{{Manufacturer|}}}|{{#set:Has manufacturer={{{Manufacturer}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Platform) - Giant Bomb Video Game Wiki}}[[Category:Platforms|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-platform-page" itemscope itemtype="https://schema.org/Product">
+<meta itemprop="name" content="{{{Name|}}}" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+{{#if:{{{ReleaseDate|}}}|<meta itemprop="releaseDate" content="{{{ReleaseDate}}}" />|}}
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} is a video game platform. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did the {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are on {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} has a library of video games available to play." /></div></div></div>
+<div class="gb-platform-hero">
+<div class="gb-platform-hero-container">
+<div class="gb-platform-hero-cover"></div>
+<div class="gb-platform-hero-info">
+<div class="gb-platform-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-platform-hero-meta"><span class="gb-platform-hero-type">PLATFORM</span>{{#if:{{{ShortName|}}}| &#187; {{{ShortName}}}|}}{{#if:{{{ReleaseDate|}}}| &#187; {{{ReleaseDate}}}|}}</div>
+<div class="gb-platform-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-platform-tabs">
+<div class="gb-platform-tabs-container">
+<div class="gb-platform-tabs-nav">
+<span class="gb-platform-tabs-tab gb-platform-tabs-tab--active">Platform</span>
+<span class="gb-platform-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-platform-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-platform-content">
+<div class="gb-platform-main">
+<div class="gb-platform-wiki-content">
+</includeonly>

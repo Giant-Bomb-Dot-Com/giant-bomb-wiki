@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the genre page layout and renders the sidebar.
+Place this at the end of genre page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-genre-sidebar">{{GenreSidebar}}</div></div></div></includeonly>

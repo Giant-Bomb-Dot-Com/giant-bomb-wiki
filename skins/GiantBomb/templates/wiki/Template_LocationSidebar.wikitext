@@ -1,0 +1,115 @@
+<noinclude>
+==Documentation==
+Renders the location page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{LocationEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Location details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-location-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+<dt>Appears in</dt>
+<dd>{{#ask: [[Has locations::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=count
+}} games</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has locations::{{FULLPAGENAME}}]] [[Category:Games]]
+  |?Has name
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Characters</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has characters
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has concepts
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Objects</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has objects
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Related Locations</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has related locations
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

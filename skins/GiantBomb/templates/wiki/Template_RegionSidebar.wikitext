@@ -1,0 +1,31 @@
+<noinclude>
+==Documentation==
+Renders the region page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{RegionEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Region details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-region-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has abbreviation
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Abbreviation</dt><dd>
+  |outro=</dd>
+}}
+
+<dt>Releases</dt>
+<dd>{{#ask: [[Has region::{{FULLPAGENAME}}]] [[Category:Releases]]
+  |format=count
+}}</dd>
+
+</dl>
+</div>
+</div>
+</includeonly>

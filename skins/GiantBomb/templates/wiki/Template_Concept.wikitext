@@ -1,0 +1,129 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Characters (property=Has characters)
+||||| Concepts (property=Has related concepts)
+||||| Franchises (property=Has franchises)
+||||| Games (property=Has games)
+||||| Locations (property=Has locations)
+||||| Objects (property=Has objects)
+||||| People (property=Has people)
+}}
+==Documentation==
+This template creates a full concept page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+The page structure follows the classic Giant Bomb wiki design:
+* Hero section with image, title, and deck
+* Tab navigation for sub-pages
+* Two-column layout with wiki content on left and concept details sidebar on right
+
+Concepts are wiki-wide topics that span multiple games, such as "Open World", "Boss Battle", 
+"Microtransactions", or "Quick Time Events".
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the concept
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Concept image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Games || Games featuring this concept (comma-separated)
+|-
+|| Characters || Characters associated with this concept (comma-separated)
+|-
+|| Concepts || Related/similar concepts (comma-separated)
+|-
+|| Franchises || Franchises featuring this concept (comma-separated)
+|-
+|| Locations || Locations associated with this concept (comma-separated)
+|-
+|| Objects || Objects associated with this concept (comma-separated)
+|-
+|| People || People associated with this concept (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Concept
+| Name = Open World
+| Guid = 3015-812
+| Deck = A game design approach featuring large, explorable environments...
+| Games = Games/The_Elder_Scrolls_V:_Skyrim, Games/Grand_Theft_Auto_V
+| Franchises = Franchises/The_Elder_Scrolls, Franchises/Grand_Theft_Auto
+| Concepts = Concepts/Sandbox, Concepts/Non-Linear_Gameplay
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{ConceptEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+====================
+Store all template parameters as semantic properties.
+Single-value properties use #set directly.
+Multi-value properties (comma-separated) use #arraymap.
+
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has related concepts=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
+}}<!--
+
+Page Setup
+==========
+-->{{DISPLAYTITLE:{{{Name|}}} (Concept) - Giant Bomb Video Game Wiki}}[[Category:Concepts|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+==============
+--><div class="gb-concept-page" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Concept" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}} in video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game concept or mechanic. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games have {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="Many video games feature {{{Name|}}} as a gameplay element or theme." /></div></div></div>
+<div class="gb-concept-hero">
+<div class="gb-concept-hero-container">
+<div class="gb-concept-hero-cover"></div>
+<div class="gb-concept-hero-info">
+<div class="gb-concept-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-concept-hero-meta"><span class="gb-concept-hero-type">CONCEPT</span></div>
+<div class="gb-concept-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-concept-tabs">
+<div class="gb-concept-tabs-container">
+<div class="gb-concept-tabs-nav">
+<span class="gb-concept-tabs-tab gb-concept-tabs-tab--active">Concept</span>
+<span class="gb-concept-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-concept-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-concept-content">
+<div class="gb-concept-main">
+<div class="gb-concept-wiki-content">
+</includeonly>

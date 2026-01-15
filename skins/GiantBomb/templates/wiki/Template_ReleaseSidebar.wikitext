@@ -1,0 +1,116 @@
+<noinclude>
+==Documentation==
+Renders the release page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{ReleaseEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Release details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-release-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has game
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Game</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has platform
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Platform</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has region
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Region</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has release date
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Release Date</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has rating
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Rating</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has developers
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Developer(s)</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has publishers
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Publisher(s)</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has minimum players
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Min Players</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has maximum players
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Max Players</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has product code
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Product Code</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has widescreen support
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Widescreen</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+</includeonly>

@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the accessory page layout and renders the sidebar.
+Place this at the end of accessory page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-accessory-sidebar">{{AccessorySidebar}}</div></div></div></includeonly>

@@ -1,0 +1,34 @@
+<noinclude>
+==Documentation==
+Closes the company page layout and renders the sidebar.
+
+Place this at the end of company page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Company
+| Name = Example Company
+| Deck = Short description...
+| City = San Francisco
+| Country = USA
+...
+}}
+
+== Overview ==
+Wiki content here...
+
+== History ==
+More content...
+
+{{CompanyEnd}}
+</pre>
+
+===Structure===
+This template closes the following divs opened by <code><nowiki>{{Company}}</nowiki></code>:
+* <code>.gb-company-wiki-content</code>
+* <code>.gb-company-main</code>
+
+Then renders the sidebar via <code><nowiki>{{CompanySidebar}}</nowiki></code> and closes:
+* <code>.gb-company-content</code>
+* <code>.gb-company-page</code>
+</noinclude><includeonly></div></div><div class="gb-company-sidebar">{{CompanySidebar}}</div></div></div></includeonly>
