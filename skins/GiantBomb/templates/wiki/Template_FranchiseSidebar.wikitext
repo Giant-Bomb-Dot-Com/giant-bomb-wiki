@@ -26,20 +26,22 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <dt>Name</dt>
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
-<dt>Appears in</dt>
-<dd>{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+<dt>Features</dt>
+<dd>{{#ask: [[Has franchises::{{FULLPAGENAME}}]] [[Category:Games]]
   |format=count
 }} games</dd>
 <dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</dd>
 
-{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+{{#ask: [[Has franchises::{{FULLPAGENAME}}]] [[Category:Games]]
   |?Has name=name
   |format=template
   |template=FranchiseFirstGame
-  |link=all
+  |named args=yes
+  |link=none
   |limit=1
   |sort=Has release date
   |order=asc
+  |searchlabel=
   |default=
 }}
 

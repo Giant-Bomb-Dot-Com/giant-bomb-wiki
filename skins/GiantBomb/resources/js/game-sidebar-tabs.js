@@ -99,7 +99,7 @@
       link.textContent = text.replace(/_/g, " ");
     }
 
-    for (const span of document.querySelectorAll(".gb-game-hero-platform")) {
+    for (const span of document.querySelectorAll(".gb-game-hero-platform, .gb-franchise-game-platform")) {
       let text = span.textContent;
       for (const prefix of prefixes) {
         if (text.startsWith(prefix)) {

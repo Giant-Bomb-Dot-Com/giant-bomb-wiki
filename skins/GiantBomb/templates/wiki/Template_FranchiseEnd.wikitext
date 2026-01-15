@@ -23,15 +23,16 @@ Wiki content here...
 <span class="gb-franchise-games-tab gb-franchise-games-tab--active">Games</span>
 </div>
 <div class="gb-franchise-games-list">
-{{#ask: [[Has franchises::{{FULLPAGENAME}}]]
+{{#ask: [[Has franchises::{{FULLPAGENAME}}]] [[Category:Games]]
   |?Has name=name
   |?Has release date=date
   |?Has platforms=platforms
   |?Has image=image
   |format=template
   |template=FranchiseGameItem
+  |named args=yes
   |link=none
-  |limit=50
+  |limit=500
   |sort=Has release date
   |order=asc
   |default=<div class="gb-franchise-game-item gb-franchise-game-item--empty"><em>No games found in this franchise</em></div>

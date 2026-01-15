@@ -648,3 +648,13 @@
 .gb-games-link:hover {
   color: #ff8844;
 }
+
+/* ============================================
+   HIDE FOOTER ELEMENTS
+   Hide "Retrieved from" URL and Category links on Franchise pages
+   ============================================ */
+
+body.rootpage-Franchises #catlinks,
+body.rootpage-Franchises .printfooter {
+  display: none !important;
+}
