@@ -51,7 +51,11 @@ class GiantBombTemplate extends BaseTemplate {
         $isGamePage = $useCustomGamePage && 
                       strpos($pageTitle, 'Games/') === 0 &&
                       substr_count($pageTitle, '/') === 1;
-        $isPlatformPage = strpos($pageTitle, 'Platforms/') === 0 &&
+        // Platform pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomPlatformPage = true to revert to custom PHP rendering
+        $useCustomPlatformPage = false;
+        $isPlatformPage = $useCustomPlatformPage &&
+                          strpos($pageTitle, 'Platforms/') === 0 &&
                           substr_count($pageTitle, '/') === 1;
         // Character pages now render via MediaWiki templates (the "MediaWiki way")
         // Set $useCustomCharacterPage = true to revert to custom PHP rendering
@@ -59,9 +63,17 @@ class GiantBombTemplate extends BaseTemplate {
         $isCharacterPage = $useCustomCharacterPage &&
                            strpos($pageTitle, 'Characters/') === 0 &&
                            substr_count($pageTitle, '/') === 1;
-        $isConceptPage = strpos($pageTitle, 'Concepts/') === 0 &&
+        // Concept pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomConceptPage = true to revert to custom PHP rendering
+        $useCustomConceptPage = false;
+        $isConceptPage = $useCustomConceptPage &&
+                         strpos($pageTitle, 'Concepts/') === 0 &&
                          substr_count($pageTitle, '/') === 1;
-        $isCompanyPage = strpos($pageTitle, 'Companies/') === 0 &&
+        // Company pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomCompanyPage = true to revert to custom PHP rendering
+        $useCustomCompanyPage = false;
+        $isCompanyPage = $useCustomCompanyPage &&
+                         strpos($pageTitle, 'Companies/') === 0 &&
                          substr_count($pageTitle, '/') === 1;
         // Franchise pages now render via MediaWiki templates (the "MediaWiki way")
         // Set $useCustomFranchisePage = true to revert to custom PHP rendering
@@ -69,13 +81,29 @@ class GiantBombTemplate extends BaseTemplate {
         $isFranchisePage = $useCustomFranchisePage &&
                            strpos($pageTitle, 'Franchises/') === 0 &&
                            substr_count($pageTitle, '/') === 1;
-        $isPersonPage = strpos($pageTitle, 'People/') === 0 &&
+        // Person pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomPersonPage = true to revert to custom PHP rendering
+        $useCustomPersonPage = false;
+        $isPersonPage = $useCustomPersonPage &&
+                        strpos($pageTitle, 'People/') === 0 &&
                         substr_count($pageTitle, '/') === 1;
-        $isObjectPage = strpos($pageTitle, 'Objects/') === 0 &&
+        // Object pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomObjectPage = true to revert to custom PHP rendering
+        $useCustomObjectPage = false;
+        $isObjectPage = $useCustomObjectPage &&
+                        strpos($pageTitle, 'Objects/') === 0 &&
                         substr_count($pageTitle, '/') === 1;
-        $isLocationPage = strpos($pageTitle, 'Locations/') === 0 &&
+        // Location pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomLocationPage = true to revert to custom PHP rendering
+        $useCustomLocationPage = false;
+        $isLocationPage = $useCustomLocationPage &&
+                          strpos($pageTitle, 'Locations/') === 0 &&
                           substr_count($pageTitle, '/') === 1;
-        $isAccessoryPage = strpos($pageTitle, 'Accessories/') === 0 &&
+        // Accessory pages now render via MediaWiki templates (the "MediaWiki way")
+        // Set $useCustomAccessoryPage = true to revert to custom PHP rendering
+        $useCustomAccessoryPage = false;
+        $isAccessoryPage = $useCustomAccessoryPage &&
+                           strpos($pageTitle, 'Accessories/') === 0 &&
                            substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
@@ -172,20 +200,44 @@ class GiantBombTemplate extends BaseTemplate {
             // Show normal wiki content for other pages
             // This includes game pages when rendered via templates (MediaWiki way)
             
-            // Check if this is a template-rendered game, character, or franchise page
+            // Check if this is a template-rendered content page (the "MediaWiki way")
             $isTemplateGamePage = strpos($pageTitle, 'Games/') === 0 &&
                                   substr_count($pageTitle, '/') === 1;
             $isTemplateCharacterPage = strpos($pageTitle, 'Characters/') === 0 &&
                                        substr_count($pageTitle, '/') === 1;
             $isTemplateFranchisePage = strpos($pageTitle, 'Franchises/') === 0 &&
                                        substr_count($pageTitle, '/') === 1;
-            $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage || $isTemplateFranchisePage;
+            $isTemplatePlatformPage = strpos($pageTitle, 'Platforms/') === 0 &&
+                                      substr_count($pageTitle, '/') === 1;
+            $isTemplateConceptPage = strpos($pageTitle, 'Concepts/') === 0 &&
+                                     substr_count($pageTitle, '/') === 1;
+            $isTemplateCompanyPage = strpos($pageTitle, 'Companies/') === 0 &&
+                                     substr_count($pageTitle, '/') === 1;
+            $isTemplatePersonPage = strpos($pageTitle, 'People/') === 0 &&
+                                    substr_count($pageTitle, '/') === 1;
+            $isTemplateObjectPage = strpos($pageTitle, 'Objects/') === 0 &&
+                                    substr_count($pageTitle, '/') === 1;
+            $isTemplateLocationPage = strpos($pageTitle, 'Locations/') === 0 &&
+                                      substr_count($pageTitle, '/') === 1;
+            $isTemplateAccessoryPage = strpos($pageTitle, 'Accessories/') === 0 &&
+                                       substr_count($pageTitle, '/') === 1;
+            $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage || $isTemplateFranchisePage ||
+                                     $isTemplatePlatformPage || $isTemplateConceptPage || $isTemplateCompanyPage ||
+                                     $isTemplatePersonPage || $isTemplateObjectPage || $isTemplateLocationPage ||
+                                     $isTemplateAccessoryPage;
             
             $contentClasses = ['mw-body'];
             if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
             if ($isTemplateGamePage) $contentClasses[] = 'wiki-game-page';
             if ($isTemplateCharacterPage) $contentClasses[] = 'wiki-character-page';
             if ($isTemplateFranchisePage) $contentClasses[] = 'wiki-franchise-page';
+            if ($isTemplatePlatformPage) $contentClasses[] = 'wiki-platform-page';
+            if ($isTemplateConceptPage) $contentClasses[] = 'wiki-concept-page';
+            if ($isTemplateCompanyPage) $contentClasses[] = 'wiki-company-page';
+            if ($isTemplatePersonPage) $contentClasses[] = 'wiki-person-page';
+            if ($isTemplateObjectPage) $contentClasses[] = 'wiki-object-page';
+            if ($isTemplateLocationPage) $contentClasses[] = 'wiki-location-page';
+            if ($isTemplateAccessoryPage) $contentClasses[] = 'wiki-accessory-page';
 ?>
         <div class="page-wrapper">
             <?php include __DIR__ . '/partials/header.php'; ?>

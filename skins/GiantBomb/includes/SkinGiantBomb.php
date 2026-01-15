@@ -92,7 +92,7 @@ class SkinGiantBomb extends SkinTemplate {
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         
         // Set HTML title
-        $out->setHTMLTitle( $gameName . ' (Game) - Giant Bomb Video Game Wiki' );
+        $out->setHTMLTitle( $gameName . ' (Game) - ' . $GLOBALS['wgSitename'] );
         
         // Build meta description
         $metaDescription = $deck;
@@ -111,10 +111,10 @@ class SkinGiantBomb extends SkinTemplate {
         
         // Add OpenGraph tags
         PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $gameName . ' (Game) - Giant Bomb Video Game Wiki',
+            'og:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
             'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'og:url' => $canonicalUrl,
-            'og:site_name' => 'Giant Bomb Video Game Wiki',
+            'og:site_name' => $GLOBALS['wgSitename'],
             'og:type' => 'video.game',
             'og:locale' => 'en_US',
         ], $metaImage );
@@ -122,7 +122,7 @@ class SkinGiantBomb extends SkinTemplate {
         // Add Twitter Card tags
         PageHelper::addTwitterTags( $out, [
             'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $gameName . ' (Game) - Giant Bomb Video Game Wiki',
+            'twitter:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
             'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'twitter:site' => '@giantbomb',
         ], $metaImage, $gameName );
@@ -280,7 +280,7 @@ class SkinGiantBomb extends SkinTemplate {
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         
         // Set HTML title
-        $out->setHTMLTitle( $characterName . ' (Character) - Giant Bomb Video Game Wiki' );
+        $out->setHTMLTitle( $characterName . ' (Character) - ' . $GLOBALS['wgSitename'] );
         
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
@@ -293,17 +293,17 @@ class SkinGiantBomb extends SkinTemplate {
         $metaImage = self::getPageImage( $title, $store, $subject );
         
         PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $characterName . ' (Character) - Giant Bomb Video Game Wiki',
+            'og:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
             'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'og:url' => $canonicalUrl,
-            'og:site_name' => 'Giant Bomb Video Game Wiki',
+            'og:site_name' => $GLOBALS['wgSitename'],
             'og:type' => 'profile',
             'og:locale' => 'en_US',
         ], $metaImage );
         
         PageHelper::addTwitterTags( $out, [
             'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $characterName . ' (Character) - Giant Bomb Video Game Wiki',
+            'twitter:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
             'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'twitter:site' => '@giantbomb',
         ], $metaImage, $characterName );
@@ -339,7 +339,7 @@ class SkinGiantBomb extends SkinTemplate {
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         
         // Set HTML title
-        $out->setHTMLTitle( $franchiseName . ' (Franchise) - Giant Bomb Video Game Wiki' );
+        $out->setHTMLTitle( $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'] );
         
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
@@ -352,17 +352,17 @@ class SkinGiantBomb extends SkinTemplate {
         $metaImage = self::getPageImage( $title, $store, $subject );
         
         PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $franchiseName . ' (Franchise) - Giant Bomb Video Game Wiki',
+            'og:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
             'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'og:url' => $canonicalUrl,
-            'og:site_name' => 'Giant Bomb Video Game Wiki',
+            'og:site_name' => $GLOBALS['wgSitename'],
             'og:type' => 'website',
             'og:locale' => 'en_US',
         ], $metaImage );
         
         PageHelper::addTwitterTags( $out, [
             'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $franchiseName . ' (Franchise) - Giant Bomb Video Game Wiki',
+            'twitter:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
             'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
             'twitter:site' => '@giantbomb',
         ], $metaImage, $franchiseName );

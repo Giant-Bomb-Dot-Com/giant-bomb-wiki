@@ -116,7 +116,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Person) - Giant Bomb Video Game Wiki}}[[Category:People|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Person)}}[[Category:People|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-person-page" itemscope itemtype="https://schema.org/Person">

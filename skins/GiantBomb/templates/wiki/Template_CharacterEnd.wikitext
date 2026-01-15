@@ -30,4 +30,25 @@ This template closes the following divs opened by <code><nowiki>{{Character}}</n
 Then renders the sidebar via <code><nowiki>{{CharacterSidebar}}</nowiki></code> and closes:
 * <code>.gb-character-content</code>
 * <code>.gb-character-page</code>
-</noinclude><includeonly></div></div><div class="gb-character-sidebar">{{CharacterSidebar}}</div></div></div></includeonly>
+</noinclude><includeonly>
+</div>
+<div id="Games" class="gb-games-section">
+<div class="gb-games-section-header">Games <span class="gb-games-view-all">[{{fullurl:Special:Ask|q=%5B%5BHas+characters%3A%3A{{urlencode:{{FULLPAGENAME}}}}%5D%5D+%5B%5BCategory%3AGames%5D%5D&po=%3FHas+name%3DName%0A%3FHas+release+date%3DRelease&p=mainlabel%3D-2F&sort=Has+name&order=asc&limit=500&offset=0}} view all →]]</span></div>
+<ul class="gb-games-section-list">
+{{#ask: [[Has characters::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=list
+  |link=all
+  |limit=100
+  |default=<li><em>No games found</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |searchlabel=
+}}
+</ul>
+</div>
+</div>
+<div class="gb-character-sidebar">{{CharacterSidebar}}</div>
+</div>
+</div>
+</includeonly>

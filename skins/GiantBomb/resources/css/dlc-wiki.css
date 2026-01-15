@@ -93,3 +93,9 @@
   .gb-dlc-content { padding: 1rem; }
   .gb-dlc-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-DLC .printfooter,
+body.rootpage-DLC #catlinks {
+  display: none !important;
+}

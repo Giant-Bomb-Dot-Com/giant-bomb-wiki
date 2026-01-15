@@ -102,7 +102,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Release) - Giant Bomb Video Game Wiki}}[[Category:Releases|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Release)}}[[Category:Releases|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-release-page" itemscope itemtype="https://schema.org/Product">

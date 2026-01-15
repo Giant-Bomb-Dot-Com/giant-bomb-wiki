@@ -48,7 +48,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Rating Board) - Giant Bomb Video Game Wiki}}[[Category:Rating Boards|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Rating Board)}}[[Category:Rating Boards|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-ratingboard-page" itemscope itemtype="https://schema.org/Organization">

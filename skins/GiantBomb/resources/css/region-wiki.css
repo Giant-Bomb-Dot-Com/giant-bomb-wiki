@@ -92,3 +92,9 @@
   .gb-region-content { padding: 1rem; }
   .gb-region-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Regions .printfooter,
+body.rootpage-Regions #catlinks {
+  display: none !important;
+}

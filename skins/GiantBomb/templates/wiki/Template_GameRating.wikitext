@@ -53,7 +53,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Game Rating) - Giant Bomb Video Game Wiki}}[[Category:Game Ratings|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Game Rating)}}[[Category:Game Ratings|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-gamerating-page" itemscope itemtype="https://schema.org/Rating">

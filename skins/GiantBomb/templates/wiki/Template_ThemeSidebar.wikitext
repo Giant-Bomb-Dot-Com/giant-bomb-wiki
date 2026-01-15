@@ -38,14 +38,16 @@ This template is called automatically by <code><nowiki>{{ThemeEnd}}</nowiki></co
   |?Has name
   |format=list
   |link=all
-  |limit=15
+  |limit=20
   |sort=Has release date
   |order=desc
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |searchlabel=
 }}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
 </ul>
 </div>
 

@@ -82,7 +82,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Platform) - Giant Bomb Video Game Wiki}}[[Category:Platforms|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Platform)}}[[Category:Platforms|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-platform-page" itemscope itemtype="https://schema.org/Product">

@@ -15,5 +15,5 @@ Called by SMW #ask query in FranchiseEnd template.
 <div class="gb-franchise-game-title">[[{{{1}}}|{{{name|{{#titleparts:{{{1}}}|1|2}}}}}]]</div>
 <div class="gb-franchise-game-date">{{{date|}}}</div>
 </div>
-<div class="gb-franchise-game-platforms">{{#arraymap:{{{platforms|}}}|,|@@|<span class="gb-franchise-game-platform">@@</span>|}}</div>
+<div class="gb-franchise-game-platforms">{{#arraymap:{{{platforms|}}}|,|@@|<span class="gb-franchise-game-platform">[[Platforms/@@|@@]]</span>|}}</div>
 </div></includeonly>

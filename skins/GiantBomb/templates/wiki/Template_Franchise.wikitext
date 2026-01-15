@@ -75,7 +75,7 @@ Your wiki content here...
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
-}}{{DISPLAYTITLE:{{{Name|}}} (Franchise) - Giant Bomb Video Game Wiki}}[[Category:Franchises|{{SUBPAGENAME}}]]<div class="gb-franchise-page" itemscope itemtype="https://schema.org/CreativeWorkSeries">
+}}{{DISPLAYTITLE:{{{Name|}}} (Franchise)}}[[Category:Franchises|{{SUBPAGENAME}}]]<div class="gb-franchise-page" itemscope itemtype="https://schema.org/CreativeWorkSeries">
 <meta itemprop="name" content="{{{Name|}}} (Video Game Franchise)" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}} franchise?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game franchise. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are in the {{{Name|}}} series?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} franchise includes multiple video game titles." /></div></div></div>

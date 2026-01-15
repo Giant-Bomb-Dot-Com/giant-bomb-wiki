@@ -63,7 +63,7 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <div class="gb-accordion gb-accordion--open">
 <div class="gb-accordion-header">Characters</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has characters
   |format=list
   |link=all
@@ -72,6 +72,8 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -79,7 +81,7 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Locations</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has locations
   |format=list
   |link=all
@@ -88,6 +90,8 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -95,7 +99,7 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Concepts</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has concepts
   |format=list
   |link=all
@@ -104,6 +108,8 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -111,7 +117,7 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Objects</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has objects
   |format=list
   |link=all
@@ -120,6 +126,8 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -127,7 +135,7 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">People</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has people
   |format=list
   |link=all
@@ -136,6 +144,8 @@ This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>

@@ -94,3 +94,9 @@
   .gb-gamerating-content { padding: 1rem; }
   .gb-gamerating-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-GameRatings .printfooter,
+body.rootpage-GameRatings #catlinks {
+  display: none !important;
+}

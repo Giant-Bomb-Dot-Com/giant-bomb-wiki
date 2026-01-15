@@ -75,33 +75,47 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
 </div>
 </div>
 
-<div class="gb-sidebar-section">
-<div class="gb-sidebar-section-header">Games</div>
-<div class="gb-sidebar-section-content">
-<dl class="gb-company-details">
-
-<dt>Developed</dt>
-<dd>{{#ask: [[Has developers::{{FULLPAGENAME}}]] [[Category:Games]]
-  |format=count
-}} games</dd>
-<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#DevelopedGames view all →]</dd>
-
-<dt>Published</dt>
-<dd>{{#ask: [[Has publishers::{{FULLPAGENAME}}]] [[Category:Games]]
-  |format=count
-}} games</dd>
-<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#PublishedGames view all →]</dd>
-
-</dl>
-</div>
-</div>
 
 <div class="gb-sidebar-accordions">
 
 <div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Developed Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has developers::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |searchlabel=
+}}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#DevelopedGames view all →]</li>
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Published Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has publishers::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |searchlabel=
+}}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#PublishedGames view all →]</li>
+</ul>
+</div>
+
+<div class="gb-accordion">
 <div class="gb-accordion-header">People</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has people
   |format=list
   |link=all
@@ -110,6 +124,8 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -117,7 +133,7 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
 <div class="gb-accordion">
 <div class="gb-accordion-header">Characters</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has characters
   |format=list
   |link=all
@@ -126,6 +142,8 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -133,7 +151,7 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
 <div class="gb-accordion">
 <div class="gb-accordion-header">Locations</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has locations
   |format=list
   |link=all
@@ -142,6 +160,8 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -149,7 +169,7 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
 <div class="gb-accordion">
 <div class="gb-accordion-header">Concepts</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has concepts
   |format=list
   |link=all
@@ -158,6 +178,8 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -165,7 +187,7 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
 <div class="gb-accordion">
 <div class="gb-accordion-header">Objects</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has objects
   |format=list
   |link=all
@@ -174,6 +196,8 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>

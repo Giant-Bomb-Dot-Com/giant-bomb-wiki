@@ -127,8 +127,8 @@ $companyData['stats'] = $stats;
 $companyData['hasStats'] = !empty( $stats );
 
 $metaTitle = $companyData['name'] !== ''
-	? $companyData['name'] . ' (Company) - Giant Bomb Video Game Wiki'
-	: 'Giant Bomb Video Game Wiki';
+	? $companyData['name'] . ' (Company) - ' . $GLOBALS['wgSitename']
+	: $GLOBALS['wgSitename'];
 $metaDescription = PageHelper::sanitizeMetaText( $companyData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $companyData['description'] ?? '' );

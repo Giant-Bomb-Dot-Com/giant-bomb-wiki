@@ -656,3 +656,11 @@ body.skin-giantbomb .gb-concept-wiki-content table td {
   padding: 0.75rem 1rem;
   vertical-align: top;
 }
+
+/* ============================================
+   HIDE FOOTER ELEMENTS
+   ============================================ */
+body.rootpage-Concepts .printfooter,
+body.rootpage-Concepts #catlinks {
+  display: none !important;
+}

@@ -108,8 +108,8 @@ $characterData['stats'] = $stats;
 $characterData['hasStats'] = !empty( $stats );
 
 $metaTitle = $characterData['name'] !== ''
-	? $characterData['name'] . ' (Character) - Giant Bomb Video Game Wiki'
-	: 'Giant Bomb Video Game Wiki';
+	? $characterData['name'] . ' (Character) - ' . $GLOBALS['wgSitename']
+	: $GLOBALS['wgSitename'];
 $metaDescription = PageHelper::sanitizeMetaText( $characterData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $characterData['description'] ?? '' );

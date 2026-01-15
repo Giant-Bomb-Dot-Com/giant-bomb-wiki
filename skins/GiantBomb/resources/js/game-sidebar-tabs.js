@@ -37,7 +37,7 @@
       if (imageData.infobox?.file && imageData.infobox?.path) {
         const coverUrl = `${GB_IMAGE_BASE}scale_super/${imageData.infobox.path}${imageData.infobox.file}`;
         const coverContainer = document.querySelector(
-          ".gb-game-hero-cover, .gb-character-hero-cover, .gb-franchise-hero-cover",
+          ".gb-game-hero-cover, .gb-character-hero-cover, .gb-franchise-hero-cover, .gb-concept-hero-cover, .gb-object-hero-cover, .gb-location-hero-cover, .gb-platform-hero-cover, .gb-company-hero-cover, .gb-person-hero-cover, .gb-accessory-hero-cover",
         );
 
         if (coverContainer) {
@@ -57,7 +57,7 @@
       if (imageData.background?.file && imageData.background?.path) {
         const bgUrl = `${GB_IMAGE_BASE}screen_kubrick_wide/${imageData.background.path}${imageData.background.file}`;
         const heroSection = document.querySelector(
-          ".gb-game-hero, .gb-character-hero, .gb-franchise-hero",
+          ".gb-game-hero, .gb-character-hero, .gb-franchise-hero, .gb-concept-hero, .gb-object-hero, .gb-location-hero, .gb-platform-hero, .gb-company-hero, .gb-person-hero, .gb-accessory-hero",
         );
 
         if (heroSection) {
@@ -82,20 +82,80 @@
       "Objects/",
       "People/",
       "Games/",
+      "Accessories/",
+      "Ratings/",
+      "Regions/",
     ];
 
-    const targetLinks = document.querySelectorAll(
-      ".gb-game-details a, .gb-character-details a, .gb-franchise-details a, .gb-sidebar-related-content a, .gb-accordion-content a, .gb-game-hero-platforms a, .gb-game-hero-platform a, .gb-franchise-game-title a",
-    );
+    // DISPLAYTITLE suffixes to strip (type indicators from page templates)
+    const suffixes = [
+      " (Game)",
+      " (Character)",
+      " (Franchise)",
+      " (Platform)",
+      " (Concept)",
+      " (Company)",
+      " (Person)",
+      " (Location)",
+      " (Object)",
+      " (Genre)",
+      " (Theme)",
+      " (Accessory)",
+      " (DLC)",
+      " (Release)",
+      " (Region)",
+      " (Rating Board)",
+      " (Game Rating)",
+      // Legacy suffixes (for cached pages)
+      " - Giant Bomb Video Game Wiki",
+    ];
+
+    // Target all content areas where links may have DISPLAYTITLE suffixes
+    const contentSelectors = [
+      // Sidebar details
+      ".gb-game-details a", ".gb-character-details a", ".gb-franchise-details a",
+      ".gb-concept-details a", ".gb-location-details a", ".gb-object-details a",
+      ".gb-platform-details a", ".gb-company-details a", ".gb-person-details a",
+      ".gb-accessory-details a", ".gb-dlc-details a", ".gb-theme-details a",
+      ".gb-genre-details a", ".gb-region-details a", ".gb-release-details a",
+      ".gb-gamerating-details a", ".gb-ratingboard-details a",
+      // Sidebar related content
+      ".gb-sidebar-related-content a", ".gb-accordion-content a",
+      // Hero platforms
+      ".gb-game-hero-platforms a", ".gb-game-hero-platform a",
+      // Franchise games
+      ".gb-franchise-game-title a",
+      // Wiki content areas (main body text)
+      ".gb-game-wiki-content a", ".gb-character-wiki-content a",
+      ".gb-franchise-wiki-content a", ".gb-concept-wiki-content a",
+      ".gb-location-wiki-content a", ".gb-object-wiki-content a",
+      ".gb-platform-wiki-content a", ".gb-company-wiki-content a",
+      ".gb-person-wiki-content a", ".gb-accessory-wiki-content a",
+      ".gb-dlc-wiki-content a", ".gb-theme-wiki-content a",
+      ".gb-genre-wiki-content a", ".gb-region-wiki-content a",
+      ".gb-release-wiki-content a", ".gb-gamerating-wiki-content a",
+      ".gb-ratingboard-wiki-content a",
+    ];
+    const targetLinks = document.querySelectorAll(contentSelectors.join(", "));
 
     for (const link of targetLinks) {
       let text = link.textContent;
+      // Strip prefixes
       for (const prefix of prefixes) {
         if (text.startsWith(prefix)) {
           text = text.replace(prefix, "");
           break;
         }
       }
+      // Strip DISPLAYTITLE suffixes
+      for (const suffix of suffixes) {
+        if (text.endsWith(suffix)) {
+          text = text.slice(0, -suffix.length);
+          break;
+        }
+      }
+      // Strip SMW printout metadata like "(Has name: ...)"
+      text = text.replace(/\s*\(Has\s+\w+:\s*[^)]+\)/g, "");
       link.textContent = text.replace(/_/g, " ");
     }
 

@@ -100,8 +100,8 @@ $platformData['hasStats'] = !empty( $stats );
 
 $out = $this->getSkin()->getOutput();
 $metaTitle = $platformData['name'] !== ''
-	? $platformData['name'] . ' (Platform) - Giant Bomb Video Game Wiki'
-	: 'Giant Bomb Video Game Wiki';
+	? $platformData['name'] . ' (Platform) - ' . $GLOBALS['wgSitename']
+	: $GLOBALS['wgSitename'];
 $metaDescription = PageHelper::sanitizeMetaText( $platformData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $platformData['description'] ?? '' );

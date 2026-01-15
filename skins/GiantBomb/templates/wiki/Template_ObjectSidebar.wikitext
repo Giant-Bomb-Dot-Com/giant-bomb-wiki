@@ -11,10 +11,6 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
 <dt>Name</dt>
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
-<dt>Appears in</dt>
-<dd>{{#ask: [[Has objects::{{FULLPAGENAME}}]] [[Category:Games]]
-  |format=count
-}} games</dd>
 
 {{#show:{{FULLPAGENAME}}
   |?Has aliases
@@ -35,7 +31,6 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
 <div class="gb-accordion-header">Games</div>
 <ul class="gb-accordion-content">
 {{#ask: [[Has objects::{{FULLPAGENAME}}]] [[Category:Games]]
-  |?Has name
   |format=list
   |link=all
   |limit=20
@@ -43,14 +38,16 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |searchlabel=
 }}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
 </ul>
 </div>
 
 <div class="gb-accordion">
 <div class="gb-accordion-header">Characters</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has characters
   |format=list
   |link=all
@@ -59,6 +56,8 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -66,7 +65,7 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
 <div class="gb-accordion">
 <div class="gb-accordion-header">Franchises</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has franchises
   |format=list
   |link=all
@@ -75,6 +74,8 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -82,7 +83,7 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
 <div class="gb-accordion">
 <div class="gb-accordion-header">Locations</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has locations
   |format=list
   |link=all
@@ -91,6 +92,8 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -98,7 +101,7 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
 <div class="gb-accordion">
 <div class="gb-accordion-header">Related Objects</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has related objects
   |format=list
   |link=all
@@ -107,6 +110,8 @@ This template is called automatically by <code><nowiki>{{ObjectEnd}}</nowiki></c
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
