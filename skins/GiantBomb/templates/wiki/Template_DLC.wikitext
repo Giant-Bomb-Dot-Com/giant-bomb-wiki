@@ -72,7 +72,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (DLC) - Giant Bomb Video Game Wiki}}[[Category:DLCs|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (DLC)}}[[Category:DLCs|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-dlc-page" itemscope itemtype="https://schema.org/Product">

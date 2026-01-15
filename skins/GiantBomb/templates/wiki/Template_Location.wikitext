@@ -75,7 +75,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Location) - Giant Bomb Video Game Wiki}}[[Category:Locations|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Location)}}[[Category:Locations|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-location-page" itemscope itemtype="https://schema.org/Place">

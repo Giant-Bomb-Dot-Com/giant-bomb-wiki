@@ -53,7 +53,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Region) - Giant Bomb Video Game Wiki}}[[Category:Regions|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Region)}}[[Category:Regions|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-region-page" itemscope itemtype="https://schema.org/Place">

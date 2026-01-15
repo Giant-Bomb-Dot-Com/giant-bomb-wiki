@@ -359,3 +359,570 @@ a:visited {
   height: 1px;
   overflow: hidden;
 }
+
+/* ============================================
+   GAMES SECTION (shared across page types)
+   ============================================ */
+
+.gb-games-section {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.gb-games-section-header {
+  background-color: #1f1f1f;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gb-games-view-all {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.gb-games-view-all a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-games-view-all a:hover {
+  text-decoration: underline;
+}
+
+.gb-sidebar-more {
+  font-style: italic;
+}
+
+.gb-sidebar-more a {
+  color: #888 !important;
+}
+
+.gb-games-section-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  column-count: 2;
+  column-gap: 24px;
+}
+
+.gb-games-section-list li {
+  padding: 8px 16px;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+  break-inside: avoid;
+}
+
+.gb-games-section-list li:last-child {
+  border-bottom: none;
+}
+
+.gb-games-section-list a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-games-section-list a:hover {
+  text-decoration: underline;
+}
+
+.gb-games-section-list em {
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .gb-games-section-list {
+    column-count: 1;
+  }
+}
+
+/* ============================================
+   DARK THEME - MediaWiki System Pages
+   ============================================ */
+
+/* Form elements */
+input,
+textarea,
+select {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #6ba4d9;
+  outline: none;
+}
+
+input[type="submit"],
+input[type="button"],
+button {
+  background-color: #3d444d;
+  color: #fff;
+  border: 1px solid #555;
+  cursor: pointer;
+  padding: 8px 16px;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover {
+  background-color: #4a5568;
+}
+
+/* Fieldsets and legends */
+fieldset {
+  border: 1px solid #444;
+  background-color: #1f1f1f;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+legend {
+  color: #fff;
+  font-weight: 600;
+  padding: 0 8px;
+}
+
+/* Pre/code blocks */
+pre,
+code,
+.mw-code {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+pre {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+code {
+  padding: 2px 6px;
+}
+
+/* Special pages content */
+.mw-body-content,
+#mw-content-text {
+  color: #e0e0e0;
+}
+
+/* Headings */
+.mw-body h1,
+.mw-body h2,
+.mw-body h3,
+.mw-body h4,
+.mw-body h5,
+.mw-body h6 {
+  color: #fff;
+  border-bottom-color: #444;
+}
+
+/* Info/warning/error boxes */
+.errorbox,
+.warningbox,
+.successbox {
+  color: #fff;
+  border-radius: 4px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.errorbox {
+  background-color: #5c2020;
+  border: 1px solid #8b3030;
+}
+
+.warningbox {
+  background-color: #5c4a20;
+  border: 1px solid #8b7030;
+}
+
+.successbox {
+  background-color: #205c30;
+  border: 1px solid #308b40;
+}
+
+/* Message boxes */
+.mbox-small,
+.mbox-inside,
+table.ambox,
+table.tmbox,
+table.imbox,
+table.cmbox,
+table.ombox,
+table.fmbox {
+  background-color: #2a2a2a !important;
+  border-color: #444 !important;
+}
+
+table.ambox td,
+table.tmbox td,
+table.imbox td,
+table.cmbox td,
+table.ombox td,
+table.fmbox td {
+  color: #e0e0e0;
+}
+
+/* Category pages */
+.mw-category,
+.mw-category-group {
+  background-color: transparent;
+}
+
+.mw-category h3,
+.mw-category-group h3 {
+  color: #fff;
+  border-bottom: 1px solid #444;
+}
+
+/* Search results */
+.searchresults,
+.mw-search-results {
+  color: #e0e0e0;
+}
+
+.mw-search-result-heading {
+  color: #fff;
+}
+
+.searchmatch {
+  background-color: #4a4a20;
+  color: #fff;
+}
+
+/* Diff view */
+.diff,
+.diff-context {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+.diff-deletedline,
+td.diff-deletedline {
+  background-color: #3d2020 !important;
+  color: #ffaaaa;
+}
+
+.diff-addedline,
+td.diff-addedline {
+  background-color: #203d20 !important;
+  color: #aaffaa;
+}
+
+.diffchange {
+  color: inherit;
+  font-weight: bold;
+}
+
+td.diff-marker {
+  color: #888;
+}
+
+/* History/logs */
+.mw-changeslist,
+.mw-contributions-list {
+  color: #e0e0e0;
+}
+
+.mw-changeslist-date,
+.mw-changeslist-separator {
+  color: #888;
+}
+
+/* Page info / metadata */
+.mw-revision,
+.mw-revision-info {
+  color: #888;
+}
+
+/* TOC */
+.toc,
+.tocnumber,
+.toctext {
+  background-color: #1f1f1f;
+  border-color: #444;
+}
+
+.toc {
+  border: 1px solid #444;
+  padding: 12px;
+}
+
+.toc h2 {
+  color: #fff;
+}
+
+.toc ul {
+  color: #e0e0e0;
+}
+
+/* Navigation / pagination */
+.mw-pager-navigation-bar,
+.mw-datatable .mw-pager-navigation-bar {
+  color: #e0e0e0;
+}
+
+/* Thumbnails / galleries */
+.thumb,
+.thumbinner {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.thumbcaption {
+  color: #ccc;
+}
+
+.gallery .gallerybox {
+  background-color: #2a2a2a;
+}
+
+.gallery .gallerytext {
+  color: #e0e0e0;
+}
+
+/* Lists in content */
+.mw-body-content ul,
+.mw-body-content ol {
+  color: #e0e0e0;
+}
+
+/* Description lists */
+.mw-body-content dl dt {
+  color: #fff;
+  font-weight: 600;
+}
+
+.mw-body-content dl dd {
+  color: #ccc;
+}
+
+/* Special:Ask page */
+#ask,
+.smw-ask-query,
+.smw-table-cell {
+  color: #e0e0e0;
+}
+
+/* SMW results table - dark theme */
+.smw-results,
+.smw-ask-result,
+table.sortable.wikitable.smwtable {
+  background-color: #1f1f1f !important;
+  color: #e0e0e0;
+}
+
+.smw-results th,
+.smw-ask-result th,
+table.sortable.wikitable.smwtable th {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+.smw-results td,
+.smw-ask-result td,
+table.sortable.wikitable.smwtable td {
+  background-color: #1f1f1f !important;
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+}
+
+.smw-results a,
+.smw-ask-result a,
+table.sortable.wikitable.smwtable a {
+  color: #6ba4d9 !important;
+}
+
+.smw-results a:visited,
+.smw-ask-result a:visited,
+table.sortable.wikitable.smwtable a:visited {
+  color: #8ab4e0 !important;
+}
+
+.smw-results tr:nth-child(even) td,
+table.sortable.wikitable.smwtable tr:nth-child(even) td {
+  background-color: #252525 !important;
+}
+
+.smw-results tr:hover td,
+table.sortable.wikitable.smwtable tr:hover td {
+  background-color: #333 !important;
+}
+
+/* SMW browse page */
+.smwb-propvalue,
+.smwb-value,
+.smwb-title {
+  color: #e0e0e0;
+}
+
+.smwb-factbox {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+/* Preferences / user pages */
+.mw-prefs-container,
+.mw-htmlform-field {
+  color: #e0e0e0;
+}
+
+.mw-htmlform-field label {
+  color: #fff;
+}
+
+/* Help text */
+.htmlform-tip,
+.mw-input-hint {
+  color: #888;
+}
+
+/* Tabs / action links */
+.mw-list-item a {
+  color: #6ba4d9;
+}
+
+/* Recent changes / watchlist */
+.mw-enhanced-rc,
+.mw-changeslist-line {
+  background-color: transparent;
+}
+
+.mw-enhanced-rc-nested {
+  background-color: #1a1a1a;
+}
+
+/* Upload page */
+.mw-upload-form {
+  color: #e0e0e0;
+}
+
+/* Login/create account */
+.mw-ui-vform,
+.mw-authproviders {
+  color: #e0e0e0;
+}
+
+/* Notice/banner */
+.mw-dismissable-notice {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+/* Dropdown menus */
+.oo-ui-popupWidget-popup,
+.oo-ui-menuSelectWidget {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.oo-ui-optionWidget {
+  color: #e0e0e0;
+}
+
+.oo-ui-optionWidget:hover,
+.oo-ui-optionWidget-highlighted {
+  background-color: #3d444d;
+}
+
+/* OOUI widgets */
+.oo-ui-inputWidget-input {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #444;
+}
+
+.oo-ui-labelElement-label {
+  color: #e0e0e0;
+}
+
+.oo-ui-buttonElement-button {
+  background-color: #3d444d;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Table of contents (collapsible) */
+.toccolours {
+  background-color: #1f1f1f;
+  border-color: #444;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid #444;
+  background-color: #1a1a1a;
+  color: #ccc;
+  padding: 12px 16px;
+  margin: 16px 0;
+}
+
+/* Horizontal rules */
+hr {
+  border-color: #444;
+}
+
+/* SMW pagination and navigation */
+.smw-ask-navigation,
+.smw-ask-result-navigation {
+  background-color: transparent;
+}
+
+.smw-ask-navigation a,
+.smw-ask-result-navigation a {
+  color: #6ba4d9;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+.smw-ask-navigation a:hover,
+.smw-ask-result-navigation a:hover {
+  background-color: #3d444d;
+}
+
+/* Generic wikitable dark theme override */
+.wikitable {
+  background-color: #1f1f1f !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+.wikitable th {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+.wikitable td {
+  background-color: #1f1f1f !important;
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+}
+
+.wikitable a:link {
+  color: #6ba4d9 !important;
+}
+
+.wikitable a:visited {
+  color: #8ab4e0 !important;
+}

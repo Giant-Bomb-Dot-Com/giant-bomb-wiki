@@ -88,7 +88,7 @@
 }
 
 .gb-franchise-hero-type {
-  color: #ff5c00;
+  color: #6ba4d9;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -142,7 +142,7 @@
 
 .gb-franchise-tabs-tab--active {
   color: #fff;
-  border-bottom-color: #ff5c00;
+  border-bottom-color: #6ba4d9;
 }
 
 .gb-franchise-tabs-tab a {
@@ -167,7 +167,7 @@
 }
 
 .gb-franchise-page .gb-wiki-action a:hover {
-  color: #ff5c00;
+  color: #6ba4d9;
 }
 
 /* ============================================
@@ -217,7 +217,7 @@
 }
 
 .gb-franchise-wiki-content a {
-  color: #ff5c00;
+  color: #6ba4d9;
   text-decoration: none;
 }
 
@@ -311,8 +311,8 @@
 }
 
 .gb-franchise-games-tab--active {
-  color: #ff5c00;
-  border-bottom-color: #ff5c00;
+  color: #6ba4d9;
+  border-bottom-color: #6ba4d9;
 }
 
 .gb-franchise-games-list {
@@ -389,7 +389,7 @@
 }
 
 .gb-franchise-game-title a {
-  color: #ff5c00;
+  color: #6ba4d9;
   text-decoration: none;
 }
 
@@ -421,6 +421,19 @@
   text-transform: uppercase;
   letter-spacing: 0.3px;
   white-space: nowrap;
+}
+
+.gb-franchise-game-platform a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gb-franchise-game-platform:hover {
+  background-color: #555;
+}
+
+.gb-franchise-game-platform a:hover {
+  text-decoration: none;
 }
 
 /* Platform color variations - can be expanded */
@@ -482,7 +495,7 @@
 }
 
 .gb-franchise-details dd a {
-  color: #ff5c00;
+  color: #6ba4d9;
   text-decoration: none;
 }
 
@@ -515,8 +528,8 @@
 }
 
 .gb-franchise-sidebar .gb-sidebar-related-tab--active {
-  color: #ff5c00;
-  border-bottom-color: #ff5c00;
+  color: #6ba4d9;
+  border-bottom-color: #6ba4d9;
 }
 
 .gb-franchise-sidebar .gb-sidebar-related-content {
@@ -545,7 +558,7 @@
 }
 
 .gb-franchise-sidebar .gb-sidebar-related-list a {
-  color: #ff5c00;
+  color: #6ba4d9;
   text-decoration: none;
 }
 
@@ -640,13 +653,13 @@
 
 /* Games link in sidebar */
 .gb-games-link {
-  color: #f26522;
+  color: #6ba4d9;
   cursor: pointer;
   text-decoration: underline;
 }
 
 .gb-games-link:hover {
-  color: #ff8844;
+  color: #8bbde8;
 }
 
 /* ============================================

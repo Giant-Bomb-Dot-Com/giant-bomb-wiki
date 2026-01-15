@@ -94,3 +94,9 @@
   .gb-release-content { padding: 1rem; }
   .gb-release-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Releases .printfooter,
+body.rootpage-Releases #catlinks {
+  display: none !important;
+}

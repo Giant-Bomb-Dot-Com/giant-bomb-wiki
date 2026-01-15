@@ -52,7 +52,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Genre) - Giant Bomb Video Game Wiki}}[[Category:Genres|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Genre)}}[[Category:Genres|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-genre-page" itemscope itemtype="https://schema.org/Article">

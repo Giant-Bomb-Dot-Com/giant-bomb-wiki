@@ -98,7 +98,7 @@ Your wiki content here...
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
-}}{{DISPLAYTITLE:{{{Name|}}} (Character) - Giant Bomb Video Game Wiki}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
+}}{{DISPLAYTITLE:{{{Name|}}} (Character)}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
 <meta itemprop="name" content="{{{Name|}}} - Video Game Character" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game character. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games is {{{Name|}}} in?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games including titles from {{{Franchises|}}}." /></div></div></div>

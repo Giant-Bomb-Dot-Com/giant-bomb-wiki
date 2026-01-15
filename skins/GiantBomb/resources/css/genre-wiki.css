@@ -103,3 +103,9 @@
   .gb-genre-content { padding: 1rem; }
   .gb-genre-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Genres .printfooter,
+body.rootpage-Genres #catlinks {
+  display: none !important;
+}

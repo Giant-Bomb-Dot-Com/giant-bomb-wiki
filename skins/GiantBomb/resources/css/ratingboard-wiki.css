@@ -103,3 +103,9 @@
   .gb-ratingboard-content { padding: 1rem; }
   .gb-ratingboard-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-RatingBoards .printfooter,
+body.rootpage-RatingBoards #catlinks {
+  display: none !important;
+}

@@ -678,3 +678,11 @@ body.skin-giantbomb .gb-company-wiki-content table td {
   padding: 0.75rem 1rem;
   vertical-align: top;
 }
+
+/* ============================================
+   HIDE FOOTER ELEMENTS
+   ============================================ */
+body.rootpage-Companies .printfooter,
+body.rootpage-Companies #catlinks {
+  display: none !important;
+}

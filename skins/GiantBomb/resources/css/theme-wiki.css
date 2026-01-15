@@ -103,3 +103,9 @@
   .gb-theme-content { padding: 1rem; }
   .gb-theme-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Themes .printfooter,
+body.rootpage-Themes #catlinks {
+  display: none !important;
+}

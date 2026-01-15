@@ -78,38 +78,23 @@ This template is called automatically by <code><nowiki>{{PlatformEnd}}</nowiki><
 </div>
 </div>
 
-<div class="gb-sidebar-section">
-<div class="gb-sidebar-section-header">Games</div>
-<div class="gb-sidebar-section-content">
-<dl class="gb-platform-details">
-
-<dt>Total games</dt>
-<dd>{{#ask: [[Has platforms::{{FULLPAGENAME}}]] [[Category:Games]]
-  |format=count
-}}</dd>
-<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</dd>
-
-</dl>
-</div>
-</div>
 
 <div class="gb-sidebar-accordions">
 
 <div class="gb-accordion gb-accordion--open">
-<div class="gb-accordion-header">Recent Games</div>
+<div class="gb-accordion-header">Games</div>
 <ul class="gb-accordion-content">
 {{#ask: [[Has platforms::{{FULLPAGENAME}}]] [[Category:Games]]
-  |?Has name
   |format=list
   |link=all
-  |limit=15
-  |sort=Has release date
-  |order=desc
+  |limit=20
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |searchlabel=
 }}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
 </ul>
 </div>
 

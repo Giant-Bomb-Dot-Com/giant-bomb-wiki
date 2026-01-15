@@ -91,3 +91,9 @@
   .gb-accessory-content { padding: 1rem; }
   .gb-accessory-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Accessories .printfooter,
+body.rootpage-Accessories #catlinks {
+  display: none !important;
+}

@@ -103,3 +103,9 @@
   .gb-object-content { padding: 1rem; }
   .gb-object-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Objects .printfooter,
+body.rootpage-Objects #catlinks {
+  display: none !important;
+}

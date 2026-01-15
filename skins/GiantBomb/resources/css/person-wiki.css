@@ -206,3 +206,9 @@ body.skin-giantbomb .gb-person-page table td { background-color: transparent; bo
   .gb-person-content { padding: 1rem; }
   .gb-person-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-People .printfooter,
+body.rootpage-People #catlinks {
+  display: none !important;
+}

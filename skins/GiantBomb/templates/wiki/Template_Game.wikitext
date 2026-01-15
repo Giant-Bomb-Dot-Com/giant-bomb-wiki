@@ -116,7 +116,7 @@ Multi-value properties (comma-separated) use #arraymap.
 
 Page Setup
 ==========
--->{{DISPLAYTITLE:{{{Name|}}} (Game) - Giant Bomb Video Game Wiki}}[[Category:Games|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Game)}}[[Category:Games|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 ==============

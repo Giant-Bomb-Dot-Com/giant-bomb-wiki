@@ -52,7 +52,7 @@ SMW Property Storage
 }}<!--
 
 Page Setup
--->{{DISPLAYTITLE:{{{Name|}}} (Accessory) - Giant Bomb Video Game Wiki}}[[Category:Accessories|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Accessory)}}[[Category:Accessories|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 --><div class="gb-accessory-page" itemscope itemtype="https://schema.org/Product">

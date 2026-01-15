@@ -209,3 +209,9 @@ body.skin-giantbomb .gb-platform-page table td { background-color: transparent; 
   .gb-platform-content { padding: 1rem; }
   .gb-platform-hero-title { font-size: 1.75rem; }
 }
+
+/* Hide footer elements */
+body.rootpage-Platforms .printfooter,
+body.rootpage-Platforms #catlinks {
+  display: none !important;
+}
