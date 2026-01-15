@@ -1,0 +1,18 @@
+<noinclude>
+==Documentation==
+Closes the platform page layout and renders the sidebar.
+Place this at the end of platform page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Platform
+| Name = Example Platform
+| Deck = Short description...
+}}
+
+== Overview ==
+Wiki content here...
+
+{{PlatformEnd}}
+</pre>
+</noinclude><includeonly></div></div><div class="gb-platform-sidebar">{{PlatformSidebar}}</div></div></div></includeonly>

@@ -1,0 +1,135 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Game (property=Has game)
+||||| Platform (property=Has platform)
+||||| Region (property=Has region)
+||||| ReleaseDate (property=Has release date)
+||||| Rating (property=Has rating)
+||||| Developers (property=Has developers)
+||||| Publishers (property=Has publishers)
+||||| MinPlayers (property=Has minimum players)
+||||| MaxPlayers (property=Has maximum players)
+||||| ProductCode (property=Has product code)
+||||| ProductCodeType (property=Has product code type)
+||||| WidescreenSupport (property=Has widescreen support)
+}}
+==Documentation==
+This template creates a full release page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Releases represent specific regional/platform releases of games - tracking release dates, ratings, and product codes.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the release
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Image || Release cover image
+|-
+|| Deck || Short description
+|-
+|| Game || The game this is a release of
+|-
+|| Platform || Platform for this release
+|-
+|| Region || Region (e.g., North America, Europe)
+|-
+|| ReleaseDate || Release date in this region
+|-
+|| Rating || Content rating (e.g., M - Mature)
+|-
+|| Developers || Developer companies (comma-separated)
+|-
+|| Publishers || Publisher companies (comma-separated)
+|-
+|| MinPlayers || Minimum number of players
+|-
+|| MaxPlayers || Maximum number of players
+|-
+|| ProductCode || UPC/EAN/SKU code
+|-
+|| ProductCodeType || Type of product code
+|-
+|| WidescreenSupport || Yes/No for widescreen support
+|}
+
+===Usage===
+<pre>
+{{Release
+| Name = The Legend of Zelda: Breath of the Wild (NA Switch)
+| Game = Games/The_Legend_of_Zelda:_Breath_of_the_Wild
+| Platform = Platforms/Nintendo_Switch
+| Region = Regions/North_America
+| ReleaseDate = 2017-03-03
+| Rating = Ratings/E10+
+| Publishers = Companies/Nintendo
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{ReleaseEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{Game|}}}|{{#set:Has game={{{Game}}}}}
+}}{{#if:{{{Platform|}}}|{{#set:Has platform={{{Platform}}}}}
+}}{{#if:{{{Region|}}}|{{#set:Has region={{{Region}}}}}
+}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
+}}{{#if:{{{Rating|}}}|{{#set:Has rating={{{Rating}}}}}
+}}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}
+}}{{#arraymap:{{{Publishers|}}}|,|@@|{{#set:Has publishers=@@}}
+}}{{#if:{{{MinPlayers|}}}|{{#set:Has minimum players={{{MinPlayers}}}}}
+}}{{#if:{{{MaxPlayers|}}}|{{#set:Has maximum players={{{MaxPlayers}}}}}
+}}{{#if:{{{ProductCode|}}}|{{#set:Has product code={{{ProductCode}}}}}
+}}{{#if:{{{ProductCodeType|}}}|{{#set:Has product code type={{{ProductCodeType}}}}}
+}}{{#if:{{{WidescreenSupport|}}}|{{#set:Has widescreen support={{{WidescreenSupport}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Release) - Giant Bomb Video Game Wiki}}[[Category:Releases|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-release-page" itemscope itemtype="https://schema.org/Product">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Release" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|at an unspecified date}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the rating for {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is rated {{{Rating|}}}." /></div></div></div>
+<div class="gb-release-hero">
+<div class="gb-release-hero-container">
+<div class="gb-release-hero-cover"></div>
+<div class="gb-release-hero-info">
+<div class="gb-release-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-release-hero-meta"><span class="gb-release-hero-type">RELEASE</span>{{#if:{{{Platform|}}}|<span class="gb-release-hero-platform">[[{{{Platform}}}]]</span>|}}{{#if:{{{Region|}}}|<span class="gb-release-hero-region">[[{{{Region}}}]]</span>|}}</div>
+<div class="gb-release-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-release-tabs">
+<div class="gb-release-tabs-container">
+<div class="gb-release-tabs-nav">
+<span class="gb-release-tabs-tab gb-release-tabs-tab--active">Release</span>
+<span class="gb-release-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-release-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-release-content">
+<div class="gb-release-main">
+<div class="gb-release-wiki-content">
+</includeonly>

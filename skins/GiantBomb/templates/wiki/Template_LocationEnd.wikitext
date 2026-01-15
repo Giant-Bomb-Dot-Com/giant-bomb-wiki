@@ -1,0 +1,18 @@
+<noinclude>
+==Documentation==
+Closes the location page layout and renders the sidebar.
+Place this at the end of location page content, after all wiki text.
+
+===Usage===
+<pre>
+{{Location
+| Name = Example Location
+| Deck = Short description...
+}}
+
+== Overview ==
+Wiki content here...
+
+{{LocationEnd}}
+</pre>
+</noinclude><includeonly></div></div><div class="gb-location-sidebar">{{LocationSidebar}}</div></div></div></includeonly>

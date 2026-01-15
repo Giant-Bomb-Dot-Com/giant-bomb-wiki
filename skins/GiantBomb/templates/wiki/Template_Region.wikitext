@@ -1,0 +1,85 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Abbreviation (property=Has abbreviation)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a region page layout.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Regions represent geographic territories for game releases (e.g., North America, Europe, Japan).
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the region
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Abbreviation || Short code (e.g., NA, EU, JP)
+|-
+|| Image || Region image/flag
+|-
+|| Deck || Short description
+|}
+
+===Usage===
+<pre>
+{{Region
+| Name = North America
+| Guid = 3075-1
+| Abbreviation = NA
+| Deck = Includes the United States, Canada, and Mexico...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{RegionEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Abbreviation|}}}|{{#set:Has abbreviation={{{Abbreviation}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Region) - Giant Bomb Video Game Wiki}}[[Category:Regions|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-region-page" itemscope itemtype="https://schema.org/Place">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Release Region" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}} region for video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game release region. {{{Deck|}}}" /></div></div></div>
+<div class="gb-region-hero">
+<div class="gb-region-hero-container">
+<div class="gb-region-hero-cover"></div>
+<div class="gb-region-hero-info">
+<div class="gb-region-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-region-hero-meta"><span class="gb-region-hero-type">REGION</span>{{#if:{{{Abbreviation|}}}|<span class="gb-region-hero-abbr">({{{Abbreviation}}})</span>|}}</div>
+<div class="gb-region-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-region-tabs">
+<div class="gb-region-tabs-container">
+<div class="gb-region-tabs-nav">
+<span class="gb-region-tabs-tab gb-region-tabs-tab--active">Region</span>
+<span class="gb-region-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-region-content">
+<div class="gb-region-main">
+<div class="gb-region-wiki-content">
+</includeonly>

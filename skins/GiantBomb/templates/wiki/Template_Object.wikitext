@@ -1,0 +1,116 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Characters (property=Has characters)
+||||| Concepts (property=Has concepts)
+||||| Franchises (property=Has franchises)
+||||| Games (property=Has games)
+||||| Locations (property=Has locations)
+||||| People (property=Has people)
+||||| Objects (property=Has related objects)
+}}
+==Documentation==
+This template creates a full object page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Objects are items, weapons, vehicles, or other tangible things that appear in video games.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the object
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Object image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Games || Games featuring this object (comma-separated)
+|-
+|| Characters || Characters associated with this object (comma-separated)
+|-
+|| Concepts || Concepts related to this object (comma-separated)
+|-
+|| Franchises || Franchises featuring this object (comma-separated)
+|-
+|| Locations || Locations where this object appears (comma-separated)
+|-
+|| People || People associated with this object (comma-separated)
+|-
+|| Objects || Related/similar objects (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Object
+| Name = Master Sword
+| Guid = 3055-1234
+| Deck = The legendary blade wielded by Link...
+| Games = Games/The_Legend_of_Zelda, Games/Ocarina_of_Time
+| Characters = Characters/Link
+| Franchises = Franchises/The_Legend_of_Zelda
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{ObjectEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has related objects=@@}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Object) - Giant Bomb Video Game Wiki}}[[Category:Objects|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-object-page" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Object" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}} in video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is an object or item in video games. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games have {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games." /></div></div></div>
+<div class="gb-object-hero">
+<div class="gb-object-hero-container">
+<div class="gb-object-hero-cover"></div>
+<div class="gb-object-hero-info">
+<div class="gb-object-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-object-hero-meta"><span class="gb-object-hero-type">OBJECT</span></div>
+<div class="gb-object-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-object-tabs">
+<div class="gb-object-tabs-container">
+<div class="gb-object-tabs-nav">
+<span class="gb-object-tabs-tab gb-object-tabs-tab--active">Object</span>
+<span class="gb-object-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-object-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-object-content">
+<div class="gb-object-main">
+<div class="gb-object-wiki-content">
+</includeonly>

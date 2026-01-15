@@ -1,0 +1,53 @@
+<noinclude>
+==Documentation==
+Renders the theme page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{ThemeEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Theme details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-theme-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+<dt>Total games</dt>
+<dd>{{#ask: [[Has themes::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=count
+}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Recent Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has themes::{{FULLPAGENAME}}]] [[Category:Games]]
+  |?Has name
+  |format=list
+  |link=all
+  |limit=15
+  |sort=Has release date
+  |order=desc
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

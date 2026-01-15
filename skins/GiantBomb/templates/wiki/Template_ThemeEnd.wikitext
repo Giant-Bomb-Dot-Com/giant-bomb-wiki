@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the theme page layout and renders the sidebar.
+Place this at the end of theme page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-theme-sidebar">{{ThemeSidebar}}</div></div></div></includeonly>

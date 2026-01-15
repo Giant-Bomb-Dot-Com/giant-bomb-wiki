@@ -1,0 +1,62 @@
+<noinclude>
+==Documentation==
+Renders the DLC page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{DLCEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">DLC details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-dlc-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has game
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Base Game</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has platform
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Platform</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has release date
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Release Date</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has launch price
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Launch Price</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+</includeonly>

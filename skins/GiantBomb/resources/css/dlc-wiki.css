@@ -1,0 +1,95 @@
+/**
+ * Giant Bomb Wiki - DLC Page Styles
+ */
+
+.gb-dlc-page {
+  --gb-bg-dark: #1c1c1c;
+  --gb-bg-card: #252525;
+  --gb-bg-elevated: #333;
+  --gb-border: #333;
+  --gb-text: #e0e0e0;
+  --gb-accent: #6ba4d9;
+  background-color: var(--gb-bg-dark);
+  color: var(--gb-text);
+  min-height: 100vh;
+}
+
+.gb-dlc-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center top;
+  padding: 2rem 0;
+}
+
+.gb-dlc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(28, 28, 28, 0.7) 0%, rgba(28, 28, 28, 0.85) 60%, rgba(28, 28, 28, 1) 100%);
+  z-index: 1;
+}
+
+.gb-dlc-hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.gb-dlc-hero-cover { flex-shrink: 0; width: 200px; }
+.gb-dlc-hero-info { flex: 1; min-width: 0; }
+.gb-dlc-hero-cover img { width: 100%; height: auto; border: 3px solid var(--gb-border); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
+.gb-dlc-hero-title { font-size: 2.5rem; font-weight: 700; color: #fff; margin: 0 0 0.5rem; line-height: 1.2; }
+.gb-dlc-hero-meta { font-size: 0.95rem; color: #aaa; margin-bottom: 0.75rem; }
+.gb-dlc-hero-type { color: #6ba4d9; text-transform: uppercase; font-weight: 600; }
+.gb-dlc-hero-game { margin-left: 0.5rem; }
+.gb-dlc-hero-game a { color: #6ba4d9; text-decoration: none; }
+.gb-dlc-hero-deck { font-size: 1.1rem; font-weight: 500; color: #fff; line-height: 1.5; margin: 1rem 0 0; }
+
+.gb-dlc-tabs { background: #252525; border-bottom: 3px solid #6ba4d9; position: sticky; top: 0; z-index: 100; }
+.gb-dlc-tabs-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.gb-dlc-tabs-nav { display: flex; gap: 0; margin: 0; padding: 0; }
+.gb-dlc-tabs-nav p { display: contents; }
+.gb-dlc-tabs-tab { display: inline-flex; align-items: center; padding: 0.85rem 1.25rem; color: #aaa; font-size: 0.9rem; font-weight: 500; border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.2s ease; }
+.gb-dlc-tabs-tab a { color: inherit; text-decoration: none; }
+.gb-dlc-tabs-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.gb-dlc-tabs-tab--active { color: #fff; background: #6ba4d9; border-bottom-color: #6ba4d9; }
+
+.gb-dlc-content { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start; }
+.gb-dlc-main { min-width: 0; }
+.gb-dlc-sidebar { width: 100%; display: flex; flex-direction: column; gap: 1.25rem; }
+.gb-dlc-content>p:empty, .gb-dlc-content>br { display: none; }
+
+.gb-dlc-wiki-content { line-height: 1.7; font-size: 0.95rem; }
+.gb-dlc-wiki-content h2 { font-size: 1.5rem; font-weight: 600; color: #fff; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
+.gb-dlc-wiki-content h3 { font-size: 1.2rem; font-weight: 600; color: #fff; margin: 1.5rem 0 0.75rem; }
+.gb-dlc-wiki-content p { margin: 0 0 1rem; color: #ccc; }
+.gb-dlc-wiki-content a { color: #6ba4d9; text-decoration: none; }
+.gb-dlc-wiki-content a:hover { text-decoration: underline; }
+
+.gb-dlc-details { margin: 0; padding: 0; }
+.gb-dlc-details dt { color: #888; font-size: 0.85rem; padding: 0.6rem 0 0.25rem; border-top: 1px solid #333; }
+.gb-dlc-details dt:first-child { border-top: none; padding-top: 0; }
+.gb-dlc-details dd { margin: 0; padding: 0 0 0.5rem; color: #fff; font-size: 0.9rem; }
+.gb-dlc-details dd a { color: #6ba4d9; text-decoration: none; }
+
+.gb-dlc-main img { float: left; margin: 0 1.5rem 1rem 0; max-width: 350px; height: auto; clear: left; }
+.gb-dlc-main h2, .gb-dlc-main h3 { clear: both; }
+.gb-dlc-page .gb-dlc-hero .gb-dlc-hero-cover img { float: none; margin: 0; max-width: none; width: 100%; }
+
+@media (max-width: 900px) {
+  .gb-dlc-content { grid-template-columns: 1fr; }
+  .gb-dlc-sidebar { order: -1; }
+  .gb-dlc-hero-container { flex-direction: column; align-items: center; text-align: center; }
+  .gb-dlc-hero-cover { width: 150px; }
+}
+
+@media (max-width: 600px) {
+  .gb-dlc-page .gb-wiki-actions { display: none; }
+  .gb-dlc-content { padding: 1rem; }
+  .gb-dlc-hero-title { font-size: 1.75rem; }
+}

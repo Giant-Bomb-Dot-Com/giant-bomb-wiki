@@ -1,0 +1,182 @@
+<noinclude>
+==Documentation==
+Renders the company page sidebar with structured data pulled from Semantic MediaWiki properties.
+
+This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></code>.
+
+===Sections===
+# '''Company details''' - Name, abbreviation, founded date, location, contact info
+# '''Games''' - Developed and published games counts with links
+# '''Related content''' - Accordion sections for People, Characters, Locations, Concepts, Objects
+
+===SMW Properties Used===
+* <code>Has name</code> - Company name
+* <code>Has abbreviation</code> - Company abbreviation
+* <code>Has founded date</code> - Date founded
+* <code>Has city</code> - City location
+* <code>Has state</code> - State/Province
+* <code>Has country</code> - Country location
+* <code>Has website</code> - Official website
+* <code>Has aliases</code> - Alternative names
+* <code>Has developed games</code> - Games developed
+* <code>Has published games</code> - Games published
+* <code>Has people</code> - Associated people
+* <code>Has characters</code> - Associated characters
+* <code>Has locations</code> - Associated locations
+* <code>Has concepts</code> - Associated concepts
+* <code>Has objects</code> - Associated objects
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Company details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-company-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has abbreviation
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Abbreviation</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has founded date
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Founded</dt><dd>
+  |outro=</dd>
+}}
+
+{{#if:{{#show:{{FULLPAGENAME}}|?Has city}}{{#show:{{FULLPAGENAME}}|?Has country}}|<dt>Location</dt><dd>{{#show:{{FULLPAGENAME}}|?Has city|default=}}{{#if:{{#show:{{FULLPAGENAME}}|?Has state}}|, {{#show:{{FULLPAGENAME}}|?Has state}}}}{{#if:{{#show:{{FULLPAGENAME}}|?Has country}}|, {{#show:{{FULLPAGENAME}}|?Has country}}}}</dd>|}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has website
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Website</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Games</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-company-details">
+
+<dt>Developed</dt>
+<dd>{{#ask: [[Has developers::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=count
+}} games</dd>
+<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#DevelopedGames view all →]</dd>
+
+<dt>Published</dt>
+<dd>{{#ask: [[Has publishers::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=count
+}} games</dd>
+<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#PublishedGames view all →]</dd>
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">People</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has people
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Characters</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has characters
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Locations</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has locations
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has concepts
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Objects</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has objects
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

@@ -1,0 +1,167 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Abbreviation (property=Has abbreviation)
+||||| FoundedDate (property=Has founded date)
+||||| Address (property=Has address)
+||||| City (property=Has city)
+||||| Country (property=Has country)
+||||| State (property=Has state)
+||||| Phone (property=Has phone)
+||||| Website (property=Has website)
+||||| Characters (property=Has characters)
+||||| Concepts (property=Has concepts)
+||||| DevelopedGames (property=Has developed games)
+||||| Locations (property=Has locations)
+||||| Objects (property=Has objects)
+||||| People (property=Has people)
+||||| PublishedGames (property=Has published games)
+}}
+==Documentation==
+This template creates a full company page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+The page structure follows the classic Giant Bomb wiki design:
+* Hero section with logo/image, title, and deck
+* Tab navigation for sub-pages
+* Two-column layout with wiki content on left and company details sidebar on right
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the company
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Company logo/image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Abbreviation || Company abbreviation (e.g., EA, MS)
+|-
+|| FoundedDate || Date company was founded
+|-
+|| Address || Street address
+|-
+|| City || City location
+|-
+|| State || State/Province
+|-
+|| Country || Country location
+|-
+|| Phone || Contact phone number
+|-
+|| Website || Official website URL
+|-
+|| DevelopedGames || Games developed by this company (comma-separated)
+|-
+|| PublishedGames || Games published by this company (comma-separated)
+|-
+|| Characters || Characters associated with this company (comma-separated)
+|-
+|| Concepts || Concepts related to this company (comma-separated)
+|-
+|| Locations || Locations associated with this company (comma-separated)
+|-
+|| Objects || Objects associated with this company (comma-separated)
+|-
+|| People || People who work/worked at this company (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Company
+| Name = Nintendo
+| Guid = 3010-805
+| Deck = Japanese multinational video game company...
+| Abbreviation = Nintendo
+| FoundedDate = 1889-09-23
+| City = Kyoto
+| Country = Japan
+| Website = https://www.nintendo.com
+| DevelopedGames = Games/Super_Mario_Bros, Games/The_Legend_of_Zelda
+| PublishedGames = Games/Pokemon_Red_and_Blue
+| People = People/Shigeru_Miyamoto
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{CompanyEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+====================
+Store all template parameters as semantic properties.
+Single-value properties use #set directly.
+Multi-value properties (comma-separated) use #arraymap.
+
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{Abbreviation|}}}|{{#set:Has abbreviation={{{Abbreviation}}}}}
+}}{{#if:{{{FoundedDate|}}}|{{#set:Has founded date={{{FoundedDate}}}}}
+}}{{#if:{{{Address|}}}|{{#set:Has address={{{Address}}}}}
+}}{{#if:{{{City|}}}|{{#set:Has city={{{City}}}}}
+}}{{#if:{{{State|}}}|{{#set:Has state={{{State}}}}}
+}}{{#if:{{{Country|}}}|{{#set:Has country={{{Country}}}}}
+}}{{#if:{{{Phone|}}}|{{#set:Has phone={{{Phone}}}}}
+}}{{#if:{{{Website|}}}|{{#set:Has website={{{Website}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{DevelopedGames|}}}|,|@@|{{#set:Has developed games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
+}}{{#arraymap:{{{PublishedGames|}}}|,|@@|{{#set:Has published games=@@}}
+}}<!--
+
+Page Setup
+==========
+-->{{DISPLAYTITLE:{{{Name|}}} (Company) - Giant Bomb Video Game Wiki}}[[Category:Companies|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+==============
+--><div class="gb-company-page" itemscope itemtype="https://schema.org/Organization">
+<meta itemprop="name" content="{{{Name|}}}" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+{{#if:{{{FoundedDate|}}}|<meta itemprop="foundingDate" content="{{{FoundedDate}}}" />|}}
+{{#if:{{{Country|}}}|<meta itemprop="addressCountry" content="{{{Country}}}" />|}}
+{{#if:{{{Website|}}}|<meta itemprop="url" content="{{{Website}}}" />|}}
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game company. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} make?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has developed and published numerous video games." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Where is {{{Name|}}} located?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is located in {{#if:{{{City|}}}|{{{City}}}, |}}{{#if:{{{Country|}}}|{{{Country}}}|}}." /></div></div></div>
+<div class="gb-company-hero">
+<div class="gb-company-hero-container">
+<div class="gb-company-hero-cover"></div>
+<div class="gb-company-hero-info">
+<div class="gb-company-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-company-hero-meta"><span class="gb-company-hero-type">COMPANY</span>{{#if:{{{Abbreviation|}}}| &#187; {{{Abbreviation}}}|}}{{#if:{{{FoundedDate|}}}| &#187; Founded {{{FoundedDate}}}|}}</div>
+<div class="gb-company-hero-location">{{#if:{{{City|}}}|{{{City}}}}}{{#if:{{{State|}}}|{{#if:{{{City|}}}|, }}{{{State}}}}}{{#if:{{{Country|}}}|{{#if:{{{City|}}}{{#if:{{{State|}}}|1}}|, }}{{{Country}}}}}</div>
+<div class="gb-company-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-company-tabs">
+<div class="gb-company-tabs-container">
+<div class="gb-company-tabs-nav">
+<span class="gb-company-tabs-tab gb-company-tabs-tab--active">Company</span>
+<span class="gb-company-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-company-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-company-content">
+<div class="gb-company-main">
+<div class="gb-company-wiki-content">
+</includeonly>

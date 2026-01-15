@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the region page layout and renders the sidebar.
+Place this at the end of region page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-region-sidebar">{{RegionSidebar}}</div></div></div></includeonly>

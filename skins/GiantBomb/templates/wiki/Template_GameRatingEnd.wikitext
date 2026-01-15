@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the game rating page layout and renders the sidebar.
+Place this at the end of game rating page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-gamerating-sidebar">{{GameRatingSidebar}}</div></div></div></includeonly>
