@@ -91,6 +91,9 @@ class SkinGiantBomb extends SkinTemplate {
                     ?: str_replace( 'Games/', '', $pageTitle );
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         
+        // Set HTML title
+        $out->setHTMLTitle( $gameName . ' (Game) - Giant Bomb Video Game Wiki' );
+        
         // Build meta description
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
@@ -276,6 +279,9 @@ class SkinGiantBomb extends SkinTemplate {
                     ?: str_replace( 'Characters/', '', $pageTitle );
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         
+        // Set HTML title
+        $out->setHTMLTitle( $characterName . ' (Character) - Giant Bomb Video Game Wiki' );
+        
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
             $metaDescription = $characterName . ' - Character info and appearances on Giant Bomb Wiki.';
@@ -331,6 +337,9 @@ class SkinGiantBomb extends SkinTemplate {
         $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' ) 
                     ?: str_replace( 'Franchises/', '', $pageTitle );
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
+        
+        // Set HTML title
+        $out->setHTMLTitle( $franchiseName . ' (Franchise) - Giant Bomb Video Game Wiki' );
         
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
