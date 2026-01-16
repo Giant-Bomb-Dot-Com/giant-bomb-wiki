@@ -113,27 +113,48 @@
     // Target all content areas where links may have DISPLAYTITLE suffixes
     const contentSelectors = [
       // Sidebar details
-      ".gb-game-details a", ".gb-character-details a", ".gb-franchise-details a",
-      ".gb-concept-details a", ".gb-location-details a", ".gb-object-details a",
-      ".gb-platform-details a", ".gb-company-details a", ".gb-person-details a",
-      ".gb-accessory-details a", ".gb-dlc-details a", ".gb-theme-details a",
-      ".gb-genre-details a", ".gb-region-details a", ".gb-release-details a",
-      ".gb-gamerating-details a", ".gb-ratingboard-details a",
+      ".gb-game-details a",
+      ".gb-character-details a",
+      ".gb-franchise-details a",
+      ".gb-concept-details a",
+      ".gb-location-details a",
+      ".gb-object-details a",
+      ".gb-platform-details a",
+      ".gb-company-details a",
+      ".gb-person-details a",
+      ".gb-accessory-details a",
+      ".gb-dlc-details a",
+      ".gb-theme-details a",
+      ".gb-genre-details a",
+      ".gb-region-details a",
+      ".gb-release-details a",
+      ".gb-gamerating-details a",
+      ".gb-ratingboard-details a",
       // Sidebar related content
-      ".gb-sidebar-related-content a", ".gb-accordion-content a",
+      ".gb-sidebar-related-content a",
+      ".gb-accordion-content a",
       // Hero platforms
-      ".gb-game-hero-platforms a", ".gb-game-hero-platform a",
+      ".gb-game-hero-platforms a",
+      ".gb-game-hero-platform a",
       // Franchise games
       ".gb-franchise-game-title a",
       // Wiki content areas (main body text)
-      ".gb-game-wiki-content a", ".gb-character-wiki-content a",
-      ".gb-franchise-wiki-content a", ".gb-concept-wiki-content a",
-      ".gb-location-wiki-content a", ".gb-object-wiki-content a",
-      ".gb-platform-wiki-content a", ".gb-company-wiki-content a",
-      ".gb-person-wiki-content a", ".gb-accessory-wiki-content a",
-      ".gb-dlc-wiki-content a", ".gb-theme-wiki-content a",
-      ".gb-genre-wiki-content a", ".gb-region-wiki-content a",
-      ".gb-release-wiki-content a", ".gb-gamerating-wiki-content a",
+      ".gb-game-wiki-content a",
+      ".gb-character-wiki-content a",
+      ".gb-franchise-wiki-content a",
+      ".gb-concept-wiki-content a",
+      ".gb-location-wiki-content a",
+      ".gb-object-wiki-content a",
+      ".gb-platform-wiki-content a",
+      ".gb-company-wiki-content a",
+      ".gb-person-wiki-content a",
+      ".gb-accessory-wiki-content a",
+      ".gb-dlc-wiki-content a",
+      ".gb-theme-wiki-content a",
+      ".gb-genre-wiki-content a",
+      ".gb-region-wiki-content a",
+      ".gb-release-wiki-content a",
+      ".gb-gamerating-wiki-content a",
       ".gb-ratingboard-wiki-content a",
     ];
     const targetLinks = document.querySelectorAll(contentSelectors.join(", "));
@@ -159,7 +180,9 @@
       link.textContent = text.replace(/_/g, " ");
     }
 
-    for (const span of document.querySelectorAll(".gb-game-hero-platform, .gb-franchise-game-platform")) {
+    for (const span of document.querySelectorAll(
+      ".gb-game-hero-platform, .gb-franchise-game-platform",
+    )) {
       let text = span.textContent;
       for (const prefix of prefixes) {
         if (text.startsWith(prefix)) {
@@ -209,28 +232,33 @@
    * MediaWiki strips anchor-only links from wikitext, so we add this via JS
    */
   const initFranchiseGamesTab = () => {
-    const tabsNav = document.querySelector('.gb-franchise-tabs-nav');
+    const tabsNav = document.querySelector(".gb-franchise-tabs-nav");
     if (!tabsNav) return;
 
-    const gamesSection = document.getElementById('Games');
+    const gamesSection = document.getElementById("Games");
     if (!gamesSection) return;
 
     // Check if Games tab already exists
     if (tabsNav.querySelector('a[href="#Games"]')) return;
 
     // Find the Images tab to insert before it
-    const imagesTab = Array.from(tabsNav.querySelectorAll('.gb-franchise-tabs-tab'))
-      .find(tab => tab.textContent.includes('Images') || tab.querySelector('a[href*="/Images"]'));
+    const imagesTab = Array.from(
+      tabsNav.querySelectorAll(".gb-franchise-tabs-tab"),
+    ).find(
+      (tab) =>
+        tab.textContent.includes("Images") ||
+        tab.querySelector('a[href*="/Images"]'),
+    );
 
     if (imagesTab) {
-      const gamesTab = document.createElement('span');
-      gamesTab.className = 'gb-franchise-tabs-tab';
-      const gamesLink = document.createElement('a');
-      gamesLink.href = '#Games';
-      gamesLink.textContent = 'Games';
-      gamesLink.addEventListener('click', (e) => {
+      const gamesTab = document.createElement("span");
+      gamesTab.className = "gb-franchise-tabs-tab";
+      const gamesLink = document.createElement("a");
+      gamesLink.href = "#Games";
+      gamesLink.textContent = "Games";
+      gamesLink.addEventListener("click", (e) => {
         e.preventDefault();
-        gamesSection.scrollIntoView({ behavior: 'smooth' });
+        gamesSection.scrollIntoView({ behavior: "smooth" });
       });
       gamesTab.appendChild(gamesLink);
       tabsNav.insertBefore(gamesTab, imagesTab);
@@ -263,7 +291,7 @@
    * Make the games count in sidebar clickable to scroll to Games section
    */
   const initGamesLink = () => {
-    const gamesLink = document.querySelector('.gb-games-link');
+    const gamesLink = document.querySelector(".gb-games-link");
     if (!gamesLink) return;
 
     const targetId = gamesLink.dataset.target;
@@ -272,8 +300,8 @@
     const targetSection = document.getElementById(targetId);
     if (!targetSection) return;
 
-    gamesLink.addEventListener('click', () => {
-      targetSection.scrollIntoView({ behavior: 'smooth' });
+    gamesLink.addEventListener("click", () => {
+      targetSection.scrollIntoView({ behavior: "smooth" });
     });
   };
 

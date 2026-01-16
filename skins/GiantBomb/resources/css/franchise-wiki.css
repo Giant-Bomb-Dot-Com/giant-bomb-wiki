@@ -30,10 +30,12 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right,
-      rgba(26, 26, 26, 1) 0%,
-      rgba(26, 26, 26, 0.9) 30%,
-      rgba(26, 26, 26, 0.7) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(26, 26, 26, 1) 0%,
+    rgba(26, 26, 26, 0.9) 30%,
+    rgba(26, 26, 26, 0.7) 100%
+  );
   pointer-events: none;
 }
 
