@@ -43,73 +43,73 @@ CSS: `skins/GiantBomb/resources/css/character-wiki.css`
 
 ### Franchise
 
-| Template                              | Purpose                                           |
-| ------------------------------------- | ------------------------------------------------- |
-| `Template_Franchise.wikitext`         | Opens franchise page layout, sets SMW properties  |
-| `Template_FranchiseEnd.wikitext`      | Closes layout, shows games list, renders sidebar  |
-| `Template_FranchiseSidebar.wikitext`  | Sidebar with franchise details via SMW queries    |
-| `Template_FranchiseFirstGame.wikitext`| Helper: renders first game in franchise           |
-| `Template_FranchiseGameItem.wikitext` | Helper: renders individual game in games list     |
+| Template                               | Purpose                                          |
+| -------------------------------------- | ------------------------------------------------ |
+| `Template_Franchise.wikitext`          | Opens franchise page layout, sets SMW properties |
+| `Template_FranchiseEnd.wikitext`       | Closes layout, shows games list, renders sidebar |
+| `Template_FranchiseSidebar.wikitext`   | Sidebar with franchise details via SMW queries   |
+| `Template_FranchiseFirstGame.wikitext` | Helper: renders first game in franchise          |
+| `Template_FranchiseGameItem.wikitext`  | Helper: renders individual game in games list    |
 
 CSS: `skins/GiantBomb/resources/css/franchise-wiki.css`
 
 ### Company
 
-| Template                           | Purpose                                         |
-| ---------------------------------- | ----------------------------------------------- |
-| `Template_Company.wikitext`        | Opens company page layout, sets SMW properties  |
-| `Template_CompanyEnd.wikitext`     | Closes layout and renders sidebar               |
-| `Template_CompanySidebar.wikitext` | Sidebar with company details via SMW queries    |
+| Template                           | Purpose                                        |
+| ---------------------------------- | ---------------------------------------------- |
+| `Template_Company.wikitext`        | Opens company page layout, sets SMW properties |
+| `Template_CompanyEnd.wikitext`     | Closes layout and renders sidebar              |
+| `Template_CompanySidebar.wikitext` | Sidebar with company details via SMW queries   |
 
 CSS: `skins/GiantBomb/resources/css/company-wiki.css`
 
 ### Concept
 
-| Template                           | Purpose                                         |
-| ---------------------------------- | ----------------------------------------------- |
-| `Template_Concept.wikitext`        | Opens concept page layout, sets SMW properties  |
-| `Template_ConceptEnd.wikitext`     | Closes layout and renders sidebar               |
-| `Template_ConceptSidebar.wikitext` | Sidebar with concept details via SMW queries    |
+| Template                           | Purpose                                        |
+| ---------------------------------- | ---------------------------------------------- |
+| `Template_Concept.wikitext`        | Opens concept page layout, sets SMW properties |
+| `Template_ConceptEnd.wikitext`     | Closes layout and renders sidebar              |
+| `Template_ConceptSidebar.wikitext` | Sidebar with concept details via SMW queries   |
 
 CSS: `skins/GiantBomb/resources/css/concept-wiki.css`
 
 ### Location
 
-| Template                            | Purpose                                          |
-| ----------------------------------- | ------------------------------------------------ |
-| `Template_Location.wikitext`        | Opens location page layout, sets SMW properties  |
-| `Template_LocationEnd.wikitext`     | Closes layout and renders sidebar                |
-| `Template_LocationSidebar.wikitext` | Sidebar with location details via SMW queries    |
+| Template                            | Purpose                                         |
+| ----------------------------------- | ----------------------------------------------- |
+| `Template_Location.wikitext`        | Opens location page layout, sets SMW properties |
+| `Template_LocationEnd.wikitext`     | Closes layout and renders sidebar               |
+| `Template_LocationSidebar.wikitext` | Sidebar with location details via SMW queries   |
 
 CSS: `skins/GiantBomb/resources/css/location-wiki.css`
 
 ### Person
 
-| Template                          | Purpose                                        |
-| --------------------------------- | ---------------------------------------------- |
-| `Template_Person.wikitext`        | Opens person page layout, sets SMW properties  |
-| `Template_PersonEnd.wikitext`     | Closes layout and renders sidebar              |
-| `Template_PersonSidebar.wikitext` | Sidebar with person details via SMW queries    |
+| Template                          | Purpose                                       |
+| --------------------------------- | --------------------------------------------- |
+| `Template_Person.wikitext`        | Opens person page layout, sets SMW properties |
+| `Template_PersonEnd.wikitext`     | Closes layout and renders sidebar             |
+| `Template_PersonSidebar.wikitext` | Sidebar with person details via SMW queries   |
 
 CSS: `skins/GiantBomb/resources/css/person-wiki.css`
 
 ### Platform
 
-| Template                            | Purpose                                          |
-| ----------------------------------- | ------------------------------------------------ |
-| `Template_Platform.wikitext`        | Opens platform page layout, sets SMW properties  |
-| `Template_PlatformEnd.wikitext`     | Closes layout and renders sidebar                |
-| `Template_PlatformSidebar.wikitext` | Sidebar with platform details via SMW queries    |
+| Template                            | Purpose                                         |
+| ----------------------------------- | ----------------------------------------------- |
+| `Template_Platform.wikitext`        | Opens platform page layout, sets SMW properties |
+| `Template_PlatformEnd.wikitext`     | Closes layout and renders sidebar               |
+| `Template_PlatformSidebar.wikitext` | Sidebar with platform details via SMW queries   |
 
 CSS: `skins/GiantBomb/resources/css/platform-wiki.css`
 
 ### Shared Helpers
 
-| Template                            | Purpose                                    |
-| ----------------------------------- | ------------------------------------------ |
-| `Template_SidebarListItem.wikitext` | Helper for rendering sidebar list items    |
+| Template                               | Purpose                                    |
+| -------------------------------------- | ------------------------------------------ |
+| `Template_SidebarListItem.wikitext`    | Helper for rendering sidebar list items    |
 | `Template_SidebarRelatedItem.wikitext` | Helper for rendering related content items |
-| `Template_StripPrefix.wikitext`     | Helper for stripping namespace prefixes    |
+| `Template_StripPrefix.wikitext`        | Helper for stripping namespace prefixes    |
 
 ## Page Structure Pattern
 
@@ -184,6 +184,7 @@ Wiki content here...
 ## SMW Properties
 
 Each content type sets semantic properties that enable:
+
 - Cross-linking between related content
 - SMW queries in sidebars
 - Category pages with filtered/sorted listings

@@ -34,7 +34,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(28, 28, 28, 0.7) 0%, rgba(28, 28, 28, 0.85) 60%, rgba(28, 28, 28, 1) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 28, 28, 0.7) 0%,
+    rgba(28, 28, 28, 0.85) 60%,
+    rgba(28, 28, 28, 1) 100%
+  );
   z-index: 1;
 }
 
@@ -121,7 +126,9 @@
   padding: 0;
 }
 
-.gb-person-tabs-nav p { display: contents; }
+.gb-person-tabs-nav p {
+  display: contents;
+}
 
 .gb-person-tabs-tab {
   display: inline-flex;
@@ -135,9 +142,19 @@
   transition: all 0.2s ease;
 }
 
-.gb-person-tabs-tab a { color: inherit; text-decoration: none; }
-.gb-person-tabs-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-.gb-person-tabs-tab--active { color: #fff; background: #6ba4d9; border-bottom-color: #6ba4d9; }
+.gb-person-tabs-tab a {
+  color: inherit;
+  text-decoration: none;
+}
+.gb-person-tabs-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+.gb-person-tabs-tab--active {
+  color: #fff;
+  background: #6ba4d9;
+  border-bottom-color: #6ba4d9;
+}
 
 /* Content Layout */
 .gb-person-content {
@@ -150,61 +167,206 @@
   align-items: start;
 }
 
-.gb-person-main { min-width: 0; }
-.gb-person-sidebar { width: 100%; display: flex; flex-direction: column; gap: 1.25rem; }
-.gb-person-content > p:empty, .gb-person-content > br { display: none; }
+.gb-person-main {
+  min-width: 0;
+}
+.gb-person-sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.gb-person-content > p:empty,
+.gb-person-content > br {
+  display: none;
+}
 
 /* Wiki Content */
-.gb-person-wiki-content { line-height: 1.7; font-size: 0.95rem; }
-.gb-person-wiki-content h2 { font-size: 1.5rem; font-weight: 600; color: #fff; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
-.gb-person-wiki-content h3 { font-size: 1.2rem; font-weight: 600; color: #fff; margin: 1.5rem 0 0.75rem; }
-.gb-person-wiki-content p { margin: 0 0 1rem; color: #ccc; }
-.gb-person-wiki-content a { color: #6ba4d9; text-decoration: none; }
-.gb-person-wiki-content a:hover { text-decoration: underline; }
-.gb-person-wiki-content ul, .gb-person-wiki-content ol { margin: 0 0 1rem 1.5rem; color: #ccc; }
+.gb-person-wiki-content {
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.gb-person-wiki-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+.gb-person-wiki-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 1.5rem 0 0.75rem;
+}
+.gb-person-wiki-content p {
+  margin: 0 0 1rem;
+  color: #ccc;
+}
+.gb-person-wiki-content a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+.gb-person-wiki-content a:hover {
+  text-decoration: underline;
+}
+.gb-person-wiki-content ul,
+.gb-person-wiki-content ol {
+  margin: 0 0 1rem 1.5rem;
+  color: #ccc;
+}
 
 /* Sidebar Details */
-.gb-person-details { margin: 0; padding: 0; }
-.gb-person-details dt { color: #888; font-size: 0.85rem; padding: 0.6rem 0 0.25rem; border-top: 1px solid #333; }
-.gb-person-details dt:first-child { border-top: none; padding-top: 0; }
-.gb-person-details dd { margin: 0; padding: 0 0 0.5rem; color: #fff; font-size: 0.9rem; }
-.gb-person-details dd a { color: #6ba4d9; text-decoration: none; }
+.gb-person-details {
+  margin: 0;
+  padding: 0;
+}
+.gb-person-details dt {
+  color: #888;
+  font-size: 0.85rem;
+  padding: 0.6rem 0 0.25rem;
+  border-top: 1px solid #333;
+}
+.gb-person-details dt:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.gb-person-details dd {
+  margin: 0;
+  padding: 0 0 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+}
+.gb-person-details dd a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
 
 /* Accordions */
-.gb-person-page .gb-sidebar-accordions { display: flex; flex-direction: column; }
-.gb-person-page .gb-accordion { background: #252525; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
-.gb-person-page .gb-accordion-header { background: #333; padding: 0.75rem 1rem; font-size: 0.95rem; font-weight: 600; color: #fff; cursor: pointer; display: flex; justify-content: space-between; }
-.gb-person-page .gb-accordion-header::after { content: "+"; font-size: 1.2rem; color: #888; }
-.gb-person-page .gb-accordion--open .gb-accordion-header::after { content: "−"; }
-.gb-person-page .gb-accordion-content { display: none; padding: 0.5rem 1rem; margin: 0; list-style: none; }
-.gb-person-page .gb-accordion--open .gb-accordion-content { display: block; }
-.gb-person-page .gb-accordion-content li { padding: 0.35rem 0; border-bottom: 1px solid #333; }
-.gb-person-page .gb-accordion-content li:last-child { border-bottom: none; }
-.gb-person-page .gb-accordion-content a { color: #6ba4d9; text-decoration: none; font-size: 0.9rem; }
-.gb-person-page .gb-accordion-content em { color: #666; font-style: italic; }
+.gb-person-page .gb-sidebar-accordions {
+  display: flex;
+  flex-direction: column;
+}
+.gb-person-page .gb-accordion {
+  background: #252525;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.gb-person-page .gb-accordion-header {
+  background: #333;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.gb-person-page .gb-accordion-header::after {
+  content: "+";
+  font-size: 1.2rem;
+  color: #888;
+}
+.gb-person-page .gb-accordion--open .gb-accordion-header::after {
+  content: "−";
+}
+.gb-person-page .gb-accordion-content {
+  display: none;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  list-style: none;
+}
+.gb-person-page .gb-accordion--open .gb-accordion-content {
+  display: block;
+}
+.gb-person-page .gb-accordion-content li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #333;
+}
+.gb-person-page .gb-accordion-content li:last-child {
+  border-bottom: none;
+}
+.gb-person-page .gb-accordion-content a {
+  color: #6ba4d9;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.gb-person-page .gb-accordion-content em {
+  color: #666;
+  font-style: italic;
+}
 
 /* Content Images */
-.gb-person-main img { float: left; margin: 0 1.5rem 1rem 0; max-width: 350px; max-height: 350px; height: auto; clear: left; }
-.gb-person-main h2, .gb-person-main h3 { clear: both; }
-.gb-person-page .gb-person-hero .gb-person-hero-cover img { float: none; margin: 0; max-width: none; width: 100%; }
+.gb-person-main img {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  max-width: 350px;
+  max-height: 350px;
+  height: auto;
+  clear: left;
+}
+.gb-person-main h2,
+.gb-person-main h3 {
+  clear: both;
+}
+.gb-person-page .gb-person-hero .gb-person-hero-cover img {
+  float: none;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+}
 
 /* Tables */
-body.skin-giantbomb .gb-person-page table { background-color: #1c1c1c; border-color: #333; color: #ccc; border-collapse: collapse; width: 100%; margin: 1rem 0; }
-body.skin-giantbomb .gb-person-page table th { background-color: #252525; color: #fff; border-color: #333; padding: 0.75rem 1rem; }
-body.skin-giantbomb .gb-person-page table td { background-color: transparent; border-color: #333; padding: 0.75rem 1rem; }
+body.skin-giantbomb .gb-person-page table {
+  background-color: #1c1c1c;
+  border-color: #333;
+  color: #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+body.skin-giantbomb .gb-person-page table th {
+  background-color: #252525;
+  color: #fff;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+}
+body.skin-giantbomb .gb-person-page table td {
+  background-color: transparent;
+  border-color: #333;
+  padding: 0.75rem 1rem;
+}
 
 /* Responsive */
 @media (max-width: 900px) {
-  .gb-person-content { grid-template-columns: 1fr; }
-  .gb-person-sidebar { order: -1; }
-  .gb-person-hero-container { flex-direction: column; align-items: center; text-align: center; }
-  .gb-person-hero-cover { width: 150px; }
+  .gb-person-content {
+    grid-template-columns: 1fr;
+  }
+  .gb-person-sidebar {
+    order: -1;
+  }
+  .gb-person-hero-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .gb-person-hero-cover {
+    width: 150px;
+  }
 }
 
 @media (max-width: 600px) {
-  .gb-person-page .gb-wiki-actions { display: none; }
-  .gb-person-content { padding: 1rem; }
-  .gb-person-hero-title { font-size: 1.75rem; }
+  .gb-person-page .gb-wiki-actions {
+    display: none;
+  }
+  .gb-person-content {
+    padding: 1rem;
+  }
+  .gb-person-hero-title {
+    font-size: 1.75rem;
+  }
 }
 
 /* Hide footer elements */
