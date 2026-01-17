@@ -14,7 +14,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 * <code>Has gender</code> - Gender
 * <code>Has birthday</code> - Birth date
 * <code>Has death</code> - Death date
-* <code>Has franchise</code> - Franchise links
+* <code>Has franchises</code> - Franchise links
 * <code>Has aliases</code> - Alternative names
 * <code>Has games</code> - Game appearances
 * <code>Has friends</code> - Allied characters
@@ -66,7 +66,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 }}
 
 {{#show:{{FULLPAGENAME}}
-  |?Has franchise
+  |?Has franchises
   |format=list
   |link=all
   |default=
@@ -92,8 +92,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion gb-accordion--open">
 <div class="gb-accordion-header">Games</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
-  |?Has games
+{{#ask: [[Has characters::{{FULLPAGENAME}}]] [[Category:Games]]
   |format=list
   |link=all
   |limit=20
@@ -101,14 +100,16 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |searchlabel=
 }}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
 </ul>
 </div>
 
 <div class="gb-accordion">
 <div class="gb-accordion-header">Friends</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has friends
   |format=list
   |link=all
@@ -117,6 +118,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -124,7 +127,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Enemies</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has enemies
   |format=list
   |link=all
@@ -133,6 +136,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -140,7 +145,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Concepts</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has concepts
   |format=list
   |link=all
@@ -149,6 +154,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -156,7 +163,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Locations</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has locations
   |format=list
   |link=all
@@ -165,6 +172,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -172,7 +181,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">Objects</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has objects
   |format=list
   |link=all
@@ -181,6 +190,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>
@@ -188,7 +199,7 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
 <div class="gb-accordion">
 <div class="gb-accordion-header">People</div>
 <ul class="gb-accordion-content">
-{{#show:{{FULLPAGENAME}}
+{{#ask: [[{{FULLPAGENAME}}]]
   |?Has people
   |format=list
   |link=all
@@ -197,6 +208,8 @@ This template is called automatically by <code><nowiki>{{CharacterEnd}}</nowiki>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
 }}
 </ul>
 </div>

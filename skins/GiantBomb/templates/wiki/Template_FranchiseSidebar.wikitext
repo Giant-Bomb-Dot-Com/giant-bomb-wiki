@@ -1,0 +1,155 @@
+<noinclude>
+==Documentation==
+Renders the franchise page sidebar with structured data pulled from Semantic MediaWiki properties.
+
+This template is called automatically by <code><nowiki>{{FranchiseEnd}}</nowiki></code>.
+
+===Sections===
+# '''Franchise details''' - Name, game count, first game, aliases
+# '''Related content''' - Accordion sections for Characters, Locations, Concepts, Objects, People
+
+===SMW Properties Used===
+* <code>Has name</code> - Franchise title
+* <code>Has aliases</code> - Alternative names
+* <code>Has games</code> - Game links (also queried via inverse)
+* <code>Has characters</code> - Character links
+* <code>Has locations</code> - Location links
+* <code>Has concepts</code> - Concept links
+* <code>Has objects</code> - Object links
+</noinclude><includeonly>
+<div class="gb-franchise-sidebar">
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Franchise details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-franchise-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+<dt>Features</dt>
+<dd>{{#ask: [[Has franchises::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=count
+}} games</dd>
+<dd class="gb-games-view-link">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</dd>
+
+{{#ask: [[Has franchises::{{FULLPAGENAME}}]] [[Category:Games]]
+  |?Has name=name
+  |format=template
+  |template=FranchiseFirstGame
+  |named args=yes
+  |link=none
+  |limit=1
+  |sort=Has release date
+  |order=asc
+  |searchlabel=
+  |default=
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Characters</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has characters
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Locations</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has locations
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has concepts
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Objects</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has objects
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">People</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has people
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+</div>
+</div>
+</includeonly>

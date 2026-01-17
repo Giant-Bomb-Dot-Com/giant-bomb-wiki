@@ -66,18 +66,23 @@
 .gb-character-hero-cover {
   flex-shrink: 0;
   width: 200px;
+  height: 309px;
+  background: #2a2a2a;
+  overflow: hidden;
+}
+
+.gb-character-hero-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border: 3px solid var(--gb-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .gb-character-hero-info {
   flex: 1;
   min-width: 0;
-}
-
-.gb-character-hero-cover img {
-  width: 100%;
-  height: auto;
-  border: 3px solid var(--gb-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .gb-character-hero-title {
@@ -498,6 +503,7 @@ body.skin-giantbomb .gb-character-page table tr:nth-child(even) td {
 
   .gb-character-hero-cover {
     width: 150px;
+    height: 232px;
     margin-bottom: 1rem;
   }
 
@@ -574,6 +580,7 @@ body.skin-giantbomb .gb-character-page table tr:nth-child(even) td {
 
   .gb-character-hero-cover {
     width: 120px;
+    height: 185px;
   }
 
   .gb-character-hero-title {

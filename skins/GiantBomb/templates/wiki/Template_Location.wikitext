@@ -1,0 +1,108 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Characters (property=Has characters)
+||||| Concepts (property=Has concepts)
+||||| Games (property=Has games)
+||||| Locations (property=Has related locations)
+||||| Objects (property=Has objects)
+}}
+==Documentation==
+This template creates a full location page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Locations are places that appear in video games, such as cities, planets, dungeons, or fictional worlds.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the location
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Location image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Games || Games featuring this location (comma-separated)
+|-
+|| Characters || Characters associated with this location (comma-separated)
+|-
+|| Concepts || Concepts related to this location (comma-separated)
+|-
+|| Locations || Related/similar locations (comma-separated)
+|-
+|| Objects || Objects found in this location (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Location
+| Name = Hyrule
+| Guid = 3035-1234
+| Deck = The kingdom where most Legend of Zelda games take place...
+| Games = Games/The_Legend_of_Zelda, Games/Ocarina_of_Time
+| Characters = Characters/Link, Characters/Zelda
+| Locations = Locations/Hyrule_Castle, Locations/Death_Mountain
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{LocationEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has related locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Location)}}[[Category:Locations|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-location-page" itemscope itemtype="https://schema.org/Place">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Location" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}} in video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a location that appears in video games. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games feature {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears as a location in various video games." /></div></div></div>
+<div class="gb-location-hero">
+<div class="gb-location-hero-container">
+<div class="gb-location-hero-cover"></div>
+<div class="gb-location-hero-info">
+<div class="gb-location-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-location-hero-meta"><span class="gb-location-hero-type">LOCATION</span></div>
+<div class="gb-location-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-location-tabs">
+<div class="gb-location-tabs-container">
+<div class="gb-location-tabs-nav">
+<span class="gb-location-tabs-tab gb-location-tabs-tab--active">Location</span>
+<span class="gb-location-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-location-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-location-content">
+<div class="gb-location-main">
+<div class="gb-location-wiki-content">
+</includeonly>

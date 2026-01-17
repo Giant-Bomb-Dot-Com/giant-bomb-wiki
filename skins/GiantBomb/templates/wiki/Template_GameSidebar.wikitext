@@ -6,7 +6,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 
 ===Sections===
 # '''Game details''' - Name, release date, platforms, developer, publisher, genre, theme, franchise, aliases
-# '''Related content''' - Tabbed interface showing Characters, Locations, Concepts, Objects
+# '''Related content''' - Accordion sections for Characters, Locations, Concepts, Objects, People
 
 ===SMW Properties Used===
 * <code>Has name</code> - Game title
@@ -16,7 +16,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 * <code>Has publishers</code> - Publisher company links
 * <code>Has genres</code> - Genre links
 * <code>Has themes</code> - Theme links
-* <code>Has franchise</code> - Franchise link
+* <code>Has franchises</code> - Franchise link
 * <code>Has aliases</code> - Alternative names
 * <code>Has characters</code> - Character links
 * <code>Has locations</code> - Location links
@@ -56,7 +56,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 <dd>{{#show:{{FULLPAGENAME}}|?Has themes|format=list|link=all|sep=<br/>|limit=20}}</dd>
 
 {{#show:{{FULLPAGENAME}}
-  |?Has franchise
+  |?Has franchises
   |format=list
   |link=all
   |default=
@@ -76,67 +76,87 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 </div>
 </div>
 
-<div class="gb-sidebar-section">
-<div class="gb-sidebar-related-tabs">
-<span class="gb-sidebar-related-tab gb-sidebar-related-tab--active" data-target="characters-list">Characters</span>
-<span class="gb-sidebar-related-tab" data-target="locations-list">Locations</span>
-<span class="gb-sidebar-related-tab" data-target="concepts-list">Concepts</span>
-<span class="gb-sidebar-related-tab" data-target="objects-list">Objects</span>
-</div>
-<div class="gb-sidebar-related-content">
+<div class="gb-sidebar-accordions">
 
-<ul id="characters-list" class="gb-sidebar-related-list gb-sidebar-related-list--active">
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Characters</div>
+<ul class="gb-accordion-content">
 {{#show:{{FULLPAGENAME}}
   |?Has characters
   |format=list
   |link=all
-  |limit=15
+  |limit=20
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
 }}
 </ul>
+</div>
 
-<ul id="locations-list" class="gb-sidebar-related-list">
+<div class="gb-accordion">
+<div class="gb-accordion-header">Locations</div>
+<ul class="gb-accordion-content">
 {{#show:{{FULLPAGENAME}}
   |?Has locations
   |format=list
   |link=all
-  |limit=15
+  |limit=20
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
 }}
 </ul>
+</div>
 
-<ul id="concepts-list" class="gb-sidebar-related-list">
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
 {{#show:{{FULLPAGENAME}}
   |?Has concepts
   |format=list
   |link=all
-  |limit=15
+  |limit=20
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
 }}
 </ul>
+</div>
 
-<ul id="objects-list" class="gb-sidebar-related-list">
+<div class="gb-accordion">
+<div class="gb-accordion-header">Objects</div>
+<ul class="gb-accordion-content">
 {{#show:{{FULLPAGENAME}}
   |?Has objects
   |format=list
   |link=all
-  |limit=15
+  |limit=20
   |default=<li><em>None</em></li>
   |intro=<li>
   |outro=</li>
   |sep=</li><li>
 }}
 </ul>
-
 </div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">People</div>
+<ul class="gb-accordion-content">
+{{#show:{{FULLPAGENAME}}
+  |?Has people
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+}}
+</ul>
+</div>
+
 </div>
 </includeonly>

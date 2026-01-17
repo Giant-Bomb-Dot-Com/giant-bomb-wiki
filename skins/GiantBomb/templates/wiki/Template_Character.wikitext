@@ -12,7 +12,7 @@
 |||| Death (property=Has death)
 |||| Concepts (property=Has concepts)
 |||| Enemies (property=Has enemies)
-|||| Franchises (property=Has franchise)
+|||| Franchises (property=Has franchises)
 |||| Friends (property=Has friends)
 |||| Games (property=Has games)
 |||| Locations (property=Has locations)
@@ -92,13 +92,16 @@ Your wiki content here...
 }}{{#if:{{{Death|}}}|{{#set:Has death={{{Death}}}}}
 }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
 }}{{#arraymap:{{{Enemies|}}}|,|@@|{{#set:Has enemies=@@}}
-}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchise=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
 }}{{#arraymap:{{{Friends|}}}|,|@@|{{#set:Has friends=@@}}
 }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
-}}{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page">
+}}{{DISPLAYTITLE:{{{Name|}}} (Character)}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Character" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game character. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games is {{{Name|}}} in?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games including titles from {{{Franchises|}}}." /></div></div></div>
 <div class="gb-character-hero">
 <div class="gb-character-hero-container">
 <div class="gb-character-hero-cover"></div>

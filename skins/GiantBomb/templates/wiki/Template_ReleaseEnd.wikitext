@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the release page layout and renders the sidebar.
+Place this at the end of release page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-release-sidebar">{{ReleaseSidebar}}</div></div></div></includeonly>

@@ -1,0 +1,200 @@
+<noinclude>
+==Documentation==
+Renders the person page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{PersonEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Person details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-person-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has gender
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Gender</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has birthday
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Born</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has death
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Died</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has hometown
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Hometown</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has country
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Country</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has website
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Website</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has twitter
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Twitter</dt><dd>@
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has people::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |searchlabel=
+}}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Franchises</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has franchises
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Characters</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has characters
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Concepts</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has concepts
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Locations</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has locations
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+<div class="gb-accordion">
+<div class="gb-accordion-header">Related People</div>
+<ul class="gb-accordion-content">
+{{#ask: [[{{FULLPAGENAME}}]]
+  |?Has related people
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |mainlabel=-
+  |searchlabel=
+}}
+</ul>
+</div>
+
+</div>
+</includeonly>

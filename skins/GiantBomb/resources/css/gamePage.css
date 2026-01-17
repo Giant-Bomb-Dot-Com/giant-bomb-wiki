@@ -31,16 +31,25 @@
 .game-hero__cover {
   flex-shrink: 0;
   width: 200px;
+  height: 309px;
   border-radius: 4px;
   overflow: hidden;
+  background: #2a2a2a;
 }
 
-.game-hero__cover .game-image-viewer {
-  border-radius: 4px;
-}
-
+.game-hero__cover [data-vue-component],
+.game-hero__cover .game-image-viewer,
 .game-hero__cover .game-image-container {
-  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+.game-hero__cover .game-image,
+.game-hero__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .game-hero__cover-image {
@@ -780,6 +789,7 @@
 
   .game-hero__cover {
     width: 250px;
+    height: 386px;
   }
 
   .game-hero__info {

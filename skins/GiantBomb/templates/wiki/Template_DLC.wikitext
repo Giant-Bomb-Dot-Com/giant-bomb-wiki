@@ -1,0 +1,105 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Game (property=Has game)
+||||| Platform (property=Has platform)
+||||| ReleaseDate (property=Has release date)
+||||| LaunchPrice (property=Has launch price)
+}}
+==Documentation==
+This template creates a full DLC page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+DLC (Downloadable Content) represents add-ons, expansions, and downloadable content for games.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the DLC
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || DLC image filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Game || The base game this DLC is for
+|-
+|| Platform || Platform this DLC is available on
+|-
+|| ReleaseDate || Release date of the DLC
+|-
+|| LaunchPrice || Original price at launch
+|}
+
+===Usage===
+<pre>
+{{DLC
+| Name = The Witcher 3: Blood and Wine
+| Guid = 3020-1234
+| Deck = A massive expansion to The Witcher 3...
+| Game = Games/The_Witcher_3
+| Platform = Platforms/PC
+| ReleaseDate = 2016-05-31
+| LaunchPrice = $19.99
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{DLCEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{Game|}}}|{{#set:Has game={{{Game}}}}}
+}}{{#if:{{{Platform|}}}|{{#set:Has platform={{{Platform}}}}}
+}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
+}}{{#if:{{{LaunchPrice|}}}|{{#set:Has launch price={{{LaunchPrice}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (DLC)}}[[Category:DLCs|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-dlc-page" itemscope itemtype="https://schema.org/Product">
+<meta itemprop="name" content="{{{Name|}}} - Video Game DLC" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is downloadable content (DLC) for a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What game is {{{Name|}}} for?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is DLC for {{{Game|}}}." /></div></div></div>
+<div class="gb-dlc-hero">
+<div class="gb-dlc-hero-container">
+<div class="gb-dlc-hero-cover"></div>
+<div class="gb-dlc-hero-info">
+<div class="gb-dlc-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-dlc-hero-meta"><span class="gb-dlc-hero-type">DLC</span>{{#if:{{{Game|}}}|<span class="gb-dlc-hero-game">for [[{{{Game}}}]]</span>|}}</div>
+<div class="gb-dlc-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-dlc-tabs">
+<div class="gb-dlc-tabs-container">
+<div class="gb-dlc-tabs-nav">
+<span class="gb-dlc-tabs-tab gb-dlc-tabs-tab--active">DLC</span>
+<span class="gb-dlc-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-dlc-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-dlc-content">
+<div class="gb-dlc-main">
+<div class="gb-dlc-wiki-content">
+</includeonly>

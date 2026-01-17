@@ -1,0 +1,85 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a full accessory page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Accessories are gaming peripherals and hardware - controllers, headsets, cables, etc.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the accessory
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Accessory image filename
+|-
+|| Deck || Short description shown in hero
+|}
+
+===Usage===
+<pre>
+{{Accessory
+| Name = DualShock 4
+| Guid = 3000-123
+| Deck = The wireless controller for the PlayStation 4...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{AccessoryEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Accessory)}}[[Category:Accessories|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-accessory-page" itemscope itemtype="https://schema.org/Product">
+<meta itemprop="name" content="{{{Name|}}} - Gaming Accessory" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a gaming accessory. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What platforms support {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is compatible with various gaming platforms." /></div></div></div>
+<div class="gb-accessory-hero">
+<div class="gb-accessory-hero-container">
+<div class="gb-accessory-hero-cover"></div>
+<div class="gb-accessory-hero-info">
+<div class="gb-accessory-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-accessory-hero-meta"><span class="gb-accessory-hero-type">ACCESSORY</span></div>
+<div class="gb-accessory-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-accessory-tabs">
+<div class="gb-accessory-tabs-container">
+<div class="gb-accessory-tabs-nav">
+<span class="gb-accessory-tabs-tab gb-accessory-tabs-tab--active">Accessory</span>
+<span class="gb-accessory-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-accessory-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-accessory-content">
+<div class="gb-accessory-main">
+<div class="gb-accessory-wiki-content">
+</includeonly>

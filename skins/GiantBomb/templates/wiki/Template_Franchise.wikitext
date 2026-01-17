@@ -1,0 +1,105 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+|||| Guid (property=Has guid)
+|||| Aliases (property=Has aliases)
+|||| Image (property=Has image)
+|||| Deck (property=Has deck)
+|||| Characters (property=Has characters)
+|||| Concepts (property=Has concepts)
+|||| Games (property=Has games)
+|||| Locations (property=Has locations)
+|||| Objects (property=Has objects)
+|||| People (property=Has people)
+}}
+==Documentation==
+This template creates a full franchise page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+The page structure follows the classic Giant Bomb wiki design:
+* Hero section with cover image, title, and deck
+* Tab navigation for sub-pages
+* Two-column layout with wiki content and games list on left, franchise details sidebar on right
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+| Name || Display name of the franchise
+|-
+| Guid || Giant Bomb API identifier
+|-
+| Aliases || Alternative names (comma-separated)
+|-
+| Image || Cover image filename
+|-
+| Deck || Short description shown in hero
+|-
+| Games || Games in this franchise (comma-separated page links)
+|-
+| Characters || Characters in this franchise (comma-separated)
+|-
+| Concepts || Concepts in this franchise (comma-separated)
+|-
+| Locations || Locations in this franchise (comma-separated)
+|-
+| Objects || Objects in this franchise (comma-separated)
+|-
+| People || People associated with this franchise (comma-separated)
+|}
+
+===Usage===
+<pre>
+{{Franchise
+| Name = The Legend of Zelda
+| Guid = 3025-89
+| Deck = Nintendo's iconic action-adventure series...
+| Games = Games/The_Legend_of_Zelda, Games/Zelda_II
+| Characters = Characters/Link, Characters/Zelda
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{FranchiseEnd}}
+</pre>
+</noinclude><includeonly>{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
+}}{{DISPLAYTITLE:{{{Name|}}} (Franchise)}}[[Category:Franchises|{{SUBPAGENAME}}]]<div class="gb-franchise-page" itemscope itemtype="https://schema.org/CreativeWorkSeries">
+<meta itemprop="name" content="{{{Name|}}} (Video Game Franchise)" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}} franchise?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game franchise. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are in the {{{Name|}}} series?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} franchise includes multiple video game titles." /></div></div></div>
+<div class="gb-franchise-hero">
+<div class="gb-franchise-hero-container">
+<div class="gb-franchise-hero-cover"></div>
+<div class="gb-franchise-hero-info">
+<div class="gb-franchise-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-franchise-hero-meta"><span class="gb-franchise-hero-type">FRANCHISE</span> &#187;</div>
+<div class="gb-franchise-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-franchise-tabs">
+<div class="gb-franchise-tabs-container">
+<div class="gb-franchise-tabs-nav">
+<span class="gb-franchise-tabs-tab gb-franchise-tabs-tab--active">Franchise Wiki</span>
+<span class="gb-franchise-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-franchise-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-franchise-content">
+<div class="gb-franchise-main">
+<div class="gb-franchise-wiki-content">
+</includeonly>

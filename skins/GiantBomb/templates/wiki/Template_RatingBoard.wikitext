@@ -1,0 +1,80 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a rating board page layout.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Rating Boards are organizations that rate video games (e.g., ESRB, PEGI, CERO).
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the rating board
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Image || Rating board logo
+|-
+|| Deck || Short description
+|}
+
+===Usage===
+<pre>
+{{RatingBoard
+| Name = ESRB
+| Guid = 3070-1
+| Deck = The Entertainment Software Rating Board rates video games in North America...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{RatingBoardEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Rating Board)}}[[Category:Rating Boards|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-ratingboard-page" itemscope itemtype="https://schema.org/Organization">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Rating Board" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game rating board. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What ratings does {{{Name|}}} use?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} uses various age-based ratings to classify video games." /></div></div></div>
+<div class="gb-ratingboard-hero">
+<div class="gb-ratingboard-hero-container">
+<div class="gb-ratingboard-hero-cover"></div>
+<div class="gb-ratingboard-hero-info">
+<div class="gb-ratingboard-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-ratingboard-hero-meta"><span class="gb-ratingboard-hero-type">RATING BOARD</span></div>
+<div class="gb-ratingboard-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-ratingboard-tabs">
+<div class="gb-ratingboard-tabs-container">
+<div class="gb-ratingboard-tabs-nav">
+<span class="gb-ratingboard-tabs-tab gb-ratingboard-tabs-tab--active">Rating Board</span>
+<span class="gb-ratingboard-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-ratingboard-content">
+<div class="gb-ratingboard-main">
+<div class="gb-ratingboard-wiki-content">
+</includeonly>
