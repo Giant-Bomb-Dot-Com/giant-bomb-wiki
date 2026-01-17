@@ -1,0 +1,5 @@
+<noinclude>
+==Documentation==
+Closes the DLC page layout and renders the sidebar.
+Place this at the end of DLC page content, after all wiki text.
+</noinclude><includeonly></div></div><div class="gb-dlc-sidebar">{{DLCSidebar}}</div></div></div></includeonly>

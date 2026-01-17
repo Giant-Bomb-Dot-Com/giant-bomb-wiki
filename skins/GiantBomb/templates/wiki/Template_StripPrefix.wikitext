@@ -1,7 +1,8 @@
 <noinclude>
 ==Documentation==
-Strips common wiki prefixes (Companies/, Platforms/, etc.) from page names for cleaner display.
+Strips common wiki prefixes (Companies/, Platforms/, etc.) from page names for cleaner display,
+and replaces underscores with spaces.
 
 Usage: <code><nowiki>{{StripPrefix|Companies/id_Software}}</nowiki></code> outputs: id Software
 
-</noinclude><includeonly>{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{{1|}}}|Companies/|}}|Platforms/|}}|Genres/|}}|Themes/|}}|Franchises/|}}|Characters/|}}|Concepts/|}}|Locations/|}}|Objects/|}}</includeonly>
+</noinclude><includeonly>{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{#replace:{{{1|}}}|Companies/|}}|Platforms/|}}|Genres/|}}|Themes/|}}|Franchises/|}}|Characters/|}}|Concepts/|}}|Locations/|}}|Objects/|}}|Games/|}}|People/|}}|Accessories/|}}|Ratings/|}}|Regions/|}}|_|{{sp}}}}</includeonly>

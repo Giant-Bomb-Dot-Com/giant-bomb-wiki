@@ -1,0 +1,152 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+||||| Gender (property=Has gender)
+||||| Birthday (property=Has birthday)
+||||| Death (property=Has death)
+||||| Country (property=Has country)
+||||| Hometown (property=Has hometown)
+||||| Website (property=Has website)
+||||| Twitter (property=Has twitter)
+||||| Characters (property=Has characters)
+||||| Concepts (property=Has concepts)
+||||| Franchises (property=Has franchises)
+||||| Games (property=Has games)
+||||| Locations (property=Has locations)
+||||| Objects (property=Has objects)
+||||| People (property=Has related people)
+}}
+==Documentation==
+This template creates a full person page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+People are real individuals involved in the video game industry - developers, designers, voice actors,
+composers, journalists, and other notable figures.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the person
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Person's photo filename
+|-
+|| Deck || Short description shown in hero
+|-
+|| Gender || Male/Female/Other
+|-
+|| Birthday || Birth date
+|-
+|| Death || Death date (if applicable)
+|-
+|| Country || Country of origin
+|-
+|| Hometown || City of origin
+|-
+|| Website || Personal website URL
+|-
+|| Twitter || Twitter/X handle
+|-
+|| Games || Games this person worked on (comma-separated)
+|-
+|| Franchises || Franchises this person is associated with
+|-
+|| Characters || Characters created/voiced by this person
+|-
+|| Concepts || Concepts associated with this person
+|-
+|| Locations || Locations associated with this person
+|-
+|| Objects || Objects associated with this person
+|-
+|| People || Related people (colleagues, etc.)
+|}
+
+===Usage===
+<pre>
+{{Person
+| Name = Shigeru Miyamoto
+| Guid = 3040-1234
+| Deck = Legendary Nintendo game designer and producer...
+| Gender = Male
+| Birthday = 1952-11-16
+| Country = Japan
+| Hometown = Sonobe
+| Games = Games/Super_Mario_Bros, Games/The_Legend_of_Zelda
+| Franchises = Franchises/Mario, Franchises/The_Legend_of_Zelda
+| Characters = Characters/Mario, Characters/Link
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{PersonEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender}}}}}
+}}{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday}}}}}
+}}{{#if:{{{Death|}}}|{{#set:Has death={{{Death}}}}}
+}}{{#if:{{{Country|}}}|{{#set:Has country={{{Country}}}}}
+}}{{#if:{{{Hometown|}}}|{{#set:Has hometown={{{Hometown}}}}}
+}}{{#if:{{{Website|}}}|{{#set:Has website={{{Website}}}}}
+}}{{#if:{{{Twitter|}}}|{{#set:Has twitter={{{Twitter}}}}}
+}}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
+}}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
+}}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
+}}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
+}}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has related people=@@}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Person)}}[[Category:People|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-person-page" itemscope itemtype="https://schema.org/Person">
+<meta itemprop="name" content="{{{Name|}}}" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+{{#if:{{{Country|}}}|<meta itemprop="nationality" content="{{{Country}}}" />|}}
+{{#if:{{{Birthday|}}}|<meta itemprop="birthDate" content="{{{Birthday}}}" />|}}
+{{#if:{{{Death|}}}|<meta itemprop="deathDate" content="{{{Death}}}" />|}}
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a person in the video game industry. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} work on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has worked on numerous video games throughout their career." /></div></div></div>
+<div class="gb-person-hero">
+<div class="gb-person-hero-container">
+<div class="gb-person-hero-cover"></div>
+<div class="gb-person-hero-info">
+<div class="gb-person-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-person-hero-meta"><span class="gb-person-hero-type">PERSON</span>{{#if:{{{Country|}}}| &#187; {{{Country}}}|}}</div>
+<div class="gb-person-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-person-tabs">
+<div class="gb-person-tabs-container">
+<div class="gb-person-tabs-nav">
+<span class="gb-person-tabs-tab gb-person-tabs-tab--active">Person</span>
+<span class="gb-person-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-person-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-person-content">
+<div class="gb-person-main">
+<div class="gb-person-wiki-content">
+</includeonly>

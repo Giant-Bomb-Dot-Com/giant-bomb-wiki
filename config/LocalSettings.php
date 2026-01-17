@@ -18,7 +18,15 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wikiEnv = getenv('MV_ENV') ?: ($_ENV['MV_ENV'] ?? 'dev');
 
 $wgMemoryLimit = "2G";
-$wgSitename = "gb";
+
+# Increase template expansion limits for pages with many SMW queries
+$wgMaxArticleSize = 8192;           # Max article size in KB (default 2048)
+$wgMaxPPNodeCount = 2000000;        # Max preprocessor node count (default 1000000)
+$wgMaxTemplateDepth = 100;          # Max template recursion depth (default 40)
+$wgMaxPPExpandDepth = 100;          # Max preprocessor expand depth (default 40)
+$wgExpensiveParserFunctionLimit = 500;  # Expensive parser function limit (default 100)
+
+$wgSitename = "Giant Bomb Video Game Wiki";
 $wgMetaNamespace = "Gb";
 
 # URL Configuration
@@ -173,7 +181,26 @@ $wgResourceLoaderMaxage = [
     'versioned' => 30 * 24 * 60 * 60,
     'unversioned' => 5 * 60,
 ];
-$wgResourceLoaderUniqueVersion = '20260111-v2';
+
+# In dev, use timestamp-based version to auto-bust cache on container restart
+# In prod, use a static version string that gets updated on deploys
+if ( $wikiEnv === 'dev' ) {
+    # Generate version from container start time (cached in APCu for consistency within session)
+    if ( function_exists( 'apcu_fetch' ) ) {
+        $devCacheVersion = apcu_fetch('dev_cache_version');
+        if ( $devCacheVersion === false ) {
+            $devCacheVersion = date('YmdHis');
+            apcu_store('dev_cache_version', $devCacheVersion, 86400);
+        }
+    } else {
+        # Fallback if APCu not available - use current date (changes daily)
+        $devCacheVersion = date('Ymd');
+    }
+    $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
+} else {
+    $wgResourceLoaderUniqueVersion = '20260112-v1';
+}
+
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
@@ -358,6 +385,15 @@ if ( $wikiEnv === 'dev' ) {
     error_reporting( -1 );
     ini_set( 'display_errors', 1 );
     $smwgIgnoreUpgradeKeyCheck = true;
+    
+    # Disable/reduce caching in dev for faster iteration
+    $wgParserCacheExpireTime = 0;  # Disable parser cache
+    $wgEnableSidebarCache = false;
+    $wgResourceLoaderMaxage = [
+        'versioned' => 0,
+        'unversioned' => 0,
+    ];
+    $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
 
 # SMW query limits
@@ -390,6 +426,111 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
         if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
             $text .= "\n{{CharacterEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{FranchiseEnd}} to franchise pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Franchises/' ) === 0 ) {
+        if ( preg_match( '/\{\{Franchise\s*[\|\}]/i', $text ) && stripos( $text, '{{FranchiseEnd}}' ) === false ) {
+            $text .= "\n{{FranchiseEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{ConceptEnd}} to concept pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Concepts/' ) === 0 ) {
+        if ( preg_match( '/\{\{Concept\s*[\|\}]/i', $text ) && stripos( $text, '{{ConceptEnd}}' ) === false ) {
+            $text .= "\n{{ConceptEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{PlatformEnd}} to platform pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Platforms/' ) === 0 ) {
+        if ( preg_match( '/\{\{Platform\s*[\|\}]/i', $text ) && stripos( $text, '{{PlatformEnd}}' ) === false ) {
+            $text .= "\n{{PlatformEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{CompanyEnd}} to company pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Companies/' ) === 0 ) {
+        if ( preg_match( '/\{\{Company\s*[\|\}]/i', $text ) && stripos( $text, '{{CompanyEnd}}' ) === false ) {
+            $text .= "\n{{CompanyEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{PersonEnd}} to person pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'People/' ) === 0 ) {
+        if ( preg_match( '/\{\{Person\s*[\|\}]/i', $text ) && stripos( $text, '{{PersonEnd}}' ) === false ) {
+            $text .= "\n{{PersonEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{ObjectEnd}} to object pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Objects/' ) === 0 ) {
+        if ( preg_match( '/\{\{Object\s*[\|\}]/i', $text ) && stripos( $text, '{{ObjectEnd}}' ) === false ) {
+            $text .= "\n{{ObjectEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{LocationEnd}} to location pages missing it
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( $title && strpos( $title->getText(), 'Locations/' ) === 0 ) {
+        if ( preg_match( '/\{\{Location\s*[\|\}]/i', $text ) && stripos( $text, '{{LocationEnd}}' ) === false ) {
+            $text .= "\n{{LocationEnd}}";
+        }
+    }
+    return true;
+};
+
+# Auto-append {{TypeEnd}} templates to pages missing them
+$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+    $title = $parser->getTitle();
+    if ( !$title ) return true;
+    
+    $pageTypes = [
+        'Accessories/' => 'Accessory',
+        'Themes/' => 'Theme',
+        'Genres/' => 'Genre',
+        'DLCs/' => 'DLC',
+        'Releases/' => 'Release',
+        'RatingBoards/' => 'RatingBoard',
+        'Regions/' => 'Region',
+        'GameRatings/' => 'GameRating',
+    ];
+    
+    foreach ( $pageTypes as $prefix => $type ) {
+        if ( strpos( $title->getText(), $prefix ) === 0 ) {
+            $endTag = "{{{$type}End}}";
+            if ( preg_match( '/\{\{' . $type . '\s*[\|\}]/i', $text ) && stripos( $text, $endTag ) === false ) {
+                $text .= "\n$endTag";
+            }
+            break;
         }
     }
     return true;

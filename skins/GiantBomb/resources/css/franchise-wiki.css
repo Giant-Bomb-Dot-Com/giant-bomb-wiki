@@ -1,0 +1,675 @@
+/**
+ * Giant Bomb Wiki - Franchise Page Styles
+ */
+
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+
+.gb-franchise-page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  background-color: #262626;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.gb-franchise-hero {
+  position: relative;
+  background-color: #1a1a1a;
+  background-size: cover;
+  background-position: center top;
+  min-height: 200px;
+  padding: 24px;
+}
+
+.gb-franchise-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(26, 26, 26, 1) 0%,
+    rgba(26, 26, 26, 0.9) 30%,
+    rgba(26, 26, 26, 0.7) 100%
+  );
+  pointer-events: none;
+}
+
+.gb-franchise-hero-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gb-franchise-hero-cover {
+  flex-shrink: 0;
+  width: 150px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #333;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.gb-franchise-hero-cover img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.gb-franchise-hero-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.gb-franchise-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.gb-franchise-hero-meta {
+  font-size: 0.875rem;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.gb-franchise-hero-type {
+  color: #6ba4d9;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gb-franchise-hero-deck {
+  font-size: 1.125rem;
+  color: #ccc;
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+/* ============================================
+   TAB NAVIGATION
+   ============================================ */
+
+.gb-franchise-tabs {
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+.gb-franchise-tabs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gb-franchise-tabs-nav {
+  display: flex;
+  gap: 0;
+}
+
+.gb-franchise-tabs-tab {
+  padding: 14px 20px;
+  color: #999;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.gb-franchise-tabs-tab:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.gb-franchise-tabs-tab--active {
+  color: #fff;
+  border-bottom-color: #6ba4d9;
+}
+
+.gb-franchise-tabs-tab a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Wiki Actions */
+.gb-franchise-page .gb-wiki-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.gb-franchise-page .gb-wiki-action {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.gb-franchise-page .gb-wiki-action a {
+  color: #999;
+  text-decoration: none;
+}
+
+.gb-franchise-page .gb-wiki-action a:hover {
+  color: #6ba4d9;
+}
+
+/* ============================================
+   CONTENT LAYOUT
+   ============================================ */
+
+.gb-franchise-content {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gb-franchise-main {
+  min-width: 0;
+}
+
+.gb-franchise-wiki-content {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  padding: 24px;
+  margin-bottom: 24px;
+  color: #ddd;
+  line-height: 1.7;
+}
+
+.gb-franchise-wiki-content p {
+  margin-bottom: 1em;
+}
+
+.gb-franchise-wiki-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 1.5em 0 0.75em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #444;
+}
+
+.gb-franchise-wiki-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 1.25em 0 0.5em;
+}
+
+.gb-franchise-wiki-content a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-franchise-wiki-content a:hover {
+  text-decoration: underline;
+}
+
+/* Image floating in wiki content */
+.gb-franchise-wiki-content img,
+.game-wiki-content img {
+  max-width: 300px;
+  height: auto;
+  border-radius: 4px;
+  float: left;
+  margin: 0 16px 16px 0;
+}
+
+/* Clear floats after paragraphs */
+.gb-franchise-wiki-content p,
+.game-wiki-content p {
+  overflow: hidden;
+}
+
+.gb-franchise-wiki-content h2,
+.gb-franchise-wiki-content h3,
+.game-wiki-content h2,
+.game-wiki-content h3 {
+  clear: both;
+}
+
+/* MediaWiki thumb classes */
+.gb-franchise-wiki-content .thumb,
+.gb-franchise-wiki-content .tleft,
+.game-wiki-content .thumb,
+.game-wiki-content .tleft {
+  float: left;
+  margin: 0 16px 12px 0;
+  max-width: 300px;
+}
+
+.gb-franchise-wiki-content .tright,
+.game-wiki-content .tright {
+  float: right;
+  margin: 0 0 12px 16px;
+  max-width: 300px;
+}
+
+.gb-franchise-wiki-content .thumbinner,
+.game-wiki-content .thumbinner {
+  background: #333;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.gb-franchise-wiki-content .thumbcaption,
+.game-wiki-content .thumbcaption {
+  font-size: 0.85rem;
+  color: #999;
+  padding: 8px 4px 4px;
+  text-align: center;
+}
+
+/* ============================================
+   GAMES LIST SECTION
+   ============================================ */
+
+.gb-franchise-games-section {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gb-franchise-games-header {
+  display: flex;
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+.gb-franchise-games-tab {
+  padding: 12px 20px;
+  color: #999;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.gb-franchise-games-tab:hover {
+  color: #fff;
+}
+
+.gb-franchise-games-tab--active {
+  color: #6ba4d9;
+  border-bottom-color: #6ba4d9;
+}
+
+.gb-franchise-games-list {
+  padding: 0;
+}
+
+/* Individual Game Item */
+.gb-franchise-game-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  transition: background-color 0.2s ease;
+}
+
+.gb-franchise-game-item:last-child {
+  border-bottom: none;
+}
+
+.gb-franchise-game-item:hover {
+  background-color: #333;
+}
+
+.gb-franchise-game-item--empty {
+  padding: 24px;
+  color: #666;
+  font-style: italic;
+}
+
+.gb-franchise-game-cover {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+.gb-franchise-game-cover a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.gb-franchise-game-cover img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.gb-franchise-game-cover-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #333 0%, #222 100%);
+}
+
+.gb-franchise-game-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gb-franchise-game-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gb-franchise-game-title a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-franchise-game-title a:hover {
+  text-decoration: underline;
+}
+
+.gb-franchise-game-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.gb-franchise-game-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+  max-width: 200px;
+}
+
+.gb-franchise-game-platform {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #444;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.gb-franchise-game-platform a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gb-franchise-game-platform:hover {
+  background-color: #555;
+}
+
+.gb-franchise-game-platform a:hover {
+  text-decoration: none;
+}
+
+/* Platform color variations - can be expanded */
+.gb-franchise-game-platform[data-platform*="PC"],
+.gb-franchise-game-platform:contains("PC") {
+  background-color: #5c6bc0;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+.gb-franchise-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gb-franchise-sidebar .gb-sidebar-section {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gb-franchise-sidebar .gb-sidebar-section-header {
+  background-color: #1f1f1f;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid #333;
+}
+
+.gb-franchise-sidebar .gb-sidebar-section-content {
+  padding: 16px;
+}
+
+/* Franchise Details */
+.gb-franchise-details {
+  margin: 0;
+}
+
+.gb-franchise-details dt {
+  font-size: 0.8rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.gb-franchise-details dd {
+  margin: 0 0 16px 0;
+  color: #ddd;
+  font-size: 0.95rem;
+}
+
+.gb-franchise-details dd:last-child {
+  margin-bottom: 0;
+}
+
+.gb-franchise-details dd a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-franchise-details dd a:hover {
+  text-decoration: underline;
+}
+
+/* Related Content Tabs */
+.gb-franchise-sidebar .gb-sidebar-related-tabs {
+  display: flex;
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-tab:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-tab--active {
+  color: #6ba4d9;
+  border-bottom-color: #6ba4d9;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-content {
+  padding: 0;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list--active {
+  display: block;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list li {
+  padding: 10px 16px;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list li:last-child {
+  border-bottom: none;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list a:hover {
+  text-decoration: underline;
+}
+
+.gb-franchise-sidebar .gb-sidebar-related-list em {
+  color: #666;
+  font-style: italic;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 900px) {
+  .gb-franchise-content {
+    grid-template-columns: 1fr;
+  }
+
+  .gb-franchise-sidebar {
+    order: -1;
+  }
+
+  .gb-franchise-hero-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .gb-franchise-hero-cover {
+    width: 120px;
+    height: 160px;
+  }
+
+  .gb-franchise-hero-title {
+    font-size: 1.75rem;
+  }
+
+  .gb-franchise-hero-deck {
+    font-size: 1rem;
+  }
+
+  .gb-franchise-tabs-container {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .gb-franchise-tabs-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gb-franchise-tabs-tab {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+
+  .gb-franchise-game-platforms {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .gb-franchise-hero {
+    padding: 16px;
+  }
+
+  .gb-franchise-content {
+    padding: 16px;
+  }
+
+  .gb-franchise-wiki-content {
+    padding: 16px;
+  }
+
+  .gb-franchise-game-item {
+    padding: 10px 12px;
+  }
+
+  .gb-franchise-game-cover {
+    width: 40px;
+    height: 40px;
+  }
+
+  .gb-franchise-game-title {
+    font-size: 0.9rem;
+  }
+}
+
+/* Games link in sidebar */
+.gb-games-link {
+  color: #6ba4d9;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.gb-games-link:hover {
+  color: #8bbde8;
+}
+
+/* ============================================
+   HIDE FOOTER ELEMENTS
+   Hide "Retrieved from" URL and Category links on Franchise pages
+   ============================================ */
+
+body.rootpage-Franchises #catlinks,
+body.rootpage-Franchises .printfooter {
+  display: none !important;
+}

@@ -1,0 +1,85 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a full theme page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Themes are aesthetic or narrative categories - e.g., Sci-Fi, Horror, Fantasy, Post-Apocalyptic.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the theme
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Theme image filename
+|-
+|| Deck || Short description shown in hero
+|}
+
+===Usage===
+<pre>
+{{Theme
+| Name = Sci-Fi
+| Guid = 3032-18
+| Deck = Games set in futuristic or science fiction settings...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{ThemeEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Theme)}}[[Category:Themes|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-theme-page" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Theme" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What are {{{Name|}}} video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a theme or setting in video games. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What are the best {{{Name|}}} games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="There are many great {{{Name|}}} themed games across various platforms." /></div></div></div>
+<div class="gb-theme-hero">
+<div class="gb-theme-hero-container">
+<div class="gb-theme-hero-cover"></div>
+<div class="gb-theme-hero-info">
+<div class="gb-theme-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-theme-hero-meta"><span class="gb-theme-hero-type">THEME</span></div>
+<div class="gb-theme-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-theme-tabs">
+<div class="gb-theme-tabs-container">
+<div class="gb-theme-tabs-nav">
+<span class="gb-theme-tabs-tab gb-theme-tabs-tab--active">Theme</span>
+<span class="gb-theme-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-theme-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-theme-content">
+<div class="gb-theme-main">
+<div class="gb-theme-wiki-content">
+</includeonly>

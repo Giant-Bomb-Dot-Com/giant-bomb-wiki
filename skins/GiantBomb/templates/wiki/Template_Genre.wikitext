@@ -1,0 +1,85 @@
+<noinclude>
+{{#template_params:
+  Name (property=Has name)
+||||| Guid (property=Has guid)
+||||| Aliases (property=Has aliases)
+||||| Image (property=Has image)
+||||| Deck (property=Has deck)
+}}
+==Documentation==
+This template creates a full genre page layout with hero section, tabs, wiki content, and sidebar.
+Uses Semantic MediaWiki for structured data storage and display.
+
+Genres are categories of games based on gameplay mechanics - e.g., First-Person Shooter, RPG, Platformer.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Name || Display name of the genre
+|-
+|| Guid || Giant Bomb API identifier
+|-
+|| Aliases || Alternative names (comma-separated)
+|-
+|| Image || Genre image filename
+|-
+|| Deck || Short description shown in hero
+|}
+
+===Usage===
+<pre>
+{{Genre
+| Name = First-Person Shooter
+| Guid = 3060-5
+| Deck = Games where the player views the world through the protagonist's eyes...
+}}
+
+== Overview ==
+Your wiki content here...
+
+{{GenreEnd}}
+</pre>
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
+}}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
+}}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Genre)}}[[Category:Genres|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-genre-page" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="name" content="{{{Name|}}} - Video Game Genre" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is a {{{Name|}}} game?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game genre. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What are the best {{{Name|}}} games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="There are many great {{{Name|}}} games across various platforms and generations." /></div></div></div>
+<div class="gb-genre-hero">
+<div class="gb-genre-hero-container">
+<div class="gb-genre-hero-cover"></div>
+<div class="gb-genre-hero-info">
+<div class="gb-genre-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
+<div class="gb-genre-hero-meta"><span class="gb-genre-hero-type">GENRE</span></div>
+<div class="gb-genre-hero-deck">{{{Deck|}}}</div>
+</div>
+</div>
+</div>
+<div class="gb-genre-tabs">
+<div class="gb-genre-tabs-container">
+<div class="gb-genre-tabs-nav">
+<span class="gb-genre-tabs-tab gb-genre-tabs-tab--active">Genre</span>
+<span class="gb-genre-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
+<span class="gb-genre-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+</div>
+<div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
+</div>
+</div>
+<div class="gb-genre-content">
+<div class="gb-genre-main">
+<div class="gb-genre-wiki-content">
+</includeonly>

@@ -82,8 +82,8 @@ try {
 }
 
 $metaTitle = $objectData['name'] !== ''
-	? $objectData['name'] . ' object - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $objectData['name'] . ' (Object) - ' . $GLOBALS['wgSitename']
+	: $GLOBALS['wgSitename'];
 $metaDescription = PageHelper::sanitizeMetaText( $objectData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $objectData['description'] ?? '' );

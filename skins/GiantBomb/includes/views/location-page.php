@@ -119,8 +119,8 @@ $locationData['stats'] = $stats;
 $locationData['hasStats'] = !empty( $stats );
 
 $metaTitle = $locationData['name'] !== ''
-	? $locationData['name'] . ' location - Giant Bomb Wiki'
-	: 'Giant Bomb Wiki';
+	? $locationData['name'] . ' (Location) - ' . $GLOBALS['wgSitename']
+	: $GLOBALS['wgSitename'];
 $metaDescription = PageHelper::sanitizeMetaText( $locationData['deck'] ?? '' );
 if ( $metaDescription === '' ) {
 	$metaDescription = PageHelper::sanitizeMetaText( $locationData['description'] ?? '' );

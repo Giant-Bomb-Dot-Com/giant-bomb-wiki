@@ -1,0 +1,102 @@
+<noinclude>
+==Documentation==
+Renders the platform page sidebar with structured data pulled from Semantic MediaWiki properties.
+This template is called automatically by <code><nowiki>{{PlatformEnd}}</nowiki></code>.
+</noinclude><includeonly>
+<div class="gb-sidebar-section">
+<div class="gb-sidebar-section-header">Platform details</div>
+<div class="gb-sidebar-section-content">
+<dl class="gb-platform-details">
+
+<dt>Name</dt>
+<dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
+
+{{#show:{{FULLPAGENAME}}
+  |?Has short name
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Abbreviation</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has release date
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Release date</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has manufacturer
+  |format=list
+  |link=all
+  |default=
+  |intro=<dt>Manufacturer</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has original price
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Launch price</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has install base
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Install base</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has online support
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Online service</dt><dd>
+  |outro=</dd>
+}}
+
+{{#show:{{FULLPAGENAME}}
+  |?Has aliases
+  |format=list
+  |link=none
+  |default=
+  |intro=<dt>Aliases</dt><dd>
+  |outro=</dd>
+}}
+
+</dl>
+</div>
+</div>
+
+
+<div class="gb-sidebar-accordions">
+
+<div class="gb-accordion gb-accordion--open">
+<div class="gb-accordion-header">Games</div>
+<ul class="gb-accordion-content">
+{{#ask: [[Has platforms::{{FULLPAGENAME}}]] [[Category:Games]]
+  |format=list
+  |link=all
+  |limit=20
+  |default=<li><em>None</em></li>
+  |intro=<li>
+  |outro=</li>
+  |sep=</li><li>
+  |searchlabel=
+}}
+<li class="gb-sidebar-more">[{{canonicalurl:{{FULLPAGENAME}}}}#Games view all →]</li>
+</ul>
+</div>
+
+</div>
+</includeonly>

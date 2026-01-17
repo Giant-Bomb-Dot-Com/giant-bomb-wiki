@@ -11,7 +11,7 @@
 ||| Characters (property=Has characters)
 ||| Concepts (property=Has concepts)
 ||| Developers (property=Has developers)
-||| Franchises (property=Has franchise)
+||| Franchises (property=Has franchises)
 ||| Games (property=Has similar games)
 ||| Genres (property=Has genres)
 ||| Locations (property=Has locations)
@@ -104,7 +104,7 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
 }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
 }}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}
-}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchise=@@}}
+}}{{#arraymap:{{{Franchises|}}}|,|@@|{{#set:Has franchises=@@}}
 }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has similar games=@@}}
 }}{{#arraymap:{{{Genres|}}}|,|@@|{{#set:Has genres=@@}}
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
@@ -116,11 +116,15 @@ Multi-value properties (comma-separated) use #arraymap.
 
 Page Setup
 ==========
--->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Games|{{SUBPAGENAME}}]]<!--
+-->{{DISPLAYTITLE:{{{Name|}}} (Game)}}[[Category:Games|{{SUBPAGENAME}}]]<!--
 
 HTML Structure
 ==============
---><div class="gb-game-page">
+--><div class="gb-game-page" itemscope itemtype="https://schema.org/VideoGame">
+<meta itemprop="name" content="{{{Name|}}}" />
+<meta itemprop="description" content="{{{Deck|}}}" />
+{{#if:{{{ReleaseDate|}}}|<meta itemprop="datePublished" content="{{{ReleaseDate}}}" />|}}
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What platforms is {{{Name|}}} on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is available on {{{Platforms|}}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}" /></div></div></div>
 <div class="gb-game-hero">
 <div class="gb-game-hero-container">
 <div class="gb-game-hero-cover"></div>
