@@ -1,0 +1,37 @@
+local p = {}
+
+function p.format(frame)
+    local input = frame.args[1] or ""
+    if input == "" then return "" end
+    
+    local items = {}
+    -- Split by comma and clean up prefixes
+    for item in input:gmatch("([^,]+)") do
+        local trimmed = item:match("^%s*(.-)%s*$")
+        if trimmed ~= "" then
+            -- Remove "Platforms/" prefix case-insensitively
+            local cleaned = trimmed:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
+            table.insert(items, cleaned)
+        end
+    end
+    
+    local results = {}
+    local maxVisible = 3
+    local totalItems = #items
+    
+    -- Loop through items but stop adding badges at the limit
+    for i, name in ipairs(items) do
+        if i &lt;= maxVisible then
+            table.insert(results, '&lt;span class="platform-badge" title="' .. name .. '"&gt;' .. name .. '&lt;/span&gt;')
+        else
+            -- Calculate how many are left and add the plus badge
+            local remaining = totalItems - maxVisible
+            table.insert(results, '&lt;span class="platform-badge plus-badge"&gt;+' .. remaining .. '&lt;/span&gt;')
+            break
+        end
+    end
+    
+    return table.concat(results, " ")
+end
+
+return p

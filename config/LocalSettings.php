@@ -297,6 +297,7 @@ wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
+wfLoadExtension( 'UrlGetParameters' );
 
 # =============================================================================
 # GIANTBOMB RESOLVE

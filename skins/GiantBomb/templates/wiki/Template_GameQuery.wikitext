@@ -1,0 +1,26 @@
+__NOTOC__
+<noinclude>
+This is the main Games portal. Use the sidebar to filter results.
+</noinclude>
+<includeonly>
+<div class="listing-content">
+    <div class="listing-sidebar">
+      <div class="filter-container game-filter">
+          <h3 class="filter-header">Filters</h3>
+          <!-- Invoke the Lua module to show the dropdown and button -->
+          <!-- Pass the parameter to the sidebar module so the dropdown stays selected -->
+          {{#invoke:GameFilters|renderSidebar
+            |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
+          }}
+      </div>
+    </div>
+    <div class="listing-main">
+       <!-- This remains your main display logic -->
+       <!-- Pass the parameter to the query module to actually filter results -->
+       {{#invoke:GameQuery|render
+            |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
+            |offset={{{offset|0}}}
+        }}
+    </div>
+</div>
+</includeonly>

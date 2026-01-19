@@ -1,0 +1,120 @@
+local p = {}
+
+function p.render(frame)
+    local args = frame.args
+    local rawPlatform = args.chosen_platform or "All"
+    local platform = mw.uri.decode(rawPlatform, "WIKI")
+    local offset = tonumber(args.offset) or 0
+    local limit = 50
+    
+    -- This handles the browser's conversion of spaces to +
+    platform = platform:gsub("%+", " ")
+    
+    -- Cleanup: If #urlget failed and returned the literal string, default to All
+    if platform:find('{{#urlget') then
+        platform = "All"
+    end
+
+    -- 1. Construct the Query
+	local query = "[[Category:Games]]"
+	
+	if platform ~= "All" then
+        -- 4. Clean up any remaining underscores for SMW consistency
+        local smwValue = platform:gsub("_", " ")
+	    query = query .. " [[Has platforms::" .. smwValue .. "]]"
+	end
+
+    -- 2. Execute Query
+    local queryData = mw.smw.getQueryResult({
+        query,
+        "?Has image raw#nowiki",
+        "?Has platforms",
+        "?Has release date",
+        "?Has deck",
+        limit = limit,
+        offset = offset
+    })
+
+    -- 3. Debugging / No Results
+    if not queryData or not queryData.results or #queryData.results == 0 then
+        return '&lt;div class="no-results"&gt;No games found for ' .. platform .. '&lt;/div&gt;'
+    end
+
+    local html = mw.html.create('div'):addClass('listing-grid')
+    
+    for _, result in ipairs(queryData.results) do
+  	    local fullTitle = result.fulltext or ""
+    	-- This pattern "^[Gg][Aa][Mm][Ee][Ss]/" matches "Games/" or "games/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+    	
+        -- Helper to extract strings from nested SMW tables
+        local function getSafe(field, isList)
+            local d = result.printouts[field] or {}
+            local vals = {}
+            for _, v in ipairs(d) do
+                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
+                table.insert(vals, str)
+            end
+            return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+
+        -- 4. Process Image data from description
+        local imageData = getSafe('Has image raw', false)
+        imageData = imageData:gsub("¤", "_"):gsub("Http", "http")
+		
+		local rawDateData = result.printouts['Has release date']
+		local cleanDate = ""
+		
+		if rawDateData and #rawDateData &gt; 0 then
+		    -- SMW getQueryResult returns a table for each result
+		    -- For dates, val.raw contains a numeric timestamp or ISO string
+		    local val = rawDateData[1]
+		    local rawTimestamp = type(val) == "table" and (val.raw or val[1]) or tostring(val)
+		    
+		    -- rawTimestamp is usually formatted like "1/2007/03/10/00/00/00/0"
+		    -- We extract YYYY, MM, and DD
+		    local y, m, d = rawTimestamp:match("^1/(%d+)/(%d+)/(%d+)")
+		    
+		    if y and m and d then
+		        -- Format it into a readable string using MediaWiki's language object
+		        local timestamp = string.format("%04d-%02d-%02d", y, m, d)
+		        cleanDate = mw.language.getContentLanguage():formatDate("Y F j", timestamp)
+		    else
+		        -- Fallback: Strip the "1/" and return YYYY-MM-DD
+		        cleanDate = rawTimestamp:gsub("^1/", ""):gsub("/", "-"):sub(1,10)
+		    end
+		end
+
+        html:wikitext(frame:expandTemplate{ 
+            title = 'GameCard', 
+            args = { 
+            	fullTitle,
+                cleanTitle,
+                getSafe('Has platforms', true, false),
+                cleanDate,
+                getSafe('Has deck', true, false),
+                imageData
+            } 
+        })
+    end
+
+    -- 5. Build Pagination (using queryData.count)
+    local totalResults = queryData.count or 0
+    local paginationHtml = ""
+    if totalResults &gt; limit then
+        local nav = mw.html.create('div'):addClass('gb-pagination')
+        local totalPages = math.ceil(totalResults / limit)
+        for i = 1, totalPages do
+            local pOffset = (i - 1) * limit
+            local pageLink = nav:tag('a')
+                :attr('href', mw.title.getCurrentTitle():getFullURL({ chosen_platform = platform, offset = pOffset }))
+                :wikitext(i)
+            if pOffset == offset then pageLink:addClass('current-page') end
+        end
+        paginationHtml = tostring(nav)
+    end
+
+    return tostring(html) .. paginationHtml
+end
+
+return p

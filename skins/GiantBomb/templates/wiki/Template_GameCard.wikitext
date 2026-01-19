@@ -1,0 +1,61 @@
+<noinclude>
+fullTitle,
+cleanTitle,
+getSafe('Has platforms', true, false),
+cleanDate,
+getSafe('Has deck', true, false),
+imageData
+
+{{#template_params:
+  Title
+||||| CleanTitle
+||||| Platforms (property=Has platforms)
+||||| Date
+||||| Deck (property=Has deck)
+||||| Parsed image data (from property=Has image raw)
+}}
+==Documentation==
+This template creates the individual game cards that show on the Games and home pages. The data is passed into this template from Module:GameQuery
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Title || The original game name / path in wiki
+|-
+|| CleanTitle || The name with Games/ removed
+|-
+|| Platforms || List of platforms
+|-
+|| Date || Date in YYYY Month DD format
+|-
+|| Deck || Short description shown in hero
+|-
+|| Image || Thumbnail image in raw format
+|}
+
+===Usage===
+<pre>
+Called from Module:GameQuery not directly used.
+</pre>
+</noinclude>
+<div class="listing-card">
+    <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{1}}}}}">
+		<div class="listing-card-image gb-game-hero-cover">
+            {{#if: {{{6|}}} | 
+                {{{6}}}
+                | 
+                <div class="no-image">No Image Available</div> 
+            }}
+        </div>
+        <div class="listing-card-info">
+            <h3 class="listing-card-title">{{{2}}}</h3>
+            <div class="listing-card-meta">{{{4|Unknown Release}}}</div>
+            <div class="listing-card-deck">{{{5|}}}</div>
+			<div class="platform-badges">
+			    {{#invoke:BadgeList|format|{{{3|}}}}}
+			</div>
+        </div>
+    </div>
+</div>
