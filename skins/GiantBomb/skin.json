@@ -67,7 +67,8 @@
     "skins.giantbomb.wikijs": {
       "scripts": [
         "resources/js/search.js",
-        "resources/js/game-sidebar-tabs.js"
+        "resources/js/game-sidebar-tabs.js",
+        "resources/js/root-page-filters.js"
       ],
       "position": "top"
     },

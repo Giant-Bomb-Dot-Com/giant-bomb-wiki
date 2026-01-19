@@ -7,7 +7,39 @@
 /* Games page uses the shared listing-page styles via the class in the template */
 /* Only add games-specific overrides here if needed */
 
+body.page-Games .firstHeading,
+body.page-Games #siteSub,
+#contentSub,
+#jump-to-nav {
+  display: none;
+}
+
 /* Games-specific: Platform badges in card info */
 .games-page .platform-badges {
   margin-top: 8px;
+}
+
+/* Hide the raw Lua output until JS is ready */
+.lua-form-wrapper {
+  display: none;
+}
+
+/* Show it once the JS adds the 'is-ready' class */
+.lua-form-wrapper.is-ready {
+  display: block;
+}
+
+/* Remove the arrow icon and blue color from card links */
+.listing-content .listing-card-link.external {
+  background: none !important;
+  padding-right: 0 !important;
+  color: inherit !important;
+}
+
+/* Ensure no leading spaces trigger pre tags */
+.listing-content .listing-grid pre {
+  display: contents;
+  border: none;
+  padding: 0;
+  background: none;
 }

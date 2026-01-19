@@ -1,0 +1,79 @@
+local p = {}
+
+function p.renderSidebar(frame)
+    local args = frame.args
+    local rawPlatform = args.chosen_platform or "All"
+    local currentPlatform = mw.uri.decode(rawPlatform, "WIKI")
+	
+    currentPlatform = currentPlatform:gsub("|.*$", ""):gsub("[%[%]]", ""):gsub("^:", "")
+    
+    -- 1. Query pages. SMW returns a simple list of strings (page titles) here.
+	local platformPages = mw.smw.ask({
+	    "[[Category:Platforms]]",
+	    "?Display title of=display", -- Request the special property
+	    "limit=500",
+	    "mainlabel=platform"
+	})
+    
+	local list = {}
+	local seen = {}
+	
+    for _, res in ipairs(platformPages or {}) do
+        -- 1. Get the raw page name (e.g., "Platforms/Nintendo_64")
+        local rawPageName = res.platform or ""
+        
+        if rawPageName ~= "" then
+            -- 2. Determine the Display Label (User-facing)
+            local display = res.display or ""
+            if display == "" then
+                local titleObj = mw.title.new(rawPageName)
+                -- titleObj.text removes underscores and the "Platforms/" prefix if it's a subpage
+                display = titleObj and titleObj.text or rawPageName:match("([^/]+)$") or rawPageName
+            end
+    
+            -- 3. Determine the Internal Value (Filter-facing)
+            local internalValue = tostring(rawPageName):gsub("|.*$", ""):gsub("[%[%]]", ""):gsub("^:", "")
+            
+    
+            if not seen[internalValue] then
+                table.insert(list, { val = internalValue, label = display })
+                seen[internalValue] = true
+            end
+        end
+    end
+	
+	-- Sort by display label and add "All"
+	table.sort(list, function(a, b) return a.label &lt; b.label end)
+	table.insert(list, 1, { val = "All", label = "All" })
+
+    -- Build the HTML Form
+    local form = mw.html.create('form')
+        :attr('method', 'get')
+        :attr('action', mw.title.getCurrentTitle():fullUrl())
+
+    local container = form:tag('div'):addClass('filter-group')
+    container:tag('label'):attr('for', 'platform-filter'):addClass('filter-label'):wikitext('Platform')
+    
+    local select = container:tag('select')
+        :attr('name', 'chosen_platform')
+        :attr('id', 'platform-filter')
+        :addClass('filter-select')
+        
+    for _, item in ipairs(list) do
+        local opt = select:tag('option')
+            :attr('value', item.val)
+            :wikitext(item.label)
+        
+        -- Mark as selected if it matches the current URL parameter
+        if item.val == currentPlatform then 
+            opt:attr('selected', 'selected') 
+        end
+    end
+    
+    form:tag('button'):attr('type', 'submit'):addClass('gb-button'):wikitext('Filter'):attr('style', 'display:none;')
+        
+    -- Wrap for JavaScript to find and decode
+    return '&lt;div class="lua-form-wrapper"&gt;' .. mw.text.nowiki(tostring(form)) .. '&lt;/div&gt;'
+end
+
+return p

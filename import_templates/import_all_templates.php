@@ -26,7 +26,9 @@ class ImportWikiTemplates extends Maintenance {
 
     public function execute() {
         global $IP;
-        $templateDir = "$IP/skins/GiantBomb/templates/wiki";
+        $moduleDir = "$IP/skins/GiantBomb/modules/wiki";
+        $pagesDir = "$IP/skins/GiantBomb/pages/wiki";
+        $templateDir = "$IP/skins/GiantBomb/templates/wiki";        
         $type = $this->getOption( 'type', 'all' );
         
         // Shared templates used by multiple page types
@@ -156,6 +158,17 @@ class ImportWikiTemplates extends Maintenance {
             'Template:GameRatingEnd' => "$templateDir/Template_GameRatingEnd.wikitext",
             'Template:GameRatingSidebar' => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
+
+        $rootGamePageTemplates = [
+            'Games' => "$pagesDir/Page_Games.wikitext",
+
+            'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",
+            'Module:GameFilters' => "$moduleDir/Module_GameFilters.wikitext",
+            'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",
+
+            'Template:GameCard' => "$templateDir/Template_GameCard.wikitext",
+            'Template:GameQuery' => "$templateDir/Template_GameQuery.wikitext",
+        ];
         
         // All template groups
         $allGroups = [
@@ -177,6 +190,7 @@ class ImportWikiTemplates extends Maintenance {
             'ratingboard' => $ratingBoardTemplates,
             'region' => $regionTemplates,
             'gamerating' => $gameRatingTemplates,
+            'rootgames' => $rootGamePageTemplates,
         ];
         
         // Build template list based on type

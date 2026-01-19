@@ -1,0 +1,3 @@
+{{GameQuery
+  |chosen_platform={{#urlget:chosen_platform|All}}
+}}
