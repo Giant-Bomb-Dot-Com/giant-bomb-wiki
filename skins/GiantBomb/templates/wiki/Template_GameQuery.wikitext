@@ -11,15 +11,18 @@ This is the main Games portal. Use the sidebar to filter results.
           <!-- Pass the parameter to the sidebar module so the dropdown stays selected -->
           {{#invoke:GameFilters|renderSidebar
             |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
+            |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
           }}
       </div>
     </div>
     <div class="listing-main">
        <!-- This remains your main display logic -->
        <!-- Pass the parameter to the query module to actually filter results -->
-       {{#invoke:GameQuery|render
+        {{#invoke:GameQuery|render
             |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
-            |offset={{{offset|0}}}
+            |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
+            |offset={{{offset|{{#urlget:offset|0}}}}}
+            |limit={{{limit|{{#urlget:limit|50}}}}} 
         }}
     </div>
 </div>

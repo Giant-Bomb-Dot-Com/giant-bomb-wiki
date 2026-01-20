@@ -240,6 +240,34 @@
   }
 }
 
+.loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Subtle dimming instead of bright white */
+  background: rgba(0, 0, 0, 0.2);
+  /* The blur makes the background feel "deactivated" */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.client-darkmode .loading-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+.loading-overlay .loading-spinner {
+  display: block !important;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+}
+
 /* ==========================================================================
    Empty State
    ========================================================================== */

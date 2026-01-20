@@ -2,9 +2,11 @@ local p = {}
 
 function p.renderSidebar(frame)
     local args = frame.args
-    local rawPlatform = args.chosen_platform or "All"
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawPlatform = args.chosen_platform or parentArgs.chosen_platform or "All"
+    local currentSearchFilter = args.search_filter or parentArgs.search_filter or ""
+    
     local currentPlatform = mw.uri.decode(rawPlatform, "WIKI")
-	
     currentPlatform = currentPlatform:gsub("|.*$", ""):gsub("[%[%]]", ""):gsub("^:", "")
     
     -- 1. Query pages. SMW returns a simple list of strings (page titles) here.
@@ -43,18 +45,30 @@ function p.renderSidebar(frame)
     end
 	
 	-- Sort by display label and add "All"
-	table.sort(list, function(a, b) return a.label &lt; b.label end)
+	table.sort(list, function(a, b) return a.label < b.label end)
 	table.insert(list, 1, { val = "All", label = "All" })
 
     -- Build the HTML Form
     local form = mw.html.create('form')
         :attr('method', 'get')
         :attr('action', mw.title.getCurrentTitle():fullUrl())
-
-    local container = form:tag('div'):addClass('filter-group')
-    container:tag('label'):attr('for', 'platform-filter'):addClass('filter-label'):wikitext('Platform')
+        
+    -- SEARCH INPUT BOX
+    local inputcontainer = form:tag('div'):addClass('filter-group')
+    inputcontainer:tag('label'):attr('for', 'search-filter'):addClass('filter-label'):wikitext('Search')
+    inputcontainer:tag('input')
+    	:attr('type', 'text')
+    	:attr('id','search-filter')
+    	:attr('name','search_filter')
+        :attr('value',currentSearchFilter)
+    	:attr('placeholder','Search by game name...')
+    	:addClass('filter-input')
     
-    local select = container:tag('select')
+    -- PLATFORM SELECT
+    local selectcontainer = form:tag('div'):addClass('filter-group')
+    selectcontainer:tag('label'):attr('for', 'platform-filter'):addClass('filter-label'):wikitext('Platform')
+    
+    local select = selectcontainer:tag('select')
         :attr('name', 'chosen_platform')
         :attr('id', 'platform-filter')
         :addClass('filter-select')
@@ -73,7 +87,7 @@ function p.renderSidebar(frame)
     form:tag('button'):attr('type', 'submit'):addClass('gb-button'):wikitext('Filter'):attr('style', 'display:none;')
         
     -- Wrap for JavaScript to find and decode
-    return '&lt;div class="lua-form-wrapper"&gt;' .. mw.text.nowiki(tostring(form)) .. '&lt;/div&gt;'
+    return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form)) .. '</div>'
 end
 
 return p

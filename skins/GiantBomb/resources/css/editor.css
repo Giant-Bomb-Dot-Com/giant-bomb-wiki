@@ -2,7 +2,8 @@
 .mw-body-content .createbox .mw-parser-output .formtable input,
 .mw-body-content #pfForm .createboxInput,
 .mw-body-content .editOptions,
-.mw-body-content .mw-editform .wikiEditor-ui-text textarea {
+.mw-body-content .mw-editform .wikiEditor-ui-text textarea,
+.mw-body-content .editor {
   background: #1a1a1a;
   color: #ffffff;
   border: 1px solid #333;
@@ -29,3 +30,63 @@
   background: #1a1a1a;
   color: #ffffff;
 }
+
+.wikiEditor-ui-toolbar .oo-ui-buttonElement-button {
+  background-color: #f8f9fa;
+}
+
+/* ACE CODE EDITOR */
+.wikiEditor-ui .ace_print-margin {
+  width: 0;
+}
+
+.wikiEditor-ui .ace-tm .ace_gutter {
+  background: #333;
+}
+
+.wikiEditor-ui {
+  background-color: #272822;
+  color: #f8f8f2;
+}
+.wikiEditor-ui .ace_gutter {
+  background: #2f3129;
+  color: #8f908a;
+}
+
+.wikiEditor-ui .ace_cursor {
+  color: #f8f8f0;
+}
+.wikiEditor-ui .ace_marker-layer .ace_active-line {
+  background: #202020;
+}
+.wikiEditor-ui .ace_marker-layer .ace_selection {
+  background: #49483e;
+}
+
+/* Syntax Highlighting */
+.wikiEditor-ui .ace_keyword,
+.wikiEditor-ui .ace_meta.ace_tag {
+  color: #f92672; /* Pink */
+}
+.wikiEditor-ui .ace_string {
+  color: #e6db74; /* Yellow */
+}
+.wikiEditor-ui .ace_constant.ace_numeric {
+  color: #ae81ff; /* Purple */
+}
+.wikiEditor-ui .ace_entity.ace_name.ace_function,
+.wikiEditor-ui .ace_support.ace_function {
+  color: #a6e22e; /* Green */
+}
+.wikiEditor-ui .ace_variable {
+  color: #fd971f; /* Orange */
+}
+.wikiEditor-ui .ace_comment {
+  color: #75715e; /* Muted olive */
+}
+
+/* Scrollbar (Optional High-Visibility) */
+.wikiEditor-ui .ace_scrollbar {
+  background-color: #272822;
+}
+/* END ACE CODE EDITOR */

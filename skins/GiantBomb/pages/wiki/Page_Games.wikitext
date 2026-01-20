@@ -1,3 +1,6 @@
 {{GameQuery
   |chosen_platform={{#urlget:chosen_platform|All}}
+  |search_filter={{#urlget:search_filter}}
+  |limit={{#urlget:limit|50}}
+  |offset={{#urlget:offset|0}}
 }}
