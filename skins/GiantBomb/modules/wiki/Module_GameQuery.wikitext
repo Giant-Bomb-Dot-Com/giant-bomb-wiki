@@ -5,7 +5,7 @@ function p.render(frame)
     local parentArgs = frame:getParent() and frame:getParent().args or {}
     local rawPlatform = args.chosen_platform or "All"
     local platform = mw.uri.decode(rawPlatform, "WIKI")
-    local searchFilter = args.search_filter or parentArgs.search_filter or ""
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
 
     -- Try to get 'limit' from invoke args, then parent args, then default to 50
     local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 50
@@ -30,8 +30,10 @@ function p.render(frame)
 	
 	-- Filter by Name (using SMW wildcard search)
     if searchFilter ~= "" then
+		-- REPLACE: Turn spaces into underscores for SMW consistency
+    	local dbSearch  = searchFilter:gsub(" ", "_")
         -- The ~ operator combined with * wildcards matches titles containing the text
-        query = query .. " [[~*" .. searchFilter .. "*]]"
+        query = query .. " [[~*" .. dbSearch  .. "*]]"
     end
 
     -- 2. Execute Query

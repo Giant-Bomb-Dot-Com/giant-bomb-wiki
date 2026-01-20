@@ -4,7 +4,7 @@ function p.renderSidebar(frame)
     local args = frame.args
     local parentArgs = frame:getParent() and frame:getParent().args or {}
     local rawPlatform = args.chosen_platform or parentArgs.chosen_platform or "All"
-    local currentSearchFilter = args.search_filter or parentArgs.search_filter or ""
+    local currentSearchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
     
     local currentPlatform = mw.uri.decode(rawPlatform, "WIKI")
     currentPlatform = currentPlatform:gsub("|.*$", ""):gsub("[%[%]]", ""):gsub("^:", "")
