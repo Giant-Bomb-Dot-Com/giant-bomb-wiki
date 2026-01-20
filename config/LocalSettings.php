@@ -563,6 +563,6 @@ $wgDebugLogGroups = [
 
 // configs for GbSessionProvider
 wfLoadExtension( 'GbSessionProvider' );
-$wgGbSessionProviderJWKSUri = 'https://enormousexplosive.com/.well-known/jwks.json';
-$wgGbSessionProviderTestModeEnabled = true;
-$wgGbSessionProviderTestJWT = 'wannabe-jwt-token';
+$wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
+$wgGbSessionProviderTestModeEnabled = false;
+$wgGbSessionProviderTestJWT = 'test-token';
