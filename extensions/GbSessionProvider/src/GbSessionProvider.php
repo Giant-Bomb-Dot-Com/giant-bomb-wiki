@@ -152,7 +152,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     }
 
     // If verification success, return decoded data
-    // if verifcation fials, return null
+    // if verifcation fails, return null
     public function decodeVerifyGbnJwt($data)
     {
         $this->logger->info(">>> JWT decode with " . print_r($data, true));
@@ -171,20 +171,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             null, // $expiresAfter int seconds to set the JWKS to expire
             true, // $rateLimit    true to enable rate limit of 10 RPS on lookup of invalid keys
         );
-        $decodedJWTObj = null;
-        try {
-            $decodedJWTObj = JWT::decode($data, $keySet);
-        } catch (LogicException $e) {
-            $this->logger->info("Logic exception error " . $e->getMessage());
-            return null;
-        } catch (UnexpectedValueException $e) {
-            $this->logger->info("Unexpected value " . $e->getMessage());
-            return null;
-        } catch (Exception $e) {
-            $this->logger->info("Catch all exception " . $e->getMessage());
-            return null;
-        }
-
+        $decodedJWTObj = $this->verifyJwt($data, $keySet);
         $this->logger->debug(
             "Verification successful; " . print_r($decodedJWTObj, true),
         );
@@ -211,6 +198,13 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             throw new UnexpectedValueException(
                 "unable to create a user with this user name, sub " . $subject,
             );
+        }
+
+        if (!$user->isRegistered()) {
+            $user->addToDatabase();
+            $this->logger->debug("create user: user saved to db");
+        } else {
+            $this->logger->error("create user: cannot save user to db");
         }
 
         $user->setEmail($email);
@@ -285,5 +279,32 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             return false;
         }
         return !!((bool) $value);
+    }
+
+    // return decoded object if good
+    // else return null
+    protected function verifyJwt($token, $keySet)
+    {
+        $result = null;
+        try {
+            $this->logger->info("data -> " . print_r($token));
+            $result = JWT::decode($token, $keySet);
+        } catch (LogicException $e) {
+            $this->logger->info(
+                "JWT::decode Logic exception error " . $e->getMessage(),
+            );
+            return null;
+        } catch (UnexpectedValueException $e) {
+            $this->logger->info(
+                "JWT::decode Unexpected value " . $e->getMessage(),
+            );
+            return null;
+        } catch (Exception $e) {
+            $this->logger->info(
+                "JWT::decode Catch all exception " . $e->getMessage(),
+            );
+            return null;
+        }
+        return $result;
     }
 }
