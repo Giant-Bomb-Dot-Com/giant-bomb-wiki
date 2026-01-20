@@ -41,21 +41,21 @@ Called from Module:GameQuery not directly used.
 </pre>
 </noinclude>
 <div class="listing-card">
-    <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{1}}}}}">
-		<div class="listing-card-image gb-game-hero-cover">
-            {{#if: {{{6|}}} | 
-                {{{6}}}
+    <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
+        <div class="listing-card-image gb-game-hero-cover">
+            {{#if: {{{image|}}} | 
+                {{{image}}}
                 | 
                 <div class="no-image">No Image Available</div> 
             }}
         </div>
         <div class="listing-card-info">
-            <h3 class="listing-card-title">{{{2}}}</h3>
-            <div class="listing-card-meta">{{{4|Unknown Release}}}</div>
-            <div class="listing-card-deck">{{{5|}}}</div>
-			<div class="platform-badges">
-			    {{#invoke:BadgeList|format|{{{3|}}}}}
-			</div>
+            <h3 class="listing-card-title">{{{title}}}</h3>
+            <div class="listing-card-meta">{{{release_date|Unknown Release}}}</div>
+            <div class="listing-card-deck">{{{deck|}}}</div>
+            <div class="platform-badges">
+                {{#invoke:BadgeList|format|{{{platforms|}}}}}
+            </div>
         </div>
     </div>
 </div>

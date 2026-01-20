@@ -8,6 +8,7 @@
 /* Only add games-specific overrides here if needed */
 
 body.page-Games .firstHeading,
+body.page-Games .printfooter,
 body.page-Games #siteSub,
 #contentSub,
 #jump-to-nav {
