@@ -36,7 +36,7 @@ function p.format(frame)
         if i <= maxVisible then
             local displayText = cleanName
 
-        	if #cleanName > 7 then
+        	if #cleanName > 9 then
         		local platformData = mw.smw.ask({
         		 "[[" .. name .. "]]",
                     "?Has aliases=aliases",
