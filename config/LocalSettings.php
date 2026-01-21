@@ -335,6 +335,9 @@ $smwgFactboxUseCache = true;
 $smwgFactboxCacheRefreshOnPurge = true;
 $smwgAutoRefreshOnPurge = true;
 $smwgEnabledQueryDependencyLinksStore = true;
+$smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
+$smwgEnabledFulltextSearch = true;
+$smwgPageSpecialProperties[] = '_CDAT';
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
@@ -376,8 +379,6 @@ $wgNamespacesWithSubpages[NS_MAIN] = true;
 $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
-$smwgEnabledFulltextSearch = true;
-$smwgPageSpecialProperties[] = '_CDAT';
 
 # Dev mode settings
 if ( $wikiEnv === 'dev' ) {

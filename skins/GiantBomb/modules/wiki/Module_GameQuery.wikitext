@@ -33,7 +33,7 @@ function p.render(frame)
 		-- REPLACE: Turn spaces into underscores for SMW consistency
     	local dbSearch  = searchFilter:gsub(" ", "_")
         -- The ~ operator combined with * wildcards matches titles containing the text
-        query = query .. " [[~*" .. dbSearch  .. "*]]"
+        query = query .. " [[~*" .. dbSearch  .. "*]] or " .. " [[~" .. dbSearch  .. "*]] "
     end
 
     -- 2. Execute Query
