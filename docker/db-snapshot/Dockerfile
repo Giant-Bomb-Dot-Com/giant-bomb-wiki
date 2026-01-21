@@ -1,5 +1,5 @@
 # Custom MariaDB image with Giant Bomb Wiki data pre-loaded
-FROM mariadb:11.2
+FROM mariadb:lts
 
 # Copy database setup SQL (creates databases and grants permissions)
 COPY 00-setup-databases.sql /docker-entrypoint-initdb.d/
