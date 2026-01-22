@@ -160,6 +160,7 @@ class ImportWikiTemplates extends Maintenance {
         ];
 
         $rootGamePageTemplates = [
+            'Main_Page' => "$pagesDir/Main_Page.wikitext",
             'Games' => "$pagesDir/Page_Games.wikitext",
 
             'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",

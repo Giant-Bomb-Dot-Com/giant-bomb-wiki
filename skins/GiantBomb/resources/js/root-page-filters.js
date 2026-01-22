@@ -15,6 +15,7 @@ $(function () {
     var $form = $container.find("form");
     var $searchField = $container.find("#search-filter");
     var $selectField = $container.find("#platform-filter");
+    var $resetBtn = $container.find("#reset-filter");
     var searchTimer;
 
     // 1. Instant submit on Platform change
@@ -38,6 +39,27 @@ $(function () {
       var val = $searchField.val();
       $searchField.val("").val(val); // Forces cursor to end
     }
+
+    //4. Reset button
+    $resetBtn.on("click", function (e) {
+      e.preventDefault(); // Prevent default button behavior
+
+      // 1. Visually clear the fields
+      $searchField.val("");
+      $selectField.val("All");
+
+      // 2. Show loading spinner
+      if (typeof showGlobalLoading === "function") showGlobalLoading();
+
+      // 3. Redirect to the page without filters
+      // This is the cleanest way to "reset" when using URL parameters
+      window.location.href = mw.util.getUrl(null, {
+        chosen_platform: "All",
+        search_filter: "",
+        offset: 0,
+        limit: 48, // Or your default limit
+      });
+    });
 
     $container.addClass("is-ready");
   });
@@ -67,6 +89,7 @@ $(function () {
     var limit = parseInt($wrapper.data("limit"));
     var offset = parseInt($wrapper.data("offset"));
     var platform = $wrapper.data("platform");
+    var search = $wrapper.data("search");
 
     var currentPage = Math.floor(offset / limit) + 1;
     var totalPages = Math.ceil(total / limit);
@@ -94,6 +117,7 @@ $(function () {
           showGlobalLoading(); // Trigger spinner
           window.location.href = mw.util.getUrl(null, {
             chosen_platform: platform,
+            search_filter: search,
             offset: (targetPage - 1) * limit,
             limit: limit,
           });
@@ -152,15 +176,12 @@ $(function () {
     var $size = $('<div class="pagination-size">');
     $size.append('<label for="items-per-page">Items per page:</label>');
     var $select = $('<select id="items-per-page" class="pagination-select">');
-    var options = [25, 50, 75, 100];
+    var options = [24, 48, 72, 96];
 
     options.forEach(function (val) {
       var $opt = $("<option>").val(val).text(val);
-      console.log(val);
-      console.log(limit);
       if (val === limit) {
         $opt.prop("selected", true);
-        console.log("SEL " + val);
       }
       $select.append($opt);
     });
@@ -169,6 +190,7 @@ $(function () {
       showGlobalLoading(); // Trigger spinner
       window.location.href = mw.util.getUrl(null, {
         chosen_platform: platform,
+        search_filter: search,
         offset: 0,
         limit: $(this).val(),
       });
@@ -182,5 +204,10 @@ $(function () {
       .append($size);
 
     $wrapper.replaceWith($mainNav);
+  });
+
+  $(".view-toggle").each(function () {
+    var $container = $(this);
+    $container.addClass("is-ready");
   });
 });

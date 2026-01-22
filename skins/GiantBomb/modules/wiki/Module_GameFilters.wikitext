@@ -84,6 +84,7 @@ function p.renderSidebar(frame)
         end
     end
     
+    form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):wikitext('Reset Filters')
     form:tag('button'):attr('type', 'submit'):addClass('gb-button'):wikitext('Filter'):attr('style', 'display:none;')
         
     -- Wrap for JavaScript to find and decode

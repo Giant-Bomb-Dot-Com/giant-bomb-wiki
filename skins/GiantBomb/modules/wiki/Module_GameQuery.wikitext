@@ -7,8 +7,8 @@ function p.render(frame)
     local platform = mw.uri.decode(rawPlatform, "WIKI")
     local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
 
-    -- Try to get 'limit' from invoke args, then parent args, then default to 50
-    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 50
+    -- Try to get 'limit' from invoke args, then parent args, then default to 48
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
     local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
     
     -- This handles the browser's conversion of spaces to +
@@ -128,7 +128,7 @@ function p.render(frame)
 	        :attr('data-limit', limit)
 	        :attr('data-offset', offset)
 	        :attr('data-platform', platform)
-	        :attr('data-game-name', gameName))
+	        :attr('data-search', searchFilter))
 	end
 	
 	return tostring(html) .. paginationHtml

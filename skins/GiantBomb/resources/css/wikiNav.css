@@ -22,6 +22,7 @@
   margin: 0;
 }
 
+.wiki-nav__item > a,
 .wiki-nav__link {
   display: flex;
   align-items: center;
@@ -39,6 +40,7 @@
     background-color 0.2s ease;
 }
 
+.wiki-nav__item > a:hover,
 .wiki-nav__link:hover {
   background: #333;
   border-color: #e63946;
@@ -46,13 +48,24 @@
   text-decoration: none;
 }
 
+.wiki-nav__item > a:active,
 .wiki-nav__link:active {
   background: #2a2a2a;
 }
 
-.wiki-nav__link--active {
+.wiki-nav__item > a {
+  color: #6ba4d9;
+}
+
+.wiki-nav__item > a:visited {
+  color: #666;
+}
+
+.wiki-nav__link--active,
+.wiki-nav__item .selflink {
   background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
   border-color: #e63946;
+  color: #fff;
 }
 
 /* Responsive */
@@ -65,7 +78,7 @@
     gap: 0.5rem;
   }
 
-  .wiki-nav__link {
+  .wiki-nav__item > a .wiki-nav__link {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
   }
@@ -80,7 +93,7 @@
     gap: 0.375rem;
   }
 
-  .wiki-nav__link {
+  .wiki-nav__item > a .wiki-nav__link {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
   }

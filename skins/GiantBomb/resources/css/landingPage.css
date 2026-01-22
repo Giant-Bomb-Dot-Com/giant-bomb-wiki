@@ -10,6 +10,11 @@
 body.page-Games .firstHeading,
 body.page-Games .printfooter,
 body.page-Games #siteSub,
+body.page-Games .mw-category-generated,
+body.page-Games #catlinks,
+body.page-Main_Page .firstHeading,
+body.page-Main_Page .printfooter,
+body.page-Main_Page #siteSub,
 #contentSub,
 #jump-to-nav {
   display: none;
