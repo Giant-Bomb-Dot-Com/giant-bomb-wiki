@@ -39,7 +39,7 @@
 </div>
 <div class="listing-page games-page view-grid">
     <div class="listing-header">
-        <h1>Games</h1>
+        <h1>All Games</h1>
         <div data-vue-component="ViewToggle" data-target-container=".games-page" data-storage-key="gamesViewPreference" data-v-app="">
             <div class="view-toggle" style="display:none;">
             <button class="view-btn view-list">

@@ -6,7 +6,7 @@ This is the main Games portal. Use the sidebar to filter results.
 <div class="listing-content">
     <div class="listing-sidebar">
       <div class="filter-container game-filter">
-          <h3 class="filter-header">Filters</h3>
+          <h3 class="filter-title">Filter Games</h3>
           <!-- Invoke the Lua module to show the dropdown and button -->
           <!-- Pass the parameter to the sidebar module so the dropdown stays selected -->
           {{#invoke:GameFilters|renderSidebar
@@ -22,7 +22,7 @@ This is the main Games portal. Use the sidebar to filter results.
             |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
             |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
             |offset={{{offset|{{#urlget:offset|0}}}}}
-            |limit={{{limit|{{#urlget:limit|50}}}}} 
+            |limit={{{limit|{{#urlget:limit|48}}}}} 
         }}
     </div>
 </div>

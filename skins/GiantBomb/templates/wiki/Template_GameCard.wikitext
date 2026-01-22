@@ -42,7 +42,7 @@ Called from Module:GameQuery not directly used.
 </noinclude>
 <div class="listing-card">
     <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
-        <div class="listing-card-image gb-game-hero-cover">
+        <div class="listing-card-image">
             {{#if: {{{image|}}} | 
                 {{{image}}}
                 | 

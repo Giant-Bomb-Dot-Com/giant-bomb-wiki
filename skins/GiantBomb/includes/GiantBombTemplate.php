@@ -41,6 +41,9 @@ class GiantBombTemplate extends BaseTemplate {
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
+        //Set main to false to force mediawiki as it's been replaced
+        $isMainPage = false;
+
         // Check if we're on a game page (in Games/ namespace but not a sub-page)
         $title = $this->getSkin()->getTitle();
         $pageTitle = $title->getText();
