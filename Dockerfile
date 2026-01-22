@@ -17,7 +17,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
- && apt-get install gnupg lsb-release libzip-dev unzip wget cron -y
+ && apt-get install gnupg lsb-release libzip-dev unzip wget -y
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -63,9 +63,6 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 # Directory for logging
 RUN mkdir -p -m 740 /var/log/mediawiki && \
     chown -R www-data:www-data /var/log/mediawiki
-
-#setup runJobs in cron
-RUN echo "0 * * * * /usr/local/bin/php /var/www/html/maintenance/runJobs.php --maxtime=3600 > /var/log/runJobs.log 2>&1" >> /var/spool/cron/crontabs/root
 
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
