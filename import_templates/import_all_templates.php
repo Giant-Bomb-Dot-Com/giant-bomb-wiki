@@ -159,16 +159,21 @@ class ImportWikiTemplates extends Maintenance {
             'Template:GameRatingSidebar' => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
 
-        $rootGamePageTemplates = [
+        $rootPageTemplates = [
             'Main_Page' => "$pagesDir/Main_Page.wikitext",
             'Games' => "$pagesDir/Page_Games.wikitext",
+            'Characters' => "$pagesDir/Page_Characters.wikitext",
 
             'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",
             'Module:GameFilters' => "$moduleDir/Module_GameFilters.wikitext",
             'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",
+            'Module:CharacterFilters' => "$moduleDir/Module_CharacterFilters.wikitext",
+            'Module:CharacterQuery' => "$moduleDir/Module_CharacterQuery.wikitext",
 
             'Template:GameCard' => "$templateDir/Template_GameCard.wikitext",
             'Template:GameQuery' => "$templateDir/Template_GameQuery.wikitext",
+            'Template:CharacterCard' => "$templateDir/Template_CharacterCard.wikitext",
+            'Template:CharacterQuery' => "$templateDir/Template_CharacterQuery.wikitext",
         ];
         
         // All template groups
@@ -191,7 +196,7 @@ class ImportWikiTemplates extends Maintenance {
             'ratingboard' => $ratingBoardTemplates,
             'region' => $regionTemplates,
             'gamerating' => $gameRatingTemplates,
-            'rootgames' => $rootGamePageTemplates,
+            'rootpages' => $rootPageTemplates,
         ];
         
         // Build template list based on type

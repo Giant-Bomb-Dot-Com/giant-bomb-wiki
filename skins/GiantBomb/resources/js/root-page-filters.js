@@ -14,11 +14,11 @@ $(function () {
 
     var $form = $container.find("form");
     var $searchField = $container.find("#search-filter");
-    var $selectField = $container.find("#platform-filter");
+    var $selectField = $container.find("#root-dropdown-filter");
     var $resetBtn = $container.find("#reset-filter");
     var searchTimer;
 
-    // 1. Instant submit on Platform change
+    // 1. Instant submit on Root Dropdown change
     $selectField.on("change", function () {
       if (typeof showGlobalLoading === "function") showGlobalLoading();
       $form.submit();
@@ -31,6 +31,18 @@ $(function () {
         if (typeof showGlobalLoading === "function") showGlobalLoading();
         $form.submit();
       }, 750);
+    });
+
+    // Prevent Enter key from clearing the form or doing a full page reload
+    $searchField.on("keydown", function (e) {
+      if (e.key === "Enter" || e.keyCode === 13) {
+        e.preventDefault(); // Stop the form from submitting and clearing
+
+        // Optional: Trigger the search immediately instead of waiting for the debounce timer
+        clearTimeout(searchTimer);
+        if (typeof showGlobalLoading === "function") showGlobalLoading();
+        $form.submit();
+      }
     });
 
     // 3. Accessibility: Focus cursor at end of text if search exists
@@ -53,12 +65,8 @@ $(function () {
 
       // 3. Redirect to the page without filters
       // This is the cleanest way to "reset" when using URL parameters
-      window.location.href = mw.util.getUrl(null, {
-        chosen_platform: "All",
-        search_filter: "",
-        offset: 0,
-        limit: 48, // Or your default limit
-      });
+
+      window.location.href = mw.util.getUrl(null, {});
     });
 
     $container.addClass("is-ready");
@@ -89,6 +97,7 @@ $(function () {
     var limit = parseInt($wrapper.data("limit"));
     var offset = parseInt($wrapper.data("offset"));
     var platform = $wrapper.data("platform");
+    var letter = $wrapper.data("letter");
     var search = $wrapper.data("search");
 
     var currentPage = Math.floor(offset / limit) + 1;
@@ -116,7 +125,8 @@ $(function () {
         $btn.on("click", function () {
           showGlobalLoading(); // Trigger spinner
           window.location.href = mw.util.getUrl(null, {
-            chosen_platform: platform,
+            ...(platform && { chosen_platform: platform }),
+            ...(letter && { chosen_letter: letter }),
             search_filter: search,
             offset: (targetPage - 1) * limit,
             limit: limit,
@@ -189,7 +199,8 @@ $(function () {
     $select.on("change", function () {
       showGlobalLoading(); // Trigger spinner
       window.location.href = mw.util.getUrl(null, {
-        chosen_platform: platform,
+        ...(platform && { chosen_platform: platform }),
+        ...(letter && { chosen_letter: letter }),
         search_filter: search,
         offset: 0,
         limit: $(this).val(),
