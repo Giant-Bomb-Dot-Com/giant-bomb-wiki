@@ -52,6 +52,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
+  grid-auto-rows: auto;
+  align-items: start;
 }
 
 /* Smaller grid for box art style cards (releases) */
@@ -63,11 +65,16 @@
    Card Styles
    ========================================================================== */
 .listing-card {
+  height: 100%;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .listing-card-link {
-  display: block;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: inherit;
 }
@@ -141,7 +148,8 @@
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .listing-card-meta {
