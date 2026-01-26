@@ -66,11 +66,11 @@ function p.renderSidebar(frame)
     
     -- PLATFORM SELECT
     local selectcontainer = form:tag('div'):addClass('filter-group')
-    selectcontainer:tag('label'):attr('for', 'platform-filter'):addClass('filter-label'):wikitext('Platform')
+    selectcontainer:tag('label'):attr('for', 'root-dropdown-filter'):addClass('filter-label'):wikitext('Platform')
     
     local select = selectcontainer:tag('select')
         :attr('name', 'chosen_platform')
-        :attr('id', 'platform-filter')
+        :attr('id', 'root-dropdown-filter')
         :addClass('filter-select')
         
     for _, item in ipairs(list) do

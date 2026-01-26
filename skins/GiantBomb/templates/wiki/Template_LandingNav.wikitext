@@ -1,0 +1,69 @@
+<noinclude>
+title
+{{#template_params:
+  title
+}}
+==Documentation==
+This template creates the horizontal menu bar on the landing pages and the grid / lines option.
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| title || The header of the page
+|}
+</noinclude><!--
+--><div class="landing-nav">
+    <div class="wiki-nav">
+        <ul class="wiki-nav__list">
+            <li class="wiki-nav__item">
+                [[Main Page|Home]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Games|Games]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Characters|Characters]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Companies|Companies]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Concepts|Concepts]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Franchises|Franchises]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Locations|Locations]]
+            </li>
+            <li class="wiki-nav__item">
+                [[People|People]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Platforms|Platforms]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Objects|Objects]]
+            </li>
+            <li class="wiki-nav__item">
+                [[Accessories|Accessories]]
+            </li>
+        </ul>     
+    </div>
+</div>
+<div class="listing-page games-page view-grid">
+    <div class="listing-header">
+        <h1>{{{title}}}</h1>
+        <div data-vue-component="ViewToggle" data-target-container=".games-page" data-storage-key="gamesViewPreference" data-v-app="">
+            <div class="view-toggle" style="display:none;">
+            <button class="view-btn view-list">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect y="2" width="16" height="2"></rect> <rect y="7" width="16" height="2"></rect> <rect y="12" width="16" height="2"></rect></svg> List
+            </button> 
+            <button class="view-btn view-grid active">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect width="7" height="7"></rect> <rect x="9" width="7" height="7"></rect> <rect y="9" width="7" height="7"></rect> <rect x="9" y="9" width="7" height="7"></rect></svg> Grid
+            </button>
+        </div>
+    </div>
+</div>
