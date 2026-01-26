@@ -16,48 +16,76 @@ function p.render(frame)
         currentLetter = "All"
     end
 
-    local query = "[[Category:Characters]]"
+    local baseQuery = "[[Category:Companies]]"
     
     if currentLetter ~= "All" then
         if currentLetter == "#" then
             -- Query for names starting with any digit 0-9
-            query = query .. " [[Has name::~[0-9]*]]"
+            baseQuery = baseQuery .. " [[Has name::~[0-9]*]]"
         else
             -- Query for names starting with the specific letter (e.g., "[[Name::~A*]]")
-            query = query .. " [[Has name::~" .. currentLetter .. "*]]"
+            baseQuery = baseQuery .. " [[Has name::~" .. currentLetter .. "*]]"
         end
     end
+    
+    -- Because we are doing inverse searches and we have muliple, we have to do each as seperate queries and join the data
+    local finalResults = {}
+    local seenTitles = {}
 	
 	-- Filter by Name (using SMW wildcard search)
-    if searchFilter ~= "" then
-		-- REPLACE: Turn spaces into underscores for SMW consistency
-    	local dbSearch  = searchFilter:gsub(" ", "_")
-        -- The ~ operator combined with * wildcards matches titles containing the text
-        query = query .. " [[~*" .. dbSearch  .. "*]] "
+	local queryTable = { baseQuery }
+	    if searchFilter ~= "" then
+	        local dbSearch = searchFilter:gsub(" ", "_")
+	        queryTable = {
+	            baseQuery .. " [[-Has developers::~*" .. dbSearch .. "*]]",
+	            baseQuery .. " [[-Has publishers::~*" .. dbSearch .. "*]]"
+	        }
     end
 
-    -- 2. Execute Query
-    local queryData = mw.smw.getQueryResult({
-        query,
-        "?Has image#nowiki",
+    -- Run queries and merge results
+    for _, q in ipairs(queryTable) do
+        local data = mw.smw.getQueryResult({
+            q,
+            "?Has image#nowiki",
 --        "?Has image raw#nowiki",  --DO WE HAVE TO DO THIS FOR ALL?
-        "?Has deck",
-        limit = limit,
-        offset = offset,
-        ["count"] = true
-    })
+            "?-Has developers=DevelopedGames",
+            "?-Has publishers=PublishedGames",
+            "?Has deck",
+	        limit = limit,
+	        offset = offset,
+	        ["count"] = true
+        })
+        
+        if data and data.results then
+            for _, res in ipairs(data.results) do
+                if not seenTitles[res.fulltext] then
+                    table.insert(finalResults, res)
+                    seenTitles[res.fulltext] = true
+                end
+            end
+        end
+    end
 
     -- 3. Debugging / No Results
-    if not queryData or not queryData.results or #queryData.results == 0 then
-        return '<div class="no-results">No characters found for ' .. currentLetter .. '</div>'
+    if #finalResults == 0 then
+        return '<div class="no-results">No companies found.</div>'
     end
+    
+    table.sort(finalResults, function(a, b) return a.fulltext < b.fulltext end)
 
     local html = mw.html.create('div'):addClass('listing-grid')
     
-    for _, result in ipairs(queryData.results) do
+    local startIndex = offset + 1
+    local endIndex = math.min(offset + limit, #finalResults)
+    
+    for i = startIndex, endIndex do
+        local result = finalResults[i]
   	    local fullTitle = result.fulltext or ""
-    	-- This pattern matches "Characters/" or "characters/" at the start
-    	local cleanTitle = fullTitle:gsub("^[Cc][Hh][Aa][Rr][Aa][Cc][Tt][Ee][Rr][Ss]/", "")
+    	-- This pattern matches "Companies/" or "companies/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Cc][Oo][Mm][Pp][Aa][Nn][Ii][Ee][Ss]/", "")
+    	
+   	    local devGamesCount = result.printouts["DevelopedGames"] and #result.printouts["DevelopedGames"] or 0
+        local pubGamesCount = result.printouts["PublishedGames"] and #result.printouts["PublishedGames"] or 0
     	
         -- Helper to extract strings from nested SMW tables
         local function getSafe(field, isList)
@@ -76,10 +104,12 @@ function p.render(frame)
         imageData = imageData:gsub("¤", "_"):gsub("Http", "http"):gsub(" ", "%%20")
 
 		html:wikitext(frame:expandTemplate{ 
-		    title = 'CharacterCard', 
+		    title = 'CompanyCard', 
 		    args = { 
 		        url_title    = fullTitle,
 		        title        = cleanTitle,
+                developed    = devGamesCount,
+                published    = pubGamesCount,
 		        deck         = getSafe('Has deck', true),
 		        image        = imageData
 		    } 
@@ -87,14 +117,7 @@ function p.render(frame)
     end
 
     -- 5. Build Pagination (using queryData.count)
-    local totalResults = queryData.count or 0
-    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
-	-- We run a quick secondary query to get the total number.
-	if totalResults == 0 and #queryData.results > 0 then
-	    local countQuery = mw.smw.ask({ query, format = "count" })
-	    totalResults = tonumber(countQuery) or 0
-	end
-    
+    local totalResults = #finalResults
 	local paginationHtml = ""
 	if totalResults > 0 then
 	    paginationHtml = tostring(mw.html.create('div')

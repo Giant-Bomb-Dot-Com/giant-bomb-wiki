@@ -1,0 +1,29 @@
+__NOTOC__
+<noinclude>
+This is the /Companies page. Use the sidebar to filter results.
+</noinclude>
+<includeonly>
+<div class="listing-content">
+    <div class="listing-sidebar">
+      <div class="filter-container game-filter">
+          <h3 class="filter-title">Filter</h3>
+          <!-- Invoke the Lua module to show the dropdown and button -->
+          <!-- Pass the parameter to the sidebar module so the dropdown stays selected -->
+          {{#invoke:CompanyFilters|renderSidebar
+            |chosen_letter={{{chosen_letter|{{#urlget:chosen_letter|All}}}}}
+            |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
+          }}
+      </div>
+    </div>
+    <div class="listing-main">
+       <!-- This remains your main display logic -->
+       <!-- Pass the parameter to the query module to actually filter results -->
+        {{#invoke:CompanyQuery|render
+            |chosen_letter={{{chosen_letter|{{#urlget:chosen_letter|All}}}}}
+            |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
+            |offset={{{offset|{{#urlget:offset|0}}}}}
+            |limit={{{limit|{{#urlget:limit|48}}}}} 
+        }}
+    </div>
+</div>
+</includeonly>
