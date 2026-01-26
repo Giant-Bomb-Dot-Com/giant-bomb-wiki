@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:11
+    image: mariadb:lts
     command: --skip-name-resolve=0
     ports:
       - "3306:3306"

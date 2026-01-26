@@ -387,7 +387,7 @@ if ( $wikiEnv === 'dev' ) {
     error_reporting( -1 );
     ini_set( 'display_errors', 1 );
     $smwgIgnoreUpgradeKeyCheck = true;
-    
+
     # Disable/reduce caching in dev for faster iteration
     $wgParserCacheExpireTime = 0;  # Disable parser cache
     $wgEnableSidebarCache = false;
@@ -514,7 +514,7 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
     $title = $parser->getTitle();
     if ( !$title ) return true;
-    
+
     $pageTypes = [
         'Accessories/' => 'Accessory',
         'Themes/' => 'Theme',
@@ -525,7 +525,7 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
         'Regions/' => 'Region',
         'GameRatings/' => 'GameRating',
     ];
-    
+
     foreach ( $pageTypes as $prefix => $type ) {
         if ( strpos( $title->getText(), $prefix ) === 0 ) {
             $endTag = "{{{$type}End}}";
@@ -537,3 +537,8 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     }
     return true;
 };
+
+
+// user permissions
+$wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['sysop']['createaccount'] = true;
