@@ -160,20 +160,26 @@ class ImportWikiTemplates extends Maintenance {
         ];
 
         $rootPageTemplates = [
+            //games
             'Main_Page' => "$pagesDir/Main_Page.wikitext",
-            'Games' => "$pagesDir/Page_Games.wikitext",
-            'Characters' => "$pagesDir/Page_Characters.wikitext",
-
+            'Games' => "$pagesDir/Page_Games.wikitext",            
             'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",
             'Module:GameFilters' => "$moduleDir/Module_GameFilters.wikitext",
-            'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",
-            'Module:CharacterFilters' => "$moduleDir/Module_CharacterFilters.wikitext",
-            'Module:CharacterQuery' => "$moduleDir/Module_CharacterQuery.wikitext",
-
+            'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",            
             'Template:GameCard' => "$templateDir/Template_GameCard.wikitext",
             'Template:GameQuery' => "$templateDir/Template_GameQuery.wikitext",
+            //characters
+            'Characters' => "$pagesDir/Page_Characters.wikitext",
+            'Module:CharacterFilters' => "$moduleDir/Module_CharacterFilters.wikitext",
+            'Module:CharacterQuery' => "$moduleDir/Module_CharacterQuery.wikitext",
             'Template:CharacterCard' => "$templateDir/Template_CharacterCard.wikitext",
             'Template:CharacterQuery' => "$templateDir/Template_CharacterQuery.wikitext",
+            //companies
+            'Companies' => "$pagesDir/Page_Companies.wikitext",
+            'Module:CompaniesFilters' => "$moduleDir/Module_CompaniesFilters.wikitext",
+            'Module:CompaniesQuery' => "$moduleDir/Module_CompaniesQuery.wikitext",
+            'Template:CompaniesCard' => "$templateDir/Template_CompaniesCard.wikitext",
+            'Template:CompaniesQuery' => "$templateDir/Template_CompaniesQuery.wikitext",
         ];
         
         // All template groups

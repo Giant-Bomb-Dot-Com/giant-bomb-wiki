@@ -103,9 +103,9 @@ function p.render(frame)
 		    args = { 
 		        url_title    = fullTitle,
 		        title        = cleanTitle,
-		        platforms    = getSafe('Has platforms', true, false),
+		        platforms    = getSafe('Has platforms', true),
 		        release_date = cleanDate,
-		        deck         = getSafe('Has deck', true, false),
+		        deck         = getSafe('Has deck', true),
 		        image        = imageData
 		    } 
 		})
