@@ -1,12 +1,14 @@
 <noinclude>
 fullTitle,
 cleanTitle,
+firstGame,
 getSafe('Has deck', true, false),
 imageData
 
 {{#template_params:
   Title
 ||||| CleanTitle
+||||| FirstGame
 ||||| Deck (property=Has deck)
 ||||| Parsed image data (from property=Has image)
 }}
@@ -21,6 +23,8 @@ This template creates the individual character cards that show on the Chracters 
 || Title || The original game name / path in wiki
 |-
 || CleanTitle || The name with Games/ removed
+|-
+|| FirstGame || The game this character first appeared
 |-
 || Deck || Short description shown in hero
 |-
@@ -44,6 +48,7 @@ Called from Module:CharacterQuery not directly used.
         <div class="listing-card-info">
             <h3 class="listing-card-title">{{{title}}}</h3>
             <div class="listing-card-deck">{{{deck|}}}</div>
+            <div class="listing-card-stat">{{{firstGame|}}}</div>
         </div>
     </div>
 </div>

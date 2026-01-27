@@ -43,7 +43,16 @@ function p.render(frame)
     end
 
     -- Run queries and merge results
+    local totalResults = 0
     for _, q in ipairs(queryTable) do
+    	local countData = mw.smw.ask({
+	        q,
+	        format = "count" -- Special format to get ONLY the total number
+	    })
+	    if countData then
+	        totalResults = totalResults + (tonumber(countData) or 0)
+	    end
+    	
         local data = mw.smw.getQueryResult({
             q,
             "?Has image#nowiki",
@@ -52,8 +61,7 @@ function p.render(frame)
             "?-Has publishers=PublishedGames",
             "?Has deck",
 	        limit = limit,
-	        offset = offset,
-	        ["count"] = true
+	        offset = offset
         })
         
         if data and data.results then
@@ -75,10 +83,7 @@ function p.render(frame)
 
     local html = mw.html.create('div'):addClass('listing-grid')
     
-    local startIndex = offset + 1
-    local endIndex = math.min(offset + limit, #finalResults)
-    
-    for i = startIndex, endIndex do
+    for i = 1, #finalResults do
         local result = finalResults[i]
   	    local fullTitle = result.fulltext or ""
     	-- This pattern matches "Companies/" or "companies/" at the start
@@ -117,7 +122,6 @@ function p.render(frame)
     end
 
     -- 5. Build Pagination (using queryData.count)
-    local totalResults = #finalResults
 	local paginationHtml = ""
 	if totalResults > 0 then
 	    paginationHtml = tostring(mw.html.create('div')

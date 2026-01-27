@@ -84,8 +84,8 @@ function p.renderSidebar(frame)
         end
     end
     
-    form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):wikitext('Reset Filters')
-    form:tag('button'):attr('type', 'submit'):addClass('gb-button'):wikitext('Filter'):attr('style', 'display:none;')
+    form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):addClass('reset'):wikitext('Reset Filters')
+    form:tag('button'):attr('id','apply-filter'):attr('type', 'submit'):addClass('gb-button'):wikitext('Apply Filter')
         
     -- Wrap for JavaScript to find and decode
     return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form)) .. '</div>'
