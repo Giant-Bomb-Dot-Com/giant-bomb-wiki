@@ -42,6 +42,7 @@ function p.render(frame)
         "?Has image#nowiki",
 --        "?Has image raw#nowiki",  --DO WE HAVE TO DO THIS FOR ALL?
         "?Has deck",
+        "?Has games=Games",
         limit = limit,
         offset = offset,
         ["count"] = true
@@ -69,6 +70,59 @@ function p.render(frame)
             end
             return isList and table.concat(vals, ", ") or (vals[1] or "")
         end
+	        
+	local function getOldestGameName()
+	    local games = result.printouts["Games"] or {}
+	    if #games == 0 then return "" end
+	
+	    local oldestGameName = ""
+	    local minDateNumeric = 99999999 -- Initialize with a very high number
+	
+	    for _, game in ipairs(games) do
+	        local gameTitle = game.fulltext or ""
+	        
+	        -- Sub-query for this specific game's date
+	        local gameData = mw.smw.getQueryResult({
+	            "[[" .. gameTitle .. "]]",
+	            "?Has release date",
+	        })
+	
+	        if gameData and gameData.results and gameData.results[1] then
+	            local datePrintout = gameData.results[1].printouts["Has release date"] or {}
+	            if #datePrintout > 0 then
+	                local val = datePrintout[1]
+	                local raw = type(val) == "table" and (val.raw or val[1]) or tostring(val)
+	                
+	                -- Extract YYYY, MM, DD from SMW internal format 1/YYYY/MM/DD...
+	                local y, m, d = raw:match("^1/(%d+)/(%d+)/(%d+)")
+	                if y and m and d then
+	                    -- Create a pure number (e.g., 19840606)
+	                    local dateNum = tonumber(string.format("%04d%02d%02d", y, m, d))
+	                    
+	                    if dateNum and dateNum < minDateNumeric then
+	                        minDateNumeric = dateNum
+	                        oldestGameName = gameTitle
+	                    end
+	                end
+	            end
+	        end
+	    end
+	    
+	    -- Fallback: If no date-bearing games were found, use the first linked game
+	    if oldestGameName == "" then 
+	        oldestGameName = games[1] and games[1].fulltext or "" 
+	    end
+	
+	    if oldestGameName == "" then return "" end
+	    -- 1. Get the title without "Games/" namespace
+	    local cleanGameTitle = oldestGameName:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+
+	    -- Return as a MediaWiki Piped Link: [[Games/Game Title|Game Title]]
+	    return "[[" .. oldestGameName .. "|" .. cleanGameTitle .. "]]"
+	end
+
+        local firstGame = getOldestGameName()
+        if firstGame ~= "" then firstGame = "First appeared in " .. firstGame end
 
         -- 4. Process Image data from description
         --local imageData = getSafe('Has image raw', false)
@@ -80,6 +134,7 @@ function p.render(frame)
 		    args = { 
 		        url_title    = fullTitle,
 		        title        = cleanTitle,
+		        firstGame    = firstGame,
 		        deck         = getSafe('Has deck', true),
 		        image        = imageData
 		    } 
