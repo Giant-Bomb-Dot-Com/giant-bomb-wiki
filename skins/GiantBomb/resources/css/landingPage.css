@@ -94,3 +94,46 @@ body.page-Main_Page #siteSub,
   padding: 0;
   background: none;
 }
+
+.gb-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
+  border-color: #e63946;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.gb-button:hover {
+  background: #333;
+  border-color: #666;
+}
+
+.gb-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
+  border-color: #e63946;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.gb-button.reset {
+  background: #666;
+  border-color: #555;
+  margin-bottom: 1rem;
+}
+
+.gb-button:hover,
+.gb-button.reset:hover {
+  background: #333;
+  border-color: #e63946;
+}

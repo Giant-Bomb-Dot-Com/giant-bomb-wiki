@@ -16,30 +16,19 @@ $(function () {
     var $searchField = $container.find("#search-filter");
     var $selectField = $container.find("#root-dropdown-filter");
     var $resetBtn = $container.find("#reset-filter");
-    var searchTimer;
+    var $searchBtn = $container.find("#apply-filter");
 
-    // 1. Instant submit on Root Dropdown change
-    $selectField.on("change", function () {
+    // 1. Search button - Manual Submit
+    $searchBtn.on("click", function (e) {
+      e.preventDefault();
       if (typeof showGlobalLoading === "function") showGlobalLoading();
       $form.submit();
     });
 
-    // 2. Debounced submit on Search typing (2 seconds)
-    $searchField.on("input", function () {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(function () {
-        if (typeof showGlobalLoading === "function") showGlobalLoading();
-        $form.submit();
-      }, 750);
-    });
-
-    // Prevent Enter key from clearing the form or doing a full page reload
+    // 3. Handle Enter Key in Search Field
     $searchField.on("keydown", function (e) {
       if (e.key === "Enter" || e.keyCode === 13) {
-        e.preventDefault(); // Stop the form from submitting and clearing
-
-        // Optional: Trigger the search immediately instead of waiting for the debounce timer
-        clearTimeout(searchTimer);
+        e.preventDefault();
         if (typeof showGlobalLoading === "function") showGlobalLoading();
         $form.submit();
       }
