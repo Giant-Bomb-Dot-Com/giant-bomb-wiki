@@ -1,6 +1,8 @@
 {{LandingNav 
 |title=Characters}}<!--
--->{{CharacterQuery
+-->{{LandingPageQuery
+  |name=Character
+  |filterTitle=Filter Characters
   |chosen_letter={{#urlget:chosen_letter|All}}
   |search_filter={{#urlget:search_filter}}
   |limit={{#urlget:limit|48}}

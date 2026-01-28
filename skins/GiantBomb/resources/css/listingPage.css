@@ -97,6 +97,8 @@
   border-radius: 8px;
   box-sizing: border-box;
   transition: border-color 0.2s;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
 }
 
 /* Portrait aspect ratio for box art style (releases) */

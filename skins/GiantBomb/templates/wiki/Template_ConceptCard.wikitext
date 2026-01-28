@@ -1,0 +1,49 @@
+<noinclude>
+fullTitle,
+cleanTitle,
+getSafe('Has deck', true, false),
+imageData
+
+{{#template_params:
+  Title
+||||| CleanTitle
+||||| Deck (property=Has deck)
+||||| Parsed image data (from property=Has image)
+}}
+==Documentation==
+This template creates the individual concept cards that show on the Concepts page. The data is passed into this template from Module:ConceptQuery
+
+===Parameters===
+{| class="wikitable"
+|-
+! Parameter !! Description
+|-
+|| Title || The original game name / path in wiki
+|-
+|| CleanTitle || The name with Games/ removed
+|-
+|| Deck || Short description shown in hero
+|-
+|| Image || Thumbnail image in raw format
+|}
+
+===Usage===
+<pre>
+Called from Module:ConceptQuery not directly used.
+</pre>
+</noinclude>
+<div class="listing-card">
+    <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
+        <div class="listing-card-image">
+            {{#if: {{{image|}}} | 
+                {{{image}}}
+                | 
+                <div class="no-image">No Image Available</div> 
+            }}
+        </div>
+        <div class="listing-card-info">
+            <h3 class="listing-card-title">{{{title}}}</h3>
+            <div class="listing-card-deck">{{{deck|}}}</div>
+        </div>
+    </div>
+</div>

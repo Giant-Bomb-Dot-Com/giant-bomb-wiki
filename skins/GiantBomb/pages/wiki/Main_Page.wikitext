@@ -1,6 +1,8 @@
 {{LandingNav
 |title=All Games}}<!--
--->{{GameQuery
+-->{{LandingPageQuery
+  |name=Game
+  |filterTitle=Filter Games
   |chosen_platform={{#urlget:chosen_platform|All}}
   |search_filter={{#urlget:search_filter}}
   |limit={{#urlget:limit|48}}
