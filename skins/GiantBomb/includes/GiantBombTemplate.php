@@ -41,6 +41,9 @@ class GiantBombTemplate extends BaseTemplate {
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
+        //Set main to false to force mediawiki as it's been replaced
+        $isMainPage = false;
+
         // Check if we're on a game page (in Games/ namespace but not a sub-page)
         $title = $this->getSkin()->getTitle();
         $pageTitle = $title->getText();
@@ -107,7 +110,7 @@ class GiantBombTemplate extends BaseTemplate {
                            substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
-        $isConceptsPage = $pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
+        $isConceptsPage = false; //$pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
         $isPeoplePage = $pageTitle === 'People' || $pageTitle === 'People/';
         error_log("Current page title: " . $pageTitle);
         

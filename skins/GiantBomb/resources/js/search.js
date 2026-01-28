@@ -26,3 +26,7 @@ function searchGBWiki(searchText) {
 
   window.location.href = uri;
 }
+
+$(".clickable-box").click(function () {
+  window.location = $(this).data("url");
+});
