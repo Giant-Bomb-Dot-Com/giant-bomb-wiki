@@ -17,6 +17,7 @@ $(function () {
     var $selectField = $container.find("#root-dropdown-filter");
     var $resetBtn = $container.find("#reset-filter");
     var $searchBtn = $container.find("#apply-filter");
+    var $sortField = $container.find("#sort-by");
 
     // 1. Search button - Manual Submit
     $searchBtn.on("click", function (e) {
@@ -48,6 +49,7 @@ $(function () {
       // 1. Visually clear the fields
       $searchField.val("");
       $selectField.val("All");
+      $sortField.val("");
 
       // 2. Show loading spinner
       if (typeof showGlobalLoading === "function") showGlobalLoading();
@@ -88,6 +90,7 @@ $(function () {
     var platform = $wrapper.data("platform");
     var letter = $wrapper.data("letter");
     var search = $wrapper.data("search");
+    var sortBy = $wrapper.data("sort");
 
     var currentPage = Math.floor(offset / limit) + 1;
     var totalPages = Math.ceil(total / limit);
@@ -117,6 +120,7 @@ $(function () {
             ...(platform && { chosen_platform: platform }),
             ...(letter && { chosen_letter: letter }),
             search_filter: search,
+            sort_by: sortBy,
             offset: (targetPage - 1) * limit,
             limit: limit,
           });

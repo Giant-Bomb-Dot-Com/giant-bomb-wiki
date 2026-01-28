@@ -160,26 +160,34 @@ class ImportWikiTemplates extends Maintenance {
         ];
 
         $rootPageTemplates = [
-            //games
             'Main_Page' => "$pagesDir/Main_Page.wikitext",
+            'Template:LandingNav' => "$templateDir/Template_LandingNav.wikitext",
+            'Template:LandingPageQuery' => "$templateDir/Template_LandingPageQuery.wikitext",
+
+            //games            
             'Games' => "$pagesDir/Page_Games.wikitext",            
             'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",
             'Module:GameFilters' => "$moduleDir/Module_GameFilters.wikitext",
             'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",            
             'Template:GameCard' => "$templateDir/Template_GameCard.wikitext",
-            'Template:GameQuery' => "$templateDir/Template_GameQuery.wikitext",
+            
             //characters
             'Characters' => "$pagesDir/Page_Characters.wikitext",
             'Module:CharacterFilters' => "$moduleDir/Module_CharacterFilters.wikitext",
             'Module:CharacterQuery' => "$moduleDir/Module_CharacterQuery.wikitext",
             'Template:CharacterCard' => "$templateDir/Template_CharacterCard.wikitext",
-            'Template:CharacterQuery' => "$templateDir/Template_CharacterQuery.wikitext",
+            
             //companies
             'Companies' => "$pagesDir/Page_Companies.wikitext",
-            'Module:CompaniesFilters' => "$moduleDir/Module_CompaniesFilters.wikitext",
-            'Module:CompaniesQuery' => "$moduleDir/Module_CompaniesQuery.wikitext",
-            'Template:CompaniesCard' => "$templateDir/Template_CompaniesCard.wikitext",
-            'Template:CompaniesQuery' => "$templateDir/Template_CompaniesQuery.wikitext",
+            'Module:CompanyFilters' => "$moduleDir/Module_CompanyFilters.wikitext",
+            'Module:CompanyQuery' => "$moduleDir/Module_CompanyQuery.wikitext",
+            'Template:CompanyCard' => "$templateDir/Template_CompanyCard.wikitext",
+            
+            //concepts
+            'Concepts' => "$pagesDir/Page_Concepts.wikitext",
+            'Module:ConceptFilters' => "$moduleDir/Module_ConceptFilters.wikitext",
+            'Module:ConceptQuery' => "$moduleDir/Module_ConceptQuery.wikitext",
+            'Template:ConceptCard' => "$templateDir/Template_ConceptCard.wikitext",
         ];
         
         // All template groups

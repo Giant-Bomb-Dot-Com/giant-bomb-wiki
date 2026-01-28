@@ -110,7 +110,7 @@ class GiantBombTemplate extends BaseTemplate {
                            substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
-        $isConceptsPage = $pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
+        $isConceptsPage = false; //$pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
         $isPeoplePage = $pageTitle === 'People' || $pageTitle === 'People/';
         error_log("Current page title: " . $pageTitle);
         
