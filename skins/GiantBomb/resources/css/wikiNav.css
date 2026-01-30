@@ -43,7 +43,7 @@
 .wiki-nav__item > a:hover,
 .wiki-nav__link:hover {
   background: #333;
-  border-color: #e63946;
+  border-color: #ff9b4d;
   color: #ffffff;
   text-decoration: none;
 }
@@ -63,8 +63,8 @@
 
 .wiki-nav__link--active,
 .wiki-nav__item .selflink {
-  background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
-  border-color: #e63946;
+  background: #ff9b4d;
+  border-color: #ff9b4d;
   color: #fff;
 }
 

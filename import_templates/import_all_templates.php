@@ -161,6 +161,9 @@ class ImportWikiTemplates extends Maintenance {
 
         $rootPageTemplates = [
             'Main_Page' => "$pagesDir/Main_Page.wikitext",
+
+            'Property:Has_image' => "$pagesDir/Property_Hasimage.wikitext",
+
             'Template:LandingNav' => "$templateDir/Template_LandingNav.wikitext",
             'Template:LandingPageQuery' => "$templateDir/Template_LandingPageQuery.wikitext",
 

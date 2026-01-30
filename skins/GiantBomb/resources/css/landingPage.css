@@ -100,8 +100,8 @@ body.page-Main_Page #siteSub,
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
-  border-color: #e63946;
+  background: #ff9b4d;
+  border-color: #ff9b4d;
   color: white;
   cursor: pointer;
   border-radius: 4px;
@@ -118,8 +118,8 @@ body.page-Main_Page #siteSub,
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
-  border-color: #e63946;
+  background: #ff9b4d;
+  border-color: #ff9b4d;
   color: white;
   cursor: pointer;
   border-radius: 4px;
@@ -135,5 +135,5 @@ body.page-Main_Page #siteSub,
 .gb-button:hover,
 .gb-button.reset:hover {
   background: #333;
-  border-color: #e63946;
+  border-color: #ff9b4d;
 }

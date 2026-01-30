@@ -5,6 +5,7 @@ function p.renderSidebar(frame)
     local parentArgs = frame:getParent() and frame:getParent().args or {}
     local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
     local currentSearchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    local currentSort = mw.uri.decode(args.sort_by or parentArgs.sort_by or "newest", "WIKI"):lower()
     
     local currentLetter = mw.uri.decode(rawLetter, "WIKI")
     
@@ -69,6 +70,28 @@ function p.renderSidebar(frame)
             opt:attr('selected', 'selected') 
         end
     end
+
+    -- SORT SELECT
+     local sortOptions = {
+        { val = "newest", label = "Newly Created" },
+        { val = "name", label = "Name (A-Z)" },
+        { val = "latest", label = "Recently Edited" }
+    }
+    
+    local sortContainer = form:tag('div'):addClass('filter-group')
+    sortContainer:tag('label'):attr('for', 'sort-by'):addClass('filter-label'):wikitext('Sort By')
+    
+    local selectSort = sortContainer:tag('select')
+        :attr('name', 'sort_by')
+        :attr('id', 'sort-by')
+        :addClass('filter-select')
+
+    for _, item in ipairs(sortOptions) do
+        local opt = selectSort:tag('option')
+            :attr('value', item.val)
+            :wikitext(item.label)
+        if item.val == currentSort then opt:attr('selected', 'selected') end
+    end 
     
     form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):addClass('reset'):wikitext('Reset Filters')
     form:tag('button'):attr('id','apply-filter'):attr('type', 'submit'):addClass('gb-button'):wikitext('Apply Filter')

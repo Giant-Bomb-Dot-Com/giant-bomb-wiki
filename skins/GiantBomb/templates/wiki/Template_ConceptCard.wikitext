@@ -34,8 +34,8 @@ Called from Module:ConceptQuery not directly used.
 </noinclude>
 <div class="listing-card">
     <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
-        <div class="listing-card-image">
-            {{#if: {{{image|}}} | 
+        <div class="listing-card-image"><!--
+            -->{{#if: {{{image|}}} | 
                 {{{image}}}
                 | 
                 <div class="no-image">No Image Available</div> 
