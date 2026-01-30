@@ -5,7 +5,7 @@ function p.renderSidebar(frame)
     local parentArgs = frame:getParent() and frame:getParent().args or {}
     local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
     local currentSearchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
-    local currentSort = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+    local currentSort = mw.uri.decode(args.sort_by or parentArgs.sort_by or "newest", "WIKI"):lower()
     
     local currentLetter = mw.uri.decode(rawLetter, "WIKI")
     
@@ -73,9 +73,9 @@ function p.renderSidebar(frame)
     
     -- SORT SELECT (New)
      local sortOptions = {
+        { val = "newest", label = "Newly Created" },
         { val = "name", label = "Name (A-Z)" },
-        { val = "latest", label = "Recently Edited" },
-        { val = "newest", label = "Newly Created" }
+        { val = "latest", label = "Recently Edited" }
     }
     
     local sortContainer = form:tag('div'):addClass('filter-group')

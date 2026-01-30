@@ -6,6 +6,18 @@ function p.render(frame)
     local rawPlatform = args.chosen_platform or "All"
     local platform = mw.uri.decode(rawPlatform, "WIKI")
     local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
+
+    if sortFilter == "latest" then
+        sortProp = "Modification date"
+        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
+    end
 
     -- Try to get 'limit' from invoke args, then parent args, then default to 48
     local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
@@ -39,13 +51,17 @@ function p.render(frame)
     -- 2. Execute Query
     local queryData = mw.smw.getQueryResult({
         query,
-        "?Has image raw#nowiki",
+        "?Has image",
         "?Has platforms",
         "?Has release date",
         "?Has deck",
         limit = limit,
         offset = offset,
-        ["count"] = true
+        ["count"] = true,
+        "?Modification date",
+    	"?Creation date",
+        sort = sortProp,
+        order = sortOrder
     })
 
     -- 3. Debugging / No Results
@@ -65,16 +81,14 @@ function p.render(frame)
             local d = result.printouts[field] or {}
             local vals = {}
             for _, v in ipairs(d) do
-                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
+                local str = type(v) == "table" and (v.fulltext or v.raw or "") or tostring(v)
                 table.insert(vals, str)
             end
             return isList and table.concat(vals, ", ") or (vals[1] or "")
         end
 
         -- 4. Process Image data from description
-        local imageData = getSafe('Has image raw', false)
-        imageData = imageData:gsub("¤", "_"):gsub("Http", "http"):gsub(" ", "%%20")
-		
+        local imageData = getSafe('Has image', false)
 		local rawDateData = result.printouts['Has release date']
 		local cleanDate = ""
 		
@@ -128,7 +142,8 @@ function p.render(frame)
 	        :attr('data-limit', limit)
 	        :attr('data-offset', offset)
 	        :attr('data-platform', platform)
-	        :attr('data-search', searchFilter))
+	        :attr('data-search', searchFilter)
+	        :attr('data-sort', sortBy))
 	end
 	
 	return tostring(html) .. paginationHtml

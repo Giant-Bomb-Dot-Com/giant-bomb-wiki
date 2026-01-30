@@ -352,7 +352,7 @@ exports.default = component;
 
 .item-chip-remove:hover {
   color: #fff;
-  background: #e63946;
+  background: #ff9b4d;
 }
 
 .filter-input {
@@ -378,7 +378,7 @@ exports.default = component;
 
 .filter-input:focus {
   outline: none;
-  border-color: #e63946;
+  border-color: #ff9b4d;
 }
 
 /* Filter checkbox styling */
@@ -400,7 +400,7 @@ exports.default = component;
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #e63946;
+  accent-color: #ff9b4d;
 }
 
 .search-results {
@@ -409,7 +409,7 @@ exports.default = component;
   left: 0;
   right: 0;
   background: #1a1a1a;
-  border: 1px solid #e63946;
+  border: 1px solid #ff9b4d;
   border-top: none;
   border-radius: 0 0 4px 4px;
   max-height: 400px;

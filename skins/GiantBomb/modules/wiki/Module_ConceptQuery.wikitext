@@ -8,15 +8,15 @@ function p.render(frame)
     local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
     
     local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
-    local sortProp = "Has name" -- Default
-    local sortOrder = "ascending"
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
 
     if sortFilter == "latest" then
         sortProp = "Modification date"
         sortOrder = "descending"
-    elseif sortFilter == "newest" then
-        sortProp = "Creation date"
-        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
     end
 
     -- Try to get 'limit' from invoke args, then parent args, then default to 48
@@ -66,8 +66,7 @@ function p.render(frame)
     -- 2. Execute Query
     local queryData = mw.smw.getQueryResult({
         query,
-        "?Has image#nowiki",
---        "?Has image raw#nowiki",  --DO WE HAVE TO DO THIS FOR ALL?
+        "?Has image",
         "?Has deck",
         limit = limit,
         offset = offset,
@@ -102,9 +101,8 @@ function p.render(frame)
         end
         
         -- 4. Process Image data from description
-        --local imageData = getSafe('Has image raw', false)
         local imageData = getSafe('Has image', false)
-        imageData = imageData:gsub("¤", "_"):gsub("Http", "http"):gsub(" ", "%%20")
+        imageData = imageData:gsub("Http", "http"):gsub(" ", "%%20")
         
 		html:wikitext(frame:expandTemplate{ 
 		    title = 'ConceptCard', 

@@ -4,7 +4,6 @@
 ||| Guid (property=Has guid)
 ||| Aliases (property=Has aliases)
 ||| Image (property=Has image)
-||| ImageRaw (property=Has image raw)
 ||| Caption (property=Has caption)
 ||| Deck (property=Has deck)
 ||| ReleaseDate (property=Has release date)
@@ -42,8 +41,6 @@ The page structure follows the classic Giant Bomb wiki design:
 | Aliases || Alternative names (comma-separated)
 |-
 | Image || Cover image filename
-|-
-| ImageRaw || Cover image filename with underscores replaced with ¤
 |-
 | Deck || Short description shown in hero
 |-
@@ -99,8 +96,7 @@ Multi-value properties (comma-separated) use #arraymap.
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image raw={{#replace:{{{Image|}}}|_|¤}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{#replace:{{{Image}}}|_|%5F}}| |%20}}}}
 }}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
