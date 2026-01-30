@@ -123,8 +123,8 @@ module.exports = exports = {
 }
 
 .view-btn.active {
-  background: #e63946;
-  border-color: #e63946;
+  background: #ff9b4d;
+  border-color: #ff9b4d;
   color: white;
 }
 

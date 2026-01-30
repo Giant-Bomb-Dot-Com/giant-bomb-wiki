@@ -130,6 +130,6 @@ exports.default = component;
 
 .filter-select:focus {
   outline: none;
-  border-color: #e63946;
+  border-color: #ff9b4d;
 }
 </style>

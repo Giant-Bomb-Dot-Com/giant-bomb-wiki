@@ -43,7 +43,7 @@ Your wiki content here...
 SMW Property Storage
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{#replace:{{{Image}}}|_|%5F}}| |%20}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}<!--
 
