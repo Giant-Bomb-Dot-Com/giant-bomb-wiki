@@ -163,7 +163,7 @@ $wgLocalisationCacheConf['store'] = 'file';
 
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
-$wgParserCacheType = CACHE_DB;
+$wgParserCacheType = CACHE_ACCEL;
 $wgParserCacheExpireTime = 86400 * 7;
 $wgMessageCacheType = CACHE_ACCEL;
 $wgSessionCacheType = CACHE_DB;
@@ -328,9 +328,11 @@ if ( $gbResolveBaseOrigin !== false && $gbResolveBaseOrigin !== null && trim( $g
 
 enableSemantics();
 
+$smwgCacheType = CACHE_ACCEL;
 $smwgMainCacheType = CACHE_ACCEL;
 $smwgQueryResultCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheLifetime = 3600;
+$smwgQueryResultCacheLifetime = 86400;
+$smwgEnableCache = true;
 $smwgFactboxUseCache = true;
 $smwgFactboxCacheRefreshOnPurge = true;
 $smwgAutoRefreshOnPurge = true;
@@ -338,6 +340,7 @@ $smwgEnabledQueryDependencyLinksStore = true;
 $smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
 $smwgEnabledFulltextSearch = true;
 $smwgPageSpecialProperties[] = '_CDAT';
+$smwgEnableUpdateJobs = true;
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
