@@ -43,8 +43,7 @@
 .wiki-nav__item > a:hover,
 .wiki-nav__link:hover {
   background: #333;
-  border-color: #ff9b4d;
-  color: #ffffff;
+  border-color: #b05f1c;
   text-decoration: none;
 }
 
@@ -63,9 +62,10 @@
 
 .wiki-nav__link--active,
 .wiki-nav__item .selflink {
-  background: #ff9b4d;
-  border-color: #ff9b4d;
+  background: #b05f1c;
+  border-color: #b05f1c;
   color: #fff;
+  cursor: pointer;
 }
 
 /* Responsive */

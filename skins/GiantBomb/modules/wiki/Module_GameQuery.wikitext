@@ -89,6 +89,8 @@ function p.render(frame)
 
         -- 4. Process Image data from description
         local imageData = getSafe('Has image', false)
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+
 		local rawDateData = result.printouts['Has release date']
 		local cleanDate = ""
 		

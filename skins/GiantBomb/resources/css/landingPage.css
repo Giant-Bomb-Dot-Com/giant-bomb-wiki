@@ -95,19 +95,6 @@ body.page-Main_Page #siteSub,
   background: none;
 }
 
-.gb-button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #ff9b4d;
-  border-color: #ff9b4d;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
 .gb-button:hover {
   background: #333;
   border-color: #666;
@@ -118,16 +105,17 @@ body.page-Main_Page #siteSub,
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: #ff9b4d;
-  border-color: #ff9b4d;
-  color: white;
+  background: #b05f1c;
+  border-color: #b05f1c;
+  color: #fff;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s;
 }
 
 .gb-button.reset {
-  background: #666;
+  color: #fff;
+  background: #44446e;
   border-color: #555;
   margin-bottom: 1rem;
 }
@@ -135,5 +123,10 @@ body.page-Main_Page #siteSub,
 .gb-button:hover,
 .gb-button.reset:hover {
   background: #333;
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
+  color: #fff;
+}
+
+.clickable-box {
+  cursor: pointer;
 }
