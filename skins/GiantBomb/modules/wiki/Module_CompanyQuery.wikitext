@@ -152,7 +152,7 @@ function p.render(frame)
 
         -- 4. Process Image data from description
         local imageData = getSafe('Has image', false)
-        imageData = imageData:gsub("Http", "http"):gsub(" ", "%%20")
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
 
 		html:wikitext(frame:expandTemplate{ 
 		    title = 'CompanyCard', 

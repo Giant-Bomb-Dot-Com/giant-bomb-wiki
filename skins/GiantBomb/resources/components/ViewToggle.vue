@@ -123,9 +123,9 @@ module.exports = exports = {
 }
 
 .view-btn.active {
-  background: #ff9b4d;
-  border-color: #ff9b4d;
-  color: white;
+  background: #b05f1c;
+  border-color: #b05f1c;
+  color: #fff;
 }
 
 @media (max-width: 768px) {
