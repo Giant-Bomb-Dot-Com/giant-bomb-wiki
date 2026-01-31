@@ -33,7 +33,7 @@
 
 .wiki-search__dropdown:focus {
   outline: none;
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
 }
 
 .wiki-search__dropdown option {
@@ -53,7 +53,7 @@
 }
 
 .wiki-search__input-wrapper:focus-within {
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
 }
 
 .wiki-search__input {
@@ -75,7 +75,7 @@
 
 .wiki-search__btn {
   padding: 0.75rem 1.25rem;
-  background: #ff9b4d;
+  background: #b05f1c;
   border: none;
   color: #ffffff;
   font-size: 0.95rem;
@@ -85,11 +85,11 @@
 }
 
 .wiki-search__btn:hover {
-  background: #ff9b4d;
+  background: #b05f1c;
 }
 
 .wiki-search__btn:active {
-  background: #ff9b4d;
+  background: #b05f1c;
 }
 
 /* Responsive */
@@ -132,12 +132,12 @@
 
 .gb-search input:focus {
   outline: none;
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
 }
 
 .gb-search-btn {
   padding: 0.75rem 1.25rem;
-  background: #ff9b4d;
+  background: #b05f1c;
   border: none;
   border-radius: 6px;
   color: #fff;
@@ -147,7 +147,7 @@
 }
 
 .gb-search-btn:hover {
-  background: #ff9b4d;
+  background: #b05f1c;
 }
 
 .gb-search .search_dropdown {
@@ -162,5 +162,5 @@
 
 .gb-search .search_dropdown:focus {
   outline: none;
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
 }

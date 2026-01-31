@@ -68,7 +68,7 @@ module.exports = exports = {
 .add-button {
   display: block;
   padding: 12px 20px;
-  background: #ff9b4d;
+  background: #b05f1c;
   border: none;
   border-radius: 4px;
   color: #fff;

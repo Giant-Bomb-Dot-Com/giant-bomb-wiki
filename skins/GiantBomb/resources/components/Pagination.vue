@@ -259,7 +259,7 @@ module.exports = exports = defineComponent({
 
 .pagination-btn:hover:not(:disabled) {
   background: #3a3a3a;
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
   color: #fff;
 }
 
@@ -269,8 +269,8 @@ module.exports = exports = defineComponent({
 }
 
 .pagination-btn.active {
-  background: #ff9b4d;
-  border-color: #ff9b4d;
+  background: #b05f1c;
+  border-color: #b05f1c;
   color: #fff;
   font-weight: 600;
 }
@@ -305,7 +305,7 @@ module.exports = exports = defineComponent({
 }
 
 .pagination-select:hover {
-  border-color: #ff9b4d;
+  border-color: #b05f1c;
 }
 
 /* Mobile responsive */
