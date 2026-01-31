@@ -83,7 +83,7 @@ Your wiki content here...
 </noinclude><includeonly>{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{#replace:{{{Image}}}|_|%5F}}| |%20}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
 }}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName}}}}}
