@@ -39,22 +39,17 @@
     }
   },
   "AvailableRights": ["gb-premium"],
-  "RevokePermissions": {
-    "*": {
-      "createpage": true
-    },
-    "user": {
-      "edit": true,
-      "editcontentmodel": true
-    }
-  },
   "GroupPermissions": {
     "subscriber": {
       "createpage": true,
+      "edit": true,
       "editcontentmodel": true,
       "gb-premium": true
     },
     "bureaucrat": {
+      "gb-premium": true
+    },
+    "sysop": {
       "gb-premium": true
     }
   }

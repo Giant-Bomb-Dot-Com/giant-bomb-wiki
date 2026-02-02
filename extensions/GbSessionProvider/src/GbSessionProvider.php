@@ -22,7 +22,8 @@ use Phpfastcache\CacheManager;
 
 class GbSessionProvider extends ImmutableSessionProviderWithCookie
 {
-    // const string PREMIUM_GROUP_NAME = 'subscriber';
+    public const string PREMIUM_GROUP_NAME = "subscriber";
+    public const string PREMIUM_RIGHT = "gb-premium";
 
     protected $logger;
     protected string $prefix = "";
@@ -64,7 +65,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     //    b) If cookie fails verification, the user is not authenticated
     //    c) If cookie passes verification, the user is externally authenticated
     // 3. When user is externally authenticated, they automatically get authenticated for Mediawiki
-    //    a) Get user info from the cookie and upsert the user into Mediawiki
+    //    a) Get user info from the cookie; find or create the user into Mediawiki
     //    b) Return a Mediawiki session for this user
     // 4. When user is not authenticated, they automatically are not authenticated with the Mediawiki
     //
@@ -103,7 +104,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $this->logger->debug("current user is considered logged in externally");
 
         // 3. a)
-        $user = $this->createUserFromGbn($data);
+        $user = $this->findOrCreateUserFromGbn($data);
         $this->logger->debug("new user " . print_r($user, true));
 
         if ($user === null) {
@@ -178,15 +179,13 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         return $decodedJWTObj;
     }
 
-    // uses UserFactory and I think it does a find or create.
     // we technically know $data is not null and it's been verified
-    public function createUserFromGbn($data)
+    public function findOrCreateUserFromGbn($data)
     {
         $this->logger->debug(
-            ">>> Create the user from GBN data and assign or update group",
+            "findOrCreateUserFromGbn: find user by name or create one",
         );
-
-        $username = $data->preferred_username;
+        $username = $data->preferred_username ?? $data->name;
         $email = $data->email;
         $emailVerified = (bool) $data->email_verified;
         $premiumClaim = (bool) $data->premium;
@@ -196,47 +195,57 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
 
         if ($user === null) {
             throw new UnexpectedValueException(
-                "unable to create a user with this user name, sub " . $subject,
+                "GbSessionProvider: Unable to create anon user with this username: " .
+                    $username,
             );
         }
 
         if (!$user->isRegistered()) {
+            $this->logger->debug(
+                "findOrCreateUserFromGbn: new user, store to db",
+            );
+            $user->setEmail($email);
+            $user->confirmEmail();
             $user->addToDatabase();
-            $this->logger->debug("create user: user saved to db");
         } else {
-            $this->logger->error("create user: cannot save user to db");
+            $this->logger->debug("findOrCreateUserFromGbn: load existing user");
+            $user->load();
+
+            $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+            $groups = $userGroupManager->getUserImplicitGroups($user);
+            $this->logger->debug(
+                "\tVerify user groups: " . print_r($groups, true),
+            );
         }
 
-        $user->setEmail($email);
-        $user->confirmEmail();
-
-        $premiumGroupName = "subscriber"; // self::PREMIUM_GROUP_NAME;
-
         if ($user->isRegistered()) {
+            $this->logger->debug("findOrCreateUserFromGbn: handle groups");
             $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
             if ($premiumClaim) {
                 $this->logger->debug("premium is true so adding to group");
                 $groupAdded = $userGroupManager->addUserToGroup(
                     $user,
-                    $premiumGroupName,
+                    GbSessionProvider::PREMIUM_GROUP_NAME,
                     null,
                     true,
-                ); // last flag, is upsert? should it?
+                );
             } else {
                 $this->logger->debug("premium is false so removing to group");
-                $groups = $userGroupManager->getUserImplicitGroups($user);
-                if (in_array($premiumGroupName, $groups)) {
+                $groups = $userGroupManager->getUserEffectiveGroups($user);
+                if (in_array(GbSessionProvider::PREMIUM_GROUP_NAME, $groups)) {
                     $this->logger->debug("\t-> member of, so kicking out");
                     $groupKicked = $userGroupManager->removeUserFromGroup(
                         $user,
-                        $premiumGroupName,
+                        GbSessionProvider::PREMIUM_GROUP_NAME,
                     );
                 } else {
                     $this->logger->debug("\tnot a member");
                 }
             }
         } else {
-            $this->logger->debug("user is not registered yet");
+            $this->logger->error(
+                "findOrcreateUserFromGbn: problem with a unregistered user",
+            );
         }
         return $user;
     }
