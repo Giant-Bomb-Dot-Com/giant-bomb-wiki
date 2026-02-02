@@ -543,12 +543,16 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 
 
 // user groups and permissions
+<<<<<<< HEAD
 // Also see extensions/GbSessionProvider/extension.json
+=======
+>>>>>>> 4c4c76bd (test(auth): test with existing users the GbSessionProvider)
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['edit'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
 
+<<<<<<< HEAD
 function RestrictImportExport(&$list) {
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
         unset($list['Export']);
