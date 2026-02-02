@@ -54,9 +54,7 @@ class GbSessionProviderTest extends MediaWikiIntegrationTestCase
             ->willReturn(null);
 
         $config = new HashConfig();
-        $config->set("GbSessionProviderTestModeEnabled", false);
         $config->set("GbSessionProviderGbnCookieName", "gb_wiki");
-        $config->set("GbSessionProviderTestJWT", null);
         $this->initProvider(
             $provider,
             $logger ?? new TestLogger(),
@@ -100,9 +98,7 @@ class GbSessionProviderTest extends MediaWikiIntegrationTestCase
             ->willReturn((object) $claim);
 
         $config = new HashConfig();
-        $config->set("GbSessionProviderTestModeEnabled", false);
         $config->set("GbSessionProviderGbnCookieName", "gb_wiki");
-        $config->set("GbSessionProviderTestJWT", null);
         $this->initProvider(
             $provider,
             $logger ?? new TestLogger(),
@@ -146,9 +142,7 @@ class GbSessionProviderTest extends MediaWikiIntegrationTestCase
             ->willReturn(null); // basically verification failed
 
         $config = new HashConfig();
-        $config->set("GbSessionProviderTestModeEnabled", false);
         $config->set("GbSessionProviderGbnCookieName", "gb_wiki");
-        $config->set("GbSessionProviderTestJWT", null);
         $this->initProvider(
             $provider,
             $logger ?? new TestLogger(),
@@ -200,9 +194,7 @@ class GbSessionProviderTest extends MediaWikiIntegrationTestCase
             ->willReturn((object) $claim);
 
         $config = new HashConfig();
-        $config->set("GbSessionProviderTestModeEnabled", false);
         $config->set("GbSessionProviderGbnCookieName", "gb_wiki");
-        $config->set("GbSessionProviderTestJWT", null);
         $this->initProvider(
             $provider,
             $logger ?? new TestLogger(),

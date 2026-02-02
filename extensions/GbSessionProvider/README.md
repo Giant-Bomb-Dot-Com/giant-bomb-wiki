@@ -35,5 +35,15 @@ The PHP code resides in this repo and gets copied to the container during the /i
 
 In `config/LocalSettings.php` locate the following configuration settings for the extension GbSessionProvider.
 * `$wgGbSessionProviderJWKSUri` is a string with URI for the JWKS
-* `$wgGbSessionProviderTestModeEnabled` is a boolean to create first a `gb_wiki` cookie containing the content of the next setting.
-* `$wgGbSessionProviderTestJWT` is a string that should contain a JWT to be verified using the JWKS
+
+Previously there was a config to have the wiki insert the `gb_wiki` cookie to test, but this was removed.
+
+```
+$wgDebugToolbar = true;
+$wgShowDebug = true;
+$wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+$wgDebugLogGroups = [
+    // log channel -> log path
+    'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+];
+```

@@ -27,7 +27,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
 
     protected $logger;
     protected string $prefix = "";
-    protected bool $testFlag = false;
     protected $params = [];
     protected string $gbnCookieName = "";
     protected string $jwksUri = "";
@@ -43,9 +42,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $this->params = $params;
 
         $config = MediaWikiServices::getInstance()->getMainConfig();
-        $this->testFlag = $this->setTestFlag(
-            $config->get("GbSessionProviderTestModeEnabled"),
-        );
         $this->gbnCookieName =
             $config->get("GbSessionProviderGbnCookieName") ?: "gb_wiki";
 
@@ -69,17 +65,9 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     //    b) Return a Mediawiki session for this user
     // 4. When user is not authenticated, they automatically are not authenticated with the Mediawiki
     //
-    // For testing, in in LocalSettings.php set
-    // * the boolean config $wgGbSessionProviderTestModeEnabled
-    // * set a JWT string for $wgGbSessionProviderTestJWT
     public function provideSessionInfo(WebRequest $request)
     {
         $this->logger->debug("Gb provide session info");
-
-        if ($this->testFlag) {
-            $this->logger->debug("Inserting a dummy GBN cookie");
-            $this->prepareDummyCookies($request);
-        }
 
         // 1.
         $cookieData = $this->getGbnCookie($request);
@@ -117,28 +105,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         // 3. b)
         $userSession = $this->createUserSession($request, $userInfo);
         return $userSession;
-    }
-
-    public function prepareDummyCookies(WebRequest $request)
-    {
-        $this->logger->debug("prepare dummy cookies");
-        $this->logger->debug(
-            "GbSessionProviderTest JWT " .
-                print_r(
-                    $this->getConfig()->get("GbSessionProviderTestJWT"),
-                    true,
-                ),
-        );
-        $testJWT = $this->getConfig()->get("GbSessionProviderTestJWT");
-        $wikiCookie = $request->getCookie("gb_wiki", $this->prefix);
-        if ($wikiCookie === null) {
-            $this->logger->info("\tno existing gb_wiki cookie");
-            $response = $request->response();
-            $response->setCookie("gb_wiki", $testJWT, time() + 3600 * 24 * 7, [
-                "prefix" => $this->prefix,
-                "path" => "/",
-            ]);
-        }
     }
 
     public function getGbnCookie($request)
@@ -211,11 +177,11 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             $this->logger->debug("findOrCreateUserFromGbn: load existing user");
             $user->load();
 
-            $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-            $groups = $userGroupManager->getUserImplicitGroups($user);
-            $this->logger->debug(
-                "\tVerify user groups: " . print_r($groups, true),
-            );
+            // $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+            // $groups = $userGroupManager->getUserImplicitGroups($user);
+            // $this->logger->debug(
+            //     "\tVerify user groups: " . print_r($groups, true),
+            // );
         }
 
         if ($user->isRegistered()) {
@@ -279,15 +245,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             "persisted" => $persisted,
             "forceUse" => $forceUse,
         ]);
-    }
-
-    // Expect config to be a bool; default to false when not bool
-    public function setTestFlag($value): bool
-    {
-        if (is_string($value)) {
-            return false;
-        }
-        return !!((bool) $value);
     }
 
     // return decoded object if good

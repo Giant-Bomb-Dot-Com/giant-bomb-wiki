@@ -4,7 +4,7 @@
   "author": "Zelnox",
   "description": "To provide a Mediawiki session for Giant Bomb Next single-sign-on (SSO) cookies. Also to create a Mediawiki user is required.",
   "url": "https://www.giantbomb.com",
-  "version": "0.1",
+  "version": "0.2",
   "license-name": "MIT",
   "type": "identity",
   "requires": {
@@ -21,17 +21,9 @@
     }
   },
   "config": {
-    "GbSessionProviderTestModeEnabled": {
-      "value": false,
-      "description": "Enable test mode (boolean)"
-    },
     "GbSessionProviderJWKSUri": {
-      "value": "https://enormousexplosive.com/.well-known/jwks.json",
-      "description": "URI to JWKS"
-    },
-    "GbSessionProviderTestJWT": {
-      "value": "some value",
-      "description": "A test JWT for the dummy cookie (string)"
+      "value": "https://giantbomb.com/.well-known/jwks.json",
+      "description": "URI to GiantBomb's JWKS"
     },
     "GbSessionProviderGbnCookieName": {
       "value": "gb_wiki",
