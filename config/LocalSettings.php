@@ -540,3 +540,12 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 // user permissions
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
+
+function RestrictImportExport(&$list) {
+    if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
+        unset($list['Export']);
+        unset($list['Import']);
+    }
+    return true;
+}
+$wgHooks['SpecialPage_initList'][]='RestrictImportExport';
