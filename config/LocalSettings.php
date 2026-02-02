@@ -545,25 +545,14 @@ $wgGroupPermissions['sysop']['edit'] = true;
 
 // Also see extensions/GbSessionProvider/extension.json
 
-// to revise
+// shares domain with GBN // to revise
 $wgCookieDomain = 'localhost';
 $wgCookiePrefix = '';
-$wgCookiePath = '/';
+$wgCookiePath = '/wiki';
 $wgCookieSecure = true;
 $wgCookieHttpOnly = true;
 $wgSessionName = 'mwSession';
 
-// DEV only
-$wgDebugToolbar = true;
-$wgShowDebug = true;
-$wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
-$wgDebugLogGroups = [
-    // log channel -> log path
-    'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
-];
-
 // configs for GbSessionProvider
 wfLoadExtension( 'GbSessionProvider' );
 $wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
-$wgGbSessionProviderTestModeEnabled = false;
-$wgGbSessionProviderTestJWT = 'test-token';
