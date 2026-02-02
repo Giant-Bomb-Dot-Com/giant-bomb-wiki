@@ -537,11 +537,12 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
-// user permissions
-$wgGroupPermissions['*']['createaccount'] = false;
-$wgGroupPermissions['sysop']['createaccount'] = true;
-
 // user groups and permissions
+$wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['*']['edit'] = false;
+$wgGroupPermissions['sysop']['createaccount'] = true;
+$wgGroupPermissions['sysop']['edit'] = true;
+
 // Also see extensions/GbSessionProvider/extension.json
 
 // to revise
