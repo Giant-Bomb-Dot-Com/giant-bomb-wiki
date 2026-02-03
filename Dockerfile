@@ -10,14 +10,13 @@ ARG INSTALL_API="false"
 WORKDIR /var/www/html
 USER root
 
-# INSTALL DB EXTENSIONS
-RUN docker-php-ext-install pdo pdo_mysql
-
-# INSTALL SEMANTIC MEDIAWIKI
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
  && apt-get install gnupg lsb-release libzip-dev unzip wget -y
+
+# INSTALL DB EXTENSIONS
+RUN docker-php-ext-install pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -38,7 +37,11 @@ RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
     apt-get update && apt-get install -y gcsfuse; \
     fi
 
+# INSTALL SEMANTIC MEDIAWIKI
+# Due to an issue with phpunit 9.6.19, we have to force it to update:
+# See https://issues.apache.org/jira/browse/IGNITE-27681
 RUN cd /var/www/html \
+ && sed -i -e "s/9.6.19/\^9.6.19/" composer.json \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-result-formats \
