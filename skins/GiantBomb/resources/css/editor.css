@@ -10,7 +10,13 @@
   border-radius: 8px;
 }
 
-.mw-body-content #pfForm .select2-selection__choice {
+.mw-body-content
+  .createbox
+  .mw-parser-output
+  .formtable
+  .mw-body-content
+  #pfForm
+  .select2-selection__choice {
   background-color: #1a1a1a;
 }
 
@@ -33,6 +39,136 @@
 
 .wikiEditor-ui-toolbar .oo-ui-buttonElement-button {
   background-color: #f8f9fa;
+}
+
+/* Table Header alignment */
+div.mw-body-content form.createbox div.mw-parser-output table.formtable th {
+  vertical-align: middle;
+}
+
+/* Input span flex layout */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan {
+  display: flex;
+}
+
+/* Styled Createbox Input */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan
+  input.createboxInput {
+  background-color: rgb(0 0 0 / 0.3);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-color: rgb(255 255 255 / 0.1);
+  width: 100%;
+}
+
+/* Loading icon next to input */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan
+  img[id^="loading-"] {
+  height: 32px;
+  width: 32px;
+  align-self: center;
+  margin-left: 12px;
+}
+
+/* Select2 Tokens/Choices */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  li.select2-selection__choice {
+  padding: 4px 8px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #ccc;
+}
+
+/* Select2 Search Field */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  li.select2-search
+  .select2-search__field {
+  box-sizing: border-box;
+  line-height: 1.7;
+  padding: 4px 8px;
+  height: 37px;
+  min-width: 30px;
+}
+
+/* OOUI Buttons - General */
+div.mw-body-content form.createbox .oo-ui-buttonElement-button {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+/* OOUI Primary (Red Gradient) Button */
+div.mw-body-content
+  form.createbox
+  .oo-ui-flaggedElement-primary
+  .oo-ui-buttonElement-button {
+  background: linear-gradient(180deg, #b05f1c 0%, #b1601c 100%);
+  border-color: #b05f1c;
+}
+
+/* OOUI Button Hover States */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-enabled
+  .oo-ui-buttonElement-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* OOUI Primary Button Hover State Override */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-enabled.oo-ui-flaggedElement-primary
+  .oo-ui-buttonElement-button:hover {
+  background: none;
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* OOUI Disabled State */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-disabled
+  > .oo-ui-buttonElement-button {
+  opacity: 0.3;
+}
+
+/* Dropdown background */
+.select2-container .select2-dropdown {
+  background-color: #2a2a2a;
+}
+
+/* Selected option background */
+.select2-container
+  .select2-dropdown
+  .select2-results
+  ul.select2-results__options[aria-selected="true"] {
+  background-color: #666;
 }
 
 /* ACE CODE EDITOR */

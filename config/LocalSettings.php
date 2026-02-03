@@ -331,7 +331,7 @@ enableSemantics();
 $smwgCacheType = CACHE_ACCEL;
 $smwgMainCacheType = CACHE_ACCEL;
 $smwgQueryResultCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheLifetime = 86400;
+$smwgQueryResultCacheLifetime = 86400 * 7;
 $smwgEnableCache = true;
 $smwgFactboxUseCache = true;
 $smwgFactboxCacheRefreshOnPurge = true;
@@ -545,3 +545,12 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 // user permissions
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
+
+function RestrictImportExport(&$list) {
+    if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
+        unset($list['Export']);
+        unset($list['Import']);
+    }
+    return true;
+}
+$wgHooks['SpecialPage_initList'][]='RestrictImportExport';
