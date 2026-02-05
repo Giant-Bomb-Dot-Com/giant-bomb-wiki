@@ -407,7 +407,7 @@ $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 # Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200;
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
 
 # Auto-append {{GameEnd}} to game pages missing it
 $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
@@ -537,6 +537,22 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
-// user permissions
+// user groups and permissions
 $wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['*']['edit'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
+$wgGroupPermissions['sysop']['edit'] = true;
+
+// Also see extensions/GbSessionProvider/extension.json
+
+// shares domain with GBN // to revise
+$wgCookieDomain = 'localhost';
+$wgCookiePrefix = '';
+$wgCookiePath = '/wiki';
+$wgCookieSecure = true;
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
+
+// configs for GbSessionProvider
+wfLoadExtension( 'GbSessionProvider' );
+$wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';

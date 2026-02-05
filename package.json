@@ -9,6 +9,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/vue3-jest": "^29.2.6",
     "babel-jest": "^30.2.0",
+    "@prettier/plugin-php": "github:prettier/plugin-php",
     "cypress": "^14.5.2",
     "cypress-dotenv": "^3.0.1",
     "dotenv": "^17.2.2",
@@ -20,8 +21,8 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "format": "pnpm prettier --write --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{css,js,json,ts,vue,yaml}|*.json|*.yaml|*.yml'",
-    "format:check": "pnpm prettier --check --config .prettierrc 'README.md|(skins|cypress|.github)/**/*.{css,js,json,ts,vue,yaml}|*.json|*.yaml|*.yml'",
+    "format": "pnpm prettier --write --config .prettierrc 'README.md|*.json|*.yaml|*.yml|(skins|cypress|.github|extensions)/**/*.{css,js,json,ts,vue,yaml,yml}|extensions/GbSessionProvider/**/*.php'",
+    "format:check": "pnpm prettier --check --config .prettierrc 'README.md|*json|*.yaml|*.yml||(skins|cypress|.github)/**/*.{css,js,json,ts,vue,yaml,yml}|extensions/GbSessionProvider/**/*.php'",
     "test:e2e": "pnpm cypress run",
     "test:unit": "jest"
   }
