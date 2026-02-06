@@ -59,7 +59,7 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # Directory for logging
-RUN mkdir -p -m 740 /var/log/mediawiki && \
+RUN mkdir -p -m 755 /var/log/mediawiki && \
     chown -R www-data:www-data /var/log/mediawiki
 
 # Cache directories for localisation and file cache
