@@ -198,7 +198,7 @@ if ( $wikiEnv === 'dev' ) {
     }
     $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
 } else {
-    $wgResourceLoaderUniqueVersion = '20260128-v1';
+    $wgResourceLoaderUniqueVersion = '20260205-v1';
 }
 
 $wgUseETag = true;
