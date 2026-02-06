@@ -26,7 +26,9 @@ class ImportWikiTemplates extends Maintenance {
 
     public function execute() {
         global $IP;
-        $templateDir = "$IP/skins/GiantBomb/templates/wiki";
+        $moduleDir = "$IP/skins/GiantBomb/modules/wiki";
+        $pagesDir = "$IP/skins/GiantBomb/pages/wiki";
+        $templateDir = "$IP/skins/GiantBomb/templates/wiki";        
         $type = $this->getOption( 'type', 'all' );
         
         // Shared templates used by multiple page types
@@ -156,6 +158,40 @@ class ImportWikiTemplates extends Maintenance {
             'Template:GameRatingEnd' => "$templateDir/Template_GameRatingEnd.wikitext",
             'Template:GameRatingSidebar' => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
+
+        $rootPageTemplates = [
+            'Main_Page' => "$pagesDir/Main_Page.wikitext",
+
+            'Property:Has_image' => "$pagesDir/Property_Hasimage.wikitext",
+
+            'Template:LandingNav' => "$templateDir/Template_LandingNav.wikitext",
+            'Template:LandingPageQuery' => "$templateDir/Template_LandingPageQuery.wikitext",
+
+            //games            
+            'Games' => "$pagesDir/Page_Games.wikitext",            
+            'Module:BadgeList' => "$moduleDir/Module_BadgeList.wikitext",
+            'Module:GameFilters' => "$moduleDir/Module_GameFilters.wikitext",
+            'Module:GameQuery' => "$moduleDir/Module_GameQuery.wikitext",            
+            'Template:GameCard' => "$templateDir/Template_GameCard.wikitext",
+            
+            //characters
+            'Characters' => "$pagesDir/Page_Characters.wikitext",
+            'Module:CharacterFilters' => "$moduleDir/Module_CharacterFilters.wikitext",
+            'Module:CharacterQuery' => "$moduleDir/Module_CharacterQuery.wikitext",
+            'Template:CharacterCard' => "$templateDir/Template_CharacterCard.wikitext",
+            
+            //companies
+            'Companies' => "$pagesDir/Page_Companies.wikitext",
+            'Module:CompanyFilters' => "$moduleDir/Module_CompanyFilters.wikitext",
+            'Module:CompanyQuery' => "$moduleDir/Module_CompanyQuery.wikitext",
+            'Template:CompanyCard' => "$templateDir/Template_CompanyCard.wikitext",
+            
+            //concepts
+            'Concepts' => "$pagesDir/Page_Concepts.wikitext",
+            'Module:ConceptFilters' => "$moduleDir/Module_ConceptFilters.wikitext",
+            'Module:ConceptQuery' => "$moduleDir/Module_ConceptQuery.wikitext",
+            'Template:ConceptCard' => "$templateDir/Template_ConceptCard.wikitext",
+        ];
         
         // All template groups
         $allGroups = [
@@ -177,6 +213,7 @@ class ImportWikiTemplates extends Maintenance {
             'ratingboard' => $ratingBoardTemplates,
             'region' => $regionTemplates,
             'gamerating' => $gameRatingTemplates,
+            'rootpages' => $rootPageTemplates,
         ];
         
         // Build template list based on type

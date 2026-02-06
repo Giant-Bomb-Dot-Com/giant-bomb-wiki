@@ -105,7 +105,7 @@ exports.default = component;
 
 .filter-input:focus {
   outline: none;
-  border-color: #e63946;
+  border-color: #b05f1c;
 }
 
 .filter-input::placeholder {

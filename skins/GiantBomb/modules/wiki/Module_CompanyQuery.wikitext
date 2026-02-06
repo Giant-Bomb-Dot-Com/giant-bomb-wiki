@@ -1,0 +1,195 @@
+local p = {}
+
+function p.render(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
+    local currentLetter = mw.uri.decode(rawLetter, "WIKI")
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
+
+    if sortFilter == "latest" then
+        sortProp = "Modification date"
+        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
+    end
+
+    -- Try to get 'limit' from invoke args, then parent args, then default to 48
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
+    local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
+    
+    -- Cleanup: If #urlget failed and returned the literal string, default to All
+    if currentLetter:find('{{#urlget') then
+        currentLetter = "All"
+    end
+
+	local companyFilter = ""
+    if searchFilter ~= "" then
+        local dbSearch = searchFilter:gsub(" ", "_")
+        
+        -- Step 1: Query Games for Developers and Publishers
+        local gameResults = mw.smw.getQueryResult({
+            "[[Category:Games]] [[~*" .. dbSearch .. "*]]",
+            "?Has developers",
+            "?Has publishers"
+            --limit = 100
+        })
+
+        if gameResults and gameResults.results then
+            local uniqueCompanies = {}
+            for _, res in ipairs(gameResults.results) do
+                -- Helper to extract data from both properties
+                local props = {"Has developers", "Has publishers"}
+                for _, prop in ipairs(props) do
+                    local list = res.printouts[prop] or {}
+                    for _, entry in ipairs(list) do
+                        -- Store in table keys to automatically handle de-duplication
+                        local name = entry.fulltext or entry
+                        uniqueCompanies["[[" .. name .. "]]"] = true
+                    end
+                end
+            end
+
+            -- Step 2: Convert table keys into an OR-separated string for the final query
+            local filterList = {}
+            local upperLetter = currentLetter:upper()
+
+            for companyLink, _ in pairs(uniqueCompanies) do
+               local match = true
+                if currentLetter ~= "All" then
+                    local pageName  = companyLink:match("%[%[(.-)%]%]") or ""
+                    -- Remove namespace prefix if present (e.g., "Companies/Nintendo" -> "Nintendo")
+                    local cleanName = pageName:gsub("^[^/]*/", "")
+                    local firstChar = cleanName:sub(1,1):upper()
+                    
+                    if currentLetter == "#" then
+                        match = (firstChar:match("%d") ~= nil)
+                    else
+                        -- Case-insensitive comparison
+                        match = (firstChar == upperLetter)
+                    end
+                end
+
+                if match then
+                    table.insert(filterList, companyLink)
+                end
+            end
+
+            if #filterList > 0 then
+                companyFilter = " (" .. table.concat(filterList, " OR ") .. ")"
+            else
+                -- Return early if games found have no company data
+                return '<div class="no-results">No companies linked to games matching "' .. searchFilter .. '"</div>'
+            end
+        else
+            -- Return early if no games match the search
+            return '<div class="no-results">No games found matching "' .. searchFilter .. '"</div>'
+        end
+    end
+
+    -- Step 3: Final Company Query
+    local query = "[[Category:Companies]] "
+    
+    if companyFilter ~= "" then
+        query = query .. companyFilter
+    end
+    
+    -- Add Alphabetical filter if applicable
+    if currentLetter ~= "All" then
+        if currentLetter == "#" then
+            query = query .. " [[Has name::~[0-9]*]]"
+        else
+            query = query .. " [[Has name::~" .. currentLetter .. "*]]"
+        end
+    end
+
+    -- 2. Run queries
+    local queryData = mw.smw.getQueryResult({
+            query,
+            "?Has image",
+            "?-Has developers=DevelopedGames",
+            "?-Has publishers=PublishedGames",
+            "?Has deck",
+	        limit = limit,
+	        offset = offset,
+	        ["count"] = true,
+			"?Modification date",
+			"?Creation date",
+			sort = sortProp,
+			order = sortOrder
+        })
+
+    -- 3. Debugging / No Results
+    if not queryData or not queryData.results or #queryData.results == 0 then
+        return '<div class="no-results">No characters found for ' .. currentLetter .. '</div>'
+    end
+
+    local html = mw.html.create('div'):addClass('listing-grid')
+    
+    for _, result in ipairs(queryData.results) do
+  	    local fullTitle = result.fulltext or ""
+    	-- This pattern matches "Companies/" or "companies/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Cc][Oo][Mm][Pp][Aa][Nn][Ii][Ee][Ss]/", "")
+    	
+   	    local devGamesCount = result.printouts["DevelopedGames"] and #result.printouts["DevelopedGames"] or 0
+        local pubGamesCount = result.printouts["PublishedGames"] and #result.printouts["PublishedGames"] or 0
+    	
+        -- Helper to extract strings from nested SMW tables
+        local function getSafe(field, isList)
+            local d = result.printouts[field] or {}
+            local vals = {}
+            for _, v in ipairs(d) do
+                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
+                table.insert(vals, str)
+            end
+            return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+
+        -- 4. Process Image data from description
+        local imageData = getSafe('Has image', false)
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+
+		html:wikitext(frame:expandTemplate{ 
+		    title = 'CompanyCard', 
+		    args = { 
+		        url_title    = fullTitle,
+		        title        = cleanTitle,
+                developed    = devGamesCount,
+                published    = pubGamesCount,
+		        deck         = getSafe('Has deck', true),
+		        image        = imageData
+		    } 
+		})
+    end
+    
+        -- 5. Build Pagination (using queryData.count)
+    local totalResults = queryData.count or 0
+    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
+	-- We run a quick secondary query to get the total number.
+	if totalResults == 0 and #queryData.results > 0 then
+	    local countQuery = mw.smw.ask({ query, format = "count" })
+	    totalResults = tonumber(countQuery) or 0
+	end
+
+    -- 5. Build Pagination (using queryData.count)
+	local paginationHtml = ""
+	if totalResults > 0 then
+	    paginationHtml = tostring(mw.html.create('div')
+	        :addClass('pagination-wrapper')
+	        :attr('data-total', totalResults)
+	        :attr('data-limit', limit)
+	        :attr('data-offset', offset)
+	        :attr('data-letter', currentLetter)
+	        :attr('data-search', searchFilter)
+	        :attr('data-sort', sortBy))
+	end
+	
+	return tostring(html) .. paginationHtml
+end
+
+return p

@@ -108,7 +108,7 @@ Multi-value properties (comma-separated) use #arraymap.
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{Abbreviation|}}}|{{#set:Has abbreviation={{{Abbreviation}}}}}
 }}{{#if:{{{FoundedDate|}}}|{{#set:Has founded date={{{FoundedDate}}}}}
