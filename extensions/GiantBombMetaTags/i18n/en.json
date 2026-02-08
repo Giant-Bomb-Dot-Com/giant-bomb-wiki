@@ -1,0 +1,7 @@
+{
+  "@metadata": {
+    "authors": ["David M. Sledge", "Purodha", "Rob W"]
+  },
+  "metatag-desc": "Tag to inject meta description into page header.",
+  "metatag-missing-content": "Error: <gbmeta> tag must have content."
+}

@@ -191,6 +191,42 @@ class ImportWikiTemplates extends Maintenance {
             'Module:ConceptFilters' => "$moduleDir/Module_ConceptFilters.wikitext",
             'Module:ConceptQuery' => "$moduleDir/Module_ConceptQuery.wikitext",
             'Template:ConceptCard' => "$templateDir/Template_ConceptCard.wikitext",
+
+            //franchises
+            'Franchises' => "$pagesDir/Page_Franchises.wikitext",
+            'Module:FranchiseFilters' => "$moduleDir/Module_FranchiseFilters.wikitext",
+            'Module:FranchiseQuery' => "$moduleDir/Module_FranchiseQuery.wikitext",
+            'Template:FranchiseCard' => "$templateDir/Template_FranchiseCard.wikitext",
+
+            //locations
+            'Locations' => "$pagesDir/Page_Locations.wikitext",
+            'Module:LocationFilters' => "$moduleDir/Module_LocationFilters.wikitext",
+            'Module:LocationQuery' => "$moduleDir/Module_LocationQuery.wikitext",
+            'Template:LocationCard' => "$templateDir/Template_LocationCard.wikitext",
+
+            //people
+            'People' => "$pagesDir/Page_People.wikitext",
+            'Module:PersonFilters' => "$moduleDir/Module_PersonFilters.wikitext",
+            'Module:PersonQuery' => "$moduleDir/Module_PersonQuery.wikitext",
+            'Template:PersonCard' => "$templateDir/Template_PersonCard.wikitext",
+
+            //platforms
+            'Platforms' => "$pagesDir/Page_Platforms.wikitext",
+            'Module:PlatformFilters' => "$moduleDir/Module_PlatformFilters.wikitext",
+            'Module:PlatformQuery' => "$moduleDir/Module_PlatformQuery.wikitext",
+            'Template:PlatformCard' => "$templateDir/Template_PlatformCard.wikitext",
+
+            //objects
+            'Objects' => "$pagesDir/Page_Objects.wikitext",
+            'Module:ObjectFilters' => "$moduleDir/Module_ObjectFilters.wikitext",
+            'Module:ObjectQuery' => "$moduleDir/Module_ObjectQuery.wikitext",
+            'Template:ObjectCard' => "$templateDir/Template_ObjectCard.wikitext",
+
+            //accessories
+            'Accessories' => "$pagesDir/Page_Accessories.wikitext",
+            'Module:AccessoryFilters' => "$moduleDir/Module_AccessoryFilters.wikitext",
+            'Module:AccessoryQuery' => "$moduleDir/Module_AccessoryQuery.wikitext",
+            'Template:AccessoryCard' => "$templateDir/Template_AccessoryCard.wikitext",
         ];
         
         // All template groups
