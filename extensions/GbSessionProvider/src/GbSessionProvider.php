@@ -18,6 +18,7 @@ use UnexpectedValueException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 
 class GbSessionProvider extends ImmutableSessionProviderWithCookie
 {
@@ -31,6 +32,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     protected string $jwksUri = "";
     protected string $expectedIssuer = "";
     protected string $expectedAudience = "";
+    protected array $groupMapping = [];
 
     public function __construct(array $params = [])
     {
@@ -49,6 +51,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $this->jwksUri = $config->get("GbSessionProviderJWKSUri");
         $this->expectedIssuer = $config->get("GbSessionProviderExpectedIssuer") ?: "https://giantbomb.com";
         $this->expectedAudience = $config->get("GbSessionProviderExpectedAudience") ?: "giantbomb-wiki";
+        $this->groupMapping = (array) ($config->get("GbSessionProviderGroupMapping") ?: []);
     }
 
     protected function postInitSetup()
@@ -82,7 +85,14 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         }
 
         // 2. b)
-        $data = $this->decodeVerifyGbnJwt($cookieData);
+        try {
+            $data = $this->decodeVerifyGbnJwt($cookieData);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                "JWT processing failed: " . $e::class . ": " . $e->getMessage(),
+            );
+            return null;
+        }
 
         // 2. c)
         if ($data === null) {
@@ -95,7 +105,14 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $this->logger->debug("current user is considered logged in externally");
 
         // 3. a)
-        $user = $this->findOrCreateUserFromGbn($data);
+        try {
+            $user = $this->findOrCreateUserFromGbn($data);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                "User resolution failed: " . $e::class . ": " . $e->getMessage(),
+            );
+            return null;
+        }
 
         if ($user === null) {
             $this->logger->warning("findOrCreateUserFromGbn returned null");
@@ -128,7 +145,9 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $httpClient = new Client();
         $httpFactory = new HttpFactory();
         // Create a cache item pool (can be any PSR-6 compatible cache item pool)
-        $cacheItemPool = CacheManager::getInstance("files");
+        $cacheItemPool = CacheManager::getInstance('Files', new ConfigurationOption([
+            'path' => sys_get_temp_dir() . '/gbsession-jwks-cache',
+        ]));
         $keySet = new CachedKeySet(
             $this->jwksUri,
             $httpClient,
@@ -175,8 +194,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         );
         $username = $data->preferred_username ?? $data->name;
         $email = $data->email;
-        $emailVerified = (bool) $data->email_verified;
-        $premiumClaim = (bool) $data->premium;
 
         $userFactory = MediaWikiServices::getInstance()->getUserFactory();
         $user = $userFactory->newFromName($username);
@@ -201,31 +218,57 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         }
 
         if ($user->isRegistered()) {
-            $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-            $currentGroups = $userGroupManager->getUserGroups($user);
-            $isSubscriber = in_array(GbSessionProvider::PREMIUM_GROUP_NAME, $currentGroups);
-
-            if ($premiumClaim && !$isSubscriber) {
-                $this->logger->debug("Adding user to subscriber group");
-                $userGroupManager->addUserToGroup(
-                    $user,
-                    GbSessionProvider::PREMIUM_GROUP_NAME,
-                    null,
-                    true,
-                );
-            } elseif (!$premiumClaim && $isSubscriber) {
-                $this->logger->debug("Removing user from subscriber group");
-                $userGroupManager->removeUserFromGroup(
-                    $user,
-                    GbSessionProvider::PREMIUM_GROUP_NAME,
-                );
-            }
+            $this->syncUserGroups($user, $data);
         } else {
             $this->logger->error(
                 "findOrCreateUserFromGbn: user is not registered after creation attempt",
             );
         }
         return $user;
+    }
+
+    protected function syncUserGroups($user, $data)
+    {
+        $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+        $currentGroups = $userGroupManager->getUserGroups($user);
+
+        $premiumClaim = (bool) ($data->premium ?? false);
+        $isSubscriber = in_array(self::PREMIUM_GROUP_NAME, $currentGroups);
+
+        if ($premiumClaim && !$isSubscriber) {
+            $this->logger->debug("Adding user to subscriber group");
+            $userGroupManager->addUserToGroup(
+                $user,
+                self::PREMIUM_GROUP_NAME,
+                null,
+                true,
+            );
+        } elseif (!$premiumClaim && $isSubscriber) {
+            $this->logger->debug("Removing user from subscriber group");
+            $userGroupManager->removeUserFromGroup(
+                $user,
+                self::PREMIUM_GROUP_NAME,
+            );
+        }
+
+        if (!empty($this->groupMapping)) {
+            $jwtGroups = (array) ($data->groups ?? []);
+            $jwtRoles = (array) ($data->roles ?? []);
+            $jwtClaims = array_unique(array_merge($jwtGroups, $jwtRoles));
+
+            foreach ($this->groupMapping as $jwtName => $mwGroup) {
+                $inJwt = in_array($jwtName, $jwtClaims);
+                $inMw = in_array($mwGroup, $currentGroups);
+
+                if ($inJwt && !$inMw) {
+                    $this->logger->debug("Adding user to {$mwGroup} group (JWT claim: {$jwtName})");
+                    $userGroupManager->addUserToGroup($user, $mwGroup, null, true);
+                } elseif (!$inJwt && $inMw) {
+                    $this->logger->debug("Removing user from {$mwGroup} group (JWT claim: {$jwtName})");
+                    $userGroupManager->removeUserFromGroup($user, $mwGroup);
+                }
+            }
+        }
     }
 
     public function createUserSession($request, $userInfo)
@@ -277,9 +320,9 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
                 "JWT::decode Unexpected value: " . $e->getMessage(),
             );
             return null;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning(
-                "JWT::decode exception: " . $e->getMessage(),
+                "JWT::decode error: " . $e::class . ": " . $e->getMessage(),
             );
             return null;
         }

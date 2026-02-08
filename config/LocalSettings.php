@@ -301,6 +301,7 @@ wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
 wfLoadExtension( 'UrlGetParameters' );
+wfLoadExtension( 'Moderation' );
 
 # =============================================================================
 # GIANTBOMB RESOLVE
@@ -546,9 +547,16 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 
 
 // user groups and permissions
-// Also see extensions/GbSessionProvider/extension.json
+// Also see extensions/GbSessionProvider/extension.json and Moderation extension.json
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['edit'] = false;
+
+$wgGroupPermissions['user']['edit'] = true;
+$wgGroupPermissions['user']['createpage'] = true;
+
+$wgGroupPermissions['subscriber']['skip-moderation'] = true;
+$wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
+
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
 
