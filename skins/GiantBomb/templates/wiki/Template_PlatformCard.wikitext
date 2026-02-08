@@ -1,21 +1,17 @@
 <noinclude>
 fullTitle,
 cleanTitle,
-getSafe('Has developed games', true),
-getSafe('Has published games', true),
-getSafe('Has deck', true),
+getSafe('Has deck', true, false),
 imageData
 
 {{#template_params:
   Title
 ||||| CleanTitle
-||||| Developed (property=Has developed games)
-||||| Published (property=Has published games)
 ||||| Deck (property=Has deck)
 ||||| Parsed image data (from property=Has image)
 }}
 ==Documentation==
-This template creates the individual company cards that show on the Chracters page. The data is passed into this template from Module:CompanyQuery
+This template creates the individual platforms cards that show on the Platforms page. The data is passed into this template from Module:FranchiseQuery
 
 ===Parameters===
 {| class="wikitable"
@@ -26,10 +22,6 @@ This template creates the individual company cards that show on the Chracters pa
 |-
 || CleanTitle || The name with Games/ removed
 |-
-|| Developed || Developed X Games
-|-
-|| Published || Published X Games
-|-
 || Deck || Short description shown in hero
 |-
 || Image || Thumbnail image in raw format
@@ -37,7 +29,7 @@ This template creates the individual company cards that show on the Chracters pa
 
 ===Usage===
 <pre>
-Called from Module:CompanyQuery not directly used.
+Called from Module:PlatformQuery not directly used.
 </pre>
 </noinclude>
 <div class="listing-card">
@@ -50,10 +42,8 @@ Called from Module:CompanyQuery not directly used.
             }}
         </div>
         <div class="listing-card-info">
-            <h3 class="listing-card-title">{{{title}}}</h3>            
+            <h3 class="listing-card-title">{{{title}}}</h3>
             <div class="listing-card-deck">{{{deck|}}}</div>
-            <div class="listing-card-stat">Published {{{published|}}} games</div>
-            <div class="listing-card-stat">Developed {{{developed|}}} games</div>
         </div>
     </div>
 </div>
