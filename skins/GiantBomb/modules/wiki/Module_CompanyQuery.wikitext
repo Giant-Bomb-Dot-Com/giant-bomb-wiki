@@ -126,7 +126,7 @@ function p.render(frame)
 
     -- 3. Debugging / No Results
     if not queryData or not queryData.results or #queryData.results == 0 then
-        return '<div class="no-results">No characters found for ' .. currentLetter .. '</div>'
+        return '<div class="no-results">No companies found for ' .. currentLetter .. '</div>'
     end
 
     local html = mw.html.create('div'):addClass('listing-grid')
