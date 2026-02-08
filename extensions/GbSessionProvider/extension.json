@@ -36,6 +36,13 @@
     "GbSessionProviderExpectedAudience": {
       "value": "giantbomb-wiki",
       "description": "Expected JWT audience (aud claim)"
+    },
+    "GbSessionProviderGroupMapping": {
+      "value": {
+        "moderator": "moderator",
+        "admin": "sysop"
+      },
+      "description": "Maps JWT group/role names to MediaWiki groups. Keys are JWT claim values (matched against both 'groups' and 'roles' arrays), values are MediaWiki group names."
     }
   },
   "AvailableRights": ["gb-premium"],
