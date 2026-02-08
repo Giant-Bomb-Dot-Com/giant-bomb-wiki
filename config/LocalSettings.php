@@ -163,7 +163,7 @@ $wgLocalisationCacheConf['store'] = 'file';
 
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
-$wgParserCacheType = CACHE_ACCEL;
+$wgParserCacheType = CACHE_DB;
 $wgParserCacheExpireTime = 86400 * 7;
 $wgMessageCacheType = CACHE_ACCEL;
 $wgSessionCacheType = CACHE_DB;
@@ -331,7 +331,7 @@ enableSemantics();
 
 $smwgCacheType = CACHE_ACCEL;
 $smwgMainCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheType = CACHE_ACCEL;
+$smwgQueryResultCacheType = CACHE_DB;
 $smwgQueryResultCacheLifetime = 86400 * 7;
 $smwgEnableCache = true;
 $smwgFactboxUseCache = true;
