@@ -49,9 +49,14 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             $config->get("GbSessionProviderGbnCookieName") ?: "gb_wiki";
 
         $this->jwksUri = $config->get("GbSessionProviderJWKSUri");
-        $this->expectedIssuer = $config->get("GbSessionProviderExpectedIssuer") ?: "https://giantbomb.com";
-        $this->expectedAudience = $config->get("GbSessionProviderExpectedAudience") ?: "giantbomb-wiki";
-        $this->groupMapping = (array) ($config->get("GbSessionProviderGroupMapping") ?: []);
+        $this->expectedIssuer =
+            $config->get("GbSessionProviderExpectedIssuer") ?:
+            "https://giantbomb.com";
+        $this->expectedAudience =
+            $config->get("GbSessionProviderExpectedAudience") ?:
+            "giantbomb-wiki";
+        $this->groupMapping =
+            (array) ($config->get("GbSessionProviderGroupMapping") ?: []);
     }
 
     protected function postInitSetup()
@@ -109,7 +114,10 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             $user = $this->findOrCreateUserFromGbn($data);
         } catch (\Throwable $e) {
             $this->logger->error(
-                "User resolution failed: " . $e::class . ": " . $e->getMessage(),
+                "User resolution failed: " .
+                    $e::class .
+                    ": " .
+                    $e->getMessage(),
             );
             return null;
         }
@@ -145,9 +153,12 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         $httpClient = new Client();
         $httpFactory = new HttpFactory();
         // Create a cache item pool (can be any PSR-6 compatible cache item pool)
-        $cacheItemPool = CacheManager::getInstance('Files', new ConfigurationOption([
-            'path' => sys_get_temp_dir() . '/gbsession-jwks-cache',
-        ]));
+        $cacheItemPool = CacheManager::getInstance(
+            "Files",
+            new ConfigurationOption([
+                "path" => sys_get_temp_dir() . "/gbsession-jwks-cache",
+            ]),
+        );
         $keySet = new CachedKeySet(
             $this->jwksUri,
             $httpClient,
@@ -163,25 +174,36 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         }
 
         // Validate issuer
-        if (!isset($decodedJWTObj->iss) || $decodedJWTObj->iss !== $this->expectedIssuer) {
+        if (
+            !isset($decodedJWTObj->iss) ||
+            $decodedJWTObj->iss !== $this->expectedIssuer
+        ) {
             $this->logger->warning(
-                "JWT issuer mismatch: expected " . $this->expectedIssuer .
-                ", got " . ($decodedJWTObj->iss ?? "(none)"),
+                "JWT issuer mismatch: expected " .
+                    $this->expectedIssuer .
+                    ", got " .
+                    ($decodedJWTObj->iss ?? "(none)"),
             );
             return null;
         }
 
         // Validate audience
-        if (!isset($decodedJWTObj->aud) || $decodedJWTObj->aud !== $this->expectedAudience) {
+        if (
+            !isset($decodedJWTObj->aud) ||
+            $decodedJWTObj->aud !== $this->expectedAudience
+        ) {
             $this->logger->warning(
-                "JWT audience mismatch: expected " . $this->expectedAudience .
-                ", got " . ($decodedJWTObj->aud ?? "(none)"),
+                "JWT audience mismatch: expected " .
+                    $this->expectedAudience .
+                    ", got " .
+                    ($decodedJWTObj->aud ?? "(none)"),
             );
             return null;
         }
 
         $this->logger->debug(
-            "JWT verification successful for sub=" . ($decodedJWTObj->sub ?? "unknown"),
+            "JWT verification successful for sub=" .
+                ($decodedJWTObj->sub ?? "unknown"),
         );
         return $decodedJWTObj;
     }
@@ -261,10 +283,19 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
                 $inMw = in_array($mwGroup, $currentGroups);
 
                 if ($inJwt && !$inMw) {
-                    $this->logger->debug("Adding user to {$mwGroup} group (JWT claim: {$jwtName})");
-                    $userGroupManager->addUserToGroup($user, $mwGroup, null, true);
+                    $this->logger->debug(
+                        "Adding user to {$mwGroup} group (JWT claim: {$jwtName})",
+                    );
+                    $userGroupManager->addUserToGroup(
+                        $user,
+                        $mwGroup,
+                        null,
+                        true,
+                    );
                 } elseif (!$inJwt && $inMw) {
-                    $this->logger->debug("Removing user from {$mwGroup} group (JWT claim: {$jwtName})");
+                    $this->logger->debug(
+                        "Removing user from {$mwGroup} group (JWT claim: {$jwtName})",
+                    );
                     $userGroupManager->removeUserFromGroup($user, $mwGroup);
                 }
             }
