@@ -163,7 +163,7 @@ $wgLocalisationCacheConf['store'] = 'file';
 
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
-$wgParserCacheType = CACHE_ACCEL;
+$wgParserCacheType = CACHE_DB;
 $wgParserCacheExpireTime = 86400 * 7;
 $wgMessageCacheType = CACHE_ACCEL;
 $wgSessionCacheType = CACHE_DB;
@@ -198,7 +198,7 @@ if ( $wikiEnv === 'dev' ) {
     }
     $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
 } else {
-    $wgResourceLoaderUniqueVersion = '20260205-v1';
+    $wgResourceLoaderUniqueVersion = '20260206-v2';
 }
 
 $wgUseETag = true;
@@ -330,7 +330,7 @@ enableSemantics();
 
 $smwgCacheType = CACHE_ACCEL;
 $smwgMainCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheType = CACHE_ACCEL;
+$smwgQueryResultCacheType = CACHE_DB;
 $smwgQueryResultCacheLifetime = 86400 * 7;
 $smwgEnableCache = true;
 $smwgFactboxUseCache = true;
@@ -402,9 +402,9 @@ if ( $wikiEnv === 'dev' ) {
 }
 
 # SMW query limits
-$smwgQUpperbound = 200000;
-$smwgQMaxInlineLimit = 200000;
-$smwgQMaxLimit = 200000;
+$smwgQUpperbound = 5000;
+$smwgQMaxInlineLimit = 500;
+$smwgQMaxLimit = 5000;
 $smwgQMaxSize = 100;
 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
