@@ -13,7 +13,6 @@ use MediaWiki\User\UserFactory;
 use MediaWiki\User\User;
 use MediaWiki\User\UserGroupManager;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Firebase\JWT\CachedKeySet;
 use UnexpectedValueException;
 use GuzzleHttp\Client;
@@ -30,6 +29,8 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     protected $params = [];
     protected string $gbnCookieName = "";
     protected string $jwksUri = "";
+    protected string $expectedIssuer = "";
+    protected string $expectedAudience = "";
 
     public function __construct(array $params = [])
     {
@@ -46,6 +47,8 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             $config->get("GbSessionProviderGbnCookieName") ?: "gb_wiki";
 
         $this->jwksUri = $config->get("GbSessionProviderJWKSUri");
+        $this->expectedIssuer = $config->get("GbSessionProviderExpectedIssuer") ?: "https://giantbomb.com";
+        $this->expectedAudience = $config->get("GbSessionProviderExpectedAudience") ?: "giantbomb-wiki";
     }
 
     protected function postInitSetup()
@@ -93,14 +96,13 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
 
         // 3. a)
         $user = $this->findOrCreateUserFromGbn($data);
-        $this->logger->debug("new user " . print_r($user, true));
 
         if ($user === null) {
-            $this->logger->debug("no new user yet?");
+            $this->logger->warning("findOrCreateUserFromGbn returned null");
+            return null;
         }
-        $this->logger->debug("create UserInfo from the new usr");
+        $this->logger->debug("User resolved: " . $user->getName());
         $userInfo = UserInfo::newFromUser($user, true);
-        $this->logger->debug("user_info " . print_r($userInfo, true));
 
         // 3. b)
         $userSession = $this->createUserSession($request, $userInfo);
@@ -109,21 +111,18 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
 
     public function getGbnCookie($request)
     {
-        $this->logger->debug(
-            ">>> get GBN external authentication cookie named " .
-                $this->gbnCookieName,
-        );
         $data = $request->getCookie($this->gbnCookieName, $this->prefix);
-        $this->logger->debug("gb_wiki data => " . print_r($data, true));
+        $this->logger->debug(
+            "getGbnCookie: " . ($data !== null ? "found" : "not found"),
+        );
         return $data;
     }
 
     // If verification success, return decoded data
-    // if verifcation fails, return null
+    // If verification fails, return null
     public function decodeVerifyGbnJwt($data)
     {
-        $this->logger->info(">>> JWT decode with " . print_r($data, true));
-        // should it check the data?
+        $this->logger->debug("decodeVerifyGbnJwt: verifying JWT");
 
         // based on Firebase example
         $httpClient = new Client();
@@ -139,8 +138,31 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             true, // $rateLimit    true to enable rate limit of 10 RPS on lookup of invalid keys
         );
         $decodedJWTObj = $this->verifyJwt($data, $keySet);
+
+        if ($decodedJWTObj === null) {
+            return null;
+        }
+
+        // Validate issuer
+        if (!isset($decodedJWTObj->iss) || $decodedJWTObj->iss !== $this->expectedIssuer) {
+            $this->logger->warning(
+                "JWT issuer mismatch: expected " . $this->expectedIssuer .
+                ", got " . ($decodedJWTObj->iss ?? "(none)"),
+            );
+            return null;
+        }
+
+        // Validate audience
+        if (!isset($decodedJWTObj->aud) || $decodedJWTObj->aud !== $this->expectedAudience) {
+            $this->logger->warning(
+                "JWT audience mismatch: expected " . $this->expectedAudience .
+                ", got " . ($decodedJWTObj->aud ?? "(none)"),
+            );
+            return null;
+        }
+
         $this->logger->debug(
-            "Verification successful; " . print_r($decodedJWTObj, true),
+            "JWT verification successful for sub=" . ($decodedJWTObj->sub ?? "unknown"),
         );
         return $decodedJWTObj;
     }
@@ -176,41 +198,31 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         } else {
             $this->logger->debug("findOrCreateUserFromGbn: load existing user");
             $user->load();
-
-            // $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-            // $groups = $userGroupManager->getUserImplicitGroups($user);
-            // $this->logger->debug(
-            //     "\tVerify user groups: " . print_r($groups, true),
-            // );
         }
 
         if ($user->isRegistered()) {
-            $this->logger->debug("findOrCreateUserFromGbn: handle groups");
             $userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-            if ($premiumClaim) {
-                $this->logger->debug("premium is true so adding to group");
-                $groupAdded = $userGroupManager->addUserToGroup(
+            $currentGroups = $userGroupManager->getUserGroups($user);
+            $isSubscriber = in_array(GbSessionProvider::PREMIUM_GROUP_NAME, $currentGroups);
+
+            if ($premiumClaim && !$isSubscriber) {
+                $this->logger->debug("Adding user to subscriber group");
+                $userGroupManager->addUserToGroup(
                     $user,
                     GbSessionProvider::PREMIUM_GROUP_NAME,
                     null,
                     true,
                 );
-            } else {
-                $this->logger->debug("premium is false so removing to group");
-                $groups = $userGroupManager->getUserEffectiveGroups($user);
-                if (in_array(GbSessionProvider::PREMIUM_GROUP_NAME, $groups)) {
-                    $this->logger->debug("\t-> member of, so kicking out");
-                    $groupKicked = $userGroupManager->removeUserFromGroup(
-                        $user,
-                        GbSessionProvider::PREMIUM_GROUP_NAME,
-                    );
-                } else {
-                    $this->logger->debug("\tnot a member");
-                }
+            } elseif (!$premiumClaim && $isSubscriber) {
+                $this->logger->debug("Removing user from subscriber group");
+                $userGroupManager->removeUserFromGroup(
+                    $user,
+                    GbSessionProvider::PREMIUM_GROUP_NAME,
+                );
             }
         } else {
             $this->logger->error(
-                "findOrcreateUserFromGbn: problem with a unregistered user",
+                "findOrCreateUserFromGbn: user is not registered after creation attempt",
             );
         }
         return $user;
@@ -253,21 +265,21 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     {
         $result = null;
         try {
-            $this->logger->info("data -> " . print_r($token));
+            $this->logger->debug("verifyJwt: decoding token");
             $result = JWT::decode($token, $keySet);
-        } catch (LogicException $e) {
-            $this->logger->info(
-                "JWT::decode Logic exception error " . $e->getMessage(),
+        } catch (\LogicException $e) {
+            $this->logger->warning(
+                "JWT::decode Logic exception: " . $e->getMessage(),
             );
             return null;
         } catch (UnexpectedValueException $e) {
-            $this->logger->info(
-                "JWT::decode Unexpected value " . $e->getMessage(),
+            $this->logger->warning(
+                "JWT::decode Unexpected value: " . $e->getMessage(),
             );
             return null;
-        } catch (Exception $e) {
-            $this->logger->info(
-                "JWT::decode Catch all exception " . $e->getMessage(),
+        } catch (\Exception $e) {
+            $this->logger->warning(
+                "JWT::decode exception: " . $e->getMessage(),
             );
             return null;
         }

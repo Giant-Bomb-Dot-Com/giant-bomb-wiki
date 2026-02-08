@@ -244,7 +244,7 @@ $wgPingback = false;
 $wgLanguageCode = "en";
 $wgLocaltimezone = "UTC";
 
-# Cookie config
+# Cookie config -- shares domain with GBN, prefix must be empty so gb_wiki cookie is read as-is
 $cookieDomain = getenv('COOKIE_DOMAIN');
 if ( $cookieDomain ) {
     $wgCookieDomain = $cookieDomain;
@@ -254,6 +254,9 @@ if ( !$cookiePath ) {
     $cookiePath = '/';
 }
 $wgCookiePath = $cookiePath;
+$wgCookiePrefix = '';
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
 if ( $wikiEnv === 'prod' ) {
     $wgCookieSecure = true;
 }
@@ -543,16 +546,12 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 
 
 // user groups and permissions
-<<<<<<< HEAD
 // Also see extensions/GbSessionProvider/extension.json
-=======
->>>>>>> 4c4c76bd (test(auth): test with existing users the GbSessionProvider)
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['edit'] = false;
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
 
-<<<<<<< HEAD
 function RestrictImportExport(&$list) {
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
         unset($list['Export']);
@@ -568,10 +567,6 @@ $wgHooks['SpecialPage_initList'][]='RestrictImportExport';
 
 wfLoadExtension( 'GbSessionProvider' );
 $wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
-
-$wgCookiePrefix = '';
-$wgCookieHttpOnly = true;
-$wgSessionName = 'mwSession';
 
 if ( $wikiEnv === 'dev' ) {
     $wgDebugToolbar = true;
