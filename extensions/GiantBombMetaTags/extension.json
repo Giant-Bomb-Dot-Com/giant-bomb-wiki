@@ -1,0 +1,23 @@
+{
+  "name": "GiantBombMetaTags",
+  "version": "0.1.0",
+  "author": [
+    "Joshua C. Lerner - joshua&lt;_at_&gt;busytonight.com",
+    "Dror S. [FFS] ([http://www.kolzchut.org.il Kol-Zchut])",
+    "Rob w. (secretrob)"
+  ],
+  "descriptionmsg": "metatag-desc",
+  "type": "parserhook",
+  "MessagesDirs": {
+    "GiantBombMetaTags": ["i18n"]
+  },
+  "AutoloadClasses": {
+    "MetaTagHooks": "MetaTag.hooks.php"
+  },
+  "license-name": "MIT",
+  "Hooks": {
+    "ParserFirstCallInit": "MetaTagHooks::onParserFirstCallInit",
+    "OutputPageParserOutput": "MetaTagHooks::onOutputPageParserOutput"
+  },
+  "manifest_version": 1
+}

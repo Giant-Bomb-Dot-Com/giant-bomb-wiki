@@ -38,7 +38,7 @@ Called from Module:ConceptQuery not directly used.
             -->{{#if: {{{image|}}} | 
                 {{{image}}}
                 | 
-                <div class="no-image">No Image Available</div> 
+                https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png
             }}
         </div>
         <div class="listing-card-info">
