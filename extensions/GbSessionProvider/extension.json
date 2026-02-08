@@ -28,6 +28,14 @@
     "GbSessionProviderGbnCookieName": {
       "value": "gb_wiki",
       "description": "Name of the GBN cookie used for external authentication"
+    },
+    "GbSessionProviderExpectedIssuer": {
+      "value": "https://giantbomb.com",
+      "description": "Expected JWT issuer (iss claim)"
+    },
+    "GbSessionProviderExpectedAudience": {
+      "value": "giantbomb-wiki",
+      "description": "Expected JWT audience (aud claim)"
     }
   },
   "AvailableRights": ["gb-premium"],
