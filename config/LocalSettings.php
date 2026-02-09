@@ -546,6 +546,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
+// Redirect User:X pages to Special:Contributions/X
+$wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, $request, $mediaWiki) {
+    if ($title->getNamespace() === NS_USER && !$title->isSubpage()) {
+        $username = $title->getText();
+        $contribTitle = \MediaWiki\Title\Title::makeTitle(NS_SPECIAL, 'Contributions/' . $username);
+        $output->redirect($contribTitle->getFullURL());
+        return false;
+    }
+    return true;
+};
+
 // user groups and permissions
 // Also see extensions/GbSessionProvider/extension.json and Moderation extension.json
 $wgGroupPermissions['*']['createaccount'] = false;
