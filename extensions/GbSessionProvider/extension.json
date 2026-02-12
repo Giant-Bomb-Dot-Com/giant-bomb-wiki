@@ -1,0 +1,63 @@
+{
+  "manifest_version": 2,
+  "name": "GbSessionProvider",
+  "author": "Zelnox",
+  "description": "To provide a Mediawiki session for Giant Bomb Next single-sign-on (SSO) cookies. Also to create a Mediawiki user is required.",
+  "url": "https://www.giantbomb.com",
+  "version": "0.2",
+  "license-name": "MIT",
+  "type": "identity",
+  "requires": {
+    "MediaWiki": ">= 1.43.6"
+  },
+  "load_composer_autoloader": true,
+  "AutoloadNamespaces": {
+    "MediaWiki\\Extension\\GbSessionProvider\\": "src/"
+  },
+  "SessionProviders": {
+    "MediaWiki\\Extension\\GbSessionProvider\\GbSessionProvider": {
+      "class": "MediaWiki\\Extension\\GbSessionProvider\\GbSessionProvider",
+      "args": []
+    }
+  },
+  "config": {
+    "GbSessionProviderJWKSUri": {
+      "value": "https://giantbomb.com/.well-known/jwks.json",
+      "description": "URI to GiantBomb's JWKS"
+    },
+    "GbSessionProviderGbnCookieName": {
+      "value": "gb_wiki",
+      "description": "Name of the GBN cookie used for external authentication"
+    },
+    "GbSessionProviderExpectedIssuer": {
+      "value": "https://giantbomb.com",
+      "description": "Expected JWT issuer (iss claim)"
+    },
+    "GbSessionProviderExpectedAudience": {
+      "value": "giantbomb-wiki",
+      "description": "Expected JWT audience (aud claim)"
+    },
+    "GbSessionProviderGroupMapping": {
+      "value": {
+        "moderator": "moderator",
+        "admin": "sysop"
+      },
+      "description": "Maps JWT group/role names to MediaWiki groups. Keys are JWT claim values (matched against both 'groups' and 'roles' arrays), values are MediaWiki group names."
+    }
+  },
+  "AvailableRights": ["gb-premium"],
+  "GroupPermissions": {
+    "subscriber": {
+      "createpage": true,
+      "edit": true,
+      "editcontentmodel": true,
+      "gb-premium": true
+    },
+    "bureaucrat": {
+      "gb-premium": true
+    },
+    "sysop": {
+      "gb-premium": true
+    }
+  }
+}

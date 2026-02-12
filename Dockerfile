@@ -54,12 +54,17 @@ RUN cd /var/www/html \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/DisplayTitle \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \
+ && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters \
+ && git clone -b 'v1.9.3' --single-branch --depth 1 https://github.com/edwardspec/mediawiki-moderation.git Moderation \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
+ && php /usr/local/bin/composer config audit.ignore '["PKSA-z3gr-8qht-p93v"]' --json \ 
  && composer update --no-dev
 
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    echo "apc.shm_size=256M" >> /usr/local/etc/php/php.ini && \
+    echo "apc.enable_cli=1" >> /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # Directory for logging
@@ -68,6 +73,8 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
 
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
+COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
+RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh

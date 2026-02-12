@@ -47,7 +47,7 @@ SMW Property Storage
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
-}}{{#if:{{{Image|}}}|{{#set:Has image={{{Image}}}}}
+}}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}<!--
 

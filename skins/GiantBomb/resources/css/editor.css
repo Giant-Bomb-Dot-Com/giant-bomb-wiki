@@ -2,14 +2,21 @@
 .mw-body-content .createbox .mw-parser-output .formtable input,
 .mw-body-content #pfForm .createboxInput,
 .mw-body-content .editOptions,
-.mw-body-content .mw-editform .wikiEditor-ui-text textarea {
+.mw-body-content .mw-editform .wikiEditor-ui-text textarea,
+.mw-body-content .editor {
   background: #1a1a1a;
   color: #ffffff;
   border: 1px solid #333;
   border-radius: 8px;
 }
 
-.mw-body-content #pfForm .select2-selection__choice {
+.mw-body-content
+  .createbox
+  .mw-parser-output
+  .formtable
+  .mw-body-content
+  #pfForm
+  .select2-selection__choice {
   background-color: #1a1a1a;
 }
 
@@ -29,3 +36,193 @@
   background: #1a1a1a;
   color: #ffffff;
 }
+
+.wikiEditor-ui-toolbar .oo-ui-buttonElement-button {
+  background-color: #f8f9fa;
+}
+
+/* Table Header alignment */
+div.mw-body-content form.createbox div.mw-parser-output table.formtable th {
+  vertical-align: middle;
+}
+
+/* Input span flex layout */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan {
+  display: flex;
+}
+
+/* Styled Createbox Input */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan
+  input.createboxInput {
+  background-color: rgb(0 0 0 / 0.3);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-color: rgb(255 255 255 / 0.1);
+  width: 100%;
+}
+
+/* Loading icon next to input */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  span.inputSpan
+  img[id^="loading-"] {
+  height: 32px;
+  width: 32px;
+  align-self: center;
+  margin-left: 12px;
+}
+
+/* Select2 Tokens/Choices */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  li.select2-selection__choice {
+  padding: 4px 8px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #ccc;
+}
+
+/* Select2 Search Field */
+div.mw-body-content
+  form.createbox
+  div.mw-parser-output
+  table.formtable
+  td
+  li.select2-search
+  .select2-search__field {
+  box-sizing: border-box;
+  line-height: 1.7;
+  padding: 4px 8px;
+  height: 37px;
+  min-width: 30px;
+}
+
+/* OOUI Buttons - General */
+div.mw-body-content form.createbox .oo-ui-buttonElement-button {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+/* OOUI Primary (Red Gradient) Button */
+div.mw-body-content
+  form.createbox
+  .oo-ui-flaggedElement-primary
+  .oo-ui-buttonElement-button {
+  background: linear-gradient(180deg, #b05f1c 0%, #b1601c 100%);
+  border-color: #b05f1c;
+}
+
+/* OOUI Button Hover States */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-enabled
+  .oo-ui-buttonElement-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* OOUI Primary Button Hover State Override */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-enabled.oo-ui-flaggedElement-primary
+  .oo-ui-buttonElement-button:hover {
+  background: none;
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* OOUI Disabled State */
+div.mw-body-content
+  form.createbox
+  .oo-ui-widget-disabled
+  > .oo-ui-buttonElement-button {
+  opacity: 0.3;
+}
+
+/* Dropdown background */
+.select2-container .select2-dropdown {
+  background-color: #2a2a2a;
+}
+
+/* Selected option background */
+.select2-container
+  .select2-dropdown
+  .select2-results
+  ul.select2-results__options[aria-selected="true"] {
+  background-color: #666;
+}
+
+/* ACE CODE EDITOR */
+.wikiEditor-ui .ace_print-margin {
+  width: 0;
+}
+
+.wikiEditor-ui .ace-tm .ace_gutter {
+  background: #333;
+}
+
+.wikiEditor-ui {
+  background-color: #272822;
+  color: #f8f8f2;
+}
+.wikiEditor-ui .ace_gutter {
+  background: #2f3129;
+  color: #8f908a;
+}
+
+.wikiEditor-ui .ace_cursor {
+  color: #f8f8f0;
+}
+.wikiEditor-ui .ace_marker-layer .ace_active-line {
+  background: #202020;
+}
+.wikiEditor-ui .ace_marker-layer .ace_selection {
+  background: #49483e;
+}
+
+/* Syntax Highlighting */
+.wikiEditor-ui .ace_keyword,
+.wikiEditor-ui .ace_meta.ace_tag {
+  color: #f92672; /* Pink */
+}
+.wikiEditor-ui .ace_string {
+  color: #e6db74; /* Yellow */
+}
+.wikiEditor-ui .ace_constant.ace_numeric {
+  color: #ae81ff; /* Purple */
+}
+.wikiEditor-ui .ace_entity.ace_name.ace_function,
+.wikiEditor-ui .ace_support.ace_function {
+  color: #a6e22e; /* Green */
+}
+.wikiEditor-ui .ace_variable {
+  color: #fd971f; /* Orange */
+}
+.wikiEditor-ui .ace_comment {
+  color: #75715e; /* Muted olive */
+}
+
+/* Scrollbar (Optional High-Visibility) */
+.wikiEditor-ui .ace_scrollbar {
+  background-color: #272822;
+}
+/* END ACE CODE EDITOR */
