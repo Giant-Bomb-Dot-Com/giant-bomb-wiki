@@ -14,10 +14,19 @@
     "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaRestIndex": "includes/AlgoliaRestClient.php",
     "MediaWiki\\Extension\\AlgoliaSearch\\IndexSettings": "includes/IndexSettings.php",
     "MediaWiki\\Extension\\AlgoliaSearch\\RecordMapper": "includes/RecordMapper.php",
-    "MediaWiki\\Extension\\AlgoliaSearch\\LegacyImageHelper": "includes/LegacyImageHelper.php"
+    "MediaWiki\\Extension\\AlgoliaSearch\\LegacyImageHelper": "includes/LegacyImageHelper.php",
+    "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaHooks": "includes/AlgoliaHooks.php"
   },
   "MaintenanceScripts": ["maintenance/algoliaReindex.php"],
-  "HookHandlers": [],
+  "HookHandlers": {
+    "AlgoliaHooks": {
+      "class": "MediaWiki\\Extension\\AlgoliaSearch\\AlgoliaHooks"
+    }
+  },
+  "Hooks": {
+    "PageSaveComplete": "AlgoliaHooks",
+    "PageDeleteComplete": "AlgoliaHooks"
+  },
   "config": {
     "AlgoliaSearchEnabled": {
       "value": false,

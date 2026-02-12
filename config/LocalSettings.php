@@ -198,7 +198,7 @@ if ( $wikiEnv === 'dev' ) {
     }
     $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
 } else {
-    $wgResourceLoaderUniqueVersion = '20260205-v1';
+    $wgResourceLoaderUniqueVersion = '20260206-v2';
 }
 
 $wgUseETag = true;
@@ -244,7 +244,7 @@ $wgPingback = false;
 $wgLanguageCode = "en";
 $wgLocaltimezone = "UTC";
 
-# Cookie config
+# Cookie config -- shares domain with GBN, prefix must be empty so gb_wiki cookie is read as-is
 $cookieDomain = getenv('COOKIE_DOMAIN');
 if ( $cookieDomain ) {
     $wgCookieDomain = $cookieDomain;
@@ -254,6 +254,9 @@ if ( !$cookiePath ) {
     $cookiePath = '/';
 }
 $wgCookiePath = $cookiePath;
+$wgCookiePrefix = '';
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
 if ( $wikiEnv === 'prod' ) {
     $wgCookieSecure = true;
 }
@@ -299,6 +302,7 @@ wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
 wfLoadExtension( 'UrlGetParameters' );
 wfLoadExtension( 'GiantBombMetaTags' );
+wfLoadExtension( 'Moderation' );
 
 # =============================================================================
 # GIANTBOMB RESOLVE
@@ -413,12 +417,18 @@ if ( $wikiEnv === 'dev' ) {
     $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
 
+# SMW query limits
+$smwgQUpperbound = 5000;
+$smwgQMaxInlineLimit = 500;
+$smwgQMaxLimit = 5000;
+$smwgQMaxSize = 100;
+
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 
 # Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200;
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
 
 # Auto-append {{GameEnd}} to game pages missing it
 $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
@@ -548,9 +558,30 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
-// user permissions
+// Redirect User:X pages to Special:Contributions/X
+$wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, $request, $mediaWiki) {
+    if ($title->getNamespace() === NS_USER && !$title->isSubpage()) {
+        $username = $title->getText();
+        $contribTitle = \MediaWiki\Title\Title::makeTitle(NS_SPECIAL, 'Contributions/' . $username);
+        $output->redirect($contribTitle->getFullURL());
+        return false;
+    }
+    return true;
+};
+
+// user groups and permissions
+// Also see extensions/GbSessionProvider/extension.json and Moderation extension.json
 $wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['*']['edit'] = false;
+
+$wgGroupPermissions['user']['edit'] = true;
+$wgGroupPermissions['user']['createpage'] = true;
+
+$wgGroupPermissions['subscriber']['skip-moderation'] = true;
+$wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
+
 $wgGroupPermissions['sysop']['createaccount'] = true;
+$wgGroupPermissions['sysop']['edit'] = true;
 
 function RestrictImportExport(&$list) {
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
@@ -560,3 +591,20 @@ function RestrictImportExport(&$list) {
     return true;
 }
 $wgHooks['SpecialPage_initList'][]='RestrictImportExport';
+
+# =============================================================================
+# GBSESSIONPROVIDER (SSO)
+# =============================================================================
+
+wfLoadExtension( 'GbSessionProvider' );
+$wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
+
+if ( $wikiEnv === 'dev' ) {
+    $wgDebugToolbar = true;
+    $wgShowDebug = true;
+    $wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+    $wgDebugLogGroups = [
+        // log channel -> log path
+        'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+    ];
+}
