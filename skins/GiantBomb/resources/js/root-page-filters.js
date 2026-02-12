@@ -195,6 +195,7 @@ $(function () {
         ...(platform && { chosen_platform: platform }),
         ...(letter && { chosen_letter: letter }),
         search_filter: search,
+        sort_by: sortBy,
         offset: 0,
         limit: $(this).val(),
       });
