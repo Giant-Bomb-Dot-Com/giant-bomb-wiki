@@ -352,9 +352,9 @@ $smwgFixedProperties = [
     '_CDAT' => 'smw_credate',   // Indexes Creation date
 ];
 
-# SMW query limits - these are really high and may need to come down
+# SMW query limits
 $smwgQUpperbound = 200000;
-$smwgQMaxInlineLimit = 200000;
+$smwgQMaxInlineLimit = 500;
 $smwgQMaxLimit = 200000;
 $smwgQMaxSize = 100;
 
@@ -416,12 +416,6 @@ if ( $wikiEnv === 'dev' ) {
     ];
     $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
-
-# SMW query limits
-$smwgQUpperbound = 5000;
-$smwgQMaxInlineLimit = 500;
-$smwgQMaxLimit = 5000;
-$smwgQMaxSize = 100;
 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 
