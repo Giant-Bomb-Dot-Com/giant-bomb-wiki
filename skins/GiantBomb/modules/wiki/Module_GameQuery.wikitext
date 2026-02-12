@@ -1,0 +1,154 @@
+local p = {}
+
+function p.render(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawPlatform = args.chosen_platform or "All"
+    local platform = mw.uri.decode(rawPlatform, "WIKI")
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
+
+    if sortFilter == "latest" then
+        sortProp = "Modification date"
+        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
+    end
+
+    -- Try to get 'limit' from invoke args, then parent args, then default to 48
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
+    local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
+    
+    -- This handles the browser's conversion of spaces to +
+    platform = platform:gsub("%+", " ")
+    
+    -- Cleanup: If #urlget failed and returned the literal string, default to All
+    if platform:find('{{#urlget') then
+        platform = "All"
+    end
+
+    -- 1. Construct the Query
+	local query = "[[Category:Games]]"
+	
+	if platform ~= "All" then
+        -- 4. Clean up any remaining underscores for SMW consistency
+        local smwValue = platform:gsub("_", " ")
+	    query = query .. " [[Has platforms::" .. smwValue .. "]]"
+	end
+	
+	-- Filter by Name (using SMW wildcard search)
+    if searchFilter ~= "" then
+		-- REPLACE: Turn spaces into underscores for SMW consistency
+    	local dbSearch  = searchFilter:gsub(" ", "_")
+        -- The ~ operator combined with * wildcards matches titles containing the text
+        query = query .. " [[~*" .. dbSearch  .. "*]] "
+    end
+
+    -- 2. Execute Query
+    local queryData = mw.smw.getQueryResult({
+        query,
+        "?Has image",
+        "?Has platforms",
+        "?Has release date",
+        "?Has deck",
+        limit = limit,
+        offset = offset,
+        ["count"] = true,
+        "?Modification date",
+    	"?Creation date",
+        sort = sortProp,
+        order = sortOrder
+    })
+
+    -- 3. Debugging / No Results
+    if not queryData or not queryData.results or #queryData.results == 0 then
+        return '<div class="no-results">No games found for ' .. platform .. '</div>'
+    end
+
+    local html = mw.html.create('div'):addClass('listing-grid')
+    
+    for _, result in ipairs(queryData.results) do
+  	    local fullTitle = result.fulltext or ""
+    	-- This pattern "^[Gg][Aa][Mm][Ee][Ss]/" matches "Games/" or "games/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+    	
+        -- Helper to extract strings from nested SMW tables
+        local function getSafe(field, isList)
+            local d = result.printouts[field] or {}
+            local vals = {}
+            for _, v in ipairs(d) do
+                local str = type(v) == "table" and (v.fulltext or v.raw or "") or tostring(v)
+                table.insert(vals, str)
+            end
+            return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+
+        -- 4. Process Image data from description
+        local imageData = getSafe('Has image', false)
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+
+		local rawDateData = result.printouts['Has release date']
+		local cleanDate = ""
+		
+		if rawDateData and #rawDateData > 0 then
+		    -- SMW getQueryResult returns a table for each result
+		    -- For dates, val.raw contains a numeric timestamp or ISO string
+		    local val = rawDateData[1]
+		    local rawTimestamp = type(val) == "table" and (val.raw or val[1]) or tostring(val)
+		    
+		    -- rawTimestamp is usually formatted like "1/2007/03/10/00/00/00/0"
+		    -- We extract YYYY, MM, and DD
+		    local y, m, d = rawTimestamp:match("^1/(%d+)/(%d+)/(%d+)")
+		    
+		    if y and m and d then
+		        -- Format it into a readable string using MediaWiki's language object
+		        local timestamp = string.format("%04d-%02d-%02d", y, m, d)
+		        cleanDate = mw.language.getContentLanguage():formatDate("Y F j", timestamp)
+		    else
+		        -- Fallback: Strip the "1/" and return YYYY-MM-DD
+		        cleanDate = rawTimestamp:gsub("^1/", ""):gsub("/", "-"):sub(1,10)
+		    end
+		end
+
+		html:wikitext(frame:expandTemplate{ 
+		    title = 'GameCard', 
+		    args = { 
+		        url_title    = fullTitle,
+		        title        = cleanTitle,
+		        platforms    = getSafe('Has platforms', true),
+		        release_date = cleanDate,
+		        deck         = getSafe('Has deck', true),
+		        image        = imageData
+		    } 
+		})
+    end
+
+    -- 5. Build Pagination (using queryData.count)
+    local totalResults = queryData.count or 0
+    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
+	-- We run a quick secondary query to get the total number.
+	if totalResults == 0 and #queryData.results > 0 then
+	    local countQuery = mw.smw.ask({ query, format = "count" })
+	    totalResults = tonumber(countQuery) or 0
+	end
+    
+	local paginationHtml = ""
+	if totalResults > 0 then
+	    paginationHtml = tostring(mw.html.create('div')
+	        :addClass('pagination-wrapper')
+	        :attr('data-total', totalResults)
+	        :attr('data-limit', limit)
+	        :attr('data-offset', offset)
+	        :attr('data-platform', platform)
+	        :attr('data-search', searchFilter)
+	        :attr('data-sort', sortBy))
+	end
+	
+	return tostring(html) .. paginationHtml
+end
+
+return p

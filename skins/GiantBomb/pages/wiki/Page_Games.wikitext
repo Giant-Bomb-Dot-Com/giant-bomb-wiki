@@ -1,0 +1,11 @@
+{{LandingNav
+|title=Games}}<!--
+-->{{LandingPageQuery
+  |name=Game
+  |filterTitle=Filter Games
+  |chosen_platform={{#urlget:chosen_platform|All}}
+  |search_filter={{#urlget:search_filter}}
+  |limit={{#urlget:limit|48}}
+  |offset={{#urlget:offset|0}}
+}}
+</div>

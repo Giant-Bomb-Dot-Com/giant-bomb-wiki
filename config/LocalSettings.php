@@ -198,7 +198,7 @@ if ( $wikiEnv === 'dev' ) {
     }
     $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
 } else {
-    $wgResourceLoaderUniqueVersion = '20260112-v1';
+    $wgResourceLoaderUniqueVersion = '20260206-v2';
 }
 
 $wgUseETag = true;
@@ -244,7 +244,7 @@ $wgPingback = false;
 $wgLanguageCode = "en";
 $wgLocaltimezone = "UTC";
 
-# Cookie config
+# Cookie config -- shares domain with GBN, prefix must be empty so gb_wiki cookie is read as-is
 $cookieDomain = getenv('COOKIE_DOMAIN');
 if ( $cookieDomain ) {
     $wgCookieDomain = $cookieDomain;
@@ -254,6 +254,9 @@ if ( !$cookiePath ) {
     $cookiePath = '/';
 }
 $wgCookiePath = $cookiePath;
+$wgCookiePrefix = '';
+$wgCookieHttpOnly = true;
+$wgSessionName = 'mwSession';
 if ( $wikiEnv === 'prod' ) {
     $wgCookieSecure = true;
 }
@@ -297,6 +300,8 @@ wfLoadExtension( 'DisplayTitle' );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
+wfLoadExtension( 'UrlGetParameters' );
+wfLoadExtension( 'Moderation' );
 
 # =============================================================================
 # GIANTBOMB RESOLVE
@@ -327,13 +332,19 @@ if ( $gbResolveBaseOrigin !== false && $gbResolveBaseOrigin !== null && trim( $g
 
 enableSemantics();
 
+$smwgCacheType = CACHE_ACCEL;
 $smwgMainCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheLifetime = 3600;
+$smwgQueryResultCacheType = CACHE_DB;
+$smwgQueryResultCacheLifetime = 86400 * 7;
+$smwgEnableCache = true;
 $smwgFactboxUseCache = true;
 $smwgFactboxCacheRefreshOnPurge = true;
 $smwgAutoRefreshOnPurge = true;
 $smwgEnabledQueryDependencyLinksStore = true;
+$smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
+$smwgEnabledFulltextSearch = true;
+$smwgPageSpecialProperties[] = '_CDAT';
+$smwgEnableUpdateJobs = true;
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
@@ -375,8 +386,6 @@ $wgNamespacesWithSubpages[NS_MAIN] = true;
 $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
-$smwgEnabledFulltextSearch = true;
-$smwgPageSpecialProperties[] = '_CDAT';
 
 # Dev mode settings
 if ( $wikiEnv === 'dev' ) {
@@ -397,9 +406,9 @@ if ( $wikiEnv === 'dev' ) {
 }
 
 # SMW query limits
-$smwgQUpperbound = 200000;
-$smwgQMaxInlineLimit = 200000;
-$smwgQMaxLimit = 200000;
+$smwgQUpperbound = 5000;
+$smwgQMaxInlineLimit = 500;
+$smwgQMaxLimit = 5000;
 $smwgQMaxSize = 100;
 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
@@ -537,22 +546,53 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 
+// Redirect User:X pages to Special:Contributions/X
+$wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, $request, $mediaWiki) {
+    if ($title->getNamespace() === NS_USER && !$title->isSubpage()) {
+        $username = $title->getText();
+        $contribTitle = \MediaWiki\Title\Title::makeTitle(NS_SPECIAL, 'Contributions/' . $username);
+        $output->redirect($contribTitle->getFullURL());
+        return false;
+    }
+    return true;
+};
+
 // user groups and permissions
+// Also see extensions/GbSessionProvider/extension.json and Moderation extension.json
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['edit'] = false;
+
+$wgGroupPermissions['user']['edit'] = true;
+$wgGroupPermissions['user']['createpage'] = true;
+
+$wgGroupPermissions['subscriber']['skip-moderation'] = true;
+$wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
+
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
 
-// Also see extensions/GbSessionProvider/extension.json
+function RestrictImportExport(&$list) {
+    if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
+        unset($list['Export']);
+        unset($list['Import']);
+    }
+    return true;
+}
+$wgHooks['SpecialPage_initList'][]='RestrictImportExport';
 
-// shares domain with GBN // to revise
-$wgCookieDomain = 'localhost';
-$wgCookiePrefix = '';
-$wgCookiePath = '/wiki';
-$wgCookieSecure = true;
-$wgCookieHttpOnly = true;
-$wgSessionName = 'mwSession';
+# =============================================================================
+# GBSESSIONPROVIDER (SSO)
+# =============================================================================
 
-// configs for GbSessionProvider
 wfLoadExtension( 'GbSessionProvider' );
 $wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
+
+if ( $wikiEnv === 'dev' ) {
+    $wgDebugToolbar = true;
+    $wgShowDebug = true;
+    $wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+    $wgDebugLogGroups = [
+        // log channel -> log path
+        'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+    ];
+}
