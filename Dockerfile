@@ -10,14 +10,13 @@ ARG INSTALL_API="false"
 WORKDIR /var/www/html
 USER root
 
-# INSTALL DB EXTENSIONS
-RUN docker-php-ext-install pdo pdo_mysql
-
-# INSTALL SEMANTIC MEDIAWIKI
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
  && apt-get install gnupg lsb-release libzip-dev unzip wget -y
+
+# INSTALL DB EXTENSIONS
+RUN docker-php-ext-install pdo pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -38,7 +37,11 @@ RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
     apt-get update && apt-get install -y gcsfuse; \
     fi
 
+# INSTALL SEMANTIC MEDIAWIKI
+# Due to an issue with phpunit 9.6.19, we have to force it to update:
+# See https://issues.apache.org/jira/browse/IGNITE-27681
 RUN cd /var/www/html \
+ && sed -i -e "s/9.6.19/\^9.6.19/" composer.json \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-result-formats \
@@ -52,6 +55,7 @@ RUN cd /var/www/html \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters \
+ && git clone -b 'v1.9.3' --single-branch --depth 1 https://github.com/edwardspec/mediawiki-moderation.git Moderation \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
@@ -70,6 +74,8 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
+COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
+RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
 COPY --chmod=755 installwiki.sh /installwiki.sh

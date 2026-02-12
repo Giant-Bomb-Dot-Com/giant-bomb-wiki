@@ -17,36 +17,35 @@ class GiantBombTemplate extends BaseTemplate {
         $title = $this->getSkin()->getTitle();
         $pageTitle = $title->getText();
         
-
         // Show normal wiki content for other pages
         // This includes game pages when rendered via templates (MediaWiki way)
-        
+
         // Check if this is a template-rendered content page (the "MediaWiki way")
         $isTemplateGamePage = strpos($pageTitle, 'Games/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                              substr_count($pageTitle, '/') === 1;
         $isTemplateCharacterPage = strpos($pageTitle, 'Characters/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                   substr_count($pageTitle, '/') === 1;
         $isTemplateFranchisePage = strpos($pageTitle, 'Franchises/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                   substr_count($pageTitle, '/') === 1;
         $isTemplatePlatformPage = strpos($pageTitle, 'Platforms/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                  substr_count($pageTitle, '/') === 1;
         $isTemplateConceptPage = strpos($pageTitle, 'Concepts/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                 substr_count($pageTitle, '/') === 1;
         $isTemplateCompanyPage = strpos($pageTitle, 'Companies/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                 substr_count($pageTitle, '/') === 1;
         $isTemplatePersonPage = strpos($pageTitle, 'People/') === 0 &&
                                 substr_count($pageTitle, '/') === 1;
         $isTemplateObjectPage = strpos($pageTitle, 'Objects/') === 0 &&
                                 substr_count($pageTitle, '/') === 1;
         $isTemplateLocationPage = strpos($pageTitle, 'Locations/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                  substr_count($pageTitle, '/') === 1;
         $isTemplateAccessoryPage = strpos($pageTitle, 'Accessories/') === 0 &&
-                                substr_count($pageTitle, '/') === 1;
+                                   substr_count($pageTitle, '/') === 1;
         $isTemplateContentPage = $isTemplateGamePage || $isTemplateCharacterPage || $isTemplateFranchisePage ||
-                                $isTemplatePlatformPage || $isTemplateConceptPage || $isTemplateCompanyPage ||
-                                $isTemplatePersonPage || $isTemplateObjectPage || $isTemplateLocationPage ||
-                                $isTemplateAccessoryPage;
-        
+                                 $isTemplatePlatformPage || $isTemplateConceptPage || $isTemplateCompanyPage ||
+                                 $isTemplatePersonPage || $isTemplateObjectPage || $isTemplateLocationPage ||
+                                 $isTemplateAccessoryPage;
+
         $contentClasses = ['mw-body'];
         if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
         if ($isTemplateGamePage) $contentClasses[] = 'wiki-game-page';
@@ -59,6 +58,18 @@ class GiantBombTemplate extends BaseTemplate {
         if ($isTemplateObjectPage) $contentClasses[] = 'wiki-object-page';
         if ($isTemplateLocationPage) $contentClasses[] = 'wiki-location-page';
         if ($isTemplateAccessoryPage) $contentClasses[] = 'wiki-accessory-page';
+
+        $action = $request->getText('action', 'view');
+        $isViewAction = $action === 'view' || $action === 'purge' || $action === '';
+        $isAdEligible = $isViewAction
+            && !$title->isSpecialPage()
+            && $title->getNamespace() >= 0
+            && $title->getNamespace() % 2 === 0;
+
+        if ($isAdEligible) {
+            $contentClasses[] = 'gb-wiki-content';
+        }
+
 ?>
         <div class="page-wrapper">
             <?php include __DIR__ . '/partials/header.php'; ?>
@@ -87,7 +98,9 @@ class GiantBombTemplate extends BaseTemplate {
                         <a href="#p-search"><?php $this->msg( 'jumptosearch' ) ?></a>
                     </div>
                     <?php } ?>
+                    <?php if ($isAdEligible) { ?><div id="gb-wiki-content"><?php } ?>
                     <?php $this->html( 'bodytext' ) ?>
+                    <?php if ($isAdEligible) { ?></div><?php } ?>
                     <?php $this->html( 'catlinks' ) ?>
                     <?php $this->html( 'dataAfterContent' ) ?>
                 </div>
