@@ -11,7 +11,6 @@ class GiantBombTemplate extends BaseTemplate {
         
         // Handle API requests first
         $request = RequestContext::getMain()->getRequest();
-        $action = $request->getText('action', '');
 
         // Check if we're on a game page (in Games/ namespace but not a sub-page)
         $title = $this->getSkin()->getTitle();
