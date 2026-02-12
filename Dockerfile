@@ -73,6 +73,7 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
 
 # Custom extensions packaged with the image
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
+COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
 COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
