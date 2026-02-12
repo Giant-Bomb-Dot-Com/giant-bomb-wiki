@@ -290,7 +290,7 @@
 
 .game-tag:hover {
   background: #e0e0e0;
-  border-color: #e63946;
+  border-color: #b05f1c;
 }
 
 /* Tag Variants */
@@ -589,8 +589,8 @@
 }
 
 .game-subpage__link:hover {
-  border-color: #e63946;
-  color: #e63946;
+  border-color: #b05f1c;
+  color: #b05f1c;
 }
 
 .game-subpage__icon {
@@ -626,8 +626,8 @@
 }
 
 .game-quick-link__link:hover {
-  border-color: #e63946;
-  color: #e63946;
+  border-color: #b05f1c;
+  color: #b05f1c;
 }
 
 /* Reviews Section */

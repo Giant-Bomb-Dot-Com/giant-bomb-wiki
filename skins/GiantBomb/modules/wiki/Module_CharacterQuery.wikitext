@@ -1,0 +1,182 @@
+local p = {}
+
+function p.render(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
+    local currentLetter = mw.uri.decode(rawLetter, "WIKI")
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
+
+    if sortFilter == "latest" then
+        sortProp = "Modification date"
+        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
+    end
+
+    -- Try to get 'limit' from invoke args, then parent args, then default to 48
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
+    local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
+    
+    -- Cleanup: If #urlget failed and returned the literal string, default to All
+    if currentLetter:find('{{#urlget') then
+        currentLetter = "All"
+    end
+
+    local query = "[[Category:Characters]]"
+    
+    if currentLetter ~= "All" then
+        if currentLetter == "#" then
+            -- Query for names starting with any digit 0-9
+            query = query .. " [[Has name::~[0-9]*]]"
+        else
+            -- Query for names starting with the specific letter (e.g., "[[Name::~A*]]")
+            query = query .. " [[Has name::~" .. currentLetter .. "*]]"
+        end
+    end
+	
+	-- Filter by Name (using SMW wildcard search)
+    if searchFilter ~= "" then
+		-- REPLACE: Turn spaces into underscores for SMW consistency
+    	local dbSearch  = searchFilter:gsub(" ", "_")
+        -- The ~ operator combined with * wildcards matches titles containing the text
+        query = query .. " [[~*" .. dbSearch  .. "*]] "
+    end
+
+    -- 2. Execute Query
+    local queryData = mw.smw.getQueryResult({
+        query,
+        "?Has image",
+        "?Has deck",
+        "?Has games=Games",
+        limit = limit,
+        offset = offset,
+        ["count"] = true,
+		"?Modification date",
+		"?Creation date",
+		sort = sortProp,
+		order = sortOrder
+    })
+
+    -- 3. Debugging / No Results
+    if not queryData or not queryData.results or #queryData.results == 0 then
+        return '<div class="no-results">No characters found for ' .. currentLetter .. '</div>'
+    end
+
+    local html = mw.html.create('div'):addClass('listing-grid')
+    
+    for _, result in ipairs(queryData.results) do
+  	    local fullTitle = result.fulltext or ""
+    	-- This pattern matches "Characters/" or "characters/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Cc][Hh][Aa][Rr][Aa][Cc][Tt][Ee][Rr][Ss]/", "")
+    	
+        -- Helper to extract strings from nested SMW tables
+        local function getSafe(field, isList)
+            local d = result.printouts[field] or {}
+            local vals = {}
+            for _, v in ipairs(d) do
+                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
+                table.insert(vals, str)
+            end
+            return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+	        
+	local function getOldestGameName()
+	    local games = result.printouts["Games"] or {}
+	    if #games == 0 then return "" end
+	
+	    local oldestGameName = ""
+	    local minDateNumeric = 99999999 -- Initialize with a very high number
+	
+	    for _, game in ipairs(games) do
+	        local gameTitle = game.fulltext or ""
+	        
+	        -- Sub-query for this specific game's date
+	        local gameData = mw.smw.getQueryResult({
+	            "[[" .. gameTitle .. "]]",
+	            "?Has release date",
+	        })
+	
+	        if gameData and gameData.results and gameData.results[1] then
+	            local datePrintout = gameData.results[1].printouts["Has release date"] or {}
+	            if #datePrintout > 0 then
+	                local val = datePrintout[1]
+	                local raw = type(val) == "table" and (val.raw or val[1]) or tostring(val)
+	                
+	                -- Extract YYYY, MM, DD from SMW internal format 1/YYYY/MM/DD...
+	                local y, m, d = raw:match("^1/(%d+)/(%d+)/(%d+)")
+	                if y and m and d then
+	                    -- Create a pure number (e.g., 19840606)
+	                    local dateNum = tonumber(string.format("%04d%02d%02d", y, m, d))
+	                    
+	                    if dateNum and dateNum < minDateNumeric then
+	                        minDateNumeric = dateNum
+	                        oldestGameName = gameTitle
+	                    end
+	                end
+	            end
+	        end
+	    end
+	    
+	    -- Fallback: If no date-bearing games were found, use the first linked game
+	    if oldestGameName == "" then 
+	        oldestGameName = games[1] and games[1].fulltext or "" 
+	    end
+	
+	    if oldestGameName == "" then return "" end
+	    -- 1. Get the title without "Games/" namespace
+	    local cleanGameTitle = oldestGameName:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+
+	    -- Return as a MediaWiki Piped Link: [[Games/Game Title|Game Title]]
+	    return "[[" .. oldestGameName .. "|" .. cleanGameTitle .. "]]"
+	end
+
+        local firstGame = getOldestGameName()
+        if firstGame ~= "" then firstGame = "First appeared in " .. firstGame end
+
+        -- 4. Process Image data from description
+        local imageData = getSafe('Has image', false)
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")		
+
+		html:wikitext(frame:expandTemplate{ 
+		    title = 'CharacterCard', 
+		    args = { 
+		        url_title    = fullTitle,
+		        title        = cleanTitle,
+		        firstGame    = firstGame,
+		        deck         = getSafe('Has deck', true),
+		        image        = imageData
+		    } 
+		})
+    end
+
+    -- 5. Build Pagination (using queryData.count)
+    local totalResults = queryData.count or 0
+    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
+	-- We run a quick secondary query to get the total number.
+	if totalResults == 0 and #queryData.results > 0 then
+	    local countQuery = mw.smw.ask({ query, format = "count" })
+	    totalResults = tonumber(countQuery) or 0
+	end
+    
+	local paginationHtml = ""
+	if totalResults > 0 then
+	    paginationHtml = tostring(mw.html.create('div')
+	        :addClass('pagination-wrapper')
+	        :attr('data-total', totalResults)
+	        :attr('data-limit', limit)
+	        :attr('data-offset', offset)
+	        :attr('data-letter', currentLetter)
+	        :attr('data-search', searchFilter)
+			:attr('data-sort', sortBy))
+	end
+	
+	return tostring(html) .. paginationHtml
+end
+
+return p

@@ -28,6 +28,21 @@
     "GbSessionProviderGbnCookieName": {
       "value": "gb_wiki",
       "description": "Name of the GBN cookie used for external authentication"
+    },
+    "GbSessionProviderExpectedIssuer": {
+      "value": "https://giantbomb.com",
+      "description": "Expected JWT issuer (iss claim)"
+    },
+    "GbSessionProviderExpectedAudience": {
+      "value": "giantbomb-wiki",
+      "description": "Expected JWT audience (aud claim)"
+    },
+    "GbSessionProviderGroupMapping": {
+      "value": {
+        "moderator": "moderator",
+        "admin": "sysop"
+      },
+      "description": "Maps JWT group/role names to MediaWiki groups. Keys are JWT claim values (matched against both 'groups' and 'roles' arrays), values are MediaWiki group names."
     }
   },
   "AvailableRights": ["gb-premium"],

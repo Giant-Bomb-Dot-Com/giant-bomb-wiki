@@ -1,0 +1,101 @@
+local p = {}
+
+-- 1. HARDCODED PRIORITIES
+-- If any of these are found in the alias list, the one with the 
+-- lowest number (highest priority) is chosen immediately.
+local priorities = {
+    ["SNES"] = 1,
+    ["NES"]  = 1,
+    ["PS5"]  = 1,
+    ["PS4"]  = 1,
+    ["Switch"] = 1,
+    ["PC"]   = 1
+}
+
+function p.format(frame)
+    local input = frame.args[1] or ""
+    if input == "" then return "" end
+    
+    local items = {}
+    -- Split by comma and clean up prefixes
+    for item in input:gmatch("([^,]+)") do
+        local trimmed = item:match("^%s*(.-)%s*$")
+        if trimmed ~= "" then table.insert(items, trimmed)
+        end
+    end
+    
+    local results = {}
+    local maxVisible = 3
+    local totalItems = #items
+    
+    -- Loop through items but stop adding badges at the limit
+    for i, name in ipairs(items) do
+        -- 1. Clean the name for display (Remove "Platforms/" prefix)
+        local cleanName = name:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
+        
+        if i <= maxVisible then
+            local displayText = cleanName
+
+        	if #cleanName > 9 then
+        		local platformData = mw.smw.ask({
+        		 "[[" .. name .. "]]",
+                    "?Has aliases=aliases",
+                    "mainlabel=-"
+                })
+                
+                if platformData and platformData[1] and platformData[1].aliases then
+                    local rawAliases = platformData[1].aliases
+                    local aliasList = {}
+                    local aliasesData = type(rawAliases) == "table" and rawAliases or {rawAliases}
+                    
+                    -- SMW returns a table for multiple values, or a string for one
+                    for _, entry in ipairs(aliasesData) do
+                    	for subAlias in entry:gmatch("([^,]+)") do
+                            table.insert(aliasList, subAlias:match("^%s*(.-)%s*$"))
+                        end
+                    end
+                    
+                    local bestAlias = nil
+                    local highestPriority = 999
+                    local shortest = cleanName
+                    
+                    for _, alias in ipairs(aliasList) do
+                        if alias ~= "" then
+                            -- Check if this alias is in our hardcoded priority list
+                            local pScore = priorities[alias]
+                            if pScore and pScore < highestPriority then
+                                highestPriority = pScore
+                                bestAlias = alias
+                            end
+                            
+                            -- Keep track of the absolute shortest as fallback
+                            if #alias < #shortest then
+                                shortest = alias
+                            end
+                        end
+                    end
+                    -- Use priority alias if found, otherwise use shortest
+                    displayText = bestAlias or shortest
+                end
+            end
+        		
+            table.insert(results, '<span class="platform-badge" title="' .. cleanName  .. '">' .. displayText .. '</span>')
+        else
+            -- 3. PLUS BADGE: Tooltip for remaining hidden items
+            local remainingNames = {}
+            for j = i, totalItems do
+                local name = items[j]:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
+                table.insert(remainingNames, name)
+            end
+            local tooltip = table.concat(remainingNames, ", ")
+            local count = totalItems - maxVisible
+            
+            table.insert(results, '<span class="platform-badge plus-badge" title="' .. tooltip .. '">+' .. count .. '</span>')
+            break
+        end
+    end
+    
+    return table.concat(results, " ")
+end
+
+return p

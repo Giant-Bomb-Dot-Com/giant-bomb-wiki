@@ -7,7 +7,126 @@
 /* Games page uses the shared listing-page styles via the class in the template */
 /* Only add games-specific overrides here if needed */
 
+body.page-Games .firstHeading,
+body.page-Games .printfooter,
+body.page-Games #siteSub,
+body.page-Games .mw-category-generated,
+body.page-Games #catlinks,
+body.page-Characters .firstHeading,
+body.page-Characters .printfooter,
+body.page-Characters #siteSub,
+body.page-Characters .mw-category-generated,
+body.page-Characters #catlinks,
+body.page-Companies .firstHeading,
+body.page-Companies .printfooter,
+body.page-Companies #siteSub,
+body.page-Companies .mw-category-generated,
+body.page-Companies #catlinks,
+body.page-Concepts .firstHeading,
+body.page-Concepts .printfooter,
+body.page-Concepts #siteSub,
+body.page-Concepts .mw-category-generated,
+body.page-Concepts #catlinks,
+body.page-Franchises .firstHeading,
+body.page-Franchises .printfooter,
+body.page-Franchises #siteSub,
+body.page-Franchises .mw-category-generated,
+body.page-Franchises #catlinks,
+body.page-Locations .firstHeading,
+body.page-Locations .printfooter,
+body.page-Locations #siteSub,
+body.page-Locations .mw-category-generated,
+body.page-Locations #catlinks,
+body.page-People .firstHeading,
+body.page-People .printfooter,
+body.page-People #siteSub,
+body.page-People .mw-category-generated,
+body.page-People #catlinks,
+body.page-Platforms .firstHeading,
+body.page-Platforms .printfooter,
+body.page-Platforms #siteSub,
+body.page-Platforms .mw-category-generated,
+body.page-Platforms #catlinks,
+body.page-Objects .firstHeading,
+body.page-Objects .printfooter,
+body.page-Objects #siteSub,
+body.page-Objects .mw-category-generated,
+body.page-Objects #catlinks,
+body.page-Accessories .firstHeading,
+body.page-Accessories .printfooter,
+body.page-Accessories #siteSub,
+body.page-Accessories .mw-category-generated,
+body.page-Accessories #catlinks,
+body.page-Main_Page .firstHeading,
+body.page-Main_Page .printfooter,
+body.page-Main_Page #siteSub,
+#contentSub,
+#jump-to-nav {
+  display: none;
+}
+
 /* Games-specific: Platform badges in card info */
 .games-page .platform-badges {
   margin-top: 8px;
+}
+
+/* Hide the raw Lua output until JS is ready */
+.lua-form-wrapper {
+  display: none;
+}
+
+/* Show it once the JS adds the 'is-ready' class */
+.lua-form-wrapper.is-ready {
+  display: block;
+}
+
+/* Remove the arrow icon and blue color from card links */
+.listing-content .listing-card-link.external {
+  background: none !important;
+  padding-right: 0 !important;
+  color: inherit !important;
+}
+
+/* Ensure no leading spaces trigger pre tags */
+.listing-content .listing-grid pre {
+  display: contents;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.gb-button:hover {
+  background: #333;
+  border-color: #666;
+}
+
+.gb-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #b05f1c;
+  border-color: #b05f1c;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.gb-button.reset {
+  color: #fff;
+  background: #44446e;
+  border-color: #555;
+  margin-bottom: 1rem;
+}
+
+.gb-button:hover,
+.gb-button.reset:hover {
+  background: #333;
+  border-color: #b05f1c;
+  color: #fff;
+}
+
+.clickable-box {
+  cursor: pointer;
 }
