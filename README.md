@@ -274,3 +274,47 @@ A git commit will use [Husky](https://typicode.github.io/husky/) to execute hook
 ### Category Page(s)
 
 Go to /Games for the overall Games category page and then click on a letter / number to see the data being pulled from Semantic and how it gathers data.
+
+### GBMETATAGS Extension
+
+On a page or template the following can be used per tag to add meta tags to the header when the page is rendered:
+
+For example on Games/Castlevania_Circle_of_the_Moon
+
+```
+{{#tag:gbmeta
+|
+|type=property
+|name=og:description
+|content=Castlevania: Circle of the Moon
+}}
+```
+
+The type can be property or name
+the name is what goes into the property or name value in the tag
+and content will be the content section
+
+The resulting tag is:
+
+```
+<meta property="og:description" content="Castlevania: Circle of the Moon">
+```
+
+Since it's in wikitext, wiki syntax / smw can be used, so the proper way to do the above would be:
+
+```
+{{#tag:gbmeta
+|
+|type=property
+|name=og:description
+|content={{PAGENAME}}
+}}
+```
+
+renders as
+
+```
+<meta property="og:description" content="Games/Castlevania Circle of the Moon">
+```
+
+We wouldn't add these to game pages, but to the underlying templates.

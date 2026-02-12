@@ -28,7 +28,7 @@ function p.render(frame)
         currentLetter = "All"
     end
 
-    local query = "[[Category:Concepts]]"
+    local query = "[[Category:Platforms]]"
     
     if currentLetter ~= "All" then
         if currentLetter == "#" then
@@ -43,22 +43,22 @@ function p.render(frame)
 	-- Filter by Name (using SMW wildcard search)
 	if searchFilter ~= "" then
 	    local dbSearch = searchFilter:gsub(" ", "_")
-	    -- Step 1: Find the specific game's concepts directly
+	    -- Step 1: Find the specific game's platforms directly
 	    local gameData = mw.smw.getQueryResult({
 	        "[[Category:Games]] [[~*" .. dbSearch .. "*]]",
-	        "?Has concepts",
+	        "?Has platforms",
 	        limit = 1
 	    })
 	
 	    if gameData and gameData.results and gameData.results[1] then
-	        local concepts = gameData.results[1].printouts["Has concepts"]
-	        local conceptList = {}
-	        for _, c in ipairs(concepts) do
-	            table.insert(conceptList, "[[" .. (c.fulltext or c) .. "]]")
+	        local platforms = gameData.results[1].printouts["Has platforms"]
+	        local platformList = {}
+	        for _, c in ipairs(platforms) do
+	            table.insert(platformList, "[[" .. (c.fulltext or c) .. "]]")
 	        end
 	        -- Step 2: Add these specific pages to our main query
-	        if #conceptList > 0 then
-	            query = query .. " (" .. table.concat(conceptList, " OR ") .. ")"
+	        if #platformList > 0 then
+	            query = query .. " (" .. table.concat(platformList, " OR ") .. ")"
 	        end
 	    end
 	end
@@ -79,15 +79,15 @@ function p.render(frame)
 
     -- 3. Debugging / No Results
     if not queryData or not queryData.results or #queryData.results == 0 then
-        return '<div class="no-results">No concepts found for ' .. currentLetter .. '</div>'
+        return '<div class="no-results">No platforms found for ' .. currentLetter .. '</div>'
     end
 
     local html = mw.html.create('div'):addClass('listing-grid')
     
     for _, result in ipairs(queryData.results) do
   	    local fullTitle = result.fulltext or ""
-    	-- This pattern matches "Concepts/" or "concepts/" at the start
-    	local cleanTitle = fullTitle:gsub("^[Cc][Oo][Nn][Cc][Ee][Pp][Tt][Ss]/", "")
+    	-- This pattern matches "Platforms/" or "platforms/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
     	
         -- Helper to extract strings from nested SMW tables
         local function getSafe(field, isList)
@@ -105,7 +105,7 @@ function p.render(frame)
         imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
         
 		html:wikitext(frame:expandTemplate{ 
-		    title = 'ConceptCard', 
+		    title = 'PlatformCard', 
 		    args = { 
 		        url_title    = fullTitle,
 		        title        = cleanTitle,

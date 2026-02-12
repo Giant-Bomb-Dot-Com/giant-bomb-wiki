@@ -301,6 +301,7 @@ wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'GiantBombResolve' );
 wfLoadExtension( 'AlgoliaSearch' );
 wfLoadExtension( 'UrlGetParameters' );
+wfLoadExtension( 'GiantBombMetaTags' );
 wfLoadExtension( 'Moderation' );
 
 # =============================================================================
@@ -345,6 +346,17 @@ $smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
 $smwgEnabledFulltextSearch = true;
 $smwgPageSpecialProperties[] = '_CDAT';
 $smwgEnableUpdateJobs = true;
+$smwgFulltextSearchIndexableDataTypes = 2 | 4;
+$smwgFixedProperties = [
+    '_MDAT' => 'smw_moddate',   // Indexes Modification date
+    '_CDAT' => 'smw_credate',   // Indexes Creation date
+];
+
+# SMW query limits
+$smwgQUpperbound = 200000;
+$smwgQMaxInlineLimit = 500;
+$smwgQMaxLimit = 200000;
+$smwgQMaxSize = 100;
 
 $wgPFEnableStringFunctions = true;
 $wgPopupsHideOptInOnPreferencesPage = true;
@@ -404,12 +416,6 @@ if ( $wikiEnv === 'dev' ) {
     ];
     $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
-
-# SMW query limits
-$smwgQUpperbound = 5000;
-$smwgQMaxInlineLimit = 500;
-$smwgQMaxLimit = 5000;
-$smwgQMaxSize = 100;
 
 $wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
 
