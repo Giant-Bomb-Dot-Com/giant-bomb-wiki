@@ -133,4 +133,7 @@ EOF
 fi
 chmod 444 /var/www/html/images/.htaccess
 
+echo "-> Ensure log file can update"
+chown -R www-data:www-data /var/log/mediawiki
+
 echo "-> Done installation"

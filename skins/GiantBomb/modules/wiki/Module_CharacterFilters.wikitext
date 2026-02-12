@@ -1,0 +1,103 @@
+local p = {}
+
+function p.renderSidebar(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
+    local currentSearchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    local currentSort = mw.uri.decode(args.sort_by or parentArgs.sort_by or "newest", "WIKI"):lower()
+    
+    local currentLetter = mw.uri.decode(rawLetter, "WIKI")
+    
+    local query = "[[Category:Characters]]"
+    
+    if currentLetter ~= "All" then
+        if currentLetter == "#" then
+            -- Query for names starting with any digit 0-9
+            query = query .. " [[Name::~[0-9]*]]"
+        else
+            -- Query for names starting with the specific letter (e.g., "[[Name::~A*]]")
+            query = query .. " [[Name::~" .. currentLetter .. "*]]"
+        end
+    end
+    
+    local characterPages = mw.smw.ask({
+	    query,
+	    "?Display title of=display", -- Request the special property
+	    "limit=500",
+	    "mainlabel=page"
+	})
+
+	-- Prepare the A-Z options for the dropdown
+    local letterOptions = {{ val = "All", label = "All" }, { val = "#", label = "#" }}
+    for i = 65, 90 do
+        local l = string.char(i)
+        table.insert(letterOptions, { val = l, label = l })
+    end
+
+    -- Build the HTML Form
+    local form = mw.html.create('form')
+        :attr('method', 'get')
+        :attr('action', mw.title.getCurrentTitle():fullUrl())
+        
+    -- SEARCH INPUT BOX
+    local inputcontainer = form:tag('div'):addClass('filter-group')
+    inputcontainer:tag('label'):attr('for', 'search-filter'):addClass('filter-label'):wikitext('Search')
+    inputcontainer:tag('input')
+    	:attr('type', 'text')
+    	:attr('id','search-filter')
+    	:attr('name','search_filter')
+        :attr('value',currentSearchFilter)
+    	:attr('placeholder','Search by character name...')
+    	:addClass('filter-input')
+    
+    -- FRANCHISE SELECT
+    local selectcontainer = form:tag('div'):addClass('filter-group')
+    selectcontainer:tag('label'):attr('for', 'root-dropdown-filter'):addClass('filter-label'):wikitext('Starts With')
+    
+    local select = selectcontainer:tag('select')
+        :attr('name', 'chosen_letter')
+        :attr('id', 'root-dropdown-filter')
+        :addClass('filter-select')
+        
+    for _, item in ipairs(letterOptions) do
+        local opt = select:tag('option')
+            :attr('value', item.val)
+            :wikitext(item.label)
+        
+        -- Mark as selected if it matches the current URL parameter
+        if item.val == currentLetter then 
+            opt:attr('selected', 'selected') 
+        end
+    end
+
+    -- SORT SELECT
+     local sortOptions = {
+        { val = "newest", label = "Newly Created" },
+        { val = "name", label = "Name (A-Z)" },
+        { val = "latest", label = "Recently Edited" }
+    }
+    
+    local sortContainer = form:tag('div'):addClass('filter-group')
+    sortContainer:tag('label'):attr('for', 'sort-by'):addClass('filter-label'):wikitext('Sort By')
+    
+    local selectSort = sortContainer:tag('select')
+        :attr('name', 'sort_by')
+        :attr('id', 'sort-by')
+        :addClass('filter-select')
+
+    for _, item in ipairs(sortOptions) do
+        local opt = selectSort:tag('option')
+            :attr('value', item.val)
+            :wikitext(item.label)
+        if item.val == currentSort then opt:attr('selected', 'selected') end
+    end 
+    
+    form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):addClass('reset'):wikitext('Reset Filters')
+    form:tag('button'):attr('id','apply-filter'):attr('type', 'submit'):addClass('gb-button'):wikitext('Apply Filter')
+        
+    -- Wrap for JavaScript to find and decode
+    return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form)) .. '</div>'
+end
+
+return p

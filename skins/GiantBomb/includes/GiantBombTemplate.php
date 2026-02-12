@@ -41,6 +41,9 @@ class GiantBombTemplate extends BaseTemplate {
         // Check if we're on the main page
         $isMainPage = $this->getSkin()->getTitle()->isMainPage();
 
+        //Set main to false to force mediawiki as it's been replaced
+        $isMainPage = false;
+
         // Check if we're on a game page (in Games/ namespace but not a sub-page)
         $title = $this->getSkin()->getTitle();
         $pageTitle = $title->getText();
@@ -107,7 +110,7 @@ class GiantBombTemplate extends BaseTemplate {
                            substr_count($pageTitle, '/') === 1;
         $isNewReleasesPage = $pageTitle === 'New Releases' || $pageTitle === 'New Releases/';
         $isPlatformsPage = $pageTitle === 'Platforms' || $pageTitle === 'Platforms/';
-        $isConceptsPage = $pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
+        $isConceptsPage = false; //$pageTitle === 'Concepts' || $pageTitle === 'Concepts/';
         $isPeoplePage = $pageTitle === 'People' || $pageTitle === 'People/';
         error_log("Current page title: " . $pageTitle);
         
@@ -238,6 +241,17 @@ class GiantBombTemplate extends BaseTemplate {
             if ($isTemplateObjectPage) $contentClasses[] = 'wiki-object-page';
             if ($isTemplateLocationPage) $contentClasses[] = 'wiki-location-page';
             if ($isTemplateAccessoryPage) $contentClasses[] = 'wiki-accessory-page';
+
+            $action = $request->getText('action', 'view');
+            $isViewAction = $action === 'view' || $action === 'purge' || $action === '';
+            $isAdEligible = $isViewAction
+                && !$title->isSpecialPage()
+                && $title->getNamespace() >= 0
+                && $title->getNamespace() % 2 === 0;
+
+            if ($isAdEligible) {
+                $contentClasses[] = 'gb-wiki-content';
+            }
 ?>
         <div class="page-wrapper">
             <?php include __DIR__ . '/partials/header.php'; ?>
@@ -266,7 +280,9 @@ class GiantBombTemplate extends BaseTemplate {
                         <a href="#p-search"><?php $this->msg( 'jumptosearch' ) ?></a>
                     </div>
                     <?php } ?>
+                    <?php if ($isAdEligible) { ?><div id="gb-wiki-content"><?php } ?>
                     <?php $this->html( 'bodytext' ) ?>
+                    <?php if ($isAdEligible) { ?></div><?php } ?>
                     <?php $this->html( 'catlinks' ) ?>
                     <?php $this->html( 'dataAfterContent' ) ?>
                 </div>

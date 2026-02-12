@@ -1,0 +1,142 @@
+local p = {}
+
+function p.render(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
+    local currentLetter = mw.uri.decode(rawLetter, "WIKI")
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
+    
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
+	local sortProp = "Creation date" -- Default
+    local sortOrder = "descending"
+
+    if sortFilter == "latest" then
+        sortProp = "Modification date"
+        sortOrder = "descending"
+    elseif sortFilter == "name" then
+        sortProp = "Has name"
+        sortOrder = "ascending"
+    end
+
+    -- Try to get 'limit' from invoke args, then parent args, then default to 48
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
+    local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
+    
+    -- Cleanup: If #urlget failed and returned the literal string, default to All
+    if currentLetter:find('{{#urlget') then
+        currentLetter = "All"
+    end
+
+    local query = "[[Category:Concepts]]"
+    
+    if currentLetter ~= "All" then
+        if currentLetter == "#" then
+            -- Query for names starting with any digit 0-9
+            query = query .. " [[Has name::~[0-9]*]]"
+        else
+            -- Query for names starting with the specific letter (e.g., "[[Name::~A*]]")
+            query = query .. " [[Has name::~" .. currentLetter .. "*]]"
+        end
+    end
+	
+	-- Filter by Name (using SMW wildcard search)
+	if searchFilter ~= "" then
+	    local dbSearch = searchFilter:gsub(" ", "_")
+	    -- Step 1: Find the specific game's concepts directly
+	    local gameData = mw.smw.getQueryResult({
+	        "[[Category:Games]] [[~*" .. dbSearch .. "*]]",
+	        "?Has concepts",
+	        limit = 1
+	    })
+	
+	    if gameData and gameData.results and gameData.results[1] then
+	        local concepts = gameData.results[1].printouts["Has concepts"]
+	        local conceptList = {}
+	        for _, c in ipairs(concepts) do
+	            table.insert(conceptList, "[[" .. (c.fulltext or c) .. "]]")
+	        end
+	        -- Step 2: Add these specific pages to our main query
+	        if #conceptList > 0 then
+	            query = query .. " (" .. table.concat(conceptList, " OR ") .. ")"
+	        end
+	    end
+	end
+
+    -- 2. Execute Query
+    local queryData = mw.smw.getQueryResult({
+        query,
+        "?Has image",
+        "?Has deck",
+        limit = limit,
+        offset = offset,
+        ["count"] = true,
+        "?Modification date",
+    	"?Creation date",
+        sort = sortProp,
+        order = sortOrder
+    })
+
+    -- 3. Debugging / No Results
+    if not queryData or not queryData.results or #queryData.results == 0 then
+        return '<div class="no-results">No characters found for ' .. currentLetter .. '</div>'
+    end
+
+    local html = mw.html.create('div'):addClass('listing-grid')
+    
+    for _, result in ipairs(queryData.results) do
+  	    local fullTitle = result.fulltext or ""
+    	-- This pattern matches "Characters/" or "characters/" at the start
+    	local cleanTitle = fullTitle:gsub("^[Cc][Oo][Nn][Cc][Ee][Pp][Tt][Ss]/", "")
+    	
+        -- Helper to extract strings from nested SMW tables
+        local function getSafe(field, isList)
+            local d = result.printouts[field] or {}
+            local vals = {}
+            for _, v in ipairs(d) do
+                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
+                table.insert(vals, str)
+            end
+            return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+        
+        -- 4. Process Image data from description
+        local imageData = getSafe('Has image', false)
+        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+        
+		html:wikitext(frame:expandTemplate{ 
+		    title = 'ConceptCard', 
+		    args = { 
+		        url_title    = fullTitle,
+		        title        = cleanTitle,
+		        deck         = getSafe('Has deck', true),
+		        image        = imageData
+		    } 
+		})
+    end
+
+    -- 5. Build Pagination (using queryData.count)
+    local totalResults = queryData.count or 0
+    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
+	-- We run a quick secondary query to get the total number.
+	if totalResults == 0 and #queryData.results > 0 then
+	    local countQuery = mw.smw.ask({ query, format = "count" })
+	    totalResults = tonumber(countQuery) or 0
+	end
+    
+	local paginationHtml = ""
+	if totalResults > 0 then
+	    paginationHtml = tostring(mw.html.create('div')
+	        :addClass('pagination-wrapper')
+	        :attr('data-total', totalResults)
+	        :attr('data-limit', limit)
+	        :attr('data-offset', offset)
+	        :attr('data-letter', currentLetter)
+	        :attr('data-search', searchFilter)
+   	        :attr('data-sort', sortBy))
+	end
+	
+	return tostring(html) .. paginationHtml
+end
+
+return p
