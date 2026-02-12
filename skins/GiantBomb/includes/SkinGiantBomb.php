@@ -21,7 +21,6 @@ class SkinGiantBomb extends SkinTemplate {
         $out->addModuleStyles( 'skins.giantbomb.styles' );
         $out->addModules( [ 'skins.giantbomb', 'skins.giantbomb.js', 'skins.giantbomb.wikijs' ] );
         
-        // Google Tag Manager - head script
         $gtmId = getenv( 'GTM_CONTAINER_ID' );
         if ( $gtmId ) {
             $out->addHeadItem( 'gtm-head', 
@@ -34,18 +33,26 @@ class SkinGiantBomb extends SkinTemplate {
         }
     }
 
-    /**
-     * Fix the imageData div which is self-closing in imported content.
-     * MediaWiki strips the / from <div ... /> making it unclosed.
-     * This adds a closing tag immediately after the opening tag.
-     */
+    public static function onOutputPageBodyAttributes( OutputPage $out, Skin $skin, array &$bodyAttrs ) {
+        $user = $skin->getUser();
+        if ( $user->isRegistered() && $user->isAllowed( 'gb-premium' ) ) {
+            $bodyAttrs['class'] .= ' _rx7q';
+        }
+    }
+
     public static function onParserAfterTidy( Parser &$parser, &$text ) {
-        // Find <div id="imageData" ...> (or id='imageData') and close it immediately
         $text = preg_replace(
             '/(<div\s+id=["\']imageData["\'][^>]*>)/',
             '$1</div>',
             $text
         );
+
+        $text = preg_replace(
+            '/\bclass="((?:[^"]*\s)?gb-\w+-sidebar(?:\s[^"]*)?)"/',
+            'class="$1 gb-sidebar"',
+            $text
+        );
+
         return true;
     }
 
