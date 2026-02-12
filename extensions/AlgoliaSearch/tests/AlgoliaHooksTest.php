@@ -31,72 +31,8 @@ class AlgoliaHooksTest extends TestCase {
 		};
 	}
 
-	public function testGetTypeFromTitleMatchesGame(): void {
-		$prefixMap = [
-			'Game' => 'Games',
-			'Character' => 'Characters',
-		];
-		$config = $this->createMockConfig( $prefixMap );
-		$title = $this->createMockTitle( 'Games/Half-Life 2' );
-
-		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-
-		$this->assertSame( 'Game', $result );
-	}
-
-	public function testGetTypeFromTitleMatchesCharacter(): void {
-		$prefixMap = [
-			'Game' => 'Games',
-			'Character' => 'Characters',
-		];
-		$config = $this->createMockConfig( $prefixMap );
-		$title = $this->createMockTitle( 'Characters/Gordon Freeman' );
-
-		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-
-		$this->assertSame( 'Character', $result );
-	}
-
-	public function testGetTypeFromTitleReturnsNullForSubpage(): void {
-		$prefixMap = [
-			'Game' => 'Games',
-		];
-		$config = $this->createMockConfig( $prefixMap );
-		// Subpage should not match (Games/Half-Life 2/Images)
-		$title = $this->createMockTitle( 'Games/Half-Life 2/Images' );
-
-		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-
-		$this->assertNull( $result );
-	}
-
-	public function testGetTypeFromTitleReturnsNullForUnmatchedPrefix(): void {
-		$prefixMap = [
-			'Game' => 'Games',
-		];
-		$config = $this->createMockConfig( $prefixMap );
-		$title = $this->createMockTitle( 'RandomPage' );
-
-		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-
-		$this->assertNull( $result );
-	}
-
-	public function testGetTypeFromTitleReturnsNullForPartialPrefixMatch(): void {
-		$prefixMap = [
-			'Game' => 'Games',
-		];
-		$config = $this->createMockConfig( $prefixMap );
-		// "Gameplay" starts with "Game" but isn't "Games/"
-		$title = $this->createMockTitle( 'Gameplay Tips' );
-
-		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-
-		$this->assertNull( $result );
-	}
-
-	public function testGetTypeFromTitleHandlesAllSupportedTypes(): void {
-		$prefixMap = [
+	private static function fullPrefixMap(): array {
+		return [
 			'Game' => 'Games',
 			'Character' => 'Characters',
 			'Concept' => 'Concepts',
@@ -108,25 +44,52 @@ class AlgoliaHooksTest extends TestCase {
 			'Company' => 'Companies',
 			'Object' => 'Objects',
 		];
-		$config = $this->createMockConfig( $prefixMap );
+	}
 
-		$testCases = [
-			'Games/Test' => 'Game',
-			'Characters/Test' => 'Character',
-			'Concepts/Test' => 'Concept',
-			'Accessories/Test' => 'Accessory',
-			'Locations/Test' => 'Location',
-			'People/Test' => 'Person',
-			'Franchises/Test' => 'Franchise',
-			'Platforms/Test' => 'Platform',
-			'Companies/Test' => 'Company',
-			'Objects/Test' => 'Object',
+	public static function provideMatchingTitles(): array {
+		return [
+			'game' => [ 'Games/Half-Life 2', 'Game' ],
+			'character' => [ 'Characters/Gordon Freeman', 'Character' ],
+			'concept' => [ 'Concepts/Test', 'Concept' ],
+			'accessory' => [ 'Accessories/Test', 'Accessory' ],
+			'location' => [ 'Locations/Test', 'Location' ],
+			'person' => [ 'People/Test', 'Person' ],
+			'franchise' => [ 'Franchises/Test', 'Franchise' ],
+			'platform' => [ 'Platforms/Test', 'Platform' ],
+			'company' => [ 'Companies/Test', 'Company' ],
+			'object' => [ 'Objects/Test', 'Object' ],
 		];
+	}
 
-		foreach ( $testCases as $titleText => $expectedType ) {
-			$title = $this->createMockTitle( $titleText );
-			$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
-			$this->assertSame( $expectedType, $result, "Failed for title: $titleText" );
-		}
+	/**
+	 * @dataProvider provideMatchingTitles
+	 */
+	public function testGetTypeFromTitleMatchesType( string $titleText, string $expectedType ): void {
+		$config = $this->createMockConfig( self::fullPrefixMap() );
+		$title = $this->createMockTitle( $titleText );
+
+		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
+
+		$this->assertSame( $expectedType, $result );
+	}
+
+	public static function provideNonMatchingTitles(): array {
+		return [
+			'subpage' => [ 'Games/Half-Life 2/Images' ],
+			'unmatched prefix' => [ 'RandomPage' ],
+			'partial prefix' => [ 'Gameplay Tips' ],
+		];
+	}
+
+	/**
+	 * @dataProvider provideNonMatchingTitles
+	 */
+	public function testGetTypeFromTitleReturnsNull( string $titleText ): void {
+		$config = $this->createMockConfig( [ 'Game' => 'Games' ] );
+		$title = $this->createMockTitle( $titleText );
+
+		$result = AlgoliaHooks::getTypeFromTitle( $title, $config );
+
+		$this->assertNull( $result );
 	}
 }
