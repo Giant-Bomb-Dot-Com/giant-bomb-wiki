@@ -205,7 +205,8 @@ $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
 # Jobs disabled on page views - run via cron/systemd instead
-$wgJobRunRate = 0;
+# this can be set to 0.5 to run every other page, .25 every 4, etc. not set at all = 1 so on every page save
+#$wgJobRunRate = 0;
 
 # =============================================================================
 # UPLOADS & IMAGES
@@ -576,6 +577,15 @@ $wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
 
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
+
+//Lockdown restricted namespaces
+//106 = form
+//828 = module
+//Special:AllPages pick from namespaces dropdown and filter, URI has #
+$wgNamespaceProtection[NS_TEMPLATE] = ['editinterface'];
+$wgNamespaceProtection[106] = ['editinterface'];
+$wgNamespaceProtection[828] = ['editinterface'];
+
 
 function RestrictImportExport(&$list) {
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
