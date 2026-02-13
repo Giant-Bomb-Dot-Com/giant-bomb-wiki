@@ -578,10 +578,12 @@ $wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
 
-//Lockdown restricted namespaces
-//106 = form
-//828 = module
-//Special:AllPages pick from namespaces dropdown and filter, URI has #
+# =============================================================================
+# Lockdown restricted namespaces
+# 106 = form
+# 828 = module
+# Special:AllPages pick from namespaces dropdown and filter, URI has the number
+# =============================================================================
 $wgNamespaceProtection[NS_TEMPLATE] = ['editinterface'];
 $wgNamespaceProtection[106] = ['editinterface'];
 $wgNamespaceProtection[828] = ['editinterface'];

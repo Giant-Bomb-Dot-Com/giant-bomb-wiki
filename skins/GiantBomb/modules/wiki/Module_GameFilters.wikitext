@@ -121,7 +121,7 @@ function p.renderSidebar(frame)
     footerform:tag('button')
         :attr('type', 'submit')        
         :addClass('button gb-button')  
-        :wikitext('Create a new Game')
+        :wikitext('Create new Game Page')
         
     -- Wrap for JavaScript to find and decode
     return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form) .. tostring(footer)) .. '</div>'
