@@ -24,13 +24,13 @@
   margin: 20px 0 0 0;
   font-size: 1.2rem;
   color: #fff;
-  border-top: 2px solid #444;  
+  border-top: 2px solid #444;
   padding-top: 10px;
 }
 
 .filter-footer button {
-  display:block;
-  text-align:center;
+  display: block;
+  text-align: center;
   width: 100%;
 }
 
