@@ -238,4 +238,12 @@ div.mw-body-content
 .wikiEditor-ui .ace_scrollbar {
   background-color: #272822;
 }
+
+.mw-widget-dateInputWidget-handle {
+  background-color: #1a1a1a !important;
+}
+
+.mw-widget-dateInputWidget-calendar {
+  background-color: #666 !important;
+}
 /* END ACE CODE EDITOR */

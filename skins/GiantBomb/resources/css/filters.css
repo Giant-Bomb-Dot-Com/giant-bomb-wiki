@@ -20,6 +20,20 @@
   padding-bottom: 10px;
 }
 
+.filter-footer {
+  margin: 20px 0 0 0;
+  font-size: 1.2rem;
+  color: #fff;
+  border-top: 2px solid #444;  
+  padding-top: 10px;
+}
+
+.filter-footer button {
+  display:block;
+  text-align:center;
+  width: 100%;
+}
+
 /* Filter Group */
 .filter-group {
   margin-bottom: 20px;

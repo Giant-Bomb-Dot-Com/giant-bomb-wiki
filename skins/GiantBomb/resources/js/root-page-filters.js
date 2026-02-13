@@ -215,4 +215,22 @@ $(function () {
     var $container = $(this);
     $container.addClass("is-ready");
   });
+
+  var fallbackUrl = 'https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png';
+  var fallbackAlt = 'gb_default-16_9.png';
+  
+  // Target only links inside your specific card image container
+  $('.listing-card-image').find('a.external.free').each(function() {
+      var $link = $(this);
+      
+      // Create the new img element
+      var $newImg = $('<img>', {
+          src: fallbackUrl,
+          alt: fallbackAlt
+      });
+
+      // Replace the link with the image
+      $link.replaceWith($newImg);
+  });
+
 });
