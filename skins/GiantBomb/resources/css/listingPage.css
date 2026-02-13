@@ -40,7 +40,8 @@
   order: 2;
 }
 
-.listing-main-wrapper {
+.listing-main-wrapper,
+.listing-main {
   order: 1;
   min-width: 0; /* Prevents grid blowout */
 }
@@ -157,7 +158,6 @@
 .listing-card-stat {
   font-size: 0.85rem;
   color: #fff;
-  line-height: 0.85;
 }
 
 .listing-card-meta {
@@ -429,7 +429,8 @@
     order: 1;
   }
 
-  .listing-main-wrapper {
+  .listing-main-wrapper,
+  .listing-main {
     order: 2;
   }
 

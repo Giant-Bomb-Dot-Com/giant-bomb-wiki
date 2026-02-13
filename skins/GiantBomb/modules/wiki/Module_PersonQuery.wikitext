@@ -120,7 +120,7 @@ function p.render(frame)
 	        :attr('data-offset', offset)
 	        :attr('data-letter', currentLetter)
 	        :attr('data-search', searchFilter)
-   	        :attr('data-sort', sortBy))
+   	        :attr('data-sort', sortFilter))
 	end
 	
 	return tostring(html) .. paginationHtml
