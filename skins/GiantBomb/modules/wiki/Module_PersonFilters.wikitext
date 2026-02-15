@@ -96,8 +96,21 @@ function p.renderSidebar(frame)
     form:tag('button'):attr('id','reset-filter'):addClass('gb-button'):addClass('reset'):wikitext('Reset Filters')
     form:tag('button'):attr('id','apply-filter'):attr('type', 'submit'):addClass('gb-button'):wikitext('Return matching concepts')
         
+    --FOOTER
+    local footer = mw.html.create('div')
+        :attr('class', 'filter-footer')
+
+    local footerform = footer:tag('form')
+        :attr('action', mw.title.new('Form:Person'):fullUrl())
+        :attr('method', 'post')
+
+    footerform:tag('button')
+        :attr('type', 'submit')        
+        :addClass('button gb-button')  
+        :wikitext('Create new Person Page')
+        
     -- Wrap for JavaScript to find and decode
-    return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form)) .. '</div>'
+    return '<div class="lua-form-wrapper">' .. mw.text.nowiki(tostring(form) .. tostring(footer)) .. '</div>'
 end
 
 return p
