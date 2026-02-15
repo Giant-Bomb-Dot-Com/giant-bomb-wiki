@@ -5,6 +5,7 @@
   |filterTitle=Filter Games
   |chosen_platform={{#urlget:chosen_platform|All}}
   |search_filter={{#urlget:search_filter}}
+  |sort_by={{#urlget:sort_by}}
   |limit={{#urlget:limit|48}}
   |offset={{#urlget:offset|0}}
 }}
