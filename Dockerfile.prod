@@ -1,6 +1,5 @@
 FROM mediawiki:1.43.6
 
-ARG INSTALL_GCSFUSE="false"
 ARG INSTALL_API="false"
 
 WORKDIR /var/www/html
@@ -24,15 +23,6 @@ RUN if [ "$INSTALL_API" = "false" ]; then \
 
 RUN chown -R www-data:www-data /var/www/html
 
-# MOUNT GCS IMAGE FOLDER
-RUN if [ "$INSTALL_GCSFUSE" = "true" ]; then \
-    lsb_release -c -s > /tmp/lsb_release && \
-    GCSFUSE_REPO=$(cat /tmp/lsb_release) && \
-    wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | tee /usr/share/keyrings/cloud.google.gpg >/dev/null && \
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
-    apt-get update && apt-get install -y gcsfuse; \
-    fi
-
 # INSTALL SEMANTIC MEDIAWIKI
 RUN cd /var/www/html \
  && sed -i -e "s/9.6.19/\^9.6.19/" composer.json \
@@ -42,6 +32,7 @@ RUN cd /var/www/html \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-scribunto dev-master \
  && php /usr/local/bin/composer require --no-update "wikimedia/css-sanitizer:^5.5.0" \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update algolia/algoliasearch-client-php \
+ && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update edwardspec/mediawiki-aws-s3:0.14.0 \
  && docker-php-ext-configure zip \
  && docker-php-ext-install zip \
  && cd /var/www/html/extensions/ \
@@ -51,11 +42,16 @@ RUN cd /var/www/html \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/Popups \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters \
  && git clone -b 'v1.9.3' --single-branch --depth 1 https://github.com/edwardspec/mediawiki-moderation.git Moderation \
+ && git clone --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git AWS \
+ && sed -i "/'ACL'/d" AWS/s3/AmazonS3FileBackend.php \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
  && composer config --no-plugins audit.block-insecure false \
  && composer update --no-dev
+
+# GCS uses uniform bucket-level ACL, so re-uploads need ignorewarnings
+RUN sed -i 's/ignorewarnings: false/ignorewarnings: true/' /var/www/html/resources/src/mediawiki.Upload.js
 
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
