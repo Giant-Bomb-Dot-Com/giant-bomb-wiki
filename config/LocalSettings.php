@@ -234,8 +234,32 @@ $wgAllowExternalImagesFrom = [
     'http://www.giantbomb.com/',
     'https://giantbomb.com/',
     'http://giantbomb.com/',
+    'https://storage.googleapis.com/',
 ];
 $wgUseInstantCommons = false;
+
+# GCS image storage via Extension:AWS (S3-compatible API)
+$gcsAccessKey = getenv('GCS_HMAC_ACCESS_KEY');
+if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
+    wfLoadExtension('AWS');
+
+    $wgAWSCredentials = [
+        'key'    => $gcsAccessKey,
+        'secret' => getenv('GCS_HMAC_SECRET'),
+        'token'  => false,
+    ];
+
+    $wgAWSRegion = 'auto';
+    $wgAWSBucketName = getenv('GCS_BUCKET_NAME') ?: 'gb_wiki_mw';
+
+    $wgFileBackends['s3']['endpoint'] = 'https://storage.googleapis.com';
+    $wgFileBackends['s3']['use_path_style_endpoint'] = true;
+
+    $wgAWSBucketDomain = 'storage.googleapis.com/$1';
+
+    $wgAWSRepoHashLevels = 2;
+    $wgAWSRepoDeletedHashLevels = 3;
+}
 
 # =============================================================================
 # GENERAL SETTINGS
