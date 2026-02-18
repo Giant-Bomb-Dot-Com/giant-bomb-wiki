@@ -1,6 +1,6 @@
 {
   "require": {
-    "firebase/php-jwt": "^6.11",
+    "firebase/php-jwt": "^7.0",
     "paragonie/sodium_compat": "^2.4",
     "guzzlehttp/guzzle": "^7.10",
     "phpfastcache/phpfastcache": "^9.2",
