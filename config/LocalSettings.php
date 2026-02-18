@@ -167,6 +167,7 @@ $wgParserCacheType = CACHE_DB;
 $wgParserCacheExpireTime = 86400 * 7;
 $wgMessageCacheType = CACHE_ACCEL;
 $wgSessionCacheType = CACHE_DB;
+$wgObjectCacheSessionExpiry = 86400;  # 24 hours
 $wgEnableSidebarCache = true;
 $wgSidebarCacheExpiry = 86400;
 

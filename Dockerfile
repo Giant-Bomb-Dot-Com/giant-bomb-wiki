@@ -61,6 +61,7 @@ RUN sed -i 's/ignorewarnings: false/ignorewarnings: true/' /var/www/html/resourc
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     echo "apc.shm_size=256M" >> /usr/local/etc/php/php.ini && \
     echo "apc.enable_cli=1" >> /usr/local/etc/php/php.ini && \
+    echo "session.gc_maxlifetime=86400" >> /usr/local/etc/php/php.ini && \
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
 
 # Directory for logging
