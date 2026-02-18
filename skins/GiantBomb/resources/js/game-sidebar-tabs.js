@@ -24,6 +24,48 @@
   const GB_IMAGE_BASE = "https://www.giantbomb.com/a/uploads/";
 
   const initHeroImages = () => {
+    const getNewImageSrc = (id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const img = el.querySelector("img");
+      const data = {
+        src: img?.src,
+        alt: img?.alt || "",
+      };
+      if (img) img.remove();
+      return data;
+    };
+
+    const heroSelector =
+      ".gb-game-hero, .gb-character-hero, .gb-franchise-hero, .gb-concept-hero, .gb-object-hero, .gb-location-hero, .gb-platform-hero, .gb-company-hero, .gb-person-hero, .gb-accessory-hero";
+    const coverSelector =
+      ".gb-game-hero-cover, .gb-character-hero-cover, .gb-franchise-hero-cover, .gb-concept-hero-cover, .gb-object-hero-cover, .gb-location-hero-cover, .gb-platform-hero-cover, .gb-company-hero-cover, .gb-person-hero-cover, .gb-accessory-hero-cover";
+
+    const coverContainer = document.querySelector(coverSelector);
+
+    //New Background - can have bg but not cover so it has to run before returns
+    const newImageBg = getNewImageSrc("backgroundImageData");
+    if (newImageBg) {
+      const { src, alt } = newImageBg;
+      const heroSection = document.querySelector(heroSelector);
+      if (heroSection) heroSection.style.backgroundImage = `url(${src})`;
+    }
+
+    //Parse new cover image:
+    const newImageCover = getNewImageSrc("coverImageData");
+    if (newImageCover) {
+      if (coverContainer) {
+        const { src, alt } = newImageCover;
+        let coverImg =
+          coverContainer.querySelector("img") || document.createElement("img");
+        if (!coverImg.parentNode) coverContainer.appendChild(coverImg);
+        coverImg.src = src;
+        coverImg.alt = alt;
+        document.querySelector(".gb-game-hero-title")?.textContent ||
+          "Cover image";
+      }
+    }
+
     const imageDataEl = document.getElementById("imageData");
     if (!imageDataEl) return;
 
@@ -36,11 +78,9 @@
 
       if (imageData.infobox?.file && imageData.infobox?.path) {
         const coverUrl = `${GB_IMAGE_BASE}scale_super/${imageData.infobox.path}${imageData.infobox.file}`;
-        const coverContainer = document.querySelector(
-          ".gb-game-hero-cover, .gb-character-hero-cover, .gb-franchise-hero-cover, .gb-concept-hero-cover, .gb-object-hero-cover, .gb-location-hero-cover, .gb-platform-hero-cover, .gb-company-hero-cover, .gb-person-hero-cover, .gb-accessory-hero-cover",
-        );
 
-        if (coverContainer) {
+        // Prioritize new over old (since new happens in edits and new pages)
+        if (!newImageCover && coverContainer) {
           let coverImg = coverContainer.querySelector("img");
           if (!coverImg) {
             coverImg = document.createElement("img");
@@ -54,7 +94,11 @@
         }
       }
 
-      if (imageData.background?.file && imageData.background?.path) {
+      if (
+        !newImageBg &&
+        imageData.background?.file &&
+        imageData.background?.path
+      ) {
         const bgUrl = `${GB_IMAGE_BASE}screen_kubrick_wide/${imageData.background.path}${imageData.background.file}`;
         const heroSection = document.querySelector(
           ".gb-game-hero, .gb-character-hero, .gb-franchise-hero, .gb-concept-hero, .gb-object-hero, .gb-location-hero, .gb-platform-hero, .gb-company-hero, .gb-person-hero, .gb-accessory-hero",
