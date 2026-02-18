@@ -3,6 +3,7 @@
   Name (property=Has name)
 ||||| Guid (property=Has guid)
 ||||| Image (property=Has image)
+||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 }}
 ==Documentation==
@@ -21,6 +22,8 @@ Rating Boards are organizations that rate video games (e.g., ESRB, PEGI, CERO).
 || Guid || Giant Bomb API identifier
 |-
 || Image || Rating board logo
+|-
+|| BackgroundImage || Background image filename
 |-
 || Deck || Short description
 |}
@@ -44,6 +47,7 @@ SMW Property Storage
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}<!--
 
@@ -54,8 +58,10 @@ HTML Structure
 --><div class="gb-ratingboard-page" itemscope itemtype="https://schema.org/Organization">
 <meta itemprop="name" content="{{{Name|}}} - Video Game Rating Board" />
 <meta itemprop="description" content="{{{Deck|}}}" />
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game rating board. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What ratings does {{{Name|}}} use?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} uses various age-based ratings to classify video games." /></div></div></div>
-<div class="gb-ratingboard-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game rating board. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What ratings does {{{Name|}}} use?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} uses various age-based ratings to classify video games." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-ratingboard-hero">
 <div class="gb-ratingboard-hero-container">
 <div class="gb-ratingboard-hero-cover"></div>
 <div class="gb-ratingboard-hero-info">

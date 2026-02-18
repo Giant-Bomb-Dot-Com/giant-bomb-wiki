@@ -4,6 +4,7 @@
 |||| Guid (property=Has guid)
 |||| Aliases (property=Has aliases)
 |||| Image (property=Has image)
+|||| BackgroundImage (property=Has background image)
 |||| Caption (property=Has caption)
 |||| Deck (property=Has deck)
 |||| RealName (property=Has real name)
@@ -33,6 +34,10 @@ Uses Semantic MediaWiki for structured data storage and display.
 | Guid || Giant Bomb API identifier
 |-
 | Aliases || Alternative names (comma-separated)
+|-
+| Image || Cover image filename
+|-
+| BackgroundImage || Background image filename
 |-
 | Deck || Short description shown in hero
 |-
@@ -84,6 +89,7 @@ Your wiki content here...
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{RealName|}}}|{{#set:Has real name={{{RealName}}}}}
@@ -101,8 +107,10 @@ Your wiki content here...
 }}{{DISPLAYTITLE:{{{Name|}}} (Character)}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
 <meta itemprop="name" content="{{{Name|}}} - Video Game Character" />
 <meta itemprop="description" content="{{{Deck|}}}" />
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game character. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games is {{{Name|}}} in?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games including titles from {{{Franchises|}}}." /></div></div></div>
-<div class="gb-character-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game character. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games is {{{Name|}}} in?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games including titles from {{{Franchises|}}}." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-character-hero">
 <div class="gb-character-hero-container">
 <div class="gb-character-hero-cover"></div>
 <div class="gb-character-hero-info">

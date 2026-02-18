@@ -52,7 +52,6 @@ RUN cd /var/www/html \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
- && php /usr/local/bin/composer config audit.ignore '["PKSA-z3gr-8qht-p93v"]' --json \ 
  && composer update --no-dev
 
 # GCS uses uniform bucket-level ACL, so re-uploads need ignorewarnings

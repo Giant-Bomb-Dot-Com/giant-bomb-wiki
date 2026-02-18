@@ -8,7 +8,8 @@ local priorities = {
     ["NES"]  = 1,
     ["PS5"]  = 1,
     ["PS4"]  = 1,
-    ["Switch"] = 1,
+    ["Nintendo Switch"] = 1,
+    ["Nintendo Switch 2"] = 1,
     ["PC"]   = 1
 }
 
@@ -45,7 +46,7 @@ function p.format(frame)
                 
                 if platformData and platformData[1] and platformData[1].aliases then
                     local rawAliases = platformData[1].aliases
-                    local aliasList = {}
+                    local aliasList = {cleanName}
                     local aliasesData = type(rawAliases) == "table" and rawAliases or {rawAliases}
                     
                     -- SMW returns a table for multiple values, or a string for one
