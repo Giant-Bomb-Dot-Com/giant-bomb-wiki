@@ -43,6 +43,10 @@
         "admin": "sysop"
       },
       "description": "Maps JWT group/role names to MediaWiki groups. Keys are JWT claim values (matched against both 'groups' and 'roles' arrays), values are MediaWiki group names."
+    },
+    "GbSessionProviderJwtGracePeriod": {
+      "value": 7200,
+      "description": "Seconds after JWT expiry to still accept a signature-verified token. Prevents data loss during long editing sessions. Default: 7200 (2 hours)."
     }
   },
   "AvailableRights": ["gb-premium"],

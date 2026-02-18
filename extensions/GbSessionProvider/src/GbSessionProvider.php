@@ -14,6 +14,7 @@ use MediaWiki\User\User;
 use MediaWiki\User\UserGroupManager;
 use Firebase\JWT\JWT;
 use Firebase\JWT\CachedKeySet;
+use Firebase\JWT\ExpiredException;
 use UnexpectedValueException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -33,6 +34,7 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     protected string $expectedIssuer = "";
     protected string $expectedAudience = "";
     protected array $groupMapping = [];
+    protected int $jwtGracePeriod = 7200;
 
     public function __construct(array $params = [])
     {
@@ -57,6 +59,8 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             "giantbomb-wiki";
         $this->groupMapping =
             (array) ($config->get("GbSessionProviderGroupMapping") ?: []);
+        $this->jwtGracePeriod =
+            (int) ($config->get("GbSessionProviderJwtGracePeriod") ?? 7200);
     }
 
     protected function postInitSetup()
@@ -333,14 +337,29 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
         ]);
     }
 
-    // return decoded object if good
-    // else return null
     protected function verifyJwt($token, $keySet)
     {
         $result = null;
         try {
             $this->logger->debug("verifyJwt: decoding token");
             $result = JWT::decode($token, $keySet);
+        } catch (ExpiredException $e) {
+            // Signature already verified; accept within grace window
+            $payload = $e->getPayload();
+            $expiredAt = $payload->exp ?? 0;
+            $elapsed = time() - $expiredAt;
+
+            if ($elapsed <= $this->jwtGracePeriod) {
+                $this->logger->info(
+                    "JWT expired {$elapsed}s ago, within {$this->jwtGracePeriod}s grace period; accepting verified payload",
+                );
+                $result = $payload;
+            } else {
+                $this->logger->warning(
+                    "JWT expired {$elapsed}s ago, beyond {$this->jwtGracePeriod}s grace period",
+                );
+                return null;
+            }
         } catch (\LogicException $e) {
             $this->logger->warning(
                 "JWT::decode Logic exception: " . $e->getMessage(),
