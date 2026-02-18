@@ -13,6 +13,18 @@ require_once __DIR__ . '/../helpers/Constants.php';
 // Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
 http_response_code(200);
 
+static $platformsMetaApplied = false;
+if ( !$platformsMetaApplied ) {
+	$platformsMetaApplied = true;
+	$out = null;
+	if ( isset( $this ) && method_exists( $this, 'getSkin' ) ) {
+		$out = $this->getSkin()->getOutput();
+	} else {
+		$out = RequestContext::getMain()->getOutput();
+	}
+	$out->setHTMLTitle( $GLOBALS['wgSitename'] . ': Platforms' );
+}
+
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $filterLetter = $request->getText('letter', '');
@@ -29,6 +41,7 @@ $filterGameTitlesString = $filterGameTitles ? implode("||", array_map(function($
 
 // Format data for Mustache template
 $data = [
+    'siteName' => $GLOBALS['wgSitename'],
     'platforms' => $result['platforms'],
     'totalCount' => $result['totalCount'],
     'currentPage' => $result['currentPage'],

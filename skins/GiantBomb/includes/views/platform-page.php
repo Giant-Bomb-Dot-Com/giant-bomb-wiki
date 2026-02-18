@@ -125,7 +125,7 @@ PageHelper::addOpenGraphTags( $out, [
 	'og:title' => $metaTitle,
 	'og:description' => $metaDescription,
 	'og:url' => $canonicalUrl,
-	'og:site_name' => 'Giant Bomb Wiki',
+	'og:site_name' => $GLOBALS['wgSitename'],
 	'og:type' => 'website',
 	'og:locale' => 'en_US',
 ], $metaImage );

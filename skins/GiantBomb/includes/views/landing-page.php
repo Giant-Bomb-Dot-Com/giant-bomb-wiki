@@ -7,6 +7,18 @@ require_once __DIR__ . '/../helpers/Constants.php';
 require_once __DIR__ . '/../helpers/GamesHelper.php';
 require_once __DIR__ . '/../helpers/PlatformHelper.php';
 
+static $landingMetaApplied = false;
+if ( !$landingMetaApplied ) {
+	$landingMetaApplied = true;
+	$out = null;
+	if ( isset( $this ) && method_exists( $this, 'getSkin' ) ) {
+		$out = $this->getSkin()->getOutput();
+	} else {
+		$out = RequestContext::getMain()->getOutput();
+	}
+	$out->setHTMLTitle( $GLOBALS['wgSitename'] . ': All Games' );
+}
+
 
 // Define available category buttons
 $buttons = [
@@ -56,6 +68,7 @@ $startItem = $totalGames > 0 ? ($currentPage - 1) * $itemsPerPage + 1 : 0;
 $endItem = min($currentPage * $itemsPerPage, $totalGames);
 
 $data = [
+	'siteName' => $GLOBALS['wgSitename'],
 	'buttons' => $buttons,
 	'wikiTypes' => $wikiTypes,
 	'games' => $games,

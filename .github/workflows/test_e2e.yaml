@@ -15,7 +15,7 @@ jobs:
           echo "MARIADB_ROOT_PASSWORD: gb_root_ci" >> .env
           echo "MW_SITE_SERVER=http://localhost:8080" >> .env
           echo "MW_SCRIPT_PATH=\"\"" >> .env
-          echo "MW_SITE_NAME=\"Giant Bomb Wiki\"" >> .env
+          echo "MW_SITE_NAME=\"Giant Bomb Video Game Wiki\"" >> .env
           echo "MW_DB_HOST=db" >> .env
           echo "MW_DB_NAME=gb_wiki_ci" >> .env
           echo "MW_DB_USER=giantbomb.ci" >> .env

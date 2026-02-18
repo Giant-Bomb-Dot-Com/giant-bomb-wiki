@@ -13,6 +13,18 @@ require_once __DIR__ . '/../helpers/ReleasesHelper.php';
 // Set HTTP status to 200 OK (MediaWiki responds with 404 for non-existent wiki pages)
 http_response_code(200);
 
+static $newReleasesMetaApplied = false;
+if ( !$newReleasesMetaApplied ) {
+	$newReleasesMetaApplied = true;
+	$out = null;
+	if ( isset( $this ) && method_exists( $this, 'getSkin' ) ) {
+		$out = $this->getSkin()->getOutput();
+	} else {
+		$out = RequestContext::getMain()->getOutput();
+	}
+	$out->setHTMLTitle( $GLOBALS['wgSitename'] . ': Latest Games' );
+}
+
 // Get filter parameters from URL
 $request = RequestContext::getMain()->getRequest();
 $filterRegion = $request->getText('region', '');
@@ -30,6 +42,7 @@ $platforms = getAllPlatforms();
 
 // Format data for Mustache template
 $data = [
+    'siteName' => $GLOBALS['wgSitename'],
     'weekGroups' => $weekGroups,
     'hasReleases' => count($releases) > 0,
     'vue' => [
