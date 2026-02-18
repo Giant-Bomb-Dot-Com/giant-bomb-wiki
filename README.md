@@ -321,10 +321,9 @@ We wouldn't add these to game pages, but to the underlying templates.
 
 ### Images (GCS)
 
-Add the following in your .env file before
-GCS_HMAC_ACCESS_KEY=key
-GCS_HMAC_SECRET=test@test.com
-GCS_BUCKET_NAME=wiki-files
+Update the following in your .env file before you run:
+GCS_HMAC_ACCESS_KEY=
+GCS_HMAC_SECRET=
 
 A new local-GCS for images will start on port 9000 and you can get to the page at localhost:9001.
 The wiki will want to run things on https so you will have to visit the local-gcs at https://localhost:9001 and tell the browser it's ok to use.
@@ -332,6 +331,7 @@ The wiki will want to run things on https so you will have to visit the local-gc
 If pages aren't saving, you may need to set the local-gcs files public by running the following:
 
 ```
-docker exec giant-bomb-wiki-local-gcs-1 mc alias set local http://localhost:9000 key test@test.com
-docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set download local/wiki-files
+docker exec giant-bomb-wiki-local-gcs-1 mc alias set local http://localhost:9000 dev test@test.com
+docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set download local/gb_wiki_mw
+docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set public local/gb_wiki_mw
 ```

@@ -8,6 +8,7 @@ local priorities = {
     ["NES"]  = 1,
     ["PS5"]  = 1,
     ["PS4"]  = 1,
+    ["Switch"] = 1,
     ["Nintendo Switch"] = 1,
     ["Nintendo Switch 2"] = 1,
     ["PC"]   = 1

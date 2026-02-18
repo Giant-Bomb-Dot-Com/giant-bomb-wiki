@@ -255,13 +255,13 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
     $wgAWSRegion = 'auto';
     $wgAWSBucketName = getenv('GCS_BUCKET_NAME') ?: 'gb_wiki_mw';
 
-    if ($gcsAccessKey === "key") {
+    if ($gcsAccessKey === "dev") {
         //LOCAL
         $wgFileBackends["s3"]["endpoint"] = "http://local-gcs:9000";
         $wgFileBackends["s3"]["use_path_style_endpoint"] = true;
 
-        $wgAWSBucketDomain = "http://localhost:9000/wiki-files";
-        $wgAWSS3ExternalURL = "http://localhost:9000/wiki-files";
+        $wgAWSBucketDomain = "http://localhost:9000/gb_wiki_mw";
+        $wgAWSS3ExternalURL = "http://localhost:9000/gb_wiki_mw";
 
         // This tells MediaWiki to get the image from MinIO for the UI
         $wgLocalFileRepo = [
@@ -269,7 +269,7 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
             "name" => "local",
             "directory" => $wgUploadDirectory,
             "scriptDirUrl" => $wgScriptPath,
-            "url" => "http://localhost:9000/wiki-files", // IMPORTANT: Host-accessible URL
+            "url" => "http://localhost:9000/gb_wiki_mw", // IMPORTANT: Host-accessible URL
             "hashLevels" => 2,
             "thumbScriptUrl" => $wgScriptPath . "/thumb.php",
             "transformVia404" => false,
