@@ -229,12 +229,13 @@ if ($wikiEnv == 'prod') {
 }
 
 $wgAddImgTagWhitelist = true;
-$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com'];
+$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com', 'giantbomb.com', 'media.giantbomb.com'];
 $wgAllowExternalImagesFrom = [
     'https://www.giantbomb.com/',
     'http://www.giantbomb.com/',
     'https://giantbomb.com/',
     'http://giantbomb.com/',
+    'https://media.giantbomb.com/',
     'https://storage.googleapis.com/',
 ];
 $wgUseInstantCommons = false;
