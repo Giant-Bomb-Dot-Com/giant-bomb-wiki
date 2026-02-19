@@ -326,12 +326,13 @@ GCS_HMAC_ACCESS_KEY=
 GCS_HMAC_SECRET=
 
 A new local-GCS for images will start on port 9000 and you can get to the page at localhost:9001.
+Once here create a bucket called: gb-wiki-mw (name in your .env)
 The wiki will want to run things on https so you will have to visit the local-gcs at https://localhost:9001 and tell the browser it's ok to use.
 
 If pages aren't saving, you may need to set the local-gcs files public by running the following:
 
 ```
 docker exec giant-bomb-wiki-local-gcs-1 mc alias set local http://localhost:9000 dev test@test.com
-docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set download local/gb_wiki_mw
-docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set public local/gb_wiki_mw
+docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set download local/gb-wiki-mw
+docker exec giant-bomb-wiki-local-gcs-1 mc anonymous set public local/gb-wiki-mw
 ```

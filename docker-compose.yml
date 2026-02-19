@@ -58,7 +58,7 @@ services:
       - "9001:9001" # Web UI Console
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: key
+      MINIO_ROOT_USER: dev
       MINIO_ROOT_PASSWORD: test@test.com
     volumes:
       - ./data/images/gcs-local:/data
