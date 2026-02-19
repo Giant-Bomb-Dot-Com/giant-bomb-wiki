@@ -1,0 +1,38 @@
+<noinclude>
+This is the "Genre" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Genre|super_page=Genres}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Genre}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|uploadable|image preview|property=Has image}}}
+|-
+! BackgroundImage: 
+| {{{field|BackgroundImage|uploadable|image preview|property=Has background image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
+|}
+{{{end template}}}
+</includeonly>

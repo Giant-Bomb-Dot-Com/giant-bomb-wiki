@@ -1,0 +1,59 @@
+<noinclude>
+This is the "Platform" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Platform|super_page=Platforms}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Platform}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid: 
+| {{{field|Guid|property=Has guid}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|uploadable|image preview|property=Has image}}}
+|-
+! BackgroundImage: 
+| {{{field|BackgroundImage|uploadable|image preview|property=Has background image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! ShortName: 
+| {{{field|ShortName|property=Has short name}}}
+|-
+! ReleaseDate: 
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! Release Date Type: 
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
+|-
+! Install Base: 
+| {{{field|InstallBase|property=Has install base}}}
+|-
+! Online Support: 
+| {{{field|OnlineSupport|property=Has online support}}}
+|-
+! Original Price: 
+| {{{field|OriginalPrice|property=Has original price}}}
+|-
+! Manufacturer: 
+| {{{field|Manufacturer|property=Has manufacturer|input type=tokens|values from category=Companies}}}
+|-
+! Description:
+| {{{standard input|free text|rows=10}}}
+|}
+{{{end template}}}
+</includeonly>
