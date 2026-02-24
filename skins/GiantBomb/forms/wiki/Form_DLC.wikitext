@@ -12,11 +12,14 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Game}:
 | {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
-|-
-! Description:
-| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
 {{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}
 {| class="formtable"
 |-

@@ -27,9 +27,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
-|-
-! Description:
-| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
 </includeonly>
