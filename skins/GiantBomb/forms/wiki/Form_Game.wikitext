@@ -35,7 +35,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|ReleaseDate|property=Has release date|input type=datepicker}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters|mapping template=CharacterLabel}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
 |-
 ! Concepts:
 | {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
@@ -66,9 +66,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Themes:
 | {{{field|Themes|property=Has themes|input type=tokens|values from category=Themes}}}
-|-
-! Description:
-| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
 </includeonly>
