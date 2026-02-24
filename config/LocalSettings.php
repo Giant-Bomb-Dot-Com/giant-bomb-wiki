@@ -236,6 +236,8 @@ $wgAllowExternalImagesFrom = [
     'https://giantbomb.com/',
     'http://giantbomb.com/',
     'https://media.giantbomb.com/',
+    'http://origin.giantbomb.com/',
+    'https://origin.giantbomb.com/',
     'https://storage.googleapis.com/',
     'http://localhost:9000',
 ];

@@ -35,7 +35,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|LastName|property=Has last name}}}
 |-
 ! Gender: 
-| {{{field|Gender|property=Has gender}}}
+| {{{field|Gender|property=Has gender|input type=tokens}}}
 |-
 ! Hometown: 
 | {{{field|Hometown|property=Has hometown}}}
@@ -66,9 +66,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! People: 
 | {{{field|People|property=Has similar people|input type=tokens|values from category=People}}}
-|-
-! Description:
-| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
 </includeonly>
