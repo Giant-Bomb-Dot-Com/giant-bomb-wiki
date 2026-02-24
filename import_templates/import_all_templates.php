@@ -174,6 +174,7 @@ class ImportWikiTemplates extends Maintenance
             "Form:Character" => "$formDir/Form_Character.wikitext",
             "Form:Company" => "$formDir/Form_Company.wikitext",
             "Form:Concept" => "$formDir/Form_Concept.wikitext",
+            "Form:Credits" => "$formDir/Form_Credits.wikitext",
             "Form:DLC" => "$formDir/Form_DLC.wikitext",
             "Form:Franchise" => "$formDir/Form_Franchise.wikitext",
             "Form:Game" => "$formDir/Form_Game.wikitext",
@@ -183,6 +184,7 @@ class ImportWikiTemplates extends Maintenance
             "Form:Person" => "$formDir/Form_Person.wikitext",
             "Form:Platform" => "$formDir/Form_Platform.wikitext",
             "Form:Rating" => "$formDir/Form_Rating.wikitext",
+            "Form:Releases" => "$formDir/Form_Releases.wikitext",
             "Form:Theme" => "$formDir/Form_Theme.wikitext",
         ];
 
@@ -191,6 +193,7 @@ class ImportWikiTemplates extends Maintenance
 
             "Property:Has_image" => "$pagesDir/Property_Hasimage.wikitext",
             "Property:Has_background_image" => "$pagesDir/Property_Hasbackgroundimage.wikitext",
+            "Property:Has_original_price" => "$pagesDir/Property_Hasoriginalprice.wikitext",
 
             "Template:LandingNav" => "$templateDir/Template_LandingNav.wikitext",
             "Template:LandingPageQuery" => "$templateDir/Template_LandingPageQuery.wikitext",

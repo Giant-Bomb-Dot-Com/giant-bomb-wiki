@@ -31,7 +31,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Deck: 
 | {{{field|Deck|property=Has deck}}}
 |-
-! ShortName: 
+! Abbreviation: 
 | {{{field|ShortName|property=Has short name}}}
 |-
 ! ReleaseDate: 
@@ -41,7 +41,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
 |-
 ! Install Base: 
-| {{{field|InstallBase|property=Has install base}}}
+| {{{field|InstallBase|property=Has install base|type=text}}}
 |-
 ! Online Support: 
 | {{{field|OnlineSupport|property=Has online support}}}
@@ -51,9 +51,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Manufacturer: 
 | {{{field|Manufacturer|property=Has manufacturer|input type=tokens|values from category=Companies}}}
-|-
-! Description:
-| {{{standard input|free text|rows=10}}}
 |}
 {{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
 </includeonly>
