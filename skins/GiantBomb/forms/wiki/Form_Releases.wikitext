@@ -7,7 +7,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Releases}}}
+{{{for template|Releases}}}{{{field|Guid|property=Has guid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Game:
@@ -20,7 +20,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|save}}}
 {{{standard input|preview}}}
 {{{standard input|cancel}}}
-{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
+{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Game: 
@@ -29,32 +29,29 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Release Name:
 | {{{field|Name|mandatory|property=Has name}}}
 |-
-! Guid:
-| {{{field|Guid|property=Has guid}}}
-|-
 ! Image:
-| {{{field|Image|property=Has image}}}
+| {{{field|Image|uploadable|property=Has image}}}
 |-
 ! Region:
 | {{{field|Region|mandatory|property=Has region}}}
 |-
 ! Rating:
-| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
+| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}
 |-
 ! Platform:
-| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms|existing values only}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies|existing values only}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies|existing values only}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date|input type=datepicker}}}
 |-
 ! Release Date Type:
 | {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
-|-
-! Release Date:
-| {{{field|ReleaseDate|property=Has release date}}}
 |-
 ! Product Code Type:
 | {{{field|ProductCodeType|property=Has product code type|input type=dropdown}}}

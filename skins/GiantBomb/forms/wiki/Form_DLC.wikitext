@@ -11,7 +11,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Game}:
-| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |}
 {{{end template}}}
 '''Description:'''
@@ -20,17 +20,14 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|save}}}
 {{{standard input|preview}}}
 {{{standard input|cancel}}}
-{{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}
+{{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Game: 
-| {{{field|Game|mandatory|property=Has games|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|Game|mandatory|property=Has games|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |-
 ! DLC Name:
 | {{{field|Name|mandatory|property=Has name}}}
-|-
-! Guid:
-| {{{field|Guid|property=Has guid}}}
 |-
 ! Image: 
 | {{{field|Image|uploadable|image preview|property=Has image}}}
@@ -48,19 +45,19 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Deck|property=Has deck}}}
 |-
 ! Platform:
-| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms|existing values only}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies|existing values only}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies|existing values only}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date|input type=datepicker}}}
 |-
 ! Release Date Type:
 | {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
-|-
-! Release Date:
-| {{{field|ReleaseDate|property=Has release date}}}
 |-
 ! DLC Types:
 | {{{field|DlcTypes|property=Has dlc types|input type=listbox}}}

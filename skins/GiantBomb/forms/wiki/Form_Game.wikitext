@@ -7,16 +7,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Game}}}
+{{{for template|Game}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Name: 
 | {{{field|Name|mandatory|property=Has name}}}
 |-
-! Guid: 
-| {{{field|Guid|property=Has guid}}}
-|-
-! Aliases: 
+! Aliases: {{#info:Separate aliases with a comma.}}
 | {{{field|Aliases|property=Has aliases}}}
 |-
 ! Image: 
@@ -35,37 +32,37 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|ReleaseDate|property=Has release date|input type=datepicker}}}
 |-
 ! Characters:
-| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters|existing values only}}}
 |-
 ! Concepts:
-| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts|existing values only}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies|existing values only}}}
 |-
 ! Franchises:
-| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises|existing values only}}}
 |-
 ! Genres:
-| {{{field|Genres|property=Has genres|input type=tokens|values from category=Genres}}}
+| {{{field|Genres|property=Has genres|input type=tokens|values from category=Genres|existing values only}}}
 |-
 ! Locations:
-| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations|existing values only}}}
 |-
 ! Objects:
-| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects|existing values only}}}
 |-
 ! Platforms:
-| {{{field|Platforms|property=Has platforms|input type=tokens|values from category=Platforms}}}
+| {{{field|Platforms|property=Has platforms|input type=tokens|values from category=Platforms|existing values only}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies|existing values only}}}
 |-
-! Games:
-| {{{field|Games|property=Has similar games|input type=tokens|values from category=Games}}}
+! Similar Games:
+| {{{field|Games|property=Has similar games|input type=tokens|values from category=Games|existing values only}}}
 |-
 ! Themes:
-| {{{field|Themes|property=Has themes|input type=tokens|values from category=Themes}}}
+| {{{field|Themes|property=Has themes|input type=tokens|values from category=Themes|existing values only}}}
 |}
 {{{end template}}}
 

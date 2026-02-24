@@ -7,16 +7,13 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Theme}}}
+{{{for template|Theme}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Name: 
 | {{{field|Name|mandatory|property=Has name}}}
 |-
-! Guid: 
-| {{{field|Guid|property=Has guid}}}
-|-
-! Aliases: 
+! Aliases: {{#info:Separate aliases with a comma.}}
 | {{{field|Aliases|property=Has aliases}}}
 |-
 ! Image: 
