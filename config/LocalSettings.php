@@ -236,7 +236,10 @@ $wgAllowExternalImagesFrom = [
     'https://giantbomb.com/',
     'http://giantbomb.com/',
     'https://media.giantbomb.com/',
+    'http://origin.giantbomb.com/',
+    'https://origin.giantbomb.com/',
     'https://storage.googleapis.com/',
+    'http://localhost:9000',
 ];
 $wgUseInstantCommons = false;
 
@@ -254,10 +257,32 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
     $wgAWSRegion = 'auto';
     $wgAWSBucketName = getenv('GCS_BUCKET_NAME') ?: 'gb_wiki_mw';
 
-    $wgFileBackends['s3']['endpoint'] = 'https://storage.googleapis.com';
-    $wgFileBackends['s3']['use_path_style_endpoint'] = true;
+    if ($gcsAccessKey === "dev") {
+        //LOCAL
+        $wgFileBackends["s3"]["endpoint"] = "http://local-gcs:9000";
+        $wgFileBackends["s3"]["use_path_style_endpoint"] = true;
 
-    $wgAWSBucketDomain = 'storage.googleapis.com/$1';
+        $wgAWSBucketDomain = "http://localhost:9000/$wgAWSBucketName";
+        $wgAWSS3ExternalURL = "http://localhost:9000/$wgAWSBucketName";
+
+        // This tells MediaWiki to get the image from MinIO for the UI
+        $wgLocalFileRepo = [
+            "class" => "LocalRepo",
+            "name" => "local",
+            "directory" => $wgUploadDirectory,
+            "scriptDirUrl" => $wgScriptPath,
+            "url" => "http://localhost:9000/$wgAWSBucketName", // IMPORTANT: Host-accessible URL
+            "hashLevels" => 2,
+            "thumbScriptUrl" => $wgScriptPath . "/thumb.php",
+            "transformVia404" => false,
+            "backend" => "s3",
+        ];
+    } else {
+        $wgFileBackends["s3"]["endpoint"] = "https://storage.googleapis.com";
+        $wgFileBackends["s3"]["use_path_style_endpoint"] = true;
+
+        $wgAWSBucketDomain = 'storage.googleapis.com/$1';
+    }
 
     $wgAWSRepoHashLevels = 2;
     $wgAWSRepoDeletedHashLevels = 3;
@@ -430,7 +455,7 @@ $wgRestrictDisplayTitle = false;
 if ( $wikiEnv === 'dev' ) {
     $wgShowExceptionDetails = true;
     $wgDevelopmentWarnings = true;
-    error_reporting( -1 );
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
     ini_set( 'display_errors', 1 );
     $smwgIgnoreUpgradeKeyCheck = true;
 

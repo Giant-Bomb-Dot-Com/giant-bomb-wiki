@@ -4,6 +4,7 @@
 ||||| Guid (property=Has guid)
 ||||| Aliases (property=Has aliases)
 ||||| Image (property=Has image)
+||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 ||||| Abbreviation (property=Has abbreviation)
 ||||| FoundedDate (property=Has founded date)
@@ -42,6 +43,8 @@ The page structure follows the classic Giant Bomb wiki design:
 || Aliases || Alternative names (comma-separated)
 |-
 || Image || Company logo/image filename
+|-
+|| BackgroundImage || Background image filename
 |-
 || Deck || Short description shown in hero
 |-
@@ -109,6 +112,7 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{Abbreviation|}}}|{{#set:Has abbreviation={{{Abbreviation}}}}}
 }}{{#if:{{{FoundedDate|}}}|{{#set:Has founded date={{{FoundedDate}}}}}
@@ -139,8 +143,10 @@ HTML Structure
 {{#if:{{{FoundedDate|}}}|<meta itemprop="foundingDate" content="{{{FoundedDate}}}" />|}}
 {{#if:{{{Country|}}}|<meta itemprop="addressCountry" content="{{{Country}}}" />|}}
 {{#if:{{{Website|}}}|<meta itemprop="url" content="{{{Website}}}" />|}}
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game company. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} make?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has developed and published numerous video games." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Where is {{{Name|}}} located?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is located in {{#if:{{{City|}}}|{{{City}}}, |}}{{#if:{{{Country|}}}|{{{Country}}}|}}." /></div></div></div>
-<div class="gb-company-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game company. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} make?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has developed and published numerous video games." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Where is {{{Name|}}} located?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is located in {{#if:{{{City|}}}|{{{City}}}, |}}{{#if:{{{Country|}}}|{{{Country}}}|}}." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-company-hero">
 <div class="gb-company-hero-container">
 <div class="gb-company-hero-cover"></div>
 <div class="gb-company-hero-info">
