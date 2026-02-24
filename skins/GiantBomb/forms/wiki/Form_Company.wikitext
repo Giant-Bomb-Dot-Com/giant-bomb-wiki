@@ -1,0 +1,84 @@
+<noinclude>
+This is the "Company" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Company|super_page=Companies}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Company}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Aliases: {{#info:Separate aliases with a comma.}}
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|uploadable|image preview|property=Has image}}}
+|-
+! BackgroundImage: 
+| {{{field|BackgroundImage|uploadable|image preview|property=Has background image}}}
+|-
+! Caption:
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck:
+| {{{field|Deck|property=Has deck}}}
+|-
+! Abbreviation:
+| {{{field|Abbreviation|property=Has abbreviation}}}
+|-
+! Founded Date:
+| {{{field|FoundedDate|property=Has founded date|input type=datepicker}}}
+|-
+! Address:
+| {{{field|Address|property=Has address}}}
+|-
+! City:
+| {{{field|City|property=Has city}}}
+|-
+! Country:
+| {{{field|Country|property=Has country}}}
+|-
+! State:
+| {{{field|State|property=Has state}}}
+|-
+! Phone:
+| {{{field|Phone|property=Has phone}}}
+|-
+! Website:
+| {{{field|Website|property=Has website}}}
+|-
+! Characters:
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters|existing values only}}}
+|-
+! Concepts:
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts|existing values only}}}
+|-
+! Locations:
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations|existing values only}}}
+|-
+! Objects:
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects|existing values only}}}
+|-
+! People:
+| {{{field|People|property=Has people|input type=tokens|values from category=People|existing values only}}}
+|-
+! Developed Games:
+| {{{field|Developed|property=Has developed games|input type=tokens|values from category=Games|existing values only}}}
+|-
+! Published Games:
+| {{{field|Published|property=Has published games|input type=tokens|values from category=Games|existing values only}}}
+|}
+{{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
+</includeonly>
