@@ -41,6 +41,17 @@ class PdoDbWrapper implements DbInterface
         return $this->fetchAllObjects($sql, ['continue' => $continue]);
     }
 
+    public function getByOverwrittenFlag(string $table, array $fields)
+    {
+        $fieldString = implode(',',$fields);
+
+        $sql = "SELECT {$fieldString}
+                  FROM {$table} AS o
+                 WHERE o.deleted = 0 AND o.overwritten = 1";
+
+        return $this->fetchAllObjects($sql);
+    }
+
     public function getPageName(string $table, int $id)
     {
         $sql = "SELECT mw_page_name FROM {$table} WHERE id = :id";
@@ -73,6 +84,22 @@ class PdoDbWrapper implements DbInterface
 
         $fields = implode(',', $subQueries);
         $sql = "SELECT {$fields} FROM {$table} AS o WHERE o.id = :id";
+
+        return $this->fetchObject($sql, ['id' => $id]);
+    }
+
+    public function getRelatedIds(string $table, array $relationsMap, int $id)
+    {
+        $subQueries = [];
+        foreach ($relationsMap as $key => $relation) {
+            $subQueries[] = sprintf(
+                "(SELECT GROUP_CONCAT(%s) FROM %s WHERE %s = %s) AS %s",
+                   $relation['relationField'], $relation['table'], $relation['mainField'], $id, $key,
+            );
+        }
+
+        $fields = implode(',', $subQueries);
+        $sql = "SELECT {$fields} FROM {$table} WHERE id = :id";
 
         return $this->fetchObject($sql, ['id' => $id]);
     }
