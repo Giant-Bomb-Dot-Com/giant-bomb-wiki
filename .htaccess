@@ -4,6 +4,9 @@
   # Redirect / to the main page
   RewriteRule ^/?$ /wiki/Main_Page [L,R=301]
 
+  # Serve favicon from skin assets at the root path
+  RewriteRule ^/?favicon\.ico$ /skins/GiantBomb/resources/assets/favicon.ico [L]
+
   # If the app is served under a path prefix (/wiki), route script endpoints and assets to docroot
   # so that generated links like /wiki/load.php still hit the actual /load.php file.
   RewriteRule ^/?wiki/load\.php$ /load.php [L,QSA]
