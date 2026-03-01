@@ -1,5 +1,9 @@
 # The Giant Bomb Wiki
 
+We're migrating the Giant Bomb Wiki from the old technology owned by Fandom to MediaWiki. Currently, wiki content is live and you can edit directly from a desktop browser, but we can use help getting the wiki up to full power! [More details here](https://www.reddit.com/r/giantbomb/comments/1n1wncz/lets_talk_about_the_giant_bomb_wiki_and_how_you/).
+
+## About 
+
 A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.6.
 
 ## Quick Start (Recommended)
