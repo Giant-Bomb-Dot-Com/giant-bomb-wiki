@@ -444,7 +444,7 @@ if ( $wikiEnv === 'dev' ) {
     $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
 }
 
-$wgFavicon = "$wgStylePath/GiantBomb/resources/assets/favicon.ico";
+$wgFavicon = '/favicon.ico';
 
 # Scribunto/Lua
 $wgScribuntoDefaultEngine = 'luastandalone';
