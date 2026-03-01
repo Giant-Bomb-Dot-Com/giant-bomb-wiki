@@ -199,7 +199,7 @@ class PdoDbWrapper implements DbInterface
             }
         }
 
-        $sql = "SELECT id, name, description FROM {$table} WHERE ".$clause;
+        $sql = "SELECT id, name, description, mw_formatted_description FROM {$table} WHERE ".$clause;
 
         return $this->fetchAllObjects($sql, $params);
     }
@@ -296,7 +296,13 @@ class PdoDbWrapper implements DbInterface
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchObject();
+        $result = $stmt->fetchObject();
+
+        if (is_bool($result)) {
+            return new stdClass();
+        }
+
+        return $result;
     }
 
     private function fetchAllObjects(string $sql, array $params = []): array 
