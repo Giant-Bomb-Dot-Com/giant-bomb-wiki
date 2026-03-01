@@ -52,7 +52,7 @@ This template is called automatically by <code><nowiki>{{CompanyEnd}}</nowiki></
   |outro=</dd>
 }}
 
-{{#if:{{#show:{{FULLPAGENAME}}|?Has city}}{{#show:{{FULLPAGENAME}}|?Has country}}|<dt>Location</dt><dd>{{#show:{{FULLPAGENAME}}|?Has city|default=}}{{#if:{{#show:{{FULLPAGENAME}}|?Has state}}|, {{#show:{{FULLPAGENAME}}|?Has state}}}}{{#if:{{#show:{{FULLPAGENAME}}|?Has country}}|, {{#show:{{FULLPAGENAME}}|?Has country}}}}</dd>|}}
+{{#if:{{#show:{{FULLPAGENAME}}|?Has city}}{{#show:{{FULLPAGENAME}}|?Has country}}|<dt>Location</dt><dd>{{#show:{{FULLPAGENAME}}|?Has city|default=}}{{#if:{{#show:{{FULLPAGENAME}}|?Has state}}|{{#if:{{#show:{{FULLPAGENAME}}|?Has city}}|, }}{{#show:{{FULLPAGENAME}}|?Has state}}}}{{#if:{{#show:{{FULLPAGENAME}}|?Has country}}|{{#if:{{#show:{{FULLPAGENAME}}|?Has city}}{{#if:{{#show:{{FULLPAGENAME}}|?Has state}}|1}}|, }}{{#show:{{FULLPAGENAME}}|?Has country}}}}</dd>|}}
 
 {{#show:{{FULLPAGENAME}}
   |?Has website
