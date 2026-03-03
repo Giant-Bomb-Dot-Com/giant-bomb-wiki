@@ -11,26 +11,23 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Game:
-| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |}
 {{{end template}}}
 '''Description:'''
-{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|free text|editor=wikieditor|rows=10}}}
 {{{standard input|summary}}}
 {{{standard input|save}}}
 {{{standard input|preview}}}
 {{{standard input|cancel}}}
-{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
+{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Game: 
-| {{{field|Game|mandatory|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|Game|mandatory|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |-
 ! Release Name:
 | {{{field|Name|mandatory|property=Has name}}}
-|-
-! Guid:
-| {{{field|Guid|property=Has guid}}}
 |-
 ! Image:
 | {{{field|Image|property=Has image}}}
@@ -39,16 +36,16 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Region|mandatory|property=Has region}}}
 |-
 ! Rating:
-| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
+| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings|existing values only}}}
 |-
 ! Platform:
-| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms|existing values only}}}
 |-
 ! Developers:
-| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies|existing values only}}}
 |-
 ! Publishers:
-| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies|existing values only}}}
 |-
 ! Release Date Type:
 | {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
@@ -72,16 +69,16 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|WidescreenSupport|property=Has widescreen support|input type=dropdown}}}
 |-
 ! Resolutions:
-| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions}}}
+| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions|existing values only}}}
 |-
-! Sound Systems
-| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems}}}
+! Sound Systems:
+| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems|existing values only}}}
 |-
 ! Single Player Features:
-| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features}}}
+| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features|existing values only}}}
 |-
 ! Multiplayer Features:
-| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features}}}
+| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features|existing values only}}}
 |-
 ! Minimum Players:
 | {{{field|MinimumPlayers|property=Has minimum players|default=1}}}

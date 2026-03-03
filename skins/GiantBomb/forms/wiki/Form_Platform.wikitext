@@ -7,14 +7,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Platform}}}
+{{{for template|Platform}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Name: 
 | {{{field|Name|mandatory|property=Has name}}}
-|-
-! Guid: 
-| {{{field|Guid|property=Has guid}}}
 |-
 ! Aliases: 
 | {{{field|Aliases|property=Has aliases}}}
@@ -50,7 +47,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|OriginalPrice|property=Has original price}}}
 |-
 ! Manufacturer: 
-| {{{field|Manufacturer|property=Has manufacturer|input type=tokens|values from category=Companies}}}
+| {{{field|Manufacturer|property=Has manufacturer|input type=tokens|values from category=Companies|existing values only}}}
 |}
 {{{end template}}}
 
