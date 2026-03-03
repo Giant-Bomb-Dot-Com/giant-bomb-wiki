@@ -1,0 +1,20 @@
+<noinclude>
+This is the "Single Player Feature" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Single Player Feature|super_page=Single Player Features}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Single Player Feature}}}{{{field|Guid|property=Has guid|hidden|restricted}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Description:
+| {{{standard input|free text|editor=wikieditor|rows=20}}}
+|}
+{{{end template}}}
+</includeonly>
