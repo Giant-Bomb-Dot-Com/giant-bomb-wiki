@@ -1,0 +1,92 @@
+<noinclude>
+This is the "Releases" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Releases}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Releases}}}
+{| class="formtable"
+|-
+! Game:
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+|}
+{{{end template}}}
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
+{{{for template|ReleaseSubobject|multiple|add button text=Add release|label=Releases|displayed fields when minimized=Name,Region,Platform}}}
+{| class="formtable"
+|-
+! Game: 
+| {{{field|Game|mandatory|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+|-
+! Release Name:
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! Guid:
+| {{{field|Guid|property=Has guid}}}
+|-
+! Image:
+| {{{field|Image|property=Has image}}}
+|-
+! Region:
+| {{{field|Region|mandatory|property=Has region}}}
+|-
+! Rating:
+| {{{field|Rating|property=Has rating|input type=dropdown|values from category=Ratings}}}
+|-
+! Platform:
+| {{{field|Platform|mandatory|property=Has platforms|input type=tokens|max values=1|values from category=Platforms}}}
+|-
+! Developers:
+| {{{field|Developers|property=Has developers|input type=tokens|values from category=Companies}}}
+|-
+! Publishers:
+| {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies}}}
+|-
+! Release Date Type:
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
+|-
+! Release Date:
+| {{{field|ReleaseDate|property=Has release date}}}
+|-
+! Product Code Type:
+| {{{field|ProductCodeType|property=Has product code type|input type=dropdown}}}
+|-
+! Product Code:
+| {{{field|ProductCode|property=Has product code}}}
+|-
+! Company Code Type:
+| {{{field|CompanyCodeType|property=Has company code type|input type=dropdown}}}
+|-
+! Company Code:
+| {{{field|CompanyCode|property=Has company code}}}
+|-
+! Widescreen Support:
+| {{{field|WidescreenSupport|property=Has widescreen support|input type=dropdown}}}
+|-
+! Resolutions:
+| {{{field|Resolutions|property=Has resolutions|input type=listbox|values from category=Resolutions}}}
+|-
+! Sound Systems
+| {{{field|SoundSystems|property=Has sound systems|input type=listbox|values from category=Sound Systems}}}
+|-
+! Single Player Features:
+| {{{field|SinglePlayerFeatures|property=Has single player features|input type=listbox|values from category=Single Player Features}}}
+|-
+! Multiplayer Features:
+| {{{field|MultiplayerFeatures|property=Has multiplayer features|input type=listbox|values from category=Multiplayer Features}}}
+|-
+! Minimum Players:
+| {{{field|MinimumPlayers|property=Has minimum players|default=1}}}
+|-
+! Maximum Players:
+| {{{field|MaximumPlayers|property=Has maximum players}}}
+|}
+{{{end template}}}

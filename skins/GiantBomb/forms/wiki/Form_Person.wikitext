@@ -1,0 +1,78 @@
+<noinclude>
+This is the "Person" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Person|super_page=People}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Person}}}
+{| class="formtable"
+|-
+! Name: 
+| {{{field|Name|mandatory|property=Has name}}}
+|-
+! People: 
+| {{{field|Guid|property=Has people}}}
+|-
+! Aliases: 
+| {{{field|Aliases|property=Has aliases}}}
+|-
+! Image: 
+| {{{field|Image|uploadable|image preview|property=Has image}}}
+|-
+! BackgroundImage: 
+| {{{field|BackgroundImage|uploadable|image preview|property=Has background image}}}
+|-
+! Caption: 
+| {{{field|Caption|property=Has caption}}}
+|-
+! Deck: 
+| {{{field|Deck|property=Has deck}}}
+|-
+! LastName: 
+| {{{field|LastName|property=Has last name}}}
+|-
+! Gender: 
+| {{{field|Gender|property=Has gender|input type=tokens}}}
+|-
+! Hometown: 
+| {{{field|Hometown|property=Has hometown}}}
+|-
+! Birthday: 
+| {{{field|Birthday|property=Has birthday}}}
+|-
+! Death: 
+| {{{field|Death|property=Has death}}}
+|-
+! Website: 
+| {{{field|Website|property=Has website}}}
+|-
+! Characters: 
+| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
+|-
+! Concepts: 
+| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
+|-
+! Franchises: 
+| {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises}}}
+|-
+! Locations: 
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
+|-
+! Objects: 
+| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
+|-
+! People: 
+| {{{field|People|property=Has similar people|input type=tokens|values from category=People}}}
+|}
+{{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
+</includeonly>

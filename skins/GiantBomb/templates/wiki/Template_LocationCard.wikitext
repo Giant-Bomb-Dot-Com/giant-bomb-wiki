@@ -36,10 +36,12 @@ Called from Module:LocationQuery not directly used.
     <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
         <div class="listing-card-image"><!--
             -->{{#if: {{{image|}}} | 
-                {{{image}}}
-                | 
-                https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png
-            }}
+                {{#ifeq: {{#sub: {{{image|}}} | 0 | 4 }} | http
+                | {{{image}}}
+                | [[File:{{{image}}}|300px|link=]]
+                }}
+                | https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png <!-- Default Fallback -->
+                }}
         </div>
         <div class="listing-card-info">
             <h3 class="listing-card-title">{{{title}}}</h3>

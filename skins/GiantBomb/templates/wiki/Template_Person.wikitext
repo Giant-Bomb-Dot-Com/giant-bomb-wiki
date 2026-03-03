@@ -4,6 +4,7 @@
 ||||| Guid (property=Has guid)
 ||||| Aliases (property=Has aliases)
 ||||| Image (property=Has image)
+||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 ||||| Gender (property=Has gender)
 ||||| Birthday (property=Has birthday)
@@ -39,6 +40,8 @@ composers, journalists, and other notable figures.
 || Aliases || Alternative names (comma-separated)
 |-
 || Image || Person's photo filename
+|-
+|| BackgroundImage || Background image filename
 |-
 || Deck || Short description shown in hero
 |-
@@ -98,6 +101,7 @@ SMW Property Storage
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{Gender|}}}|{{#set:Has gender={{{Gender}}}}}
 }}{{#if:{{{Birthday|}}}|{{#set:Has birthday={{{Birthday}}}}}
@@ -125,8 +129,10 @@ HTML Structure
 {{#if:{{{Country|}}}|<meta itemprop="nationality" content="{{{Country}}}" />|}}
 {{#if:{{{Birthday|}}}|<meta itemprop="birthDate" content="{{{Birthday}}}" />|}}
 {{#if:{{{Death|}}}|<meta itemprop="deathDate" content="{{{Death}}}" />|}}
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a person in the video game industry. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} work on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has worked on numerous video games throughout their career." /></div></div></div>
-<div class="gb-person-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a person in the video game industry. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games did {{{Name|}}} work on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} has worked on numerous video games throughout their career." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-person-hero">
 <div class="gb-person-hero-container">
 <div class="gb-person-hero-cover"></div>
 <div class="gb-person-hero-info">
