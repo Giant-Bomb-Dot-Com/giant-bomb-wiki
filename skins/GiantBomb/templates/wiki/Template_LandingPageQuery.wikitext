@@ -19,6 +19,7 @@ __NOTOC__
             |sort_by={{{sort_by|{{#urlget:sort_by}}}}}
           }}
       </div>
+      <div class="filter-footer">[[Form:{{{name}}}|<span type="submit" class="button gb-button">Create New {{{name}}} Page</span>]]</div>
     </div>
     <div class="listing-main">
        <!-- This remains your main display logic -->

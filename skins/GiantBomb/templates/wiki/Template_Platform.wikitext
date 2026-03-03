@@ -4,6 +4,7 @@
 ||||| Guid (property=Has guid)
 ||||| Aliases (property=Has aliases)
 ||||| Image (property=Has image)
+||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 ||||| ShortName (property=Has short name)
 ||||| ReleaseDate (property=Has release date)
@@ -30,6 +31,8 @@ Platforms are gaming hardware systems - consoles, handhelds, computers, and othe
 || Aliases || Alternative names (comma-separated)
 |-
 || Image || Platform image filename
+|-
+|| BackgroundImage || Background image filename
 |-
 || Deck || Short description shown in hero
 |-
@@ -72,6 +75,7 @@ SMW Property Storage
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{ShortName|}}}|{{#set:Has short name={{{ShortName}}}}}
 }}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
@@ -89,8 +93,10 @@ HTML Structure
 <meta itemprop="name" content="{{{Name|}}}" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 {{#if:{{{ReleaseDate|}}}|<meta itemprop="releaseDate" content="{{{ReleaseDate}}}" />|}}
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} is a video game platform. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did the {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are on {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} has a library of video games available to play." /></div></div></div>
-<div class="gb-platform-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} is a video game platform. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did the {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are on {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} has a library of video games available to play." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-platform-hero">
 <div class="gb-platform-hero-container">
 <div class="gb-platform-hero-cover"></div>
 <div class="gb-platform-hero-info">

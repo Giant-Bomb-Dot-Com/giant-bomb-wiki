@@ -4,6 +4,7 @@
 ||| Guid (property=Has guid)
 ||| Aliases (property=Has aliases)
 ||| Image (property=Has image)
+||| BackgroundImage (property=Has background image)
 ||| Caption (property=Has caption)
 ||| Deck (property=Has deck)
 ||| ReleaseDate (property=Has release date)
@@ -41,6 +42,8 @@ The page structure follows the classic Giant Bomb wiki design:
 | Aliases || Alternative names (comma-separated)
 |-
 | Image || Cover image filename
+|-
+| BackgroundImage || Background image filename
 |-
 | Deck || Short description shown in hero
 |-
@@ -97,6 +100,7 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption}}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
@@ -124,8 +128,10 @@ HTML Structure
 <meta itemprop="name" content="{{{Name|}}}" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 {{#if:{{{ReleaseDate|}}}|<meta itemprop="datePublished" content="{{{ReleaseDate}}}" />|}}
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What platforms is {{{Name|}}} on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is available on {{{Platforms|}}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}" /></div></div></div>
-<div class="gb-game-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What platforms is {{{Name|}}} on?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is available on {{{Platforms|}}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} was released {{#if:{{{ReleaseDate|}}}|on {{{ReleaseDate}}}|}}" /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-game-hero">
 <div class="gb-game-hero-container">
 <div class="gb-game-hero-cover"></div>
 <div class="gb-game-hero-info">

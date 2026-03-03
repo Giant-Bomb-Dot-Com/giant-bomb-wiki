@@ -43,7 +43,7 @@ This template is called automatically by <code><nowiki>{{PlatformEnd}}</nowiki><
   |format=list
   |link=none
   |default=
-  |intro=<dt>Launch price</dt><dd>
+  |intro=<dt>Launch price</dt><dd>$
   |outro=</dd>
 }}
 

@@ -4,6 +4,7 @@
 ||||| Guid (property=Has guid)
 ||||| Aliases (property=Has aliases)
 ||||| Image (property=Has image)
+||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 ||||| Characters (property=Has characters)
 ||||| Concepts (property=Has concepts)
@@ -29,6 +30,8 @@ Locations are places that appear in video games, such as cities, planets, dungeo
 || Aliases || Alternative names (comma-separated)
 |-
 || Image || Location image filename
+|-
+|| BackgroundImage || Background image filename
 |-
 || Deck || Short description shown in hero
 |-
@@ -66,6 +69,7 @@ SMW Property Storage
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
+}}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
 }}{{#arraymap:{{{Characters|}}}|,|@@|{{#set:Has characters=@@}}
 }}{{#arraymap:{{{Concepts|}}}|,|@@|{{#set:Has concepts=@@}}
@@ -81,8 +85,10 @@ HTML Structure
 --><div class="gb-location-page" itemscope itemtype="https://schema.org/Place">
 <meta itemprop="name" content="{{{Name|}}} - Video Game Location" />
 <meta itemprop="description" content="{{{Deck|}}}" />
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}} in video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a location that appears in video games. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games feature {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears as a location in various video games." /></div></div></div>
-<div class="gb-location-hero">
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}} in video games?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a location that appears in video games. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games feature {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears as a location in various video games." /></div></div></div><!--
+-->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+--><div class="gb-location-hero">
 <div class="gb-location-hero-container">
 <div class="gb-location-hero-cover"></div>
 <div class="gb-location-hero-info">

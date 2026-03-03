@@ -12,6 +12,12 @@
   padding: 20px;
 }
 
+.game-filter .gb-button {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
 .filter-title {
   margin: 0 0 20px 0;
   font-size: 1.2rem;
@@ -22,16 +28,23 @@
 
 .filter-footer {
   margin: 20px 0 0 0;
-  font-size: 1.2rem;
   color: #fff;
-  border-top: 2px solid #444;
-  padding-top: 10px;
 }
 
-.filter-footer button {
+.filter-footer a {
+  text-decoration: none;
+}
+
+.filter-footer .button {
+  border: 1px solid #555;
   display: block;
   text-align: center;
-  width: 100%;
+}
+
+.filter-footer .button:hover {
+  border: 1px solid #b05f1c;
+  background: #333;
+  color: #fff;
 }
 
 /* Filter Group */

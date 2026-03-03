@@ -66,6 +66,20 @@ class SkinGiantBomb extends SkinTemplate {
             return;
         }
 
+        $request = $out->getRequest();
+        $action = $request->getText( 'action', 'view' );
+        $isViewAction = $action === 'view' || $action === 'purge' || $action === '';
+        $isFrontFacing = $isViewAction
+            && !$title->isSpecialPage()
+            && $title->getNamespace() >= 0
+            && $title->getNamespace() % 2 === 0;
+
+        if ( $isFrontFacing ) {
+            $out->addHeadItem( 'pubnation',
+                '<script src="//scripts.pubnation.com/tags/4812f039-a343-4e18-89f9-d9461276ff90.js" async="" data-noptimize="1" data-cfasync="false"></script>'
+            );
+        }
+
         $pageTitle = $title->getText();
         
         // Process game, character, or franchise pages rendered via templates
