@@ -9,7 +9,13 @@
 ||||| Game (property=Has game)
 ||||| Platform (property=Has platform)
 ||||| Region (property=Has region)
+||||| ReleaseDateType (property=Has release date type)
 ||||| ReleaseDate (property=Has release date)
+||||| MonthPart
+||||| MonthYearPart
+||||| QuarterPart
+||||| QuarterYearPart
+||||| YearPart
 ||||| Rating (property=Has rating)
 ||||| Developers (property=Has developers)
 ||||| Publishers (property=Has publishers)
@@ -46,6 +52,8 @@ Releases represent specific regional/platform releases of games - tracking relea
 |-
 || Region || Region (e.g., North America, Europe)
 |-
+|| ReleaseDate || Release date type (None, Full, Month, Quarter, Year)
+|-
 || ReleaseDate || Release date in this region
 |-
 || Rating || Content rating (e.g., M - Mature)
@@ -72,6 +80,7 @@ Releases represent specific regional/platform releases of games - tracking relea
 | Game = Games/The_Legend_of_Zelda:_Breath_of_the_Wild
 | Platform = Platforms/Nintendo_Switch
 | Region = Regions/North_America
+| ReleaseDateType = Full
 | ReleaseDate = 2017-03-03
 | Rating = Ratings/E10+
 | Publishers = Companies/Nintendo
@@ -94,7 +103,8 @@ SMW Property Storage
 }}{{#if:{{{Game|}}}|{{#set:Has game={{{Game}}}}}
 }}{{#if:{{{Platform|}}}|{{#set:Has platform={{{Platform}}}}}
 }}{{#if:{{{Region|}}}|{{#set:Has region={{{Region}}}}}
-}}{{#if:{{{ReleaseDate|}}}|{{#set:Has release date={{{ReleaseDate}}}}}
+}}{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}
+}}{{#set:Has release date={{#invoke:DateHelper|getReleaseDateInISOFormat|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
 }}{{#if:{{{Rating|}}}|{{#set:Has rating={{{Rating}}}}}
 }}{{#arraymap:{{{Developers|}}}|,|@@|{{#set:Has developers=@@}}
 }}{{#arraymap:{{{Publishers|}}}|,|@@|{{#set:Has publishers=@@}}

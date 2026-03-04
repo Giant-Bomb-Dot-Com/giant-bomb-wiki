@@ -180,11 +180,15 @@ class ImportWikiTemplates extends Maintenance
             "Form:Game" => "$formDir/Form_Game.wikitext",
             "Form:Genre" => "$formDir/Form_Genre.wikitext",
             "Form:Location" => "$formDir/Form_Location.wikitext",
+            "Form:MultiplayerFeature" => "$formDir/Form_MultiplayerFeature.wikitext",
             "Form:Object" => "$formDir/Form_Object.wikitext",
             "Form:Person" => "$formDir/Form_Person.wikitext",
             "Form:Platform" => "$formDir/Form_Platform.wikitext",
             "Form:Rating" => "$formDir/Form_Rating.wikitext",
             "Form:Releases" => "$formDir/Form_Releases.wikitext",
+            "Form:Resolution" => "$formDir/Form_Resolution.wikitext",
+            "Form:SingleplayerFeature" => "$formDir/Form_SingleplayerFeature.wikitext",
+            "Form:SoundSystem" => "$formDir/Form_SoundSystem.wikitext",
             "Form:Theme" => "$formDir/Form_Theme.wikitext",
         ];
 
@@ -197,6 +201,9 @@ class ImportWikiTemplates extends Maintenance
 
             "Template:LandingNav" => "$templateDir/Template_LandingNav.wikitext",
             "Template:LandingPageQuery" => "$templateDir/Template_LandingPageQuery.wikitext",
+
+            "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
+            "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
 
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",

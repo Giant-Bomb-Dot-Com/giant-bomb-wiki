@@ -21,8 +21,10 @@ This template is called automatically by <code><nowiki>{{PlatformEnd}}</nowiki><
 }}
 
 {{#show:{{FULLPAGENAME}}
-  |?Has release date
+  |?Has release date#ISO
+  |?Has release date type
   |format=list
+  |template=DateDisplay
   |link=none
   |default=
   |intro=<dt>Release date</dt><dd>

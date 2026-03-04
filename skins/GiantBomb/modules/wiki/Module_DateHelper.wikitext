@@ -1,0 +1,135 @@
+local p = {}
+
+-- START FORM DEFINITION METHODS --
+-- Fetches value of given param from the page's smw data
+local function fetchValue(paramName)
+    local pageName = mw.title.getCurrentTitle().prefixedText
+    local title = mw.title.new(pageName)
+    if not title then return nil end
+    
+    local content = title:getContent()
+    if not content then return nil end
+
+    local pattern = "|%s*" .. paramName .. "%s*=%s*([^|%}%c]+)"
+    local value = content:match(pattern)
+    return value and mw.text.trim(value) or nil
+end
+
+function p.getExistingValue(frame)
+    local param = frame.args[1]
+    return fetchValue(param) or nil
+end
+
+function p.hasLegacyDate(frame)
+    local releaseDateType = fetchValue("ReleaseDateType")
+    local releaseDate = fetchValue("ReleaseDate")
+    
+    if releaseDate ~= "" and releaseDate ~= nil and releaseDateType ~= "Full" then
+        return "true"
+    end
+    
+    return nil
+end
+-- END FORM DEFINITION METHODS --
+
+-- START TEMPLATE METHODS --
+-- Returns the string formatted date using smw date parts
+function p.getDisplayDate(frame)
+    local args = frame.args
+    if args.ReleaseDate == nil or args.ReleaseDate == "" then
+        args = frame:getParent().args
+    end
+
+    local dateType = args.ReleaseDateType or ""
+    
+    if dateType == "Full" then
+        return args.ReleaseDate or ""
+        
+    elseif dateType == "Month" then
+        local month = args.MonthPart or ""
+        return month .. " " .. (args.MonthYearPart or "")
+        
+    elseif dateType == "Quarter" then
+        return args.QuarterPart .. " " .. (args.QuarterYearPart or "")
+        
+    elseif dateType == "Year" then
+        return args.YearPart or ""
+        
+    else
+        return args.ReleaseDate or ""
+    end
+end
+
+-- Returns the string formatted date from iso date - used by Template:DateDisplay
+function p.formatForDisplay(frame)
+    local dateStr = frame.args[1] or ""
+    local dateType = frame.args.type or ""
+    
+    if dateStr == "" then 
+        return ""
+    end
+
+    local year, month = dateStr:match("^(%d%d%d%d)[/-](%d%d)")
+    if not year or not month then 
+        return dateStr
+    end
+
+    if dateType == "Quarter" then
+        local qMap = { ["01"]="Q1", ["04"]="Q2", ["07"]="Q3", ["10"]="Q4" }
+        return (qMap[month] or "Q1") .. " " .. year
+    end
+
+    if dateType == "Month" then
+        local mMap = {
+            ["01"]="January", ["02"]="February", ["03"]="March", ["04"]="April",
+            ["05"]="May", ["06"]="June", ["07"]="July", ["08"]="August",
+            ["09"]="September", ["10"]="October", ["11"]="November", ["12"]="December"
+        }
+        return (mMap[month] or month) .. " " .. year
+    end
+    
+    if dateType == "Year" then 
+        return year
+    end
+    
+    return dateStr
+end
+
+-- Returns ISO formatted date using smw date parts
+function p.getReleaseDateInISOFormat(frame)
+    local args = frame.args
+    if args.ReleaseDate == nil or args.ReleaseDate == "" then
+        args = frame:getParent().args
+    end
+    
+    local dateType = args.ReleaseDateType or ""
+    
+    local mMap = {
+        January="01", February="02", March="03", April="04", May="05", June="06",
+        July="07", August="08", September="09", October="10", November="11", December="12"
+    }
+
+    if dateType == "Full" then
+        return args.ReleaseDate or ""
+        
+    elseif dateType == "Month" then
+        local year = args.MonthYearPart or ""
+        local month = mMap[args.MonthPart] or "01"
+        return year .. "-" .. month
+        
+    elseif dateType == "Quarter" then
+        local qMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
+        local year = args.QuarterYearPart or ""
+        local month = qMap[args.QuarterPart] or "01"
+        return year .. "-" .. month
+        
+    elseif dateType == "Year" then
+        return args.YearPart or ""
+        
+    else
+        return args.ReleaseDate or ""
+    end
+end
+-- END TEMPLATE METHODS --
+
+return p

@@ -11,6 +11,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 ===SMW Properties Used===
 * <code>Has name</code> - Game title
 * <code>Has release date</code> - Release date
+* <code>Has release date type</code> - Release date type
 * <code>Has platforms</code> - Platform links
 * <code>Has developers</code> - Developer company links
 * <code>Has publishers</code> - Publisher company links
@@ -32,8 +33,10 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
 <dd>{{#show:{{FULLPAGENAME}}|?Has name|default={{SUBPAGENAME}}}}</dd>
 
 {{#show:{{FULLPAGENAME}}
-  |?Has release date
+  |?Has release date#ISO
+  |?Has release date type
   |format=list
+  |template=DateDisplay
   |link=none
   |default=
   |intro=<dt>Release date</dt><dd>
