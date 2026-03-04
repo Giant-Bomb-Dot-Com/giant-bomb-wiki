@@ -41,7 +41,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises|existing values only}}}
 |-
 ! Games:
-| {{{field|Games|property=Has games|input type=tokens|values from category=Games|existing values onlys}}}
+| {{{field|Games|property=Has games|input type=tokens|values from category=Games|existing values only}}}
 |-
 ! Objects:
 | {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects|existing values only}}}
