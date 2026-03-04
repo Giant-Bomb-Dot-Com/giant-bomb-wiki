@@ -38,10 +38,12 @@ interface DbInterface
     public function getVersion(): string;
     public function getById(string $table, array $fields, int $id);
     public function getAll(string $table, array $fields, int $continue = 0);
+    public function getByOverwrittenFlag(string $table, array $fields);
     public function getPageName(string $table, int $id);
     public function getImageName(int $id);
     public function getImageData(int $id): array;
     public function getRelatedPageNames(string $table, array $relationsMap, int $id);
+    public function getRelatedIds(string $table, array $relationsMap, int $id);
     public function getCreditsFromDB(int $id);
     public function getReleasesFromDB(int $id);
     public function getDLCFromDB(int $id);

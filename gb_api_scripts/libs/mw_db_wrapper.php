@@ -44,6 +44,17 @@ class MWDbWrapper implements DbInterface
         return $qb->fetchResultSet();
     }
 
+    public function getByOverwrittenFlag(string $table, array $fields)
+    {
+        $qb = $this->dbConnection->newSelectQueryBuilder();
+        $qb->select($fields)
+            ->from($table, 'o')
+            ->where(['o.deleted' => 0, 'o.overwritten' => 1])
+            ->caller( __METHOD__ );
+
+        return $qb->fetchResultSet();
+    }
+
     public function getPageName(string $table, int $id)
     {
         $qb = $this->dbConnection->newSelectQueryBuilder();
@@ -82,6 +93,11 @@ class MWDbWrapper implements DbInterface
         }
 
         return $qb->fetchRow();        
+    }
+
+    public function getRelatedIds(string $table, array $relationMap, int $id)
+    {
+        
     }
 
     public function getImageName(int $id)

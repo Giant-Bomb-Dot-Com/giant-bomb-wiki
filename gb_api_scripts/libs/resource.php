@@ -232,6 +232,20 @@ abstract class Resource
     }
 
     /**
+     * Get all the wiki objects by its overwritten flag
+     */
+    public function getByOverwrittenFlag()
+    {
+        $prefix = function($element) { 
+            return 'o.'.$element;
+        };
+
+        $fields = array_map($prefix, static::TABLE_FIELDS);
+
+        return $this->dbw->getByOverwrittenFlag(static::TABLE_NAME, $fields);  
+    }
+
+    /**
      * Stores the media wiki description in the mw_formatted_description field
      * 
      * @param int $id
@@ -372,6 +386,11 @@ abstract class Resource
         }
 
         return $relations;
+    }
+
+    public function getRelatedIds(int $id)
+    {
+        return $this->dbw->getRelatedIds(static::TABLE_NAME, static::RELATION_TABLE_MAP, $id);
     }
 
     /**

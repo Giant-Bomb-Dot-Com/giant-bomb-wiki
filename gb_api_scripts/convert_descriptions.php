@@ -29,6 +29,7 @@ class ConvertToMWDescriptions extends Maintenance
     {
         $resources = ['accessory','character','company','concept','dlc','franchise','game','genre','location','person','platform','release','theme','thing'];
         $continue = (int)$this->getOption('continue', 0);
+        $changes = array_fill_keys($resources, []);
 
         if ($resourceOption = $this->getOption('resource', false)) {
             if ($continue > 0) {
@@ -63,8 +64,12 @@ class ConvertToMWDescriptions extends Maintenance
             foreach ($rows as $row) {
                 if (!empty($row->description)) {
                     $convertedDescription = $converter->convert($row->description, $content::TYPE_ID, $row->id);
-                    $content->updateMediaWikiDescription($row->id, $convertedDescription);
-                    echo sprintf("Converted %s description for %s::%s\n", $resource, $row->id, $row->name);
+
+                    if (md5($row->mw_formatted_description) != md5($convertedDescription)) {
+                        $content->updateMediaWikiDescription($row->id, $convertedDescription);
+                        echo sprintf("Converted %s description for %s::%s\n", $resource, $row->id, $row->name);
+                        $changes[$resource][] = $row->id;
+                    }
                 }
                 else {
                     $emptyDescriptionTally++;
@@ -75,6 +80,10 @@ class ConvertToMWDescriptions extends Maintenance
             echo sprintf("Updated %d of %s to an empty string\n", $emptyDescriptionTally, $resource);
         }
 
+
+        foreach ($changes as $key => $value) {
+            echo "$key: ".join(',', $value)."\n\n";
+        }
         echo "done\n";
     }
 }

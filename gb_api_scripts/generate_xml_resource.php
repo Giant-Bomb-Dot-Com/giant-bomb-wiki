@@ -21,12 +21,32 @@ class GenerateXMLResource extends Maintenance
         $this->addOption('id', 'Entity id. Requires resource to be set. When visiting the GB Wiki, the url has a guid at the end. The id is the number after the dash.', false, true, 'i');
         $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
         $this->addOption('continue', 'Requires resource to be set and last id proccessed for that resource. Will proccess the rest of the resources afterwards.', false, true, 'c');
+        $this->addOption('overwritten', 'Retrieve the resources that were overwritten because of a duplicate name');
     }
 
     /**
      * - Retrieve all from a resource table
      * - Craft the xml block for each row
      * - Save the xml file
+     * 
+     * In the initial page generation there were names that otherwise matched if the punctuation were removed and resulted
+     *  in having the same mw_page_name. During import the latter mw_page_name overwrote the earlier mw_page_name. 
+     * 
+     * Steps to fix matching pages:
+     *  - Check if the matching pages exist on the wiki (due to different capitalization)
+     *      - Check their relationships
+     *          - If correct, good
+     *          - If they are swapped
+     *              - move relationships so that the corresponding pages are pointing to the correct page
+     *              - fix the relationships in the incorrect page
+     *              - set overwritten flag to 1 in the legacy db for the affected relationships
+     *  - Check if the page was overwritten (capitalization the same)
+     *      - Check the relationships of the existing page
+     *          - If correct, good
+     *          - If they are for the overwritten page
+     *              - change the page to the overwritten page
+     *              - set overwritten flag to 1 in the legacy db for the affected relationships
+     *  - Run this command with the overwritten flag to generate the xml for the affected pages
      */
     public function execute()
     {
@@ -63,6 +83,10 @@ class GenerateXMLResource extends Maintenance
             if ($this->getOption('resource', false) && $id = $this->getOption('id', false)) {
                 $result = $content->getById($id);
                 $totalItems = 1;
+            }
+            else if ($this->getOption('overwritten', false)) {
+                $result = $content->getByOverwrittenFlag();
+                $totalItems = is_array($result) ? count($result) : $result->count();
             }
             else {
                 $result = $content->getAll($continue);
