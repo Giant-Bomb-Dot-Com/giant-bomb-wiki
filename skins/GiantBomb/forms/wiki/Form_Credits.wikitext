@@ -11,11 +11,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 {| class="formtable"
 |-
 ! Game:
-| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|ParentPage|mandatory|input type=tokens|property=Has superpage|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |}
 {{{end template}}}
 '''Description:'''
-{{{standard input|free text|editor=wikieditor|rows=30}}}
+{{{standard input|free text|editor=wikieditor|rows=10}}}
 {{{standard input|summary}}}
 {{{standard input|save}}}
 {{{standard input|preview}}}
@@ -23,13 +23,14 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{for template|CreditSubobject|multiple|add button text=Add credit|label=Credits|displayed fields when minimized=Person,Department,Role}}}
 {| class="formtable"
 ! Game: 
-| {{{field|Game|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}}}}
+| {{{field|Game|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
 |- 
 ! Release:
 | {{{field
 |Release
 |input type=tokens
-|mapping template=Release token
+|max values=1
+|existing values only
 |values={{#ask: [[Has games::{{BASEPAGENAME}}]][[Has object type::Release]]
  |?Has composite name
  |format=plainlist
@@ -50,6 +51,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 |Dlc
 |input type=tokens
 |max values=1
+|existing values only
 |values={{#ask: [[Has games::{{BASEPAGENAME}}]][[Has object type::Dlc]]
  |?Has composite name
  |format=plainlist
@@ -66,10 +68,10 @@ if a page with that name already exists, you will be sent to a form to edit that
 }}}
 |-
 ! Person: 
-| {{{field|Person|mandatory|input type=tokens|max values=1|values from category=People}}}
+| {{{field|Person|mandatory|input type=tokens|max values=1|values from category=People|existing values only}}}
 |-
 ! Company: 
-| {{{field|Company|input type=tokens|max values=1|values from category=Companies}}}
+| {{{field|Company|input type=tokens|max values=1|values from category=Companies|existing values only}}}
 |-
 ! Department: 
 | {{{field|Department|input type=dropdown|property=Has department|default=Unclassified}}}
