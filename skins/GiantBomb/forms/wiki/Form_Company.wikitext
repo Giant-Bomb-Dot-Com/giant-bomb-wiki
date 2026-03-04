@@ -7,14 +7,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Company}}}
+{{{for template|Company}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
 {| class="formtable"
 |-
 ! Name: 
 | {{{field|Name|mandatory|property=Has name}}}
-|-
-! Guid:
-| {{{field|Guid|property=Has guid}}}
 |-
 ! Aliases:
 | {{{field|Aliases|property=Has aliases}}}
@@ -35,7 +32,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Abbreviation|property=Has abbreviation}}}
 |-
 ! Founded Date:
-| {{{field|FoundedDate|property=Has founded date}}}
+| {{{field|FoundedDate|property=Has founded date|input type=datepicker}}}
 |-
 ! Address:
 | {{{field|Address|property=Has address}}}
@@ -55,27 +52,17 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! Website:
 | {{{field|Website|property=Has website}}}
 |-
-! Characters:
-| {{{field|Characters|property=Has characters|input type=tokens|values from category=Characters}}}
-|-
-! Concepts:
-| {{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts}}}
-|-
-! Locations:
-| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations}}}
-|-
-! Objects:
-| {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects}}}
-|-
-! People:
-| {{{field|People|property=Has people|input type=tokens|values from category=People}}}
-|-
 ! Developed Games:
-| {{{field|Developed|property=Has developed games|input type=tokens|values from category=Games}}}
+| {{{field|Developed|property=Has developed games|input type=tokens|values from category=Games|existing values only}}}
 |-
 ! Published Games:
-| {{{field|Published|property=Has published games|input type=tokens|values from category=Games}}}
+| {{{field|Published|property=Has published games|input type=tokens|values from category=Games|existing values only}}}
 |}
+{{{field|Characters|property=Has characters|input type=tokens|values from category=Characters|existing values only|hidden}}}
+{{{field|Concepts|property=Has concepts|input type=tokens|values from category=Concepts|existing values only|hidden}}}
+{{{field|Locations|property=Has locations|input type=tokens|values from category=Locations|existing values only|hidden}}}
+{{{field|Objects|property=Has objects|input type=tokens|values from category=Objects|existing values only|hidden}}}
+{{{field|People|property=Has people|input type=tokens|values from category=People|existing values only|hidden}}}
 {{{end template}}}
 
 '''Description:'''
