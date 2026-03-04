@@ -22,7 +22,7 @@ trait DBConnection
             $this->output("Database connection or query failed: " . $e->getMessage(), true);
         }
 
-        echo "Using external db.\n";
+        echo "Using external db.\n\n";
 
         return $dbWrapper;
     }
