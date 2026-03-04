@@ -56,7 +56,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Franchises|property=Has franchises|input type=tokens|values from category=Franchises|existing values only}}}
 |-
 ! Locations: 
-| {{{field|Locations|property=Has locations|input type=tokens|values from category=Location|existing values onlys}}}
+| {{{field|Locations|property=Has locations|input type=tokens|values from category=Locations|existing values onlys}}}
 |-
 ! Objects: 
 | {{{field|Objects|property=Has objects|input type=tokens|values from category=Objects|existing values only}}}
