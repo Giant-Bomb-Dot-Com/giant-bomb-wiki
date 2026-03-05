@@ -44,9 +44,19 @@ DLC (Downloadable Content) represents add-ons, expansions, and downloadable cont
 |-
 || Platform || Platform this DLC is available on
 |-
-|| ReleaseDate || Release date type (None, Full, Month, Quarter, Year)
+|| ReleaseDateType || Release date type (None, Full, Month, Quarter, Year)
 |-
 || ReleaseDate || Release date of the DLC
+|-
+|| MonthPart || Month part of a monthly release date (not saved to smw)
+|-
+|| MonthYearPart || Year part of a monthly release date (not saved to smw)
+|-
+|| QuarterPart ||  Quarter part of a quarterly release date (not saved to smw)
+|-
+|| QuarterYearPart || Year part of quarterly release date (not saved to smw)
+|-
+|| YearPart || Year part of a yearly release date (not saved to smw)
 |-
 || LaunchPrice || Original price at launch
 |}
@@ -71,6 +81,17 @@ Your wiki content here...
 </pre>
 </noinclude><includeonly><!--
 
+Cache date in display and ISO formats
+-->{{#invoke:DateHelper|loadDates
+|ReleaseDateType={{{ReleaseDateType|}}}
+|ReleaseDate={{{ReleaseDate|}}}
+|MonthPart={{{MonthPart|}}}
+|MonthYearPart={{{MonthYearPart|}}}
+|QuarterPart={{{QuarterPart|}}}
+|QuarterYearPart={{{QuarterYearPart|}}}
+|YearPart={{{YearPart|}}}
+}}<!--
+
 SMW Property Storage
 -->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
@@ -81,7 +102,7 @@ SMW Property Storage
 }}{{#if:{{{Game|}}}|{{#set:Has game={{{Game}}}}}
 }}{{#if:{{{Platform|}}}|{{#set:Has platform={{{Platform}}}}}
 }}{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}
-}}{{#set:Has release date={{#invoke:DateHelper|getReleaseDateInISOFormat|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
+}}{{#set:Has release date={{#invoke:DateHelper|getISO}}
 }}{{#if:{{{LaunchPrice|}}}|{{#set:Has launch price={{{LaunchPrice}}}}}
 }}<!--
 
@@ -92,6 +113,7 @@ HTML Structure
 --><div class="gb-dlc-page" itemscope itemtype="https://schema.org/Product">
 <meta itemprop="name" content="{{{Name|}}} - Video Game DLC" />
 <meta itemprop="description" content="{{{Deck|}}}" />
+{{#if:{{#invoke:DateHelper|hasDate}}|<meta itemprop="releaseDate" content="{{#invoke:DateHelper|getISO}}" />|}}
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is downloadable content (DLC) for a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What game is {{{Name|}}} for?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is DLC for {{{Game|}}}." /></div></div></div><!--
 -->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
 -->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--

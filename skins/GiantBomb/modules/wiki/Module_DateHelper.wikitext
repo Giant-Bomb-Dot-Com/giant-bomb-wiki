@@ -104,7 +104,7 @@ function p.getReleaseDateInISOFormat(frame)
     
     local dateType = args.ReleaseDateType or ""
     
-    local mMap = {
+    local monthMap = {
         January="01", February="02", March="03", April="04", May="05", June="06",
         July="07", August="08", September="09", October="10", November="11", December="12"
     }
@@ -114,13 +114,13 @@ function p.getReleaseDateInISOFormat(frame)
         
     elseif dateType == "Month" then
         local year = args.MonthYearPart or ""
-        local month = mMap[args.MonthPart] or "01"
+        local month = monthMap[args.MonthPart] or "01"
         return year .. "-" .. month
         
     elseif dateType == "Quarter" then
-        local qMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
+        local quarterMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
         local year = args.QuarterYearPart or ""
-        local month = qMap[args.QuarterPart] or "01"
+        local month = quarterMap[args.QuarterPart] or "01"
         return year .. "-" .. month
         
     elseif dateType == "Year" then

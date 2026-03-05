@@ -39,7 +39,7 @@ This template is called automatically by <code><nowiki>{{GameEnd}}</nowiki></cod
   |template=DateDisplay
   |link=none
   |default=
-  |intro=<dt>Release date</dt><dd>
+  |intro=<dt>Release Date</dt><dd>
   |outro=</dd>
 }}
 

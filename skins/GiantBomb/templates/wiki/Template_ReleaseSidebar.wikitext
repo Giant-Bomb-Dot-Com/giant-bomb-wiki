@@ -45,7 +45,7 @@ This template is called automatically by <code><nowiki>{{ReleaseEnd}}</nowiki></
   |template=DateDisplay
   |link=none
   |default=
-  |intro=<dt>Release date</dt><dd>
+  |intro=<dt>Release Date</dt><dd>
   |outro=</dd>
 }}
 
