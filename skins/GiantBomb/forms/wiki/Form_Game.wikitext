@@ -31,7 +31,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{#if: {{#invoke:DateHelper|hasLegacyDate}} |
 <div id="legacy-warning" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
   '''Legacy Release Date Detected:''' This page uses an old date setting (current value: {{#invoke:DateHelper|getExistingValue|ReleaseDate}}).<br/>
-  Please select a release date type and manually copy this into the fields below.<br/>
+  Please select a release date type and fill in the fields below.<br/>
   ''Note: Saving this form without making a change will delete the release date.''
 </div>
 }}
