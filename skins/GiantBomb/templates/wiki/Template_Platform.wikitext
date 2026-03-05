@@ -123,8 +123,8 @@ HTML Structure
 --><div class="gb-platform-page" itemscope itemtype="https://schema.org/Product">
 <meta itemprop="name" content="{{{Name|}}}" />
 <meta itemprop="description" content="{{{Deck|}}}" />
-{{#if:{{#invoke:DateHelper|hasDate}}|<meta itemprop="releaseDate" content="{{#invoke:DateHelper|getISO}}" />|}}
-<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} is a video game platform. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did the {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} was released {{#if:{{#invoke:DateHelper|hasDate}}|on {{#invoke:DateHelper|getISO}}|}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are on {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} has a library of video games available to play." /></div></div></div><!--
+{{#if:{{#invoke:DateHelper|hasCachedDate}}|<meta itemprop="releaseDate" content="{{#invoke:DateHelper|getISO}}" />|}}
+<div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} is a video game platform. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="When did the {{{Name|}}} come out?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} was released {{#if:{{#invoke:DateHelper|hasCachedDate}}|on {{#invoke:DateHelper|getISO}}|}}." /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are on {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} has a library of video games available to play." /></div></div></div><!--
 -->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
 -->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
 --><div class="gb-platform-hero">
@@ -132,7 +132,7 @@ HTML Structure
 <div class="gb-platform-hero-cover"></div>
 <div class="gb-platform-hero-info">
 <div class="gb-platform-hero-title">{{{Name|{{SUBPAGENAME}}}}}</div>
-<div class="gb-platform-hero-meta"><span class="gb-platform-hero-type">PLATFORM</span>{{#if:{{{ShortName|}}}| &#187; {{{ShortName}}}|}}{{#if:{{#invoke:DateHelper|hasDate}}| &#187; {{#invoke:DateHelper|getDisplay}}|}}</div>
+<div class="gb-platform-hero-meta"><span class="gb-platform-hero-type">PLATFORM</span>{{#if:{{{ShortName|}}}| &#187; {{{ShortName}}}|}}{{#if:{{#invoke:DateHelper|hasCachedDate}}| &#187; {{#invoke:DateHelper|getDisplay}}|}}</div>
 <div class="gb-platform-hero-deck">{{{Deck|}}}</div>
 </div>
 </div>

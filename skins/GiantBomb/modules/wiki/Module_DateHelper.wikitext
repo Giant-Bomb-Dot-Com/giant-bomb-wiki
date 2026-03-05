@@ -1,7 +1,30 @@
 local p = {}
+local pageCache = {}
 
--- START FORM DEFINITION METHODS --
--- Fetches value of given param from the page's smw data
+-- check arguments from invoke call before checking parent template arguments with preprocess as fallback
+local function getArgs(frame)
+    local args = frame.args
+    if (args.ReleaseDateType and args.ReleaseDateType ~= "") or (args.ReleaseDate and args.ReleaseDate ~= "") then
+        return args
+    end
+
+    local parent = frame:getParent()
+    if parent and ((parent.args.ReleaseDateType and parent.args.ReleaseDateType ~= "") or (parent.args.ReleaseDate and parent.args.ReleaseDate ~= "")) then
+        return parent.args
+    end
+
+    return {
+        ReleaseDateType = frame:preprocess('{{{ReleaseDateType|}}}'),
+        ReleaseDate = frame:preprocess('{{{ReleaseDate|}}}'),
+        MonthPart = frame:preprocess('{{{MonthPart|}}}'),
+        MonthYearPart = frame:preprocess('{{{MonthYearPart|}}}'),
+        QuarterPart = frame:preprocess('{{{QuarterPart|}}}'),
+        QuarterYearPart = frame:preprocess('{{{QuarterYearPart|}}}'),
+        YearPart = frame:preprocess('{{{YearPart|}}}'),
+    }
+end
+
+-- fetches value of given param from the template's smw data
 local function fetchValue(paramName)
     local pageName = mw.title.getCurrentTitle().prefixedText
     local title = mw.title.new(pageName)
@@ -12,42 +35,38 @@ local function fetchValue(paramName)
 
     local pattern = "|%s*" .. paramName .. "%s*=%s*([^|%}%c]+)"
     local value = content:match(pattern)
-    return value and mw.text.trim(value) or nil
+    return value and mw.text.trim(value) or ""
 end
 
 function p.getExistingValue(frame)
     local param = frame.args[1]
-    return fetchValue(param) or nil
+    return fetchValue(param) or ""
 end
 
-function p.hasLegacyDate(frame)
+-- determines if legacy date for displaying warning in form
+function p.displayLegacyWarning(frame)
     local releaseDateType = fetchValue("ReleaseDateType")
     local releaseDate = fetchValue("ReleaseDate")
     
-    if releaseDate ~= "" and releaseDate ~= nil and releaseDateType ~= "Full" then
+    -- it is a legacy date if ReleaseDate is filled and ReleaseDateType is empty or not Full
+    if releaseDate ~= "" and releaseDate ~= nil and (releaseDateType == nil or releaseDateType == "" or releaseDateType ~= "Full") then
         return "true"
     end
     
-    return nil
+    return ""
 end
--- END FORM DEFINITION METHODS --
 
--- START TEMPLATE METHODS --
 -- Returns the string formatted date using smw date parts
-function p.getDisplayDate(frame)
-    local args = frame.args
-    if args.ReleaseDate == nil or args.ReleaseDate == "" then
-        args = frame:getParent().args
-    end
+function p.getDisplayDateFromParts(frame)
+    local args = getArgs(frame)
 
     local dateType = args.ReleaseDateType or ""
     
     if dateType == "Full" then
-        return args.ReleaseDate or ""
+        return mw.getLanguage('en'):formatDate('F j, Y', args.ReleaseDate) or ""
         
     elseif dateType == "Month" then
-        local month = args.MonthPart or ""
-        return month .. " " .. (args.MonthYearPart or "")
+        return mw.getLanguage('en'):formatDate('F Y', args.MonthYearPart .. "-" .. args.MonthPart)
         
     elseif dateType == "Quarter" then
         return args.QuarterPart .. " " .. (args.QuarterYearPart or "")
@@ -61,13 +80,13 @@ function p.getDisplayDate(frame)
 end
 
 -- Returns the string formatted date from iso date - used by Template:DateDisplay
-function p.formatForDisplay(frame)
-    local dateStr = frame.args[1] or ""
-    local dateType = frame.args.type or ""
+function p.getDisplayDateFromISO(frame)
+    local args = getArgs(frame)
     
-    if dateStr == "" then 
-        return ""
-    end
+    local dateStr = args.ReleaseDate or ""
+    local dateType = args.ReleaseDateType or ""
+    
+    if dateStr == "" then return "" end
 
     local year, month = dateStr:match("^(%d%d%d%d)[/-](%d%d)")
     if not year or not month then 
@@ -80,47 +99,38 @@ function p.formatForDisplay(frame)
     end
 
     if dateType == "Month" then
-        local mMap = {
-            ["01"]="January", ["02"]="February", ["03"]="March", ["04"]="April",
-            ["05"]="May", ["06"]="June", ["07"]="July", ["08"]="August",
-            ["09"]="September", ["10"]="October", ["11"]="November", ["12"]="December"
-        }
-        return (mMap[month] or month) .. " " .. year
+        return mw.getLanguage('en'):formatDate('F Y', dateStr)
     end
     
     if dateType == "Year" then 
         return year
     end
     
-    return dateStr
+    return mw.getLanguage('en'):formatDate('F j, Y', dateStr)
 end
 
 -- Returns ISO formatted date using smw date parts
-function p.getReleaseDateInISOFormat(frame)
-    local args = frame.args
-    if args.ReleaseDate == nil or args.ReleaseDate == "" then
-        args = frame:getParent().args
-    end
+function p.getISODateFromParts(frame)
+    local args = getArgs(frame)
     
     local dateType = args.ReleaseDateType or ""
     
-    local monthMap = {
-        January="01", February="02", March="03", April="04", May="05", June="06",
-        July="07", August="08", September="09", October="10", November="11", December="12"
-    }
-
     if dateType == "Full" then
-        return args.ReleaseDate or ""
+        return args.releaseDate or ""
         
     elseif dateType == "Month" then
+        local mMap = {
+            January="01", February="02", March="03", April="04", May="05", June="06",
+            July="07", August="08", September="09", October="10", November="11", December="12"
+        }
         local year = args.MonthYearPart or ""
-        local month = monthMap[args.MonthPart] or "01"
+        local month = mMap[args.MonthPart] or "01"
         return year .. "-" .. month
         
     elseif dateType == "Quarter" then
-        local quarterMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
+        local qMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
         local year = args.QuarterYearPart or ""
-        local month = quarterMap[args.QuarterPart] or "01"
+        local month = qMap[args.QuarterPart] or "01"
         return year .. "-" .. month
         
     elseif dateType == "Year" then
@@ -130,6 +140,62 @@ function p.getReleaseDateInISOFormat(frame)
         return args.ReleaseDate or ""
     end
 end
--- END TEMPLATE METHODS --
+
+-- store iso and display date formats in cache for a single page render
+local function constructDates(frame)
+    if pageCache.iso and pageCache.iso ~= "" then return end 
+
+    local args = getArgs(frame)
+    
+    local dateType = args.ReleaseDateType or ""
+    local legacyDate = args.ReleaseDate or ""
+
+    local iso = ""
+    local display = ""
+
+    -- fuzzy dates have a date type
+    if dateType ~= "" then
+        -- account for legacy dates with date type
+        if dateType ~= "Full" and legacyDate ~= "" and legacyDate ~= nil then
+            iso = legacyDate
+            display = p.getDisplayDateFromISO(frame)
+        else        
+            iso = p.getISODateFromParts(frame)
+            display = p.getDisplayDateFromParts(frame)
+        end
+    
+    -- account for legacy dates without date type
+    elseif legacyDate ~= "" then
+        iso = legacyDate
+        display = p.getDisplayDateFromISO(frame)
+    end
+
+    pageCache.iso = iso
+    pageCache.display = display
+end
+
+function p.loadDates(frame)
+    constructDates(frame)
+    return ""
+end
+
+function p.getISO(frame)
+    if not pageCache.iso or pageCache.iso == "" then constructDates(frame) end
+    return pageCache.iso or ""
+end
+
+function p.getDisplay(frame)
+    if not pageCache.iso or pageCache.iso == "" then constructDates(frame) end
+    return pageCache.display or ""
+end
+
+function p.hasCachedDate(frame)
+    if not pageCache.iso or pageCache.iso == "" then constructDates(frame) end
+    
+    if (pageCache.iso and pageCache.iso ~= "") or (pageCache.display and pageCache.display ~= "") then
+        return "true"
+    end
+    return ""
+end
 
 return p

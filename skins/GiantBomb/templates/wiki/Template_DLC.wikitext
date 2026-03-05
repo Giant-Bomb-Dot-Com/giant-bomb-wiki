@@ -113,7 +113,7 @@ HTML Structure
 --><div class="gb-dlc-page" itemscope itemtype="https://schema.org/Product">
 <meta itemprop="name" content="{{{Name|}}} - Video Game DLC" />
 <meta itemprop="description" content="{{{Deck|}}}" />
-{{#if:{{#invoke:DateHelper|hasDate}}|<meta itemprop="releaseDate" content="{{#invoke:DateHelper|getISO}}" />|}}
+{{#if:{{#invoke:DateHelper|hasCachedDate}}|<meta itemprop="releaseDate" content="{{#invoke:DateHelper|getISO}}" />|}}
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is downloadable content (DLC) for a video game. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What game is {{{Name|}}} for?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is DLC for {{{Game|}}}." /></div></div></div><!--
 -->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
 -->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
