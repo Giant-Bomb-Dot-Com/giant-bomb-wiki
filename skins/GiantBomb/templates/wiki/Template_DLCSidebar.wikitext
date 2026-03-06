@@ -30,8 +30,10 @@ This template is called automatically by <code><nowiki>{{DLCEnd}}</nowiki></code
 }}
 
 {{#show:{{FULLPAGENAME}}
-  |?Has release date
+  |?Has release date#ISO
+  |?Has release date type
   |format=list
+  |template=DateDisplay
   |link=none
   |default=
   |intro=<dt>Release Date</dt><dd>
