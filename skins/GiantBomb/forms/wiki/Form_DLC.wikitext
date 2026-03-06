@@ -52,13 +52,45 @@ if a page with that name already exists, you will be sent to a form to edit that
 |-
 ! Publishers:
 | {{{field|Publishers|property=Has publishers|input type=tokens|values from category=Companies|existing values only}}}
-|-
-! Release Date Type:
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|default=None}}}
-|-
-! Release Date:
-| {{{field|ReleaseDate|property=Has release date}}}
-|-
+|}
+{| class="formtable"
+! style="width: 150px;" | Release Date Type: 
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=Full}}}
+|}
+{{#if: {{#invoke:DateHelper|hasLegacyDate}} |
+<div id="legacy-warning" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+  '''Legacy Release Date Detected:''' This page uses an old date setting (current value: {{#invoke:DateHelper|getExistingValue|ReleaseDate}}).<br/>
+  Please select a release date type and fill in the fields below.<br/>
+  ''Note: Saving this form without making a change will delete the release date.''
+</div>
+}}
+<div id="default">
+</div>
+<div id="full_date">
+{| class="formtable"
+! style="width: 150px;" | Release Date: 
+| {{{field|ReleaseDate|input type=datepicker}}}
+|}
+</div>
+<div id="month_year">
+{| class="formtable"
+! style="width: 150px;" | Release Month: 
+| {{{field|MonthPart|input type=dropdown|values=January,February,March,April,May,June,July,August,September,October,November,December}}} {{{field|MonthYearPart|input type=year}}}
+|}
+</div>
+<div id="quarter_year">
+{| class="formtable"
+! style="width: 150px;" | Release Quarter: 
+| {{{field|QuarterPart|input type=dropdown|values=Q1,Q2,Q3,Q4}}} {{{field|QuarterYearPart|input type=year}}}
+|}
+</div>
+<div id="only_year">
+{| class="formtable"
+! style="width: 150px;" | Release Year:
+| {{{field|YearPart|input type=year}}}
+|}
+</div>
+{| class="formtable"
 ! DLC Types:
 | {{{field|DlcTypes|property=Has dlc types|input type=listbox}}}
 |}

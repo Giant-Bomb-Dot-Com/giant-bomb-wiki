@@ -202,6 +202,9 @@ class ImportWikiTemplates extends Maintenance
             "Template:LandingNav" => "$templateDir/Template_LandingNav.wikitext",
             "Template:LandingPageQuery" => "$templateDir/Template_LandingPageQuery.wikitext",
 
+            "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
+            "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
+
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",
             "Module:BadgeList" => "$moduleDir/Module_BadgeList.wikitext",
