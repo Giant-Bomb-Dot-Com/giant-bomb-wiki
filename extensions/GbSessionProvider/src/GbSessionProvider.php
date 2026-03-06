@@ -34,7 +34,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
     protected string $expectedIssuer = "";
     protected string $expectedAudience = "";
     protected array $groupMapping = [];
-    protected int $jwtGracePeriod = 7200;
 
     public function __construct(array $params = [])
     {
@@ -59,8 +58,6 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             "giantbomb-wiki";
         $this->groupMapping =
             (array) ($config->get("GbSessionProviderGroupMapping") ?: []);
-        $this->jwtGracePeriod =
-            (int) ($config->get("GbSessionProviderJwtGracePeriod") ?? 7200);
     }
 
     protected function postInitSetup()
@@ -344,22 +341,14 @@ class GbSessionProvider extends ImmutableSessionProviderWithCookie
             $this->logger->debug("verifyJwt: decoding token");
             $result = JWT::decode($token, $keySet);
         } catch (ExpiredException $e) {
-            // Signature already verified; accept within grace window
+            // Signature was already verified; exp alone shouldn't kill the session.
             $payload = $e->getPayload();
             $expiredAt = $payload->exp ?? 0;
             $elapsed = time() - $expiredAt;
-
-            if ($elapsed <= $this->jwtGracePeriod) {
-                $this->logger->info(
-                    "JWT expired {$elapsed}s ago, within {$this->jwtGracePeriod}s grace period; accepting verified payload",
-                );
-                $result = $payload;
-            } else {
-                $this->logger->warning(
-                    "JWT expired {$elapsed}s ago, beyond {$this->jwtGracePeriod}s grace period",
-                );
-                return null;
-            }
+            $this->logger->info(
+                "JWT expired {$elapsed}s ago; signature verified, accepting payload",
+            );
+            $result = $payload;
         } catch (\LogicException $e) {
             $this->logger->warning(
                 "JWT::decode Logic exception: " . $e->getMessage(),

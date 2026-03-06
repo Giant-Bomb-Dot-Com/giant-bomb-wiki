@@ -61,7 +61,9 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     echo "apc.shm_size=256M" >> /usr/local/etc/php/php.ini && \
     echo "apc.enable_cli=1" >> /usr/local/etc/php/php.ini && \
     echo "session.gc_maxlifetime=86400" >> /usr/local/etc/php/php.ini && \
-    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
+    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini && \
+    echo "LimitRequestFieldSize 16384\nLimitRequestLine 16384" \
+      > /etc/apache2/conf-enabled/request-limits.conf
 
 # Directory for logging
 RUN mkdir -p -m 740 /var/log/mediawiki && \

@@ -4,7 +4,7 @@
   "author": "Zelnox",
   "description": "To provide a Mediawiki session for Giant Bomb Next single-sign-on (SSO) cookies. Also to create a Mediawiki user is required.",
   "url": "https://www.giantbomb.com",
-  "version": "0.2",
+  "version": "0.3",
   "license-name": "MIT",
   "type": "identity",
   "requires": {
@@ -43,10 +43,6 @@
         "admin": "sysop"
       },
       "description": "Maps JWT group/role names to MediaWiki groups. Keys are JWT claim values (matched against both 'groups' and 'roles' arrays), values are MediaWiki group names."
-    },
-    "GbSessionProviderJwtGracePeriod": {
-      "value": 7200,
-      "description": "Seconds after JWT expiry to still accept a signature-verified token. Prevents data loss during long editing sessions. Default: 7200 (2 hours)."
     }
   },
   "AvailableRights": ["gb-premium"],

@@ -55,7 +55,9 @@ RUN sed -i 's/ignorewarnings: false/ignorewarnings: true/' /var/www/html/resourc
 
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     echo "session.gc_maxlifetime=86400" >> /usr/local/etc/php/php.ini && \
-    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini
+    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" /usr/local/etc/php/php.ini && \
+    echo "LimitRequestFieldSize 16384\nLimitRequestLine 16384" \
+      > /etc/apache2/conf-enabled/request-limits.conf
 
 # Directory for logging
 RUN mkdir -p -m 755 /var/log/mediawiki && \
