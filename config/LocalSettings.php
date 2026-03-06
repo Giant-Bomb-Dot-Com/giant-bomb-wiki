@@ -21,6 +21,7 @@ $wgMemoryLimit = "2G";
 
 # Increase template expansion limits for pages with many SMW queries
 $wgMaxArticleSize = 8192;           # Max article size in KB (default 2048)
+$wgAPIMaxResultSize = $wgMaxArticleSize * 4096;  # Must be >= MaxArticleSize * 4096
 $wgMaxPPNodeCount = 2000000;        # Max preprocessor node count (default 1000000)
 $wgMaxTemplateDepth = 100;          # Max template recursion depth (default 40)
 $wgMaxPPExpandDepth = 100;          # Max preprocessor expand depth (default 40)
@@ -283,6 +284,10 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
 
         $wgAWSBucketDomain = 'storage.googleapis.com/$1';
     }
+
+    // GCS doesn't support the checksum headers newer AWS SDKs send by default
+    putenv('AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED');
+    putenv('AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED');
 
     $wgAWSRepoHashLevels = 2;
     $wgAWSRepoDeletedHashLevels = 3;
@@ -622,9 +627,6 @@ $wgGroupPermissions['*']['edit'] = false;
 
 $wgGroupPermissions['user']['edit'] = true;
 $wgGroupPermissions['user']['createpage'] = true;
-
-$wgGroupPermissions['subscriber']['skip-moderation'] = true;
-$wgGroupPermissions['subscriber']['skip-move-moderation'] = true;
 
 $wgGroupPermissions['sysop']['createaccount'] = true;
 $wgGroupPermissions['sysop']['edit'] = true;
