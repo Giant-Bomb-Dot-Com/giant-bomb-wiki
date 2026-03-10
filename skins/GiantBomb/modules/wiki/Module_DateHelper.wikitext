@@ -58,12 +58,12 @@ function p.displayLegacyWarning(frame)
         return ""
     end
     
-    -- filled date and full date type is not Full is a legacy date
+    -- filled date and missing date type or a Full date type is a legacy date
     if releaseDate ~= "" and releaseDate ~= nil and (releaseDateType == nil or releaseDateType == "" or releaseDateType ~= "Full") then
         return "true"
     end
     
-    -- don't show warning otherwise
+    -- the rest of the combinations are not a legacy date
     return ""
 end
 
