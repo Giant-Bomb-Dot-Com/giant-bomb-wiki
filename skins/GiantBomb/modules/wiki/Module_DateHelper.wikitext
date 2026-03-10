@@ -200,7 +200,7 @@ function p.getDisplay(frame)
     return pageCache.display or ""
 end
 
-function p.hasDate(frame)
+function p.hasCachedDate(frame)
     if not pageCache.iso or pageCache.iso == "" then constructDates(frame) end
     
     if (pageCache.iso and pageCache.iso ~= "") or (pageCache.display and pageCache.display ~= "") then
