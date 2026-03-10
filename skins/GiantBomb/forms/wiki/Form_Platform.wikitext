@@ -35,7 +35,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 ! style="width: 150px;" | Release Date Type: 
 | {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=Full}}}
 |}
-{{#if: {{#invoke:DateHelper|hasLegacyDate}} |
+{{#if: {{#invoke:DateHelper|displayLegacyWarning}} |
 <div id="legacy-warning" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
   '''Legacy Release Date Detected:''' This page uses an old date setting (current value: {{#invoke:DateHelper|getExistingValue|ReleaseDate}}).<br/>
   Please select a release date type and fill in the fields below.<br/>
