@@ -48,11 +48,22 @@ function p.displayLegacyWarning(frame)
     local releaseDateType = fetchValue("ReleaseDateType")
     local releaseDate = fetchValue("ReleaseDate")
     
-    -- it is a legacy date if ReleaseDate is filled and ReleaseDateType is empty or not Full
+    -- empty date is not a legacy date
+    if releaseDate == nil or releaseDate == "" then
+        return ""
+    end
+
+    -- filled date and Full date type is not a legacy date
+    if releaseDate ~= nil and releaseDateType == "Full" then
+        return ""
+    end
+    
+    -- filled date and missing date type or a Full date type is a legacy date
     if releaseDate ~= "" and releaseDate ~= nil and (releaseDateType == nil or releaseDateType == "" or releaseDateType ~= "Full") then
         return "true"
     end
     
+    -- the rest of the combinations are not a legacy date
     return ""
 end
 
