@@ -18,7 +18,25 @@ use Title;
 use User;
 
 class ResolveHandler extends SimpleHandler {
-	private const GUID_PATTERN = '/^(\d{3,4})-(\d{1,12})$/';
+	private const LEGACY_GUID_PATTERN = '/^(\d{3,4})-(\d{1,12})$/';
+	private const UUID_GUID_PATTERN =
+		'/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i';
+	private const TITLE_PREFIX_TYPE_IDS = [
+		'Accessories' => 3000,
+		'Characters' => 3005,
+		'Companies' => 3010,
+		'Concepts' => 3015,
+		'DLC' => 3020,
+		'Franchises' => 3025,
+		'Games' => 3030,
+		'Themes' => 3032,
+		'Locations' => 3035,
+		'People' => 3040,
+		'Platforms' => 3045,
+		'Releases' => 3050,
+		'Objects' => 3055,
+		'Genres' => 3060,
+	];
 
 	/** @var Config */
 	private $config;
@@ -99,9 +117,17 @@ class ResolveHandler extends SimpleHandler {
 	}
 
 	private function resolveGuid( string $guid, array $fields ): array {
-		$parts = $this->splitGuid( $guid );
-		if ( !$parts ) {
-			return $this->makeInvalidRecord( $guid, 'invalid-guid' );
+		$isUuidGuid = $this->isUuidGuid( $guid );
+		$assocTypeId = 0;
+		$assocId = 0;
+
+		if ( !$isUuidGuid ) {
+			$legacyParts = $this->splitLegacyGuid( $guid );
+			if ( !$legacyParts ) {
+				return $this->makeInvalidRecord( $guid, 'invalid-guid' );
+			}
+			$assocTypeId = $legacyParts['assocTypeId'];
+			$assocId = $legacyParts['assocId'];
 		}
 
 		try {
@@ -118,13 +144,21 @@ class ResolveHandler extends SimpleHandler {
 		}
 
 		if ( $data === null ) {
-			return $this->makeMissingRecord( $guid, $parts['assocTypeId'], $parts['assocId'] );
+			return $this->makeMissingRecord( $guid, $assocTypeId, $assocId );
+		}
+
+		if ( $isUuidGuid ) {
+			$inferredTypeId = $this->inferAssocTypeIdFromData( $data );
+			if ( $inferredTypeId === null ) {
+				return $this->makeInvalidRecord( $guid, 'unmapped-guid-type' );
+			}
+			$assocTypeId = $inferredTypeId;
 		}
 
 		return [
 			'guid' => $guid,
-			'assocTypeId' => $parts['assocTypeId'],
-			'assocId' => $parts['assocId'],
+			'assocTypeId' => $assocTypeId,
+			'assocId' => $assocId,
 			'status' => 'ok',
 			'data' => $data,
 		];
@@ -253,7 +287,7 @@ class ResolveHandler extends SimpleHandler {
 		return null;
 	}
 
-	private function runAskQuery( string $query ): array {
+	protected function runAskQuery( string $query ): array {
 		$params = [
 			'action' => 'ask',
 			'query' => $query,
@@ -291,7 +325,7 @@ class ResolveHandler extends SimpleHandler {
 			if ( $part === '' ) {
 				continue;
 			}
-			if ( !preg_match( self::GUID_PATTERN, $part ) ) {
+			if ( !$this->isValidGuid( $part ) ) {
 				throw new HttpException( 'resolve-invalid-guid', 400, [ 'guid' => $part ] );
 			}
 			$out[] = $part;
@@ -377,14 +411,46 @@ class ResolveHandler extends SimpleHandler {
 		return hash_equals( $expected, $provided );
 	}
 
-	private function splitGuid( string $guid ): ?array {
-		if ( !preg_match( self::GUID_PATTERN, $guid, $matches ) ) {
+	private function splitLegacyGuid( string $guid ): ?array {
+		if ( !preg_match( self::LEGACY_GUID_PATTERN, $guid, $matches ) ) {
 			return null;
 		}
 		return [
 			'assocTypeId' => (int)$matches[1],
 			'assocId' => (int)$matches[2],
 		];
+	}
+
+	private function isValidGuid( string $guid ): bool {
+		return $this->isLegacyGuid( $guid ) || $this->isUuidGuid( $guid );
+	}
+
+	private function isLegacyGuid( string $guid ): bool {
+		return (bool)preg_match( self::LEGACY_GUID_PATTERN, $guid );
+	}
+
+	private function isUuidGuid( string $guid ): bool {
+		return (bool)preg_match( self::UUID_GUID_PATTERN, $guid );
+	}
+
+	private function inferAssocTypeIdFromData( ?array $data ): ?int {
+		if ( !$data ) {
+			return null;
+		}
+		$title = null;
+		if ( isset( $data['prefixedTitle'] ) && is_string( $data['prefixedTitle'] ) ) {
+			$title = $data['prefixedTitle'];
+		} elseif ( isset( $data['fullText'] ) && is_string( $data['fullText'] ) ) {
+			$title = $data['fullText'];
+		}
+		if ( !$title ) {
+			return null;
+		}
+		$prefix = strstr( $title, '/', true );
+		if ( $prefix === false || $prefix === '' ) {
+			return null;
+		}
+		return self::TITLE_PREFIX_TYPE_IDS[$prefix] ?? null;
 	}
 
 	private function makeMissingRecord( string $guid, int $assocTypeId, int $assocId ): array {

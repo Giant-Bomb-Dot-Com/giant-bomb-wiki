@@ -51,6 +51,7 @@ function p.render(frame)
     -- 2. Execute Query
     local queryData = mw.smw.getQueryResult({
         query,
+        "?Has name",
         "?Has image",
         "?Has platforms",
         "?Has release date",
@@ -73,8 +74,6 @@ function p.render(frame)
     
     for _, result in ipairs(queryData.results) do
   	    local fullTitle = result.fulltext or ""
-    	-- This pattern "^[Gg][Aa][Mm][Ee][Ss]/" matches "Games/" or "games/" at the start
-    	local cleanTitle = fullTitle:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
     	
         -- Helper to extract strings from nested SMW tables
         local function getSafe(field, isList)
@@ -85,6 +84,22 @@ function p.render(frame)
                 table.insert(vals, str)
             end
             return isList and table.concat(vals, ", ") or (vals[1] or "")
+        end
+
+        local function fallbackDisplayTitle( rawTitle )
+            local withoutPrefix = rawTitle:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+            local withSpaces = withoutPrefix:gsub("_", " ")
+            local trimmed = withSpaces:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+            local noIdSuffix = trimmed:gsub("%s+%d+$", "")
+            if noIdSuffix ~= "" then
+                return noIdSuffix
+            end
+            return trimmed
+        end
+
+        local cleanTitle = getSafe('Has name', false)
+        if cleanTitle == "" then
+            cleanTitle = fallbackDisplayTitle( fullTitle )
         end
 
         -- 4. Process Image data from description
