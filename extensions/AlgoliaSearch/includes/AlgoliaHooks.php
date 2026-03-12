@@ -85,16 +85,21 @@ class AlgoliaHooks {
 			return;
 		}
 
+		$effectivePageId = $pageID > 0 ? $pageID : $page->getId();
+		if ( $effectivePageId <= 0 ) {
+			return;
+		}
+
 		try {
 			$index = AlgoliaClientFactory::getIndexFromConfig( $config );
 			if ( !$index ) {
 				return;
 			}
 
-			$objectId = 'wiki:' . $pageID;
+			$objectId = 'wiki:' . $effectivePageId;
 			$index->deleteObjects( [ $objectId ] );
 		} catch ( \Throwable $e ) {
-			wfLogWarning( 'AlgoliaSearch: Failed to delete object wiki:' . $pageID . ': ' . $e->getMessage() );
+			wfLogWarning( 'AlgoliaSearch: Failed to delete object wiki:' . $effectivePageId . ': ' . $e->getMessage() );
 		}
 	}
 

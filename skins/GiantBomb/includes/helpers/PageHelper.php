@@ -29,6 +29,19 @@ class PageHelper {
 		return $data;
 	}
 
+	/**
+	 * @param array<int,string> $names
+	 * @param string $namespace
+	 * @return array<int,string>
+	 */
+	public static function resolveDisplayNames( array $names, string $namespace = '' ): array {
+		if ( !$names ) {
+			return [];
+		}
+		unset( $namespace );
+		return array_values( array_map( static fn ( $name ) => (string)$name, $names ) );
+	}
+
 	public static function chooseLegacySize( array $available, array $preferred ): ?string {
 		foreach ( $preferred as $candidate ) {
 			if ( in_array( $candidate, $available, true ) ) {
