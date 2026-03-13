@@ -32,8 +32,8 @@ $(document).on("dialogopen", function (event) {
     { label: "Location", prefix: "Locations/" },
     { label: "Person", prefix: "People/" },
     { label: "Platform", prefix: "Platforms/" },
+    { label: "Object", prefix: "Objects/" },
     { label: "Theme", prefix: "Themes/" },
-    { label: "Thing", prefix: "Things/" },
   ];
 
   allPrefixes = config
