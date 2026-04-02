@@ -80,10 +80,6 @@
   color: inherit;
 }
 
-.listing-card-link:hover .listing-card-title {
-  text-decoration: underline;
-}
-
 /* ==========================================================================
    Card Image
    ========================================================================== */
@@ -106,8 +102,20 @@
   aspect-ratio: 3/4;
 }
 
-.listing-card:hover .listing-card-image {
+.clickable-box:hover ~ .listing-card-image img, 
+.listing-card-image:hover img,
+.listing-card-link:has(.listing-card-title:hover) .listing-card-image img {
+    transform: scaleX(0.92) scaleY(0.9004166667);
+}
+
+.clickable-box:hover ~ .listing-card-image,
+.listing-card-image:hover,
+.listing-card-link:has(.listing-card-title:hover) .listing-card-image {
   border-color: #2a2a2a;
+}
+
+.listing-card-link:has(.listing-card-image:hover, .listing-card-title:hover) .listing-card-title {
+  text-decoration: underline;
 }
 
 .listing-card-image img {
@@ -117,10 +125,6 @@
   border-radius: 5px;
   transition: transform 0.2s;
   object-fit: cover;
-}
-
-.listing-card:hover .listing-card-image img {
-  transform: scaleX(0.92) scaleY(0.9004166667);
 }
 
 .listing-card-image-placeholder {

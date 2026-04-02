@@ -643,11 +643,13 @@ $wgNamespaceProtection[828] = ['editinterface'];
 
 
 function RestrictImportExport(&$list) {
-    if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
-        unset($list['Export']);
-        unset($list['Import']);
+    if ( !defined( 'MW_ENTRY_POINT' ) || MW_ENTRY_POINT !== 'load' ) {
+        if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
+            unset($list['Export']);
+            unset($list['Import']);
+        }
+        return true;
     }
-    return true;
 }
 $wgHooks['SpecialPage_initList'][]='RestrictImportExport';
 
