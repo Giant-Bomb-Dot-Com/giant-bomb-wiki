@@ -56,10 +56,6 @@
   color: #6ba4d9;
 }
 
-.wiki-nav__item > a:visited {
-  color: #666;
-}
-
 .wiki-nav__link--active,
 .wiki-nav__item .selflink {
   background: #b05f1c;
