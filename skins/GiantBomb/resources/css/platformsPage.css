@@ -1,8 +1,0 @@
-/**
- * Platform-specific styles
- * Extends shared listing styles from listingPage.css
- * Uses .platforms-page for page-specific overrides while keeping .listing-* classes for shared behavior
- */
-
-/* Platform page uses the shared listing-page styles via the class in the template */
-/* Only add platform-specific overrides here */
