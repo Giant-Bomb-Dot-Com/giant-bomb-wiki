@@ -29,6 +29,5 @@ function searchGBWiki(searchText) {
 
 $(".clickable-box").click(function () {
   var url = $(this).closest(".listing-card-link").data("url");
-  if( url)
-    window.location = url;
+  if (url) window.location = url;
 });
