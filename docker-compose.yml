@@ -27,6 +27,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8080:80"
     volumes:
@@ -49,7 +51,19 @@ services:
     environment:
       - MV_ENV=dev
       - COMPOSER_ROOT_VERSION=1.43.6
+      - REDIS_HOST=redis
     restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
 
   local-gcs:
     image: minio/minio
@@ -66,4 +80,5 @@ services:
 volumes:
   db-data:
   wiki-data:
+  redis-data:
   local-gcs: {}
