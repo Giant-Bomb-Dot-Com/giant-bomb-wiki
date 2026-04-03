@@ -4,6 +4,9 @@
 
 set -e
 
+# Git for Windows: avoid rewriting paths in `docker exec` args (e.g. /bin/bash -> host bash).
+export MSYS2_ARG_CONV_EXCL='*'
+
 echo "=========================================="
 echo "Giant Bomb Wiki - Setup"
 echo "=========================================="
@@ -86,6 +89,17 @@ until docker exec $WIKI_CONTAINER php -r "new mysqli('db', 'root', '${MARIADB_RO
 done
 echo ""
 echo "✓ Wiki can connect to database"
+echo ""
+
+# Wait for Redis
+REDIS_CONTAINER=$(docker compose -f docker-compose.snapshot.yml ps -q redis)
+echo "Waiting for Redis..."
+until docker exec $REDIS_CONTAINER redis-cli ping 2>/dev/null | grep -q PONG; do
+    printf "."
+    sleep 1
+done
+echo ""
+echo "✓ Redis ready"
 echo ""
 
 # Check MediaWiki installation

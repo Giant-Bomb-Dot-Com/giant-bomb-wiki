@@ -501,26 +501,16 @@ class CacheHelper {
     /**
      * Clear the entire cache (use with caution!)
      * 
-     * This attempts to clear the entire cache backend.
-     * Only works with certain cache backends (APCu, etc.)
+     * Invalidates all known cache prefixes via version increment.
+     * Works with any cache backend (Redis, APCu, etc.).
      * 
      * @return bool True if the operation was attempted
      */
     public function clearAll(): bool {
-        // For APCu
-        if (function_exists('apcu_clear_cache')) {
-            apcu_clear_cache();
-            if ($this->debugLogging) {
-                error_log("🗑 Cache CLEAR ALL: APCu cache cleared");
-            }
-            return true;
-        }
-        
-        // For other backends, fall back to purging known prefixes
-        if ($this->debugLogging) {
-            error_log("⚠ Cache CLEAR ALL: Backend doesn't support full clear, using purgeAll()");
-        }
         $this->purgeAll();
+        if ($this->debugLogging) {
+            error_log("Cache CLEAR ALL: all known prefixes invalidated");
+        }
         return true;
     }
     
