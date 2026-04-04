@@ -58,6 +58,10 @@
     "AlgoliaIndexName": {
       "value": "gb_content",
       "description": "Algolia index name (e.g., gb_content)."
+    },
+    "AlgoliaExcludeCategoryPatterns": {
+      "value": [],
+      "description": "Array of regex patterns to exclude from Algolia category facets (applied after hidden-category filtering)."
     }
   }
 }
