@@ -169,13 +169,25 @@ $wgCacheDirectory = "$IP/cache";
 # Localisation cache - use filesystem for faster interface message loading
 $wgLocalisationCacheConf["store"] = "file";
 
-$wgMainCacheType = CACHE_ACCEL;
+$redisHost = getenv('REDIS_HOST') ?: '127.0.0.1';
+$redisPort = intval(getenv('REDIS_PORT') ?: 6379);
+$redisPassword = getenv('REDIS_PASSWORD') ?: null;
+
+$wgObjectCaches['redis'] = [
+    'class' => 'RedisBagOStuff',
+    'servers' => [ "{$redisHost}:{$redisPort}" ],
+    'password' => $redisPassword,
+    'persistent' => true,
+    'automaticFailover' => true,
+];
+
+$wgMainCacheType = 'redis';
 $wgMemCachedServers = [];
-$wgParserCacheType = CACHE_DB;
+$wgParserCacheType = 'redis';
 $wgParserCacheExpireTime = 86400 * 7;
-$wgMessageCacheType = CACHE_ACCEL;
-$wgSessionCacheType = CACHE_DB;
-$wgObjectCacheSessionExpiry = 86400; # 24 hours
+$wgMessageCacheType = 'redis';
+$wgSessionCacheType = 'redis';
+$wgObjectCacheSessionExpiry = 86400;  # 24 hours
 $wgEnableSidebarCache = true;
 $wgSidebarCacheExpiry = 86400;
 
@@ -215,7 +227,7 @@ $wgInvalidateCacheOnLocalSettingsChange = true;
 
 # Jobs disabled on page views - run via cron/systemd instead
 # this can be set to 0.5 to run every other page, .25 every 4, etc. not set at all = 1 so on every page save
-#$wgJobRunRate = 0;
+$wgJobRunRate = 0.25;
 
 # =============================================================================
 # UPLOADS & IMAGES
@@ -410,9 +422,9 @@ if (
 
 enableSemantics();
 
-$smwgCacheType = CACHE_ACCEL;
-$smwgMainCacheType = CACHE_ACCEL;
-$smwgQueryResultCacheType = CACHE_DB;
+$smwgCacheType = 'redis';
+$smwgMainCacheType = 'redis';
+$smwgQueryResultCacheType = 'redis';
 $smwgQueryResultCacheLifetime = 86400 * 7;
 $smwgEnableCache = true;
 $smwgFactboxUseCache = true;
@@ -478,6 +490,13 @@ if (
 } else {
     $wgAlgoliaIndexName = "gb_content";
 }
+
+$wgAlgoliaExcludeCategoryPatterns = [
+	'/^Pages using /i',
+	'/^Pages with /i',
+	'/^Articles with /i',
+	'/^Articles using /i',
+];
 
 # =============================================================================
 # MISC
