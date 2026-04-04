@@ -459,6 +459,13 @@ if ( $algoliaIndex !== false && $algoliaIndex !== null && trim( $algoliaIndex ) 
 	$wgAlgoliaIndexName = 'gb_content';
 }
 
+$wgAlgoliaExcludeCategoryPatterns = [
+	'/^Pages using /i',
+	'/^Pages with /i',
+	'/^Articles with /i',
+	'/^Articles using /i',
+];
+
 # =============================================================================
 # MISC
 # =============================================================================
