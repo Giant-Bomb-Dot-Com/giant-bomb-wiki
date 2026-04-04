@@ -221,16 +221,44 @@ class RecordMapper {
 	private static function getCategoriesForPageId( int $pageId ): array {
 		$services = MediaWikiServices::getInstance();
 		$dbr = $services->getDBLoadBalancer()->getConnection( \DB_REPLICA );
+
+		// Exclude hidden categories (tracking/maintenance categories marked with __HIDDENCAT__)
 		$rows = $dbr->newSelectQueryBuilder()
 			->select( 'cl_to' )
 			->from( 'categorylinks' )
-			->where( [ 'cl_from' => $pageId ] )
+			->leftJoin( 'page', null, [
+				'page_title = cl_to',
+				'page_namespace' => NS_CATEGORY,
+			] )
+			->leftJoin( 'page_props', null, [
+				'pp_page = page_id',
+				'pp_propname' => 'hiddencat',
+			] )
+			->where( [
+				'cl_from' => $pageId,
+				'pp_value IS NULL',
+			] )
 			->caller( __METHOD__ )
 			->fetchResultSet();
+
 		$categories = [];
 		foreach ( $rows as $row ) {
 			$categories[] = str_replace( '_', ' ', (string)$row->cl_to );
 		}
+
+		$config = $services->getMainConfig();
+		$excludePatterns = (array)$config->get( 'AlgoliaExcludeCategoryPatterns' );
+		if ( $excludePatterns ) {
+			$categories = array_filter( $categories, static function ( string $cat ) use ( $excludePatterns ) {
+				foreach ( $excludePatterns as $pattern ) {
+					if ( preg_match( $pattern, $cat ) ) {
+						return false;
+					}
+				}
+				return true;
+			} );
+		}
+
 		return array_values( array_unique( $categories ) );
 	}
 
