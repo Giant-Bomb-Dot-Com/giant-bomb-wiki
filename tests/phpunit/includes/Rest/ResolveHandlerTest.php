@@ -17,6 +17,22 @@ use MediaWiki\Extension\GiantBombResolve\Rest\ResolveHandler;
 class ResolveHandlerTest extends MediaWikiIntegrationTestCase {
 	use MockServiceDependenciesTrait;
 
+	private function newHandlerWithAskResults( array $results ): ResolveHandler {
+		return new class( $results ) extends ResolveHandler {
+			/** @var array<string,mixed> */
+			private $results;
+
+			public function __construct( array $results ) {
+				$this->results = $results;
+				parent::__construct();
+			}
+
+			protected function runAskQuery( string $query ): array {
+				return $this->results;
+			}
+		};
+	}
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -92,6 +108,58 @@ class ResolveHandlerTest extends MediaWikiIntegrationTestCase {
 		$handler->setRequest( $request );
 		$this->expectException( HttpException::class );
 		$handler->execute();
+	}
+
+	public function testParseGuidsAcceptsUuid(): void {
+		$handler = new ResolveHandler();
+		$uuid = 'b4e96727-2fd5-4f13-93d3-f105d003387d';
+		$request = new FauxRequest( [ 'guids' => $uuid ] );
+		$handler->setRequest( $request );
+
+		$result = $handler->execute();
+		$this->assertInstanceOf( Response::class, $result );
+		$data = json_decode( $result->getBody()->getContents(), true );
+		$this->assertCount( 1, $data['guids'] );
+		$this->assertSame( $uuid, $data['guids'][0]['guid'] );
+	}
+
+	public function testParseGuidsAcceptsMixedLegacyAndUuid(): void {
+		$handler = new ResolveHandler();
+		$uuid = 'b4e96727-2fd5-4f13-93d3-f105d003387d';
+		$request = new FauxRequest( [ 'guids' => '3030-123,' . $uuid ] );
+		$handler->setRequest( $request );
+
+		$result = $handler->execute();
+		$this->assertInstanceOf( Response::class, $result );
+		$data = json_decode( $result->getBody()->getContents(), true );
+		$this->assertCount( 2, $data['guids'] );
+		$this->assertSame( '3030-123', $data['guids'][0]['guid'] );
+		$this->assertSame( $uuid, $data['guids'][1]['guid'] );
+	}
+
+	public function testUuidGuidIncludesAssocIdSentinelAndMappedTypeId(): void {
+		$uuid = 'b4e96727-2fd5-4f13-93d3-f105d003387d';
+		$handler = $this->newHandlerWithAskResults( [
+			'Games/Stubbed' => [
+				'displaytitle' => 'Stubbed Game',
+				'fullurl' => 'https://www.giantbomb.com/wiki/Games/Stubbed',
+				'fulltext' => 'Games/Stubbed',
+				'namespace' => 0,
+				'pageid' => 1,
+				'printouts' => [],
+			],
+		] );
+		$request = new FauxRequest( [ 'guids' => $uuid ] );
+		$handler->setRequest( $request );
+
+		$result = $handler->execute();
+		$this->assertInstanceOf( Response::class, $result );
+		$data = json_decode( $result->getBody()->getContents(), true );
+
+		$this->assertSame( 'ok', $data['guids'][0]['status'] );
+		$this->assertSame( $uuid, $data['guids'][0]['guid'] );
+		$this->assertSame( 3030, $data['guids'][0]['assocTypeId'] );
+		$this->assertSame( 0, $data['guids'][0]['assocId'] );
 	}
 }
 

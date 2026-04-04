@@ -58,6 +58,27 @@ class AlgoliaRestIndex {
 		}
 	}
 
+	public function deleteObjects( array $objectIds ): void {
+		$requests = [];
+		foreach ( $objectIds as $objectId ) {
+			$id = trim( (string)$objectId );
+			if ( $id === '' ) {
+				continue;
+			}
+			$requests[] = [
+				'action' => 'deleteObject',
+				'body' => [ 'objectID' => $id ],
+			];
+		}
+		if ( $requests ) {
+			$this->request(
+				'POST',
+				"/1/indexes/{$this->indexName}/batch",
+				[ 'requests' => $requests ]
+			);
+		}
+	}
+
 	private function request( string $method, string $path, array $body ): array {
 		$url = "https://{$this->appId}.algolia.net{$path}";
 		$payload = json_encode( $body, JSON_UNESCAPED_SLASHES );
