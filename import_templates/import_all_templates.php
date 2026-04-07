@@ -8,9 +8,12 @@
  *   php maintenance/run.php import_templates/import_all_templates.php
  *   php maintenance/run.php import_templates/import_all_templates.php --type=game
  *   php maintenance/run.php import_templates/import_all_templates.php --type=character
+ *
+ * If the repo is mounted only at $IP/import_templates (legacy), run:
+ *   php import_templates/import_all_templates.php
  */
 
-// Support both local dev (import_templates/) and Docker (maintenance/import_templates/)
+// $IP/import_templates/ or $IP/maintenance/import_templates/ (see Dockerfile.prod / docker-compose)
 if (file_exists(__DIR__ . "/../Maintenance.php")) {
     require_once __DIR__ . "/../Maintenance.php";
 } else {
