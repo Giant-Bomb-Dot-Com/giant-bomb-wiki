@@ -59,8 +59,17 @@
       "value": "gb_content",
       "description": "Algolia index name (e.g., gb_content)."
     },
+    "AlgoliaImageCdnBase": {
+      "value": null,
+      "description": "If set, rewrites storage.googleapis.com/{bucket} thumbnail URLs to this base (e.g. 'https://media.example.com'). Keeps raw GCS URLs out of the public index."
+    },
     "AlgoliaExcludeCategoryPatterns": {
-      "value": [],
+      "value": [
+        "/^Pages using /i",
+        "/^Pages with /i",
+        "/^Articles with /i",
+        "/^Articles using /i"
+      ],
       "description": "Array of regex patterns to exclude from Algolia category facets (applied after hidden-category filtering)."
     }
   }
