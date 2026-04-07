@@ -208,6 +208,11 @@ class ImportWikiTemplates extends Maintenance
             "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
             "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
 
+            //images page
+            "Template:ImagesPage" => "$templateDir/Template_ImagesPage.wikitext",
+            "Template:ImagesPageEnd" => "$templateDir/Template_ImagesPageEnd.wikitext",
+            "Module:ImagesPage" => "$moduleDir/Module_ImagesPage.wikitext",
+
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",
             "Module:BadgeList" => "$moduleDir/Module_BadgeList.wikitext",

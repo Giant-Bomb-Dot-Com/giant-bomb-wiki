@@ -379,6 +379,15 @@ wfLoadExtension( 'AlgoliaSearch' );
 wfLoadExtension( 'UrlGetParameters' );
 wfLoadExtension( 'GiantBombMetaTags' );
 wfLoadExtension( 'Moderation' );
+wfLoadExtension( 'GBGallery' );
+
+# =============================================================================
+# GBGALLERY (legacy CDN image galleries)
+# =============================================================================
+
+$wgGBGalleryBaseUrl   = "https://www.giantbomb.com/a/uploads";
+$wgGBGalleryThumbSize = "scale_medium";
+$wgGBGalleryFullSize  = "original";
 
 # =============================================================================
 # GIANTBOMB RESOLVE
@@ -639,6 +648,26 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     return true;
 };
 
+# Auto-append {{ImagesPageEnd}} to /Images subpages missing it
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
+    $title = $parser->getTitle();
+    if (!$title) {
+        return true;
+    }
+    if (str_ends_with($title->getText(), "/Images")) {
+        if (
+            preg_match("/\{\{ImagesPage\s*[\|\}]/i", $text) &&
+            stripos($text, "{{ImagesPageEnd}}") === false
+        ) {
+            $text .= "\n{{ImagesPageEnd}}";
+        }
+    }
+    return true;
+};
 
 // Redirect User:X pages to Special:Contributions/X
 $wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, $request, $mediaWiki) {

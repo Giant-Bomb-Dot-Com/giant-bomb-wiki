@@ -15,6 +15,7 @@ import_templates/import_franchise_bundle.php
 .DS_Store
 gcs_key.json
 .env
+.env.migration
 
 docs/
 gb_api_scripts/import_xml/*.xml
