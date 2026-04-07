@@ -41,8 +41,8 @@ Called from Module:CompanyQuery not directly used.
 </pre>
 </noinclude>
 <div class="listing-card">
-    <div class="listing-card-link clickable-box" data-url="{{fullurl:{{{url_title}}}}}">
-        <div class="listing-card-image"><!--
+    <div class="listing-card-link" data-url="{{fullurl:{{{url_title}}}}}">
+        <div class="listing-card-image clickable-box"><!--
             -->{{#if: {{{image|}}} | 
                 {{#ifeq: {{#sub: {{{image|}}} | 0 | 4 }} | http
                 | {{{image}}}
@@ -52,7 +52,7 @@ Called from Module:CompanyQuery not directly used.
                 }}
         </div>
         <div class="listing-card-info">
-            <h3 class="listing-card-title">{{{title}}}</h3>            
+            <h3 class="listing-card-title clickable-box">{{{title}}}</h3>            
             <div class="listing-card-deck">{{{deck|}}}</div>
             <div class="listing-card-stat">Published {{{published|}}} games</div>
             <div class="listing-card-stat">Developed {{{developed|}}} games</div>

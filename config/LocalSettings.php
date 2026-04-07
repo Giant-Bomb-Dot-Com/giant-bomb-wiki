@@ -11,22 +11,21 @@
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 
 # Protect against web entry
-if ( !defined( 'MEDIAWIKI' ) ) {
-	exit;
+if (!defined("MEDIAWIKI")) {
+    exit();
 }
 
-$wikiEnv = getenv('MV_ENV') ?: ($_ENV['MV_ENV'] ?? 'dev');
+$wikiEnv = getenv("MV_ENV") ?: $_ENV["MV_ENV"] ?? "dev";
 
 $wgMemoryLimit = "2G";
 
 # Increase template expansion limits for pages with many SMW queries
-$wgMaxArticleSize = 8192;           # Max article size in KB (default 2048)
-$wgAPIMaxResultSize = $wgMaxArticleSize * 4096;  # Must be >= MaxArticleSize * 4096
-$wgMaxPPNodeCount = 2000000;        # Max preprocessor node count (default 1000000)
-$wgMaxTemplateDepth = 100;          # Max template recursion depth (default 40)
-$wgMaxPPExpandDepth = 100;          # Max preprocessor expand depth (default 40)
-$wgExpensiveParserFunctionLimit = 500;  # Expensive parser function limit (default 100)
-
+$wgMaxArticleSize = 8192; # Max article size in KB (default 2048)
+$wgAPIMaxResultSize = $wgMaxArticleSize * 4096; # Must be >= MaxArticleSize * 4096
+$wgMaxPPNodeCount = 2000000; # Max preprocessor node count (default 1000000)
+$wgMaxTemplateDepth = 100; # Max template recursion depth (default 40)
+$wgMaxPPExpandDepth = 100; # Max preprocessor expand depth (default 40)
+$wgExpensiveParserFunctionLimit = 500; # Expensive parser function limit (default 100)
 $wgSitename = "Giant Bomb Video Game Wiki";
 $wgMetaNamespace = "Gb";
 
@@ -37,30 +36,39 @@ $wgUsePathInfo = false;
 $wgServer = "http://localhost:8080";
 
 # SMW config directory
-$smwgConfigFileDir = getenv('SMW_CONFIG_DIR') ?: '/var/www/html/images/smw-config';
-$smwSetupInfoFile = rtrim( $smwgConfigFileDir, '/' ) . '/.smw.json';
-if ( is_readable( $smwSetupInfoFile ) ) {
-    $smwSetupInfo = json_decode( @file_get_contents( $smwSetupInfoFile ), true );
-    if ( is_array( $smwSetupInfo ) && isset( $smwSetupInfo['upgrade_key'] ) && $smwSetupInfo['upgrade_key'] ) {
-        $smwgUpgradeKey = $smwSetupInfo['upgrade_key'];
+$smwgConfigFileDir =
+    getenv("SMW_CONFIG_DIR") ?: "/var/www/html/images/smw-config";
+$smwSetupInfoFile = rtrim($smwgConfigFileDir, "/") . "/.smw.json";
+if (is_readable($smwSetupInfoFile)) {
+    $smwSetupInfo = json_decode(@file_get_contents($smwSetupInfoFile), true);
+    if (
+        is_array($smwSetupInfo) &&
+        isset($smwSetupInfo["upgrade_key"]) &&
+        $smwSetupInfo["upgrade_key"]
+    ) {
+        $smwgUpgradeKey = $smwSetupInfo["upgrade_key"];
     }
 }
 
 $wgResourceBasePath = $wgScriptPath;
 
 # Env-driven base origin/path for reverse-proxy hosting
-$appBaseOrigin = getenv('APP_BASE_ORIGIN');
-$appBasePath = getenv('APP_BASE_PATH');
-if ( $appBaseOrigin ) {
+$appBaseOrigin = getenv("APP_BASE_ORIGIN");
+$appBasePath = getenv("APP_BASE_PATH");
+if ($appBaseOrigin) {
     $wgServer = $appBaseOrigin;
 }
-if ( $appBasePath !== false && $appBasePath !== null && $appBasePath !== '' ) {
+if ($appBasePath !== false && $appBasePath !== null && $appBasePath !== "") {
     $wgScriptPath = $appBasePath;
     $wgResourceBasePath = $wgScriptPath;
 }
 
-$canonicalServerEnv = getenv('CANONICAL_SERVER');
-if ( $canonicalServerEnv !== false && $canonicalServerEnv !== null && trim($canonicalServerEnv) !== '' ) {
+$canonicalServerEnv = getenv("CANONICAL_SERVER");
+if (
+    $canonicalServerEnv !== false &&
+    $canonicalServerEnv !== null &&
+    trim($canonicalServerEnv) !== ""
+) {
     $wgCanonicalServer = trim($canonicalServerEnv);
 } else {
     $wgCanonicalServer = $wgServer;
@@ -69,8 +77,8 @@ $wgLoadScript = "$wgScriptPath/load.php";
 $wgStylePath = "$wgResourceBasePath/skins";
 
 $wgLogos = [
-	'1x' => "$wgResourceBasePath/resources/assets/change-your-logo.svg",
-	'icon' => "$wgResourceBasePath/resources/assets/change-your-logo-icon.svg",
+    "1x" => "$wgResourceBasePath/resources/assets/change-your-logo.svg",
+    "icon" => "$wgResourceBasePath/resources/assets/change-your-logo-icon.svg",
 ];
 
 # Email (disabled)
@@ -89,62 +97,61 @@ $wgDBname = getenv("MARIADB_DATABASE");
 $wgDBuser = getenv("MARIADB_USER");
 $wgDBpassword = getenv("MARIADB_PASSWORD");
 
-
 # Cloud SQL socket support
-$cloudSqlInstance = getenv('CLOUDSQL_INSTANCE');
-if ( $cloudSqlInstance ) {
-    $socketPath = '/cloudsql/' . $cloudSqlInstance;
-    $wgDBserver = 'localhost:' . $socketPath;
+$cloudSqlInstance = getenv("CLOUDSQL_INSTANCE");
+if ($cloudSqlInstance) {
+    $socketPath = "/cloudsql/" . $cloudSqlInstance;
+    $wgDBserver = "localhost:" . $socketPath;
     $wgDBsocket = $socketPath;
 }
 
 # DB env overrides (DB_* takes precedence over MARIADB_*)
-$dbHost = getenv('DB_HOST');
-if ( $dbHost ) {
+$dbHost = getenv("DB_HOST");
+if ($dbHost) {
     $wgDBserver = $dbHost;
 }
-$dbPort = getenv('DB_PORT');
-if ( $dbPort ) {
+$dbPort = getenv("DB_PORT");
+if ($dbPort) {
     $wgDBport = intval($dbPort);
 }
-$dbName = getenv('DB_NAME');
-if ( $dbName ) {
+$dbName = getenv("DB_NAME");
+if ($dbName) {
     $wgDBname = $dbName;
 }
-$dbUser = getenv('DB_USER');
-if ( $dbUser ) {
+$dbUser = getenv("DB_USER");
+if ($dbUser) {
     $wgDBuser = $dbUser;
 }
-$dbPassword = getenv('DB_PASSWORD');
-if ( $dbPassword ) {
+$dbPassword = getenv("DB_PASSWORD");
+if ($dbPassword) {
     $wgDBpassword = $dbPassword;
 }
 
 # Fallback if DB name is still empty
-if ( !$wgDBname || trim($wgDBname) === '' ) {
-    $wgDBname = 'mediawiki';
+if (!$wgDBname || trim($wgDBname) === "") {
+    $wgDBname = "mediawiki";
 }
 
 # External DB for gb_api_dump
-$wgExternalDataSources['gb_api_dump'] = [
-    'server' => 'db',
-    'type' => 'mysql',
-    'name' => getenv("MARIADB_API_DUMP_DATABASE"),
-    'user' => getenv("MARIADB_USER"),
-    'password' => getenv("MARIADB_PASSWORD")
+$wgExternalDataSources["gb_api_dump"] = [
+    "server" => "db",
+    "type" => "mysql",
+    "name" => getenv("MARIADB_API_DUMP_DATABASE"),
+    "user" => getenv("MARIADB_USER"),
+    "password" => getenv("MARIADB_PASSWORD"),
 ];
 
-$wgExternalDatabases['external_db'] = [
-    'class' => 'DatabaseLoadBalancer',
-    'hosts' => [
+$wgExternalDatabases["external_db"] = [
+    "class" => "DatabaseLoadBalancer",
+    "hosts" => [
         [
-            'type' => 'mysql',
-            'host' => getenv( 'EXTERNAL_DB_HOST' ),
-            'dbname' => getenv( 'EXTERNAL_DB_NAME' ),
-            'user' => getenv( 'EXTERNAL_DB_USER' ),
-            'password' => getenv( 'EXTERNAL_DB_PASSWORD' )
-        ]
-    ]
+            "type" => "mysql",
+            "host" => getenv("EXTERNAL_DB_HOST"),
+            "dbname" => getenv("EXTERNAL_DB_NAME"),
+            "user" => getenv("EXTERNAL_DB_USER"),
+            "password" => getenv("EXTERNAL_DB_PASSWORD"),
+        ],
+    ],
 ];
 
 $wgDBprefix = "";
@@ -160,7 +167,7 @@ $wgSharedTables[] = "actor";
 $wgCacheDirectory = "$IP/cache";
 
 # Localisation cache - use filesystem for faster interface message loading
-$wgLocalisationCacheConf['store'] = 'file';
+$wgLocalisationCacheConf["store"] = "file";
 
 $redisHost = getenv('REDIS_HOST') ?: '127.0.0.1';
 $redisPort = intval(getenv('REDIS_PORT') ?: 6379);
@@ -184,7 +191,7 @@ $wgObjectCacheSessionExpiry = 86400;  # 24 hours
 $wgEnableSidebarCache = true;
 $wgSidebarCacheExpiry = 86400;
 
-if ( $wikiEnv === 'prod' ) {
+if ($wikiEnv === "prod") {
     $wgUseFileCache = true;
     $wgFileCacheDirectory = "$IP/cache/html";
     $wgShowIPinHeader = false;
@@ -192,27 +199,27 @@ if ( $wikiEnv === 'prod' ) {
 }
 
 $wgResourceLoaderMaxage = [
-    'versioned' => 30 * 24 * 60 * 60,
-    'unversioned' => 5 * 60,
+    "versioned" => 30 * 24 * 60 * 60,
+    "unversioned" => 5 * 60,
 ];
 
 # In dev, use timestamp-based version to auto-bust cache on container restart
 # In prod, use a static version string that gets updated on deploys
-if ( $wikiEnv === 'dev' ) {
+if ($wikiEnv === "dev") {
     # Generate version from container start time (cached in APCu for consistency within session)
-    if ( function_exists( 'apcu_fetch' ) ) {
-        $devCacheVersion = apcu_fetch('dev_cache_version');
-        if ( $devCacheVersion === false ) {
-            $devCacheVersion = date('YmdHis');
-            apcu_store('dev_cache_version', $devCacheVersion, 86400);
+    if (function_exists("apcu_fetch")) {
+        $devCacheVersion = apcu_fetch("dev_cache_version");
+        if ($devCacheVersion === false) {
+            $devCacheVersion = date("YmdHis");
+            apcu_store("dev_cache_version", $devCacheVersion, 86400);
         }
     } else {
         # Fallback if APCu not available - use current date (changes daily)
-        $devCacheVersion = date('Ymd');
+        $devCacheVersion = date("Ymd");
     }
-    $wgResourceLoaderUniqueVersion = 'dev-' . $devCacheVersion;
+    $wgResourceLoaderUniqueVersion = "dev-" . $devCacheVersion;
 } else {
-    $wgResourceLoaderUniqueVersion = '20260206-v2';
+    $wgResourceLoaderUniqueVersion = "20260206-v2";
 }
 
 $wgUseETag = true;
@@ -230,45 +237,50 @@ $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
-if ($wikiEnv == 'prod') {
-    $uploadsSubdir = getenv('UPLOADS_SUBDIR');
-    if ( $uploadsSubdir ) {
-        $wgUploadDirectory = '/var/www/html/images/' . trim($uploadsSubdir, "/");
-        $wgUploadPath = $wgScriptPath . '/images/' . trim($uploadsSubdir, "/");
+if ($wikiEnv == "prod") {
+    $uploadsSubdir = getenv("UPLOADS_SUBDIR");
+    if ($uploadsSubdir) {
+        $wgUploadDirectory =
+            "/var/www/html/images/" . trim($uploadsSubdir, "/");
+        $wgUploadPath = $wgScriptPath . "/images/" . trim($uploadsSubdir, "/");
     } else {
-        $wgUploadDirectory = '/var/www/html/images';
-        $wgUploadPath = $wgScriptPath.'/images';
+        $wgUploadDirectory = "/var/www/html/images";
+        $wgUploadPath = $wgScriptPath . "/images";
     }
 }
 
 $wgAddImgTagWhitelist = true;
-$wgAddImgTagWhitelistDomainsList = ['www.giantbomb.com', 'giantbomb.com', 'media.giantbomb.com'];
+$wgAddImgTagWhitelistDomainsList = [
+    "www.giantbomb.com",
+    "giantbomb.com",
+    "media.giantbomb.com",
+];
 $wgAllowExternalImagesFrom = [
-    'https://www.giantbomb.com/',
-    'http://www.giantbomb.com/',
-    'https://giantbomb.com/',
-    'http://giantbomb.com/',
-    'https://media.giantbomb.com/',
-    'http://origin.giantbomb.com/',
-    'https://origin.giantbomb.com/',
-    'https://storage.googleapis.com/',
-    'http://localhost:9000',
+    "https://www.giantbomb.com/",
+    "http://www.giantbomb.com/",
+    "https://giantbomb.com/",
+    "http://giantbomb.com/",
+    "https://media.giantbomb.com/",
+    "http://origin.giantbomb.com/",
+    "https://origin.giantbomb.com/",
+    "https://storage.googleapis.com/",
+    "http://localhost:9000",
 ];
 $wgUseInstantCommons = false;
 
 # GCS image storage via Extension:AWS (S3-compatible API)
-$gcsAccessKey = getenv('GCS_HMAC_ACCESS_KEY');
+$gcsAccessKey = getenv("GCS_HMAC_ACCESS_KEY");
 if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
-    wfLoadExtension('AWS');
+    wfLoadExtension("AWS");
 
     $wgAWSCredentials = [
-        'key'    => $gcsAccessKey,
-        'secret' => getenv('GCS_HMAC_SECRET'),
-        'token'  => false,
+        "key" => $gcsAccessKey,
+        "secret" => getenv("GCS_HMAC_SECRET"),
+        "token" => false,
     ];
 
-    $wgAWSRegion = 'auto';
-    $wgAWSBucketName = getenv('GCS_BUCKET_NAME') ?: 'gb_wiki_mw';
+    $wgAWSRegion = "auto";
+    $wgAWSBucketName = getenv("GCS_BUCKET_NAME") ?: "gb_wiki_mw";
 
     if ($gcsAccessKey === "dev") {
         //LOCAL
@@ -298,8 +310,8 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
     }
 
     // GCS doesn't support the checksum headers newer AWS SDKs send by default
-    putenv('AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED');
-    putenv('AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED');
+    putenv("AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED");
+    putenv("AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED");
 
     $wgAWSRepoHashLevels = 2;
     $wgAWSRepoDeletedHashLevels = 3;
@@ -314,25 +326,25 @@ $wgLanguageCode = "en";
 $wgLocaltimezone = "UTC";
 
 # Cookie config -- shares domain with GBN, prefix must be empty so gb_wiki cookie is read as-is
-$cookieDomain = getenv('COOKIE_DOMAIN');
-if ( $cookieDomain ) {
+$cookieDomain = getenv("COOKIE_DOMAIN");
+if ($cookieDomain) {
     $wgCookieDomain = $cookieDomain;
 }
-$cookiePath = getenv('COOKIE_PATH');
-if ( !$cookiePath ) {
-    $cookiePath = '/';
+$cookiePath = getenv("COOKIE_PATH");
+if (!$cookiePath) {
+    $cookiePath = "/";
 }
 $wgCookiePath = $cookiePath;
-$wgCookiePrefix = '';
+$wgCookiePrefix = "";
 $wgCookieHttpOnly = true;
-$wgSessionName = 'mwSession';
-if ( $wikiEnv === 'prod' ) {
+$wgSessionName = "mwSession";
+if ($wikiEnv === "prod") {
     $wgCookieSecure = true;
 }
 
-$wgSecretKey = getenv('MW_SK');
+$wgSecretKey = getenv("MW_SK");
 $wgAuthenticationTokenVersion = "1";
-$wgUpgradeKey = getenv('MW_UK');
+$wgUpgradeKey = getenv("MW_UK");
 
 # License
 $wgRightsPage = "";
@@ -348,52 +360,60 @@ $wgGroupPermissions["*"]["edit"] = false;
 # =============================================================================
 
 $wgDefaultSkin = "giantbomb";
-wfLoadSkin( 'GiantBomb' );
-wfLoadSkin( 'Vector' );
+wfLoadSkin("GiantBomb");
+wfLoadSkin("Vector");
 
-wfLoadExtension( 'CodeEditor' );
-wfLoadExtension( 'PageImages' );
-wfLoadExtension( 'ParserFunctions' );
-wfLoadExtension( 'Popups' );
-wfLoadExtension( 'Scribunto' );
-wfLoadExtension( 'SemanticExtraSpecialProperties' );
-wfLoadExtension( 'SemanticMediaWiki' );
-wfLoadExtension( 'SemanticResultFormats' );
-wfLoadExtension( 'SemanticScribunto' );
-wfLoadExtension( 'TemplateData' );
-wfLoadExtension( 'TemplateStyles' );
-wfLoadExtension( 'TemplateStylesExtender' );
-wfLoadExtension( 'TextExtracts' );
-wfLoadExtension( 'WikiEditor' );
-wfLoadExtension( 'DisplayTitle' );
-wfLoadExtension( 'PageForms' );
-wfLoadExtension( 'GiantBombResolve' );
-wfLoadExtension( 'AlgoliaSearch' );
-wfLoadExtension( 'UrlGetParameters' );
-wfLoadExtension( 'GiantBombMetaTags' );
-wfLoadExtension( 'Moderation' );
+wfLoadExtension("CodeEditor");
+wfLoadExtension("PageImages");
+wfLoadExtension("ParserFunctions");
+wfLoadExtension("Popups");
+wfLoadExtension("Scribunto");
+wfLoadExtension("SemanticExtraSpecialProperties");
+wfLoadExtension("SemanticMediaWiki");
+wfLoadExtension("SemanticResultFormats");
+wfLoadExtension("SemanticScribunto");
+wfLoadExtension("TemplateData");
+wfLoadExtension("TemplateStyles");
+wfLoadExtension("TemplateStylesExtender");
+wfLoadExtension("TextExtracts");
+wfLoadExtension("WikiEditor");
+wfLoadExtension("DisplayTitle");
+wfLoadExtension("PageForms");
+wfLoadExtension("GiantBombResolve");
+wfLoadExtension("AlgoliaSearch");
+wfLoadExtension("UrlGetParameters");
+wfLoadExtension("GiantBombMetaTags");
+wfLoadExtension("Moderation");
 
 # =============================================================================
 # GIANTBOMB RESOLVE
 # =============================================================================
 
 $wgGiantBombResolveFields = [
-	'displaytitle',
-	'fullurl',
-	'fulltext',
-	'pageid',
-	'namespace',
-	'image',
+    "displaytitle",
+    "fullurl",
+    "fulltext",
+    "pageid",
+    "namespace",
+    "image",
 ];
 
-$gbResolveToken = getenv( 'MW_GIANTBOMB_RESOLVE_INTERNAL_TOKEN' );
-if ( $gbResolveToken !== false && $gbResolveToken !== null && $gbResolveToken !== '' ) {
-	$wgGiantBombResolveInternalToken = $gbResolveToken;
+$gbResolveToken = getenv("MW_GIANTBOMB_RESOLVE_INTERNAL_TOKEN");
+if (
+    $gbResolveToken !== false &&
+    $gbResolveToken !== null &&
+    $gbResolveToken !== ""
+) {
+    $wgGiantBombResolveInternalToken = $gbResolveToken;
 }
 
-$gbResolveBaseOrigin = getenv( 'MW_GIANTBOMB_RESOLVE_BASE_ORIGIN' );
-if ( $gbResolveBaseOrigin !== false && $gbResolveBaseOrigin !== null && trim( $gbResolveBaseOrigin ) !== '' ) {
-	$wgGiantBombResolveBaseOrigin = trim( $gbResolveBaseOrigin );
+$gbResolveBaseOrigin = getenv("MW_GIANTBOMB_RESOLVE_BASE_ORIGIN");
+if (
+    $gbResolveBaseOrigin !== false &&
+    $gbResolveBaseOrigin !== null &&
+    trim($gbResolveBaseOrigin) !== ""
+) {
+    $wgGiantBombResolveBaseOrigin = trim($gbResolveBaseOrigin);
 }
 
 # =============================================================================
@@ -413,12 +433,12 @@ $smwgAutoRefreshOnPurge = true;
 $smwgEnabledQueryDependencyLinksStore = true;
 $smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
 $smwgEnabledFulltextSearch = true;
-$smwgPageSpecialProperties[] = '_CDAT';
+$smwgPageSpecialProperties[] = "_CDAT";
 $smwgEnableUpdateJobs = true;
 $smwgFulltextSearchIndexableDataTypes = 2 | 4;
 $smwgFixedProperties = [
-    '_MDAT' => 'smw_moddate',   // Indexes Modification date
-    '_CDAT' => 'smw_credate',   // Indexes Creation date
+    "_MDAT" => "smw_moddate", // Indexes Modification date
+    "_CDAT" => "smw_credate", // Indexes Creation date
 ];
 
 # SMW query limits
@@ -437,26 +457,38 @@ $wgPageFormsUseDisplayTitle = false;
 # =============================================================================
 
 $wgAlgoliaSearchEnabled = false;
-$algoliaEnabled = getenv( 'ALGOLIA_SEARCH_ENABLED' );
-if ( $algoliaEnabled !== false && $algoliaEnabled !== null ) {
-	$flag = strtolower( trim( (string)$algoliaEnabled ) );
-	if ( $flag === '1' || $flag === 'true' || $flag === 'yes' ) {
-		$wgAlgoliaSearchEnabled = true;
-	}
+$algoliaEnabled = getenv("ALGOLIA_SEARCH_ENABLED");
+if ($algoliaEnabled !== false && $algoliaEnabled !== null) {
+    $flag = strtolower(trim((string) $algoliaEnabled));
+    if ($flag === "1" || $flag === "true" || $flag === "yes") {
+        $wgAlgoliaSearchEnabled = true;
+    }
 }
-$algoliaAppId = getenv( 'ALGOLIA_APP_ID' );
-if ( $algoliaAppId !== false && $algoliaAppId !== null && trim( $algoliaAppId ) !== '' ) {
-	$wgAlgoliaAppId = trim( $algoliaAppId );
+$algoliaAppId = getenv("ALGOLIA_APP_ID");
+if (
+    $algoliaAppId !== false &&
+    $algoliaAppId !== null &&
+    trim($algoliaAppId) !== ""
+) {
+    $wgAlgoliaAppId = trim($algoliaAppId);
 }
-$algoliaAdminKey = getenv( 'ALGOLIA_ADMIN_API_KEY' );
-if ( $algoliaAdminKey !== false && $algoliaAdminKey !== null && trim( $algoliaAdminKey ) !== '' ) {
-	$wgAlgoliaAdminApiKey = trim( $algoliaAdminKey );
+$algoliaAdminKey = getenv("ALGOLIA_ADMIN_API_KEY");
+if (
+    $algoliaAdminKey !== false &&
+    $algoliaAdminKey !== null &&
+    trim($algoliaAdminKey) !== ""
+) {
+    $wgAlgoliaAdminApiKey = trim($algoliaAdminKey);
 }
-$algoliaIndex = getenv( 'ALGOLIA_INDEX_CONTENT' );
-if ( $algoliaIndex !== false && $algoliaIndex !== null && trim( $algoliaIndex ) !== '' ) {
-	$wgAlgoliaIndexName = trim( $algoliaIndex );
+$algoliaIndex = getenv("ALGOLIA_INDEX_CONTENT");
+if (
+    $algoliaIndex !== false &&
+    $algoliaIndex !== null &&
+    trim($algoliaIndex) !== ""
+) {
+    $wgAlgoliaIndexName = trim($algoliaIndex);
 } else {
-	$wgAlgoliaIndexName = 'gb_content';
+    $wgAlgoliaIndexName = "gb_content";
 }
 
 $wgAlgoliaExcludeCategoryPatterns = [
@@ -476,35 +508,42 @@ $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
 # Dev mode settings
-if ( $wikiEnv === 'dev' ) {
+if ($wikiEnv === "dev") {
     $wgShowExceptionDetails = true;
     $wgDevelopmentWarnings = true;
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-    ini_set( 'display_errors', 1 );
+    ini_set("display_errors", 1);
     $smwgIgnoreUpgradeKeyCheck = true;
 
     # Disable/reduce caching in dev for faster iteration
-    $wgParserCacheExpireTime = 0;  # Disable parser cache
+    $wgParserCacheExpireTime = 0; # Disable parser cache
     $wgEnableSidebarCache = false;
     $wgResourceLoaderMaxage = [
-        'versioned' => 0,
-        'unversioned' => 0,
+        "versioned" => 0,
+        "unversioned" => 0,
     ];
-    $smwgQueryResultCacheLifetime = 0;  # Disable SMW query cache
+    $smwgQueryResultCacheLifetime = 0; # Disable SMW query cache
 }
 
 $wgFavicon = "/favicon.ico";
 
 # Scribunto/Lua
-$wgScribuntoDefaultEngine = 'luastandalone';
-$wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
-
+$wgScribuntoDefaultEngine = "luastandalone";
+$wgScribuntoEngineConf["luastandalone"]["errorFile"] =
+    "/var/log/mediawiki/lua_err.log";
+$wgScribuntoEngineConf["luastandalone"]["memoryLimit"] = 209715200; # bytes, 200 MB
 # Auto-append {{GameEnd}} to game pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Games/' ) === 0 ) {
-        if ( preg_match( '/\{\{Game\s*[\|\}]/i', $text ) && stripos( $text, '{{GameEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Games/") === 0) {
+        if (
+            preg_match("/\{\{Game\s*[\|\}]/i", $text) &&
+            stripos($text, "{{GameEnd}}") === false
+        ) {
             $text .= "\n{{GameEnd}}";
         }
     }
@@ -512,10 +551,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{CharacterEnd}} to character pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
-        if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Characters/") === 0) {
+        if (
+            preg_match("/\{\{Character\s*[\|\}]/i", $text) &&
+            stripos($text, "{{CharacterEnd}}") === false
+        ) {
             $text .= "\n{{CharacterEnd}}";
         }
     }
@@ -523,10 +569,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{FranchiseEnd}} to franchise pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Franchises/' ) === 0 ) {
-        if ( preg_match( '/\{\{Franchise\s*[\|\}]/i', $text ) && stripos( $text, '{{FranchiseEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Franchises/") === 0) {
+        if (
+            preg_match("/\{\{Franchise\s*[\|\}]/i", $text) &&
+            stripos($text, "{{FranchiseEnd}}") === false
+        ) {
             $text .= "\n{{FranchiseEnd}}";
         }
     }
@@ -534,10 +587,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{ConceptEnd}} to concept pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Concepts/' ) === 0 ) {
-        if ( preg_match( '/\{\{Concept\s*[\|\}]/i', $text ) && stripos( $text, '{{ConceptEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Concepts/") === 0) {
+        if (
+            preg_match("/\{\{Concept\s*[\|\}]/i", $text) &&
+            stripos($text, "{{ConceptEnd}}") === false
+        ) {
             $text .= "\n{{ConceptEnd}}";
         }
     }
@@ -545,10 +605,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{PlatformEnd}} to platform pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Platforms/' ) === 0 ) {
-        if ( preg_match( '/\{\{Platform\s*[\|\}]/i', $text ) && stripos( $text, '{{PlatformEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Platforms/") === 0) {
+        if (
+            preg_match("/\{\{Platform\s*[\|\}]/i", $text) &&
+            stripos($text, "{{PlatformEnd}}") === false
+        ) {
             $text .= "\n{{PlatformEnd}}";
         }
     }
@@ -556,10 +623,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{CompanyEnd}} to company pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Companies/' ) === 0 ) {
-        if ( preg_match( '/\{\{Company\s*[\|\}]/i', $text ) && stripos( $text, '{{CompanyEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Companies/") === 0) {
+        if (
+            preg_match("/\{\{Company\s*[\|\}]/i", $text) &&
+            stripos($text, "{{CompanyEnd}}") === false
+        ) {
             $text .= "\n{{CompanyEnd}}";
         }
     }
@@ -567,10 +641,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{PersonEnd}} to person pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'People/' ) === 0 ) {
-        if ( preg_match( '/\{\{Person\s*[\|\}]/i', $text ) && stripos( $text, '{{PersonEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "People/") === 0) {
+        if (
+            preg_match("/\{\{Person\s*[\|\}]/i", $text) &&
+            stripos($text, "{{PersonEnd}}") === false
+        ) {
             $text .= "\n{{PersonEnd}}";
         }
     }
@@ -578,10 +659,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{ObjectEnd}} to object pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Objects/' ) === 0 ) {
-        if ( preg_match( '/\{\{Object\s*[\|\}]/i', $text ) && stripos( $text, '{{ObjectEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Objects/") === 0) {
+        if (
+            preg_match("/\{\{Object\s*[\|\}]/i", $text) &&
+            stripos($text, "{{ObjectEnd}}") === false
+        ) {
             $text .= "\n{{ObjectEnd}}";
         }
     }
@@ -589,10 +677,17 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{LocationEnd}} to location pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Locations/' ) === 0 ) {
-        if ( preg_match( '/\{\{Location\s*[\|\}]/i', $text ) && stripos( $text, '{{LocationEnd}}' ) === false ) {
+    if ($title && strpos($title->getText(), "Locations/") === 0) {
+        if (
+            preg_match("/\{\{Location\s*[\|\}]/i", $text) &&
+            stripos($text, "{{LocationEnd}}") === false
+        ) {
             $text .= "\n{{LocationEnd}}";
         }
     }
@@ -600,25 +695,34 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
 };
 
 # Auto-append {{TypeEnd}} templates to pages missing them
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
     $title = $parser->getTitle();
-    if ( !$title ) return true;
+    if (!$title) {
+        return true;
+    }
 
     $pageTypes = [
-        'Accessories/' => 'Accessory',
-        'Themes/' => 'Theme',
-        'Genres/' => 'Genre',
-        'DLCs/' => 'DLC',
-        'Releases/' => 'Release',
-        'RatingBoards/' => 'RatingBoard',
-        'Regions/' => 'Region',
-        'GameRatings/' => 'GameRating',
+        "Accessories/" => "Accessory",
+        "Themes/" => "Theme",
+        "Genres/" => "Genre",
+        "DLCs/" => "DLC",
+        "Releases/" => "Release",
+        "RatingBoards/" => "RatingBoard",
+        "Regions/" => "Region",
+        "GameRatings/" => "GameRating",
     ];
 
-    foreach ( $pageTypes as $prefix => $type ) {
-        if ( strpos( $title->getText(), $prefix ) === 0 ) {
+    foreach ($pageTypes as $prefix => $type) {
+        if (strpos($title->getText(), $prefix) === 0) {
             $endTag = "{{{$type}End}}";
-            if ( preg_match( '/\{\{' . $type . '\s*[\|\}]/i', $text ) && stripos( $text, $endTag ) === false ) {
+            if (
+                preg_match("/\{\{" . $type . "\s*[\|\}]/i", $text) &&
+                stripos($text, $endTag) === false
+            ) {
                 $text .= "\n$endTag";
             }
             break;
@@ -627,12 +731,21 @@ $wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_st
     return true;
 };
 
-
 // Redirect User:X pages to Special:Contributions/X
-$wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, $request, $mediaWiki) {
+$wgHooks["BeforeInitialize"][] = function (
+    &$title,
+    &$unused,
+    &$output,
+    &$user,
+    $request,
+    $mediaWiki,
+) {
     if ($title->getNamespace() === NS_USER && !$title->isSubpage()) {
         $username = $title->getText();
-        $contribTitle = \MediaWiki\Title\Title::makeTitle(NS_SPECIAL, 'Contributions/' . $username);
+        $contribTitle = \MediaWiki\Title\Title::makeTitle(
+            NS_SPECIAL,
+            "Contributions/" . $username,
+        );
         $output->redirect($contribTitle->getFullURL());
         return false;
     }
@@ -641,14 +754,14 @@ $wgHooks['BeforeInitialize'][] = function (&$title, &$unused, &$output, &$user, 
 
 // user groups and permissions
 // Also see extensions/GbSessionProvider/extension.json and Moderation extension.json
-$wgGroupPermissions['*']['createaccount'] = false;
-$wgGroupPermissions['*']['edit'] = false;
+$wgGroupPermissions["*"]["createaccount"] = false;
+$wgGroupPermissions["*"]["edit"] = false;
 
-$wgGroupPermissions['user']['edit'] = true;
-$wgGroupPermissions['user']['createpage'] = true;
+$wgGroupPermissions["user"]["edit"] = true;
+$wgGroupPermissions["user"]["createpage"] = true;
 
-$wgGroupPermissions['sysop']['createaccount'] = true;
-$wgGroupPermissions['sysop']['edit'] = true;
+$wgGroupPermissions["sysop"]["createaccount"] = true;
+$wgGroupPermissions["sysop"]["edit"] = true;
 
 # =============================================================================
 # Lockdown restricted namespaces
@@ -656,33 +769,35 @@ $wgGroupPermissions['sysop']['edit'] = true;
 # 828 = module
 # Special:AllPages pick from namespaces dropdown and filter, URI has the number
 # =============================================================================
-$wgNamespaceProtection[NS_TEMPLATE] = ['editinterface'];
-$wgNamespaceProtection[106] = ['editinterface'];
-$wgNamespaceProtection[828] = ['editinterface'];
+$wgNamespaceProtection[NS_TEMPLATE] = ["editinterface"];
+$wgNamespaceProtection[106] = ["editinterface"];
+$wgNamespaceProtection[828] = ["editinterface"];
 
-
-function RestrictImportExport(&$list) {
-    if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
-        unset($list['Export']);
-        unset($list['Import']);
+function RestrictImportExport(&$list)
+{
+    if (!defined("MW_ENTRY_POINT") || MW_ENTRY_POINT !== "load") {
+        if (!RequestContext::getMain()->getUser()->isAllowed("editinterface")) {
+            unset($list["Export"]);
+            unset($list["Import"]);
+        }
+        return true;
     }
-    return true;
 }
-$wgHooks['SpecialPage_initList'][]='RestrictImportExport';
+$wgHooks["SpecialPage_initList"][] = "RestrictImportExport";
 
 # =============================================================================
 # GBSESSIONPROVIDER (SSO)
 # =============================================================================
 
-wfLoadExtension( 'GbSessionProvider' );
-$wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
+wfLoadExtension("GbSessionProvider");
+$wgGbSessionProviderJWKSUri = "https://giantbomb.com/.well-known/jwks.json";
 
-if ( $wikiEnv === 'dev' ) {
+if ($wikiEnv === "dev") {
     $wgDebugToolbar = true;
     $wgShowDebug = true;
-    $wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+    $wgDebugLogFile = getenv("MW_LOG_DIR") . "debug-{$wgDBname}.log";
     $wgDebugLogGroups = [
         // log channel -> log path
-        'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',
+        "GbSessionProvider" => "/var/log/mediawiki/gb_session_provider.log",
     ];
 }
