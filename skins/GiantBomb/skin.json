@@ -28,41 +28,36 @@
     "GiantBomb\\Skin\\Helpers\\PageHelper": "includes/helpers/PageHelper.php"
   },
   "ResourceModules": {
-    "skins.giantbomb.vueexamplecomponent": {
-      "scripts": ["resources/components/VueExampleComponent.js"]
-    },
     "skins.giantbomb.styles": {
       "styles": [
-        "resources/css/styles.css",
-        "resources/css/pageWrapper.css",
-        "resources/css/search.css",
-        "resources/css/wikiNav.css",
-        "resources/css/landingPage.css",
-        "resources/css/gamePage.css",
-        "resources/css/listingPage.css",
-        "resources/css/filters.css",
-        "resources/css/newReleasesPage.css",
-        "resources/css/platformsPage.css",
-        "resources/css/conceptsPage.css",
-        "resources/css/peoplesPage.css",
-        "resources/css/game-wiki.css",
+        "resources/css/accessory-wiki.css",
         "resources/css/character-wiki.css",
-        "resources/css/franchise-wiki.css",
         "resources/css/company-wiki.css",
         "resources/css/concept-wiki.css",
+        "resources/css/dlc-wiki.css",
+        "resources/css/editor.css",
+        "resources/css/filters.css",
+        "resources/css/franchise-wiki.css",
+        "resources/css/game-wiki.css",
+        "resources/css/gamePage.css",
+        "resources/css/gamerating-wiki.css",
+        "resources/css/genre-wiki.css",
+        "resources/css/landingPage.css",
+        "resources/css/listingPage.css",
         "resources/css/location-wiki.css",
+        "resources/css/newReleasesPage.css",
+        "resources/css/object-wiki.css",
+        "resources/css/pageWrapper.css",
+        "resources/css/pagination.css",
         "resources/css/person-wiki.css",
         "resources/css/platform-wiki.css",
-        "resources/css/object-wiki.css",
-        "resources/css/genre-wiki.css",
-        "resources/css/theme-wiki.css",
-        "resources/css/accessory-wiki.css",
-        "resources/css/dlc-wiki.css",
-        "resources/css/release-wiki.css",
         "resources/css/ratingboard-wiki.css",
         "resources/css/region-wiki.css",
-        "resources/css/gamerating-wiki.css",
-        "resources/css/editor.css"
+        "resources/css/release-wiki.css",
+        "resources/css/search.css",
+        "resources/css/styles.css",
+        "resources/css/theme-wiki.css",
+        "resources/css/wikiNav.css"
       ]
     },
     "skins.giantbomb.wikijs": {
@@ -73,41 +68,6 @@
         "resources/js/wikieditor-link-dialog.js"
       ],
       "position": "top"
-    },
-    "skins.giantbomb": {
-      "packageFiles": [
-        "resources/components/index.js",
-        "resources/components/VueSingleFileComponentExample.vue",
-        "resources/components/AnotherVueComponent.vue",
-        "resources/components/DatabaseAddPrompt.vue",
-        "resources/components/GameImageViewer.vue",
-        "resources/components/ReleaseSelector.vue",
-        "resources/components/ViewToggle.vue",
-        "resources/components/ReleaseFilter.vue",
-        "resources/components/ReleaseList.vue",
-        "resources/components/GameFilter.vue",
-        "resources/components/GameList.vue",
-        "resources/components/Pagination.vue",
-        "resources/components/PlatformFilter.vue",
-        "resources/components/PlatformList.vue",
-        "resources/components/ConceptFilter.vue",
-        "resources/components/ConceptList.vue",
-        "resources/components/PeopleFilter.vue",
-        "resources/components/PeopleList.vue",
-        "resources/components/FilterContainer.vue",
-        "resources/components/FilterDropdown.vue",
-        "resources/components/FilterInput.vue",
-        "resources/components/SearchableMultiSelect.vue",
-        "resources/composables/index.js",
-        "resources/composables/useFilters.js",
-        "resources/composables/useSearch.js",
-        "resources/composables/useListData.js",
-        "resources/helpers/countryFlags.js",
-        "resources/helpers/htmlUtils.js",
-        "resources/data/countryFlags.json",
-        "resources/helpers/displayUtils.js"
-      ],
-      "dependencies": ["skins.giantbomb.vueexamplecomponent", "vue"]
     }
   },
   "ResourceFileModulePaths": {
