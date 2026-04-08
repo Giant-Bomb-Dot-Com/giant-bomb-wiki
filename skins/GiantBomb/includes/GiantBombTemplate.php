@@ -44,6 +44,7 @@ class GiantBombTemplate extends BaseTemplate {
                                  $isTemplatePlatformPage || $isTemplateConceptPage || $isTemplateCompanyPage ||
                                  $isTemplatePersonPage || $isTemplateObjectPage || $isTemplateLocationPage ||
                                  $isTemplateAccessoryPage;
+        $isImagesSubpage = str_ends_with($pageTitle, '/Images');
 
         $contentClasses = ['mw-body'];
         if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
@@ -57,6 +58,7 @@ class GiantBombTemplate extends BaseTemplate {
         if ($isTemplateObjectPage) $contentClasses[] = 'wiki-object-page';
         if ($isTemplateLocationPage) $contentClasses[] = 'wiki-location-page';
         if ($isTemplateAccessoryPage) $contentClasses[] = 'wiki-accessory-page';
+        if ($isImagesSubpage) $contentClasses[] = 'wiki-images-page';
 
         $action = $request->getText('action', 'view');
         $isViewAction = $action === 'view' || $action === 'purge' || $action === '';

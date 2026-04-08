@@ -19,6 +19,13 @@
   "Hooks": {
     "ParserFirstCallInit": "GBGalleryHooks"
   },
+  "ResourceModules": {
+    "ext.gbgallery": {
+      "localBasePath": "resources",
+      "remoteExtPath": "GBGallery/resources",
+      "scripts": [ "gbgallery.js" ]
+    }
+  },
   "config": {
     "GBGalleryBaseUrl": {
       "value": "https://www.giantbomb.com/a/uploads",

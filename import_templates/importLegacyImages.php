@@ -6,25 +6,33 @@
  * Reads from a local MySQL database (giantbomb-mysql) and writes to a
  * remote MediaWiki instance using bot credentials.
  *
+ * The script iterates over wiki pages that have a GUID (via SMW Ask API),
+ * then queries the legacy DB for images belonging to each entity. This
+ * avoids scanning the entire legacy image table.
+ *
  * Usage:
  *   php importLegacyImages.php [options]
  *
  * Options:
  *   --type=<id>         Filter by assoc_type_id (e.g. 3030 for Games). Default: all
+ *   --guid=<guid>       Process a single GUID (e.g. 3030-16559). Implies --dry-run unless --force.
  *   --limit=<n>         Max entities to process
- *   --resume-after=<id> Resume after this image_tag.assoc_type_id-assoc_id GUID
+ *   --resume-after=<id> Resume after this GUID (e.g. 3030-16559)
  *   --batch-size=<n>    Entities per progress log (default 100)
  *   --dry-run           Output wikitext to stdout, don't call API
+ *   --force             Allow --guid to write to the API (otherwise --guid implies dry-run)
  *   --sleep=<ms>        Milliseconds to sleep between API edit calls (default 200)
  *   --env=<path>        Path to .env file (default: .env.migration)
  */
 
 $options = getopt("", [
     "type:",
+    "guid:",
     "limit:",
     "resume-after:",
     "batch-size:",
     "dry-run",
+    "force",
     "sleep:",
     "env:",
 ]);
@@ -51,12 +59,13 @@ $MW_API_URL     = getenv("MW_API_URL");
 $MW_BOT_USER    = getenv("MW_BOT_USER");
 $MW_BOT_PASS    = getenv("MW_BOT_PASSWORD");
 
-$filterType  = $options["type"] ?? null;
-$maxEntities = isset($options["limit"]) ? (int)$options["limit"] : null;
-$resumeAfter = $options["resume-after"] ?? null;
-$batchSize   = isset($options["batch-size"]) ? (int)$options["batch-size"] : 100;
-$dryRun      = isset($options["dry-run"]);
-$sleepMs     = isset($options["sleep"]) ? (int)$options["sleep"] : 200;
+$filterType   = $options["type"] ?? null;
+$singleGuid   = $options["guid"] ?? null;
+$maxEntities  = isset($options["limit"]) ? (int)$options["limit"] : null;
+$resumeAfter  = $options["resume-after"] ?? null;
+$batchSize    = isset($options["batch-size"]) ? (int)$options["batch-size"] : 100;
+$dryRun       = isset($options["dry-run"]) || ($singleGuid && !isset($options["force"]));
+$sleepMs      = isset($options["sleep"]) ? (int)$options["sleep"] : 200;
 
 if (!$LEGACY_DB_USER || !$LEGACY_DB_NAME) {
     fwrite(STDERR, "ERROR: LEGACY_DB_USER and LEGACY_DB_NAME must be set.\n");
@@ -229,17 +238,21 @@ class MWApiClient {
         return false;
     }
 
-    public function buildGuidMap(): array {
+    public function buildGuidMap(?string $typeFilter = null): array {
         $map = [];
         $offset = 0;
         $limit = 500;
+
+        $condition = $typeFilter !== null
+            ? "[[Has guid::~{$typeFilter}-*]]"
+            : "[[Has guid::+]]";
 
         fwrite(STDERR, "Building GUID -> page title map via SMW Ask API...\n");
 
         while (true) {
             $data = $this->get([
                 "action" => "ask",
-                "query"  => "[[Has guid::+]]|?Has guid|limit={$limit}|offset={$offset}",
+                "query"  => "{$condition}|?Has guid|limit={$limit}|offset={$offset}",
                 "format" => "json",
             ]);
 
@@ -252,7 +265,7 @@ class MWApiClient {
                 $printouts = $pageData["printouts"] ?? [];
                 $guids = $printouts["Has guid"] ?? [];
                 foreach ($guids as $guid) {
-                    $guidVal = is_array($guid) ? ($guid["value"] ?? $guid[0] ?? null) : $guid;
+                    $guidVal = is_array($guid) ? ($guid["fulltext"] ?? $guid["value"] ?? null) : $guid;
                     if ($guidVal) {
                         $map[$guidVal] = $pageTitle;
                     }
@@ -289,36 +302,33 @@ function connectLegacyDb(
     return $pdo;
 }
 
-function queryImageData(PDO $pdo, ?string $typeFilter): PDOStatement {
-    $sql = "
-        SELECT
-            it.id AS tag_id,
-            it.assoc_type_id,
-            it.assoc_id,
-            it.name AS tag_name,
-            i.id AS image_id,
-            i.name AS filename,
-            i.path,
-            i.caption
+function queryImagesForEntity(PDO $pdo, int $typeId, int $assocId): array {
+    $stmt = $pdo->prepare("
+        SELECT it.name AS tag_name, i.name AS filename, i.path, i.caption
         FROM image_tag it
         JOIN image_imagetag iit ON iit.imagetag_id = it.id
         JOIN image i ON i.id = iit.image_id
-        WHERE it.deleted = 0
+        WHERE it.assoc_type_id = :type_id
+          AND it.assoc_id = :assoc_id
+          AND it.deleted = 0
           AND i.deleted = 0
-    ";
+        ORDER BY it.name, i.id
+    ");
+    $stmt->execute([":type_id" => $typeId, ":assoc_id" => $assocId]);
 
-    if ($typeFilter !== null) {
-        $sql .= " AND it.assoc_type_id = :type_id";
+    $albums = [];
+    while ($row = $stmt->fetch()) {
+        $albumName = $row["tag_name"] ?: "Images";
+        if (!isset($albums[$albumName])) {
+            $albums[$albumName] = [];
+        }
+        $albums[$albumName][] = [
+            "filename" => $row["filename"],
+            "path"     => $row["path"],
+            "caption"  => $row["caption"],
+        ];
     }
-
-    $sql .= " ORDER BY it.assoc_type_id, it.assoc_id, it.name, i.id";
-
-    $stmt = $pdo->prepare($sql);
-    if ($typeFilter !== null) {
-        $stmt->bindValue(":type_id", (int)$typeFilter, PDO::PARAM_INT);
-    }
-    $stmt->execute();
-    return $stmt;
+    return $albums;
 }
 
 function buildWikitext(array $albums): string {
@@ -355,7 +365,11 @@ if ($dryRun) {
 } else {
     fwrite(STDERR, "Target: {$MW_API_URL}\n");
 }
-fwrite(STDERR, "Type filter: " . ($filterType ?? "all") . "\n");
+if ($singleGuid) {
+    fwrite(STDERR, "Single GUID: {$singleGuid}\n");
+} else {
+    fwrite(STDERR, "Type filter: " . ($filterType ?? "all") . "\n");
+}
 fwrite(STDERR, "Sleep: {$sleepMs}ms between edits\n");
 if ($maxEntities !== null) {
     fwrite(STDERR, "Limit: {$maxEntities} entities\n");
@@ -368,136 +382,118 @@ fwrite(STDERR, "\n");
 $pdo = connectLegacyDb($LEGACY_DB_HOST, $LEGACY_DB_PORT, $LEGACY_DB_USER, $LEGACY_DB_PASS, $LEGACY_DB_NAME);
 fwrite(STDERR, "Connected to legacy database\n");
 
+if ($singleGuid) {
+    $parts = explode("-", $singleGuid, 2);
+    if (count($parts) !== 2) {
+        fwrite(STDERR, "ERROR: --guid must be in format TYPE_ID-ASSOC_ID (e.g. 3030-16559)\n");
+        exit(1);
+    }
+
+    $albums = queryImagesForEntity($pdo, (int)$parts[0], (int)$parts[1]);
+    if (empty($albums)) {
+        fwrite(STDERR, "No images found for GUID {$singleGuid}\n");
+        exit(0);
+    }
+
+    $totalImages = array_sum(array_map('count', $albums));
+    $wikitext = buildWikitext($albums);
+
+    if ($dryRun) {
+        echo "--- {$singleGuid}/Images ({$totalImages} images, " . count($albums) . " albums) ---\n";
+        echo $wikitext;
+        echo "\n";
+    } else {
+        $api = new MWApiClient($MW_API_URL);
+        $api->login($MW_BOT_USER, $MW_BOT_PASS);
+        $guidMap = $api->buildGuidMap();
+        $pageTitle = $guidMap[$singleGuid] ?? null;
+        if ($pageTitle === null) {
+            fwrite(STDERR, "ERROR: No wiki page found for GUID {$singleGuid}\n");
+            exit(1);
+        }
+        $api->editPage("{$pageTitle}/Images", $wikitext, "Import legacy image gallery ({$totalImages} images)");
+        fwrite(STDERR, "Created {$pageTitle}/Images ({$totalImages} images)\n");
+    }
+    exit(0);
+}
+
 $api = null;
 $guidMap = [];
 
 if (!$dryRun) {
     $api = new MWApiClient($MW_API_URL);
     $api->login($MW_BOT_USER, $MW_BOT_PASS);
-    $guidMap = $api->buildGuidMap();
-} else {
-    fwrite(STDERR, "Skipping API login and GUID map in dry-run mode\n\n");
 }
 
-$stmt = queryImageData($pdo, $filterType);
+$guidMap = $dryRun
+    ? [] // dry-run without API needs --guid mode; bulk dry-run still needs the map
+    : $api->buildGuidMap($filterType);
 
-$currentGuid = null;
-$currentAlbums = [];
+if (!$dryRun && empty($guidMap)) {
+    fwrite(STDERR, "No wiki pages with GUIDs found. Nothing to migrate.\n");
+    exit(0);
+}
+
 $entityCount = 0;
 $imageCount = 0;
 $skippedCount = 0;
 $createdCount = 0;
 $resumeSkipping = ($resumeAfter !== null);
-$resumeSkipGuid = null;
 
-$flushEntity = function () use (
-    &$currentGuid,
-    &$currentAlbums,
-    &$entityCount,
-    &$imageCount,
-    &$skippedCount,
-    &$createdCount,
-    &$guidMap,
-    &$api,
-    $dryRun,
-    $sleepMs,
-    $batchSize,
-) {
-    if ($currentGuid === null || empty($currentAlbums)) {
-        return;
-    }
+$sortedGuids = array_keys($guidMap);
+sort($sortedGuids);
 
-    $entityCount++;
-
-    $pageTitle = $guidMap[$currentGuid] ?? null;
-
-    if (!$dryRun && $pageTitle === null) {
-        fwrite(STDERR, "  SKIP: No wiki page for GUID {$currentGuid}\n");
-        $skippedCount++;
-        $currentAlbums = [];
-        $currentGuid = null;
-        return;
-    }
-
-    $totalImages = 0;
-    foreach ($currentAlbums as $imgs) {
-        $totalImages += count($imgs);
-    }
-    $imageCount += $totalImages;
-
-    $wikitext = buildWikitext($currentAlbums);
-
-    if ($dryRun) {
-        $label = $pageTitle ?? $currentGuid;
-        echo "--- {$label}/Images ({$totalImages} images) ---\n";
-        echo $wikitext;
-        echo "\n\n";
-    } else {
-        $imagesPageTitle = $pageTitle . "/Images";
-        try {
-            $api->editPage($imagesPageTitle, $wikitext, "Import legacy image gallery ({$totalImages} images)");
-            $createdCount++;
-
-            if ($entityCount % $batchSize === 0) {
-                fwrite(STDERR, "Progress: {$entityCount} entities, {$createdCount} created, {$skippedCount} skipped, {$imageCount} images, last GUID: {$currentGuid}\n");
-            }
-        } catch (RuntimeException $e) {
-            fwrite(STDERR, "  ERROR creating {$imagesPageTitle}: {$e->getMessage()}\n");
-            $skippedCount++;
-        }
-
-        if ($sleepMs > 0) {
-            usleep($sleepMs * 1000);
-        }
-    }
-
-    $currentAlbums = [];
-    $currentGuid = null;
-};
-
-while ($row = $stmt->fetch()) {
-    $guid = $row["assoc_type_id"] . "-" . $row["assoc_id"];
-
+foreach ($sortedGuids as $guid) {
     if ($resumeSkipping) {
         if ($guid === $resumeAfter) {
             $resumeSkipping = false;
-            $resumeSkipGuid = $guid;
         }
         continue;
-    }
-
-    if ($resumeSkipGuid !== null) {
-        if ($guid === $resumeSkipGuid) {
-            continue;
-        }
-        $resumeSkipGuid = null;
     }
 
     if ($maxEntities !== null && $entityCount >= $maxEntities) {
         break;
     }
 
-    if ($guid !== $currentGuid) {
-        $flushEntity();
-        $currentGuid = $guid;
+    $parts = explode("-", $guid, 2);
+    if (count($parts) !== 2) {
+        continue;
+    }
+    $typeId = (int)$parts[0];
+    $assocId = (int)$parts[1];
+
+    $albums = queryImagesForEntity($pdo, $typeId, $assocId);
+    if (empty($albums)) {
+        continue;
     }
 
-    $albumName = $row["tag_name"] ?? "Images";
-    if (!isset($currentAlbums[$albumName])) {
-        $currentAlbums[$albumName] = [];
+    $entityCount++;
+    $totalImages = array_sum(array_map('count', $albums));
+    $imageCount += $totalImages;
+
+    $pageTitle = $guidMap[$guid];
+    $wikitext = buildWikitext($albums);
+    $imagesPageTitle = "{$pageTitle}/Images";
+
+    try {
+        $api->editPage($imagesPageTitle, $wikitext, "Import legacy image gallery ({$totalImages} images)");
+        $createdCount++;
+
+        if ($entityCount % $batchSize === 0) {
+            fwrite(STDERR, "Progress: {$entityCount} entities, {$createdCount} created, {$skippedCount} skipped, {$imageCount} images, last GUID: {$guid}\n");
+        }
+    } catch (RuntimeException $e) {
+        fwrite(STDERR, "  ERROR creating {$imagesPageTitle}: {$e->getMessage()}\n");
+        $skippedCount++;
     }
 
-    $currentAlbums[$albumName][] = [
-        "filename" => $row["filename"],
-        "path"     => $row["path"],
-        "caption"  => $row["caption"],
-    ];
+    if ($sleepMs > 0) {
+        usleep($sleepMs * 1000);
+    }
 }
-
-$flushEntity();
 
 fwrite(STDERR, "\n=== Migration Complete ===\n");
 fwrite(STDERR, "Entities processed: {$entityCount}\n");
 fwrite(STDERR, "Pages created: {$createdCount}\n");
-fwrite(STDERR, "Skipped (no wiki page or error): {$skippedCount}\n");
+fwrite(STDERR, "Skipped (errors): {$skippedCount}\n");
 fwrite(STDERR, "Total images: {$imageCount}\n");
