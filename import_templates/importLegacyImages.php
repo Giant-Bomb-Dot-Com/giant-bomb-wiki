@@ -238,6 +238,20 @@ class MWApiClient {
         return false;
     }
 
+    public function resolveGuid(string $guid): ?string {
+        $data = $this->get([
+            "action" => "ask",
+            "query"  => "[[Has guid::{$guid}]]|?Has guid|limit=1",
+            "format" => "json",
+        ]);
+
+        $results = $data["query"]["results"] ?? [];
+        foreach ($results as $pageTitle => $pageData) {
+            return $pageTitle;
+        }
+        return null;
+    }
+
     public function buildGuidMap(?string $typeFilter = null): array {
         $map = [];
         $offset = 0;
@@ -405,12 +419,13 @@ if ($singleGuid) {
     } else {
         $api = new MWApiClient($MW_API_URL);
         $api->login($MW_BOT_USER, $MW_BOT_PASS);
-        $guidMap = $api->buildGuidMap();
-        $pageTitle = $guidMap[$singleGuid] ?? null;
+        fwrite(STDERR, "Resolving GUID {$singleGuid}...\n");
+        $pageTitle = $api->resolveGuid($singleGuid);
         if ($pageTitle === null) {
             fwrite(STDERR, "ERROR: No wiki page found for GUID {$singleGuid}\n");
             exit(1);
         }
+        fwrite(STDERR, "Found: {$pageTitle}\n");
         $api->editPage("{$pageTitle}/Images", $wikitext, "Import legacy image gallery ({$totalImages} images)");
         fwrite(STDERR, "Created {$pageTitle}/Images ({$totalImages} images)\n");
     }
