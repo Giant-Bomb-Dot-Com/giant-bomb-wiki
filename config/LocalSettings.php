@@ -388,6 +388,7 @@ wfLoadExtension( 'GBGallery' );
 $wgGBGalleryBaseUrl   = "https://www.giantbomb.com/a/uploads";
 $wgGBGalleryThumbSize = "scale_medium";
 $wgGBGalleryFullSize  = "original";
+$wgAllowImageTag      = true;
 
 # =============================================================================
 # GIANTBOMB RESOLVE

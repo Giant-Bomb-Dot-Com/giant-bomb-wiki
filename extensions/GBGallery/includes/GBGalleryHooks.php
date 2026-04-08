@@ -62,10 +62,8 @@ class GBGalleryHooks implements ParserFirstCallInitHook {
                 $captionHtml = '<div class="gb-gallery-caption">' . $captionEnc . '</div>';
             }
 
-            $items[] = '<div class="gb-gallery-item">'
-                . '<a href="' . $fullUrlEnc . '" target="_blank" rel="noopener">'
-                . '<img src="' . $thumbUrlEnc . '" alt="' . $captionEnc . '" loading="lazy" />'
-                . '</a>'
+            $items[] = '<div class="gb-gallery-item" data-thumb="' . $thumbUrlEnc . '" data-full="' . $fullUrlEnc . '" data-alt="' . $captionEnc . '">'
+                . '<a href="' . $fullUrlEnc . '" target="_blank" rel="noopener"></a>'
                 . $captionHtml
                 . '</div>';
         }
@@ -74,6 +72,7 @@ class GBGalleryHooks implements ParserFirstCallInitHook {
             return '';
         }
 
-        return '<div class="gb-gallery">' . implode( '', $items ) . '</div>';
+        $parser->getOutput()->addModules( [ 'ext.gbgallery' ] );
+        return '<div class="gb-gallery" data-ad-context="gallery">' . implode( '', $items ) . '</div>';
     }
 }
