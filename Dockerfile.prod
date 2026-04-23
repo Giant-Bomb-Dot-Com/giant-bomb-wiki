@@ -8,7 +8,7 @@ USER root
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
- && apt-get install gnupg lsb-release libzip-dev unzip wget lua5.1 -y
+ && apt-get install gnupg lsb-release libzip-dev unzip wget lua5.1 cron -y
 
 # INSTALL DB EXTENSIONS AND REDIS
 RUN docker-php-ext-install pdo pdo_mysql
@@ -89,5 +89,13 @@ COPY --chown=www-data:www-data ./import_templates /var/www/html/import_templates
 COPY .htaccess /var/www/html/.htaccess
 
 COPY --chmod=755 scripts/wiki-admin.sh /usr/local/bin/wiki-admin
+
+# Nightly sitemap regeneration. Cron runs with a minimal env, so
+# entrypoint.sh writes the container env to /etc/container.env for cron
+# jobs to source.
+COPY --chmod=644 docker/sitemap-cron /etc/cron.d/sitemap-cron
+RUN touch /var/log/mediawiki/sitemap-cron.log \
+ && chown www-data:www-data /var/log/mediawiki/sitemap-cron.log
+
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
