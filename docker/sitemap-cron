@@ -1,0 +1,10 @@
+# Nightly sitemap regeneration. Runs at 04:00 UTC.
+# Log: /var/log/mediawiki/sitemap-cron.log
+#
+# Cron runs with a stripped env, so we source /etc/container.env (populated
+# by entrypoint.sh) to pick up CANONICAL_SERVER, DB creds, etc.
+#
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+0 4 * * * www-data . /etc/container.env 2>/dev/null; /usr/local/bin/wiki-admin sitemap >> /var/log/mediawiki/sitemap-cron.log 2>&1

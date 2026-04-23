@@ -17,4 +17,16 @@ if [ "$MV_ENV" = "dev" ] && [ -f /docker/dev-startup.sh ]; then
     /bin/bash /docker/dev-startup.sh &
 fi
 
+# Dump runtime env to a shell-sourceable file so cron jobs (which otherwise
+# run with a stripped environment) can pick up CANONICAL_SERVER, DB creds, etc.
+# Keep key=value lines only; strip anything without an = to avoid shell errors.
+env | grep -E '^[A-Za-z_][A-Za-z0-9_]*=' | sed 's/^\(.*\)$/export \1/' > /etc/container.env
+chmod 644 /etc/container.env
+
+# Start cron if installed (prod image installs it; dev image does not).
+if command -v cron >/dev/null 2>&1; then
+    echo "Starting cron daemon..."
+    cron
+fi
+
 exec apache2-foreground
