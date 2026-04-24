@@ -1,0 +1,32 @@
+<noinclude>
+==Documentation==
+Renders the page chrome (hero, tabs) for an entity's /Images subpage.
+
+Works for all entity types: Games, Characters, Companies, Concepts, Franchises,
+Platforms, People, Locations, Objects, Genres, Themes, Accessories, DLCs, and Releases.
+
+The Lua module determines the entity type from the page path prefix, queries the
+parent page's SMW properties, and renders the appropriate hero and tab navigation
+with the '''Images''' tab active.
+
+===Usage===
+<pre>
+{{ImagesPage}}
+
+== Screenshots ==
+<gb-gallery>
+0/628/267079-some-image.jpg | Optional caption
+</gb-gallery>
+
+{{ImagesPageEnd}}
+</pre>
+
+===Structure===
+This template opens the following div structure (matching entity templates):
+* <code>.gb-{type}-page</code> (opened around this template by MediaWiki parser)
+* <code>.gb-{type}-hero</code>
+* <code>.gb-{type}-tabs</code>
+* <code>.gb-{type}-content .gb-images-content</code>
+* <code>.gb-{type}-main .gb-images-main</code>
+* <code>.gb-{type}-wiki-content</code>
+</noinclude><includeonly>{{#invoke:ImagesPage|render}}</includeonly>

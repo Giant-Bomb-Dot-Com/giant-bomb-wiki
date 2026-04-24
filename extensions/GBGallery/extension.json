@@ -1,0 +1,43 @@
+{
+  "name": "GBGallery",
+  "version": "0.1.0",
+  "author": "Giant Bomb Engineering",
+  "description": "Provides a <gb-gallery> parser tag for rendering external image galleries from the legacy Giant Bomb CDN.",
+  "type": "parserhook",
+  "manifest_version": 2,
+  "requires": {
+    "MediaWiki": ">=1.40.0"
+  },
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GBGallery\\GBGalleryHooks": "includes/GBGalleryHooks.php"
+  },
+  "HookHandlers": {
+    "GBGalleryHooks": {
+      "class": "MediaWiki\\Extension\\GBGallery\\GBGalleryHooks"
+    }
+  },
+  "Hooks": {
+    "ParserFirstCallInit": "GBGalleryHooks"
+  },
+  "ResourceModules": {
+    "ext.gbgallery": {
+      "localBasePath": "resources",
+      "remoteExtPath": "GBGallery/resources",
+      "scripts": [ "gbgallery.js" ]
+    }
+  },
+  "config": {
+    "GBGalleryBaseUrl": {
+      "value": "https://www.giantbomb.com/a/uploads",
+      "description": "Base URL for legacy image CDN, without trailing slash."
+    },
+    "GBGalleryThumbSize": {
+      "value": "scale_medium",
+      "description": "Size variant used for gallery grid thumbnails."
+    },
+    "GBGalleryFullSize": {
+      "value": "original",
+      "description": "Size variant used for click-through full-size view."
+    }
+  }
+}
