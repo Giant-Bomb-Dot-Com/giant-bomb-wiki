@@ -44,6 +44,7 @@ class GiantBombTemplate extends BaseTemplate {
                                  $isTemplatePlatformPage || $isTemplateConceptPage || $isTemplateCompanyPage ||
                                  $isTemplatePersonPage || $isTemplateObjectPage || $isTemplateLocationPage ||
                                  $isTemplateAccessoryPage;
+        $isImagesSubpage = str_ends_with($pageTitle, '/Images');
 
         $contentClasses = ['mw-body'];
         if ($isTemplateContentPage) $contentClasses[] = 'wiki-template-page';
@@ -57,6 +58,7 @@ class GiantBombTemplate extends BaseTemplate {
         if ($isTemplateObjectPage) $contentClasses[] = 'wiki-object-page';
         if ($isTemplateLocationPage) $contentClasses[] = 'wiki-location-page';
         if ($isTemplateAccessoryPage) $contentClasses[] = 'wiki-accessory-page';
+        if ($isImagesSubpage) $contentClasses[] = 'wiki-images-page';
 
         $action = $request->getText('action', 'view');
         $isViewAction = $action === 'view' || $action === 'purge' || $action === '';
@@ -76,11 +78,11 @@ class GiantBombTemplate extends BaseTemplate {
             <div id="content" class="<?php echo implode(' ', $contentClasses); ?>" role="main">
                 <a id="top"></a>
                 <div id="siteNotice"><?php $this->html( 'sitenotice' ) ?></div>
-                <?php if (!$isTemplateContentPage) { ?>
+                <?php if (!$isTemplateContentPage && !$isImagesSubpage) { ?>
                 <h1 id="firstHeading" class="firstHeading"><?php $this->html( 'title' ) ?></h1>
                 <?php } ?>
                 <div id="bodyContent" class="mw-body-content">
-                    <?php if (!$isTemplateContentPage) { ?>
+                    <?php if (!$isTemplateContentPage && !$isImagesSubpage) { ?>
                     <div id="siteSub"><?php $this->msg( 'tagline' ) ?></div>
                     <div id="contentSub"><?php $this->html( 'subtitle' ) ?></div>
                     <?php } ?>
@@ -90,7 +92,7 @@ class GiantBombTemplate extends BaseTemplate {
                     <?php if ( $this->data['newtalk'] ) { ?>
                         <div class="usermessage"><?php $this->html( 'newtalk' ) ?></div>
                     <?php } ?>
-                    <?php if (!$isTemplateContentPage) { ?>
+                    <?php if (!$isTemplateContentPage && !$isImagesSubpage) { ?>
                     <div id="jump-to-nav" class="mw-jump">
                         <?php $this->msg( 'jumpto' ) ?>
                         <a href="#mw-navigation"><?php $this->msg( 'jumptonavigation' ) ?></a>,
