@@ -7,6 +7,7 @@ mountpoint/
 gb_api_scripts/images/
 gb_api_scripts/import_xml/
 import_templates/import_franchise_bundle.php
+import_templates/guid_map.csv
 
 .idea/
 .vscode/*
@@ -15,6 +16,25 @@ import_templates/import_franchise_bundle.php
 .DS_Store
 gcs_key.json
 .env
+.env.migration
 
 docs/
 gb_api_scripts/import_xml/*.xml
+.env.migration
+
+# Local-dev-only audit output
+/audit.csv
+/game_snippet_audit.csv
+
+# Local-dev-only migration / audit / legacy-repair scripts (one-shot tools,
+# not part of the running app). Keep these patterns narrow so production
+# scripts under gb_api_scripts/ (api/, content/, generate_xml_*.php, etc.)
+# stay tracked.
+/gb_api_scripts/audit_*.php
+/gb_api_scripts/reconvert_*.php
+/gb_api_scripts/convert_descriptions_base.php
+/gb_api_scripts/convert_html_file_prod_links.php
+/gb_api_scripts/docker/
+/gb_api_scripts/libs/ProdGuidResolver.php
+/gb_api_scripts/libs/docker_local_db.php
+/import_templates/fixEscapedSlashPageTitles.php

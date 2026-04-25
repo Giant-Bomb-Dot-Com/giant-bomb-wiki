@@ -99,12 +99,16 @@ class RecordMapper
             }
         }
 
-        $timestamps = self::getRevisionTimestamps($title);
-        $record["_updatedAt"] = $timestamps["latest"] ?? null;
-        $record["publishDate"] = $timestamps["first"] ?? null;
+		if ( is_string( $record['thumbnail'] ) ) {
+			$record['thumbnail'] = self::rewriteCdnUrl( $record['thumbnail'] );
+		}
 
-        return $record;
-    }
+		$timestamps = self::getRevisionTimestamps($title);
+		$record["_updatedAt"] = $timestamps["latest"] ?? null;
+		$record["publishDate"] = $timestamps["first"] ?? null;
+
+		return $record;
+	}
 
     private static function getGameTemplateFields(Title $title): array
     {
@@ -155,6 +159,26 @@ class RecordMapper
         $url = $file->getFullUrl();
         return is_string($url) && $url !== "" ? $url : null;
     }
+
+    private static function rewriteCdnUrl( string $url ): string {
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$cdnBase = $config->get( 'AlgoliaImageCdnBase' );
+		if ( !is_string( $cdnBase ) || $cdnBase === '' ) {
+			return $url;
+		}
+
+		$bucketName = $config->get( 'AWSBucketName' );
+		if ( !is_string( $bucketName ) || $bucketName === '' ) {
+			return $url;
+		}
+
+		$gcsPrefix = 'https://storage.googleapis.com/' . $bucketName . '/';
+		if ( strpos( $url, $gcsPrefix ) === 0 ) {
+			return rtrim( $cdnBase, '/' ) . '/' . substr( $url, strlen( $gcsPrefix ) );
+		}
+
+		return $url;
+	}
 
     private static function truncatePlaintext(string $text, int $limit): string
     {
