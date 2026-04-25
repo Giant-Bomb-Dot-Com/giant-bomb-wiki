@@ -29,4 +29,24 @@ if command -v cron >/dev/null 2>&1; then
     cron
 fi
 
+# Regenerate XML sitemaps in the background on every container start.
+# The generated files live in the container's ephemeral filesystem
+# (/var/www/html/wiki-sitemap.xml and /var/www/html/wiki-sitemaps/),
+# so they vanish on every redeploy or restart. Without this, Apache's
+# !-f rewrite in .htaccess falls through to MediaWiki and happily
+# serves Main_Page HTML with a 200 for /wiki-sitemap.xml until the
+# 04:00 UTC cron fires -- which is what just poisoned our CDN cache.
+# Runs async so Apache can start accepting traffic immediately; the
+# worker's non-XML guard covers the few seconds before regen finishes.
+# Set SITEMAP_ON_STARTUP=0 to opt out (e.g. when debugging).
+if [ "${SITEMAP_ON_STARTUP:-1}" = "1" ] \
+    && [ -x /usr/local/bin/wiki-admin ] \
+    && [ -f /var/www/html/LocalSettings.php ]; then
+    (
+        sleep 5
+        /usr/local/bin/wiki-admin sitemap \
+            >> /var/log/mediawiki/sitemap-cron.log 2>&1 || true
+    ) &
+fi
+
 exec apache2-foreground
