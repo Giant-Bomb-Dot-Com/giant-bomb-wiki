@@ -2,21 +2,38 @@
 
 require_once(__DIR__.'/../libs/common.php');
 
-use Wikimedia\Rdbms\IDatabase;
-
 class HtmlToMediaWikiConverter
 {
     use CommonVariablesAndMethods;
 
+    private DbInterface $dbw;
+
     private DOMDocument $dom;
     private int $typeId;
     private int $id;
+
+    /**
+     * Optional hook: resolve legacy data-ref-id guids to a full wiki page title (e.g. "Games/Foo")
+     * before querying the local API database. Return null to fall through to built-in logic.
+     * Fourth argument is the &lt;a&gt; element (for slug fallback without DB).
+     *
+     * @var null|callable(string $contentGuid, int $contentTypeId, int $contentId, \DOMElement $link): ?string
+     */
+    private $wikiPageTitleResolver = null;
 
     public function __construct(DbInterface $dbw) 
     {
         $this->dbw = $dbw;
         $this->dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
+    }
+
+    /**
+     * @param null|callable(string,int,int,\DOMElement): ?string $resolver
+     */
+    public function setWikiPageTitleResolver(?callable $resolver): void
+    {
+        $this->wikiPageTitleResolver = $resolver;
     }
 
     /**
@@ -39,9 +56,10 @@ class HtmlToMediaWikiConverter
         $description = $this->preProcess($description);
 
         libxml_use_internal_errors(true);
-        $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . 
-                              mb_convert_encoding($description, 'HTML-ENTITIES', 'UTF-8') . 
-                              '</body></html>';
+        // UTF-8 is declared in <meta>; avoid mb_convert_encoding(..., 'HTML-ENTITIES', ...) (deprecated PHP 8.2+).
+        $wrappedDescription = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' .
+            $description .
+            '</body></html>';
 
         $success = $this->dom->loadHTML($wrappedDescription, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
@@ -219,17 +237,17 @@ class HtmlToMediaWikiConverter
         // replace empty h# tags
         $description = preg_replace('/<h\d{1}.*?>\s*<\/h\d{1}>/', "", $description);
 
-        // replace the h2s with ==
-        $description = preg_replace('/<h2.*?>(.*?)<\/h2>/', "\n==$1==\n", $description);
+        // replace the h2s with == (s: inner heading may span lines)
+        $description = preg_replace('/<h2.*?>(.*?)<\/h2>/s', "\n==$1==\n", $description);
 
         // replace the h3s with ===
-        $description = preg_replace('/<h3.*?>(.*?)<\/h3>/', "\n===$1===\n", $description);
+        $description = preg_replace('/<h3.*?>(.*?)<\/h3>/s', "\n===$1===\n", $description);
 
         // replace the h4s with ====
-        $description = preg_replace('/<h4.*?>(.*?)<\/h4>/', "\n====$1====\n", $description);
+        $description = preg_replace('/<h4.*?>(.*?)<\/h4>/s', "\n====$1====\n", $description);
 
         // replace the h5s with =====
-        $description = preg_replace('/<h5.*?>(.*?)<\/h5>/', "\n=====$1=====\n", $description);
+        $description = preg_replace('/<h5.*?>(.*?)<\/h5>/s', "\n=====$1=====\n", $description);
 
         // replace the i|em with ''
         $description = preg_replace('/<\/?(?:i|em)>/', "''", $description);
@@ -265,6 +283,11 @@ class HtmlToMediaWikiConverter
 
         // replace the ampersand with &amp; outside of page links
         $description = str_replace('&amp;amp;', '&amp;', $description);
+
+        $description = str_replace("\r\n", "\n", $description);
+        // Pretty-printed legacy HTML leaves newlines + leading spaces inside <p>; MediaWiki
+        // treats a line beginning with a space as preformatted (<pre>). Strip line-start spaces.
+        $description = preg_replace('/^[ \t]+/m', '', $description);
 
         return $description;
     }
@@ -392,17 +415,24 @@ class HtmlToMediaWikiConverter
 
             if (!empty($contentGuid) && strpos($contentGuid, '-') !== false) {
 
-                list($contentTypeId, $contentId) = explode('-', $contentGuid);
+                list($contentTypeId, $contentId) = explode('-', $contentGuid, 2);
 
                 $contentTypeId = (int)$contentTypeId;
                 $contentId = (int)$contentId;
+
+                if ($this->wikiPageTitleResolver !== null) {
+                    $resolved = ($this->wikiPageTitleResolver)($contentGuid, $contentTypeId, $contentId, $link);
+                    if (is_string($resolved) && $resolved !== '') {
+                        return '[[' . $resolved . '|' . $displayText . ']]';
+                    }
+                }
 
                 if (isset($this->map[$contentTypeId]) && !is_null($this->map[$contentTypeId]['plural'])) {
 
                     // instantiate the content class to retrieve the name for the page
                     if (is_null($this->map[$contentTypeId]['content'])) {
                         $resource = $this->map[$contentTypeId]['className'];
-                        require_once('/var/www/html/maintenance/gb_api_scripts/content/'.$resource.'.php');
+                        require_once(__DIR__ . '/../content/' . $resource . '.php');
                         $classname = ucfirst($resource);
                         $this->map[$contentTypeId]['content'] = new $classname($this->dbw);
                     }

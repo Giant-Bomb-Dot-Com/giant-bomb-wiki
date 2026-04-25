@@ -1,0 +1,24 @@
+<noinclude>
+==Documentation==
+Closes the /Images subpage layout opened by <code><nowiki>{{ImagesPage}}</nowiki></code>.
+
+Place this at the end of image gallery content.
+
+===Usage===
+<pre>
+{{ImagesPage}}
+
+== Screenshots ==
+<gb-gallery>
+0/628/267079-some-image.jpg | Optional caption
+</gb-gallery>
+
+{{ImagesPageEnd}}
+</pre>
+
+===Structure===
+This template closes the following divs opened by <code><nowiki>{{ImagesPage}}</nowiki></code>:
+* <code>.gb-{type}-wiki-content</code>
+* <code>.gb-{type}-main .gb-images-main</code>
+* <code>.gb-{type}-content .gb-images-content</code>
+</noinclude><includeonly>{{#invoke:ImagesPage|close}}</includeonly>

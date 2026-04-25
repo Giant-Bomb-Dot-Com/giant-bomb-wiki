@@ -306,7 +306,14 @@ if ($gcsAccessKey && file_exists("$IP/extensions/AWS/extension.json")) {
         $wgFileBackends["s3"]["endpoint"] = "https://storage.googleapis.com";
         $wgFileBackends["s3"]["use_path_style_endpoint"] = true;
 
-        $wgAWSBucketDomain = 'storage.googleapis.com/$1';
+        $gcsPublicBase = getenv( 'GCS_PUBLIC_BASE_URL' );
+        if ( $gcsPublicBase !== false && trim( $gcsPublicBase ) !== '' ) {
+            $parsed = parse_url( trim( $gcsPublicBase ) );
+            $wgAWSBucketDomain = ( $parsed['host'] ?? '' )
+                . ( isset( $parsed['path'] ) ? rtrim( $parsed['path'], '/' ) : '' );
+        } else {
+            $wgAWSBucketDomain = 'storage.googleapis.com/$1';
+        }
     }
 
     // GCS doesn't support the checksum headers newer AWS SDKs send by default
@@ -384,6 +391,16 @@ wfLoadExtension("AlgoliaSearch");
 wfLoadExtension("UrlGetParameters");
 wfLoadExtension("GiantBombMetaTags");
 wfLoadExtension("Moderation");
+wfLoadExtension("GBGallery");
+
+# =============================================================================
+# GBGALLERY (legacy CDN image galleries)
+# =============================================================================
+
+$wgGBGalleryBaseUrl = "https://www.giantbomb.com/a/uploads";
+$wgGBGalleryThumbSize = "scale_medium";
+$wgGBGalleryFullSize = "original";
+$wgAllowImageTag = true;
 
 # =============================================================================
 # GIANTBOMB RESOLVE
@@ -497,6 +514,11 @@ $wgAlgoliaExcludeCategoryPatterns = [
 	'/^Articles with /i',
 	'/^Articles using /i',
 ];
+
+$gcsPublicBaseForAlgolia = getenv( 'GCS_PUBLIC_BASE_URL' );
+if ( $gcsPublicBaseForAlgolia !== false && trim( (string)$gcsPublicBaseForAlgolia ) !== '' ) {
+	$wgAlgoliaImageCdnBase = rtrim( trim( $gcsPublicBaseForAlgolia ), '/' );
+}
 
 # =============================================================================
 # MISC
@@ -726,6 +748,27 @@ $wgHooks["ParserBeforeInternalParse"][] = function (
                 $text .= "\n$endTag";
             }
             break;
+        }
+    }
+    return true;
+};
+
+# Auto-append {{ImagesPageEnd}} to /Images subpages missing it
+$wgHooks["ParserBeforeInternalParse"][] = function (
+    &$parser,
+    &$text,
+    &$strip_state,
+) {
+    $title = $parser->getTitle();
+    if (!$title) {
+        return true;
+    }
+    if (str_ends_with($title->getText(), "/Images")) {
+        if (
+            preg_match("/\{\{ImagesPage\s*[\|\}]/i", $text) &&
+            stripos($text, "{{ImagesPageEnd}}") === false
+        ) {
+            $text .= "\n{{ImagesPageEnd}}";
         }
     }
     return true;

@@ -8,7 +8,7 @@ USER root
 RUN set -x; \
     apt-get update \
  && apt-get upgrade -y \
- && apt-get install gnupg lsb-release libzip-dev unzip wget lua5.1 -y
+ && apt-get install gnupg lsb-release libzip-dev unzip wget lua5.1 cron -y
 
 # INSTALL DB EXTENSIONS AND REDIS
 RUN docker-php-ext-install pdo pdo_mysql
@@ -73,6 +73,7 @@ COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/exten
 COPY --chown=www-data:www-data ./extensions/AlgoliaSearch /var/www/html/extensions/AlgoliaSearch
 COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
 COPY --chown=www-data:www-data ./extensions/GbSessionProvider /var/www/html/extensions/GbSessionProvider
+COPY --chown=www-data:www-data ./extensions/GBGallery /var/www/html/extensions/GBGallery
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
@@ -82,12 +83,20 @@ COPY --chmod=755 installwiki.sh /installwiki.sh
 COPY --chown=www-data:www-data ./config/LocalSettings.php /var/www/html/LocalSettings.php
 COPY --chown=www-data:www-data ./skins/GiantBomb /var/www/html/skins/GiantBomb
 
-# Template import scripts for game pages
-COPY --chown=www-data:www-data ./import_templates /var/www/html/import_templates
+# Template import scripts (under maintenance/ so `php maintenance/run.php import_templates/...` works)
+COPY --chown=www-data:www-data ./import_templates /var/www/html/maintenance/import_templates
 
 # Route /wiki/* to docroot for ResourceLoader and API when served under a path prefix
 COPY .htaccess /var/www/html/.htaccess
 
 COPY --chmod=755 scripts/wiki-admin.sh /usr/local/bin/wiki-admin
+
+# Nightly sitemap regeneration. Cron runs with a minimal env, so
+# entrypoint.sh writes the container env to /etc/container.env for cron
+# jobs to source.
+COPY --chmod=644 docker/sitemap-cron /etc/cron.d/sitemap-cron
+RUN touch /var/log/mediawiki/sitemap-cron.log \
+ && chown www-data:www-data /var/log/mediawiki/sitemap-cron.log
+
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
