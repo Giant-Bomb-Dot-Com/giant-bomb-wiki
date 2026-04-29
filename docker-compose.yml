@@ -43,8 +43,9 @@ services:
       - wiki-data:/var/www/html/images
       - ./tests:/var/www/html/gb-tests
       - ./extensions/GbSessionProvider:/var/www/html/extensions/GbSessionProvider
+      - ./extensions/GBGallery:/var/www/html/extensions/GBGallery:cached
       # Import scripts
-      - ./import_templates:/var/www/html/import_templates:cached
+      - ./import_templates:/var/www/html/maintenance/import_templates:cached
       - ./gb_api_scripts:/var/www/html/gb_api_scripts:cached
       # Dev startup script
       - ./docker:/docker:cached
