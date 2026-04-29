@@ -74,6 +74,7 @@ RUN mkdir -p -m 740 /var/log/mediawiki && \
 COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/extensions/GiantBombResolve
 COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
 COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
+COPY --chown=www-data:www-data ./extensions/GiantBombModerationBridge /var/www/html/extensions/GiantBombModerationBridge
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)
