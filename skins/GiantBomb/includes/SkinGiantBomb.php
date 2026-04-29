@@ -107,25 +107,29 @@ class SkinGiantBomb extends SkinTemplate {
         // Get SMW properties for this page
         $store = \SMW\StoreFactory::getStore();
         $subject = \SMW\DIWikiPage::newFromTitle( $title );
-        
-        $gameName = self::getSMWPropertyValue( $store, $subject, 'Has name' ) 
+
+        $wikitext = self::getPageWikitext( $title );
+
+        $gameName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
+                    ?: self::extractTemplateNameFromWikitext( $wikitext )
                     ?: str_replace( 'Games/', '', $pageTitle );
+
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        
-        // Set HTML title
+        if ( $deck === '' ) {
+            $deck = self::extractFirstParagraph( $wikitext );
+        }
+
         $out->setHTMLTitle( $gameName . ' (Game) - ' . $GLOBALS['wgSitename'] );
-        
-        // Build meta description
+
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
             $metaDescription = $gameName . ' - Game info, reviews, and more on Giant Bomb Wiki.';
         }
-        
-        // Add meta description
+
         $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-        
-        // Build canonical URL
+
         $canonicalUrl = $title->getFullURL();
+        $out->setCanonicalUrl( $canonicalUrl );
         
         // Get cover image (SMW property first, then legacy imageData fallback)
         $metaImage = self::getPageImage( $title, $store, $subject );
@@ -295,22 +299,29 @@ class SkinGiantBomb extends SkinTemplate {
     private static function addCharacterSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
         $store = \SMW\StoreFactory::getStore();
         $subject = \SMW\DIWikiPage::newFromTitle( $title );
-        
-        $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' ) 
+
+        $wikitext = self::getPageWikitext( $title );
+
+        $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
+                    ?: self::extractTemplateNameFromWikitext( $wikitext )
                     ?: str_replace( 'Characters/', '', $pageTitle );
+
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        
-        // Set HTML title
+        if ( $deck === '' ) {
+            $deck = self::extractFirstParagraph( $wikitext );
+        }
+
         $out->setHTMLTitle( $characterName . ' (Character) - ' . $GLOBALS['wgSitename'] );
-        
+
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
             $metaDescription = $characterName . ' - Character info and appearances on Giant Bomb Wiki.';
         }
-        
+
         $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-        
+
         $canonicalUrl = $title->getFullURL();
+        $out->setCanonicalUrl( $canonicalUrl );
         $metaImage = self::getPageImage( $title, $store, $subject );
         
         PageHelper::addOpenGraphTags( $out, [
@@ -354,22 +365,29 @@ class SkinGiantBomb extends SkinTemplate {
     private static function addFranchiseSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
         $store = \SMW\StoreFactory::getStore();
         $subject = \SMW\DIWikiPage::newFromTitle( $title );
-        
-        $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' ) 
+
+        $wikitext = self::getPageWikitext( $title );
+
+        $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
+                    ?: self::extractTemplateNameFromWikitext( $wikitext )
                     ?: str_replace( 'Franchises/', '', $pageTitle );
+
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        
-        // Set HTML title
+        if ( $deck === '' ) {
+            $deck = self::extractFirstParagraph( $wikitext );
+        }
+
         $out->setHTMLTitle( $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'] );
-        
+
         $metaDescription = $deck;
         if ( $metaDescription === '' ) {
             $metaDescription = $franchiseName . ' - Franchise info, games, and characters on Giant Bomb Wiki.';
         }
-        
+
         $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-        
+
         $canonicalUrl = $title->getFullURL();
+        $out->setCanonicalUrl( $canonicalUrl );
         $metaImage = self::getPageImage( $title, $store, $subject );
         
         PageHelper::addOpenGraphTags( $out, [
@@ -404,5 +422,90 @@ class SkinGiantBomb extends SkinTemplate {
             'jsonld-franchise',
             '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
         );
+    }
+
+    /**
+     * Load a page's raw wikitext, cached per request.
+     */
+    private static function getPageWikitext( \Title $title ): string {
+        static $cache = [];
+        $key = $title->getPrefixedDBkey();
+        if ( array_key_exists( $key, $cache ) ) {
+            return $cache[$key];
+        }
+        try {
+            $wikiPage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+            $content = $wikiPage->getContent();
+            if ( !$content ) {
+                return $cache[$key] = '';
+            }
+            return $cache[$key] = $content->getText();
+        } catch ( \Throwable $e ) {
+            return $cache[$key] = '';
+        }
+    }
+
+    /**
+     * Pull the "Name" parameter from a {{Game|...}} / {{Character|...}} / {{Franchise|...}}
+     * invocation. The template value keeps punctuation (colons, ampersands) that the URL
+     * slug strips.
+     */
+    private static function extractTemplateNameFromWikitext( string $wikitext ): string {
+        if ( $wikitext === '' ) {
+            return '';
+        }
+        if ( preg_match( '/^\s*\|\s*Name\s*=\s*(.+?)\s*$/mi', $wikitext, $m ) ) {
+            return trim( $m[1] );
+        }
+        return '';
+    }
+
+    /**
+     * Pull a short plain-text excerpt for meta description use. Tries a template "Deck"
+     * parameter first, then the first non-trivial <p>...</p> block (legacy HTML-in-wikitext
+     * pages), then the first non-markup line. Returns empty if nothing usable is found.
+     */
+    private static function extractFirstParagraph( string $wikitext, int $maxLen = 280, int $minLen = 40 ): string {
+        if ( $wikitext === '' ) {
+            return '';
+        }
+
+        if ( preg_match( '/^\s*\|\s*Deck\s*=\s*(.+?)\s*$/mi', $wikitext, $m ) ) {
+            $text = PageHelper::sanitizeMetaText( $m[1], $maxLen );
+            if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+                return $text;
+            }
+        }
+
+        $stripped = preg_replace( '/\{\{[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/s', '', $wikitext );
+        if ( $stripped === null ) {
+            $stripped = $wikitext;
+        }
+
+        if ( preg_match_all( '/<p[^>]*>(.*?)<\/p>/is', $stripped, $matches ) ) {
+            foreach ( $matches[1] as $candidate ) {
+                $text = PageHelper::sanitizeMetaText( $candidate, $maxLen );
+                if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+                    return $text;
+                }
+            }
+        }
+
+        foreach ( preg_split( '/\r?\n/', $stripped ) as $line ) {
+            $line = trim( $line );
+            if ( $line === '' ) {
+                continue;
+            }
+            $first = $line[0];
+            if ( $first === '<' || $first === '{' || $first === '|' || $first === '=' || $first === '*' || $first === '#' || $first === ':' ) {
+                continue;
+            }
+            $text = PageHelper::sanitizeMetaText( $line, $maxLen );
+            if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+                return $text;
+            }
+        }
+
+        return '';
     }
 }
