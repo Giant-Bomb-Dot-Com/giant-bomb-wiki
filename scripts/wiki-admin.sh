@@ -121,6 +121,52 @@ case "${cmd}" in
     run_php --conf "$CONF_PATH" "$MW_ROOT/maintenance/refreshLinks.php" "$@"
     ;;
 
+  # Generate XML sitemaps for search engines.
+  # SITEMAP_URLPATH must be a path only (no scheme/host); generateSitemap.php
+  # prepends SITEMAP_SERVER to form full URLs.
+  #
+  # Examples:
+  #   wiki-admin sitemap
+  #   SITEMAP_FSPATH=/tmp/wiki-sitemaps wiki-admin sitemap
+  #   SITEMAP_SERVER=https://giantbomb.com wiki-admin sitemap
+  sitemap)
+    # FS path matches URL path so Apache can serve the files directly.
+    SITEMAP_FSPATH="${SITEMAP_FSPATH:-$MW_ROOT/wiki-sitemaps}"
+    SITEMAP_SERVER="${SITEMAP_SERVER:-${CANONICAL_SERVER:-${APP_BASE_ORIGIN:-http://localhost:8080}}}"
+    SITEMAP_URLPATH="${SITEMAP_URLPATH:-/wiki-sitemaps/}"
+    SITEMAP_IDENTIFIER="${SITEMAP_IDENTIFIER:-giantbomb}"
+    SITEMAP_COMPRESS="${SITEMAP_COMPRESS:-no}"
+
+    mkdir -p "$SITEMAP_FSPATH"
+
+    # NS 0 covers Games/, Concepts/, Characters/, etc.; everything else is
+    # MediaWiki plumbing (templates, SMW, Scribunto, ...).
+    SITEMAP_NAMESPACES="${SITEMAP_NAMESPACES:-0}"
+
+    run_php --conf "$CONF_PATH" "$MW_ROOT/maintenance/generateSitemap.php" \
+      --fspath "$SITEMAP_FSPATH" \
+      --urlpath "$SITEMAP_URLPATH" \
+      --server "$SITEMAP_SERVER" \
+      --identifier "$SITEMAP_IDENTIFIER" \
+      --compress "$SITEMAP_COMPRESS" \
+      --namespaces "$SITEMAP_NAMESPACES" \
+      --skip-redirects \
+      "$@"
+
+    # Stable top-level pointer so /wiki-sitemap.xml isn't affected by the
+    # identifier suffix MediaWiki bakes into its filenames.
+    INDEX_FILE="$SITEMAP_FSPATH/sitemap-index-${SITEMAP_IDENTIFIER}.xml"
+    TOP_LEVEL="${SITEMAP_TOP_LEVEL:-$MW_ROOT/wiki-sitemap.xml}"
+    if [ -f "$INDEX_FILE" ]; then
+      cp "$INDEX_FILE" "$TOP_LEVEL"
+      echo "Sitemap generated at $INDEX_FILE"
+      echo "Top-level pointer copied to $TOP_LEVEL"
+    else
+      echo "WARN: Expected sitemap index not found at $INDEX_FILE" >&2
+      exit 1
+    fi
+    ;;
+
   # GiantBomb cache management (uses version-based invalidation)
   cache-purge)
     # Purge GiantBomb skin cache by incrementing version numbers
@@ -135,7 +181,7 @@ case "${cmd}" in
     ;;
 
   *)
-    echo "Usage: wiki-admin {install|update|smw-setup|smw-rebuild|run|refresh-links|cache-purge}" >&2
+    echo "Usage: wiki-admin {install|install-innodb|update|smw-setup|smw-rebuild|run|refresh-links|sitemap|cache-purge}" >&2
     exit 2
     ;;
 esac

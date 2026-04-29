@@ -12,13 +12,19 @@ if ( $IP === false || $IP === '' ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 class AlgoliaReindex extends Maintenance {
+
+	private const DB_PAGE_SIZE = 500;
+
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Reindex MediaWiki/SMW content into Algolia.' );
 		$this->addOption( 'apply-settings', 'Apply default index settings before indexing', false, false );
 		$this->addOption( 'types', 'Comma-separated list of types to index', false, true );
 		$this->addOption( 'since', 'Only index pages updated since YYYY-MM-DD', false, true );
-		$this->addOption( 'batch', 'Batch size for saveObjects (default: 1000)', false, true );
+		$this->addOption( 'batch', 'Batch size for saveObjects (default: 200)', false, true );
+		$this->addOption( 'sleep', 'Milliseconds to sleep between batches (default: 0)', false, true );
+		$this->addOption( 'limit', 'Max total records to index (for testing/incremental runs)', false, true );
+		$this->addOption( 'resume-after', 'Resume after this page_id (skip pages with id <= value)', false, true );
 	}
 
 	public function execute() {
@@ -49,10 +55,13 @@ class AlgoliaReindex extends Maintenance {
 				$sinceTs = sprintf( '%04d%02d%02d000000', (int)$parts[0], (int)$parts[1], (int)$parts[2] );
 			}
 		}
-		$batchSize = (int)$this->getOption( 'batch', '1000' );
+		$batchSize = (int)$this->getOption( 'batch', '200' );
 		if ( $batchSize <= 0 ) {
-			$batchSize = 1000;
+			$batchSize = 200;
 		}
+		$sleepMs = (int)$this->getOption( 'sleep', '0' );
+		$limit = (int)$this->getOption( 'limit', '0' );
+		$resumeAfter = (int)$this->getOption( 'resume-after', '0' );
 
 		$this->output( "Index: " . $config->get( 'AlgoliaIndexName' ) . "\n" );
 		$this->output( "Types: " . implode( ',', $types ) . "\n" );
@@ -60,13 +69,27 @@ class AlgoliaReindex extends Maintenance {
 			$this->output( "Since: $since\n" );
 		}
 		$this->output( "Batch: $batchSize\n" );
+		if ( $sleepMs > 0 ) {
+			$this->output( "Sleep: {$sleepMs}ms between batches\n" );
+		}
+		if ( $limit > 0 ) {
+			$this->output( "Limit: $limit records\n" );
+		}
+		if ( $resumeAfter > 0 ) {
+			$this->output( "Resuming after page_id $resumeAfter\n" );
+		}
+		$this->output( "Memory limit: " . ini_get( 'memory_limit' ) . "\n" );
 
 		$typePrefixMap = (array)$config->get( 'AlgoliaTypePrefixMap' );
 		$totalIndexed = 0;
 		$totalSkipped = 0;
 		$errors = 0;
+		$hitLimit = false;
 
 		foreach ( $types as $type ) {
+			if ( $hitLimit ) {
+				break;
+			}
 			$prefix = $typePrefixMap[ $type ] ?? null;
 			if ( !is_string( $prefix ) || $prefix === '' ) {
 				$this->output( "Skipping type '$type' (no prefix configured)\n" );
@@ -78,8 +101,10 @@ class AlgoliaReindex extends Maintenance {
 			$countForType = 0;
 			$skippedForType = 0;
 			$errorForType = 0;
+			$lastPageId = 0;
 
-			foreach ( $this->enumerateTitlesByPrefix( $prefix ) as $title ) {
+			foreach ( $this->enumerateTitlesByPrefix( $prefix, $resumeAfter ) as [ $pageId, $title ] ) {
+				$lastPageId = $pageId;
 				try {
 					$record = RecordMapper::mapRecord( $type, $title );
 					if ( $record === null ) {
@@ -94,18 +119,24 @@ class AlgoliaReindex extends Maintenance {
 					}
 					$recordsBatch[] = $record;
 					$countForType++;
+
 					if ( count( $recordsBatch ) >= $batchSize ) {
-						$index->saveObjects( $recordsBatch );
+						$this->flushBatch( $index, $recordsBatch, $type, $countForType, $lastPageId, $sleepMs );
 						$recordsBatch = [];
-						$this->output( "Upserted $countForType objects for '$type'...\n" );
+					}
+
+					if ( $limit > 0 && ( $totalIndexed + $countForType ) >= $limit ) {
+						$hitLimit = true;
+						break;
 					}
 				} catch ( \Throwable $e ) {
 					$errorForType++;
-					$this->output( "Error mapping/upserting '{$title->getPrefixedText()}': " . $e->getMessage() . "\n" );
+					$this->output( "Error page_id=$pageId '{$title->getPrefixedText()}': " . $e->getMessage() . "\n" );
 				}
 			}
 			if ( $recordsBatch ) {
-				$index->saveObjects( $recordsBatch );
+				$this->flushBatch( $index, $recordsBatch, $type, $countForType, $lastPageId, 0 );
+				$recordsBatch = [];
 			}
 			$totalIndexed += $countForType;
 			$totalSkipped += $skippedForType;
@@ -116,33 +147,68 @@ class AlgoliaReindex extends Maintenance {
 		$this->output( "Done. Total indexed=$totalIndexed, skipped=$totalSkipped, errors=$errors\n" );
 	}
 
-	private function enumerateTitlesByPrefix( string $prefix ): \Generator {
+	private function flushBatch( $index, array &$records, string $type, int $countForType, int $lastPageId, int $sleepMs ): void {
+		$index->saveObjects( $records );
+		$mem = round( memory_get_usage( true ) / 1048576, 1 );
+		$this->output( "  [$type] upserted=$countForType last_page_id=$lastPageId mem={$mem}MB\n" );
+
+		$this->clearMediaWikiCaches();
+
+		if ( $sleepMs > 0 ) {
+			usleep( $sleepMs * 1000 );
+		}
+	}
+
+	private function clearMediaWikiCaches(): void {
+		$services = MediaWikiServices::getInstance();
+
+		$linkCache = $services->getLinkCache();
+		$linkCache->clear();
+
+		gc_collect_cycles();
+	}
+
+	private function enumerateTitlesByPrefix( string $prefix, int $resumeAfter = 0 ): \Generator {
 		$services = MediaWikiServices::getInstance();
 		$dbr = $services->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$dbPrefix = str_replace( ' ', '_', $prefix ) . '/';
 		$like = $dbr->buildLike( $dbPrefix, $dbr->anyString() );
-		$res = $dbr->newSelectQueryBuilder()
-			->select( [ 'page_id', 'page_namespace', 'page_title', 'page_is_redirect' ] )
-			->from( 'page' )
-			->where( [
-				'page_namespace' => NS_MAIN,
-				'page_is_redirect' => 0,
-			] )
-			->andWhere( [ "page_title $like" ] )
-			->caller( __METHOD__ )
-			->fetchResultSet();
-		foreach ( $res as $row ) {
-			$dbTitle = (string)$row->page_title;
-			$remainder = substr( $dbTitle, strlen( $dbPrefix ) );
-			if ( $remainder === false ) {
-				continue;
+
+		$lastId = $resumeAfter;
+
+		while ( true ) {
+			$res = $dbr->newSelectQueryBuilder()
+				->select( [ 'page_id', 'page_namespace', 'page_title' ] )
+				->from( 'page' )
+				->where( [
+					'page_namespace' => NS_MAIN,
+					'page_is_redirect' => 0,
+					'page_id > ' . (int)$lastId,
+				] )
+				->andWhere( [ "page_title $like" ] )
+				->orderBy( 'page_id', 'ASC' )
+				->limit( self::DB_PAGE_SIZE )
+				->caller( __METHOD__ )
+				->fetchResultSet();
+
+			$count = 0;
+			foreach ( $res as $row ) {
+				$count++;
+				$pageId = (int)$row->page_id;
+				$lastId = $pageId;
+				$dbTitle = (string)$row->page_title;
+				$remainder = substr( $dbTitle, strlen( $dbPrefix ) );
+				if ( $remainder === false || strpos( $remainder, '/' ) !== false ) {
+					continue;
+				}
+				$title = Title::makeTitle( (int)$row->page_namespace, $dbTitle );
+				if ( $title ) {
+					yield [ $pageId, $title ];
+				}
 			}
-			if ( strpos( $remainder, '/' ) !== false ) {
-				continue;
-			}
-			$title = Title::makeTitle( (int)$row->page_namespace, $dbTitle );
-			if ( $title ) {
-				yield $title;
+
+			if ( $count < self::DB_PAGE_SIZE ) {
+				break;
 			}
 		}
 	}
