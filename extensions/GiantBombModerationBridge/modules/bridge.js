@@ -4,15 +4,16 @@
   var lastClickedFieldId = null;
 
   // 1. Listen for clicks on ANY Page Forms upload link/button
-  jQuery(document).on("click", ".pfUploadable, .pfRemoteSelect", function () {
-    // Find the input ID.
-    var $this = jQuery(this);
-    lastClickedFieldId =
-      $this.attr("id") || $this.closest(".pfUploadable").attr("id");
+  document.addEventListener("click", function (event) {
+    var target = event.target.closest(".pfUploadable, .pfRemoteSelect");
+    if (!target) return;
+
+    // Find the input ID
+    lastClickedFieldId = target.id || target.closest(".pfUploadable")?.id;
 
     // Fallback: If no ID, get the pfInputID from the link's href
-    if (!lastClickedFieldId && this.href) {
-      var params = new URLSearchParams(this.href.split("?")[1]);
+    if (!lastClickedFieldId && target.href) {
+      var params = new URLSearchParams(target.href.split("?")[1]);
       lastClickedFieldId = params.get("pfInputID");
     }
 
@@ -66,7 +67,7 @@
 
         if (targetField) {
           targetField.value = filename;
-          jQuery(targetField).trigger("change");
+          targetField.dispatchEvent(new Event("change", { bubbles: true }));
           console.log("Moderation Bridge: Updated field: " + targetField.id);
 
           // 4. Close the UI
