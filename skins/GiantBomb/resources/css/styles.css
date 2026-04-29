@@ -712,6 +712,145 @@ td.diff-marker {
   color: #e0e0e0;
 }
 
+/* GB Legacy Image Gallery (<gb-gallery> tag) */
+.gb-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.gb-gallery-item {
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gb-gallery-item:hover {
+  outline: 2px solid #6ba4d9;
+}
+
+.gb-gallery-item a {
+  display: block;
+  height: 160px;
+  overflow: hidden;
+}
+
+.gb-gallery-item img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.gb-gallery-caption {
+  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #aaa;
+  min-height: 2.4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* GB Gallery Lightbox */
+.gb-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gb-lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.gb-lightbox-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ccc;
+  font-size: 14px;
+  text-align: center;
+  max-width: 80vw;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+}
+
+.gb-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+}
+
+.gb-lightbox-close:hover {
+  color: #6ba4d9;
+}
+
+.gb-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 2.5rem;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.gb-lightbox-nav:hover {
+  background: rgba(107, 164, 217, 0.3);
+  color: #6ba4d9;
+}
+
+.gb-lightbox-prev {
+  left: 1rem;
+}
+
+.gb-lightbox-next {
+  right: 1rem;
+}
+
+.gb-lightbox-counter {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.5rem;
+  color: #888;
+  font-size: 14px;
+}
+
+/* Images page: full-width content (no sidebar) */
+.gb-images-content {
+  grid-template-columns: 1fr !important;
+}
+
+.gb-images-main {
+  max-width: 100%;
+}
+
 /* Lists in content */
 .mw-body-content ul,
 .mw-body-content ol {
