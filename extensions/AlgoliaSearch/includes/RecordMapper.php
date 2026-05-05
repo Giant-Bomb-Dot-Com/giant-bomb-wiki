@@ -110,9 +110,10 @@ class RecordMapper
         } catch (\Throwable $e) {
         }
 
-        // 2. wikitext Image= (loose match; covers pre-SMW-rebuild pages and any spacing)
+        // 2. wikitext Image= (loose match; covers pre-SMW-rebuild pages and any spacing).
+        // [^\n|}] keeps us from gobbling the closing }} when Image= is the last parameter.
         $text = self::getPageWikitext($title);
-        if ($text !== "" && preg_match('/\|\s*Image\s*=\s*([^\n|]+)/i', $text, $m)) {
+        if ($text !== "" && preg_match('/\|\s*Image\s*=\s*([^\n|}]+)/i', $text, $m)) {
             $resolved = self::resolveImageReference(trim($m[1]), 640);
             if ($resolved) {
                 return $resolved;
@@ -138,7 +139,9 @@ class RecordMapper
     // http(s) -> as-is; mw File: -> 640px thumb; else assume legacy gb cdn path.
     private static function resolveImageReference(string $value, int $width): ?string
     {
-        $value = trim($value);
+        // belt-and-suspenders: strip trailing whitespace / template-close braces so we
+        // can't ever leak '}}' into a thumbnail URL even if upstream regex misbehaves.
+        $value = preg_replace('/[\s}]+$/', '', trim($value)) ?? "";
         if ($value === "") {
             return null;
         }
@@ -177,8 +180,8 @@ class RecordMapper
         }
 
         $text = self::getPageWikitext($title);
-        if ($text !== "" && preg_match('/\|\s*Deck\s*=\s*([^\n|]+)/i', $text, $m)) {
-            $deck = trim($m[1]);
+        if ($text !== "" && preg_match('/\|\s*Deck\s*=\s*([^\n|}]+)/i', $text, $m)) {
+            $deck = preg_replace('/[\s}]+$/', '', trim($m[1])) ?? "";
             if ($deck !== "") {
                 return $deck;
             }
