@@ -226,7 +226,22 @@ class ResolveHandler extends SimpleHandler {
 		if ( $titleText ) {
 			$title = Title::newFromText( $titleText );
 			if ( $title ) {
-				$data['title'] = $title->getText();
+				// title: human display (DisplayTitle if set, else stripped slug).
+				// prefixedTitle: url-form slug (kept verbatim for url construction).
+				$displayTitle = is_string( $first['displaytitle'] ?? null )
+					? trim( $first['displaytitle'] )
+					: '';
+				if ( $displayTitle !== '' ) {
+					$data['title'] = $displayTitle;
+				} else {
+					$raw = $title->getText();
+					$slashPos = strpos( $raw, '/' );
+					if ( $slashPos !== false ) {
+						$raw = substr( $raw, $slashPos + 1 );
+					}
+					$raw = preg_replace( '/_\d+$/', '', $raw );
+					$data['title'] = str_replace( '_', ' ', $raw );
+				}
 				$data['prefixedTitle'] = $title->getPrefixedText();
 				if (
 					in_array( 'image', $fields, true ) &&

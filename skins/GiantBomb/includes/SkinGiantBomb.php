@@ -112,7 +112,7 @@ class SkinGiantBomb extends SkinTemplate {
 
         $gameName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
                     ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Games/', '', $pageTitle );
+                    ?: self::cleanSlugFallback( $pageTitle, 'Games/' );
 
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         if ( $deck === '' ) {
@@ -304,7 +304,7 @@ class SkinGiantBomb extends SkinTemplate {
 
         $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
                     ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Characters/', '', $pageTitle );
+                    ?: self::cleanSlugFallback( $pageTitle, 'Characters/' );
 
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         if ( $deck === '' ) {
@@ -370,7 +370,7 @@ class SkinGiantBomb extends SkinTemplate {
 
         $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
                     ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Franchises/', '', $pageTitle );
+                    ?: self::cleanSlugFallback( $pageTitle, 'Franchises/' );
 
         $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
         if ( $deck === '' ) {
@@ -443,6 +443,14 @@ class SkinGiantBomb extends SkinTemplate {
         } catch ( \Throwable $e ) {
             return $cache[$key] = '';
         }
+    }
+
+    // strips entity prefix, trailing legacy id (_NNNN), and underscores.
+    // last-resort fallback so we never leak a raw url slug into display surfaces.
+    private static function cleanSlugFallback( string $pageTitle, string $prefix ): string {
+        $slug = str_replace( $prefix, '', $pageTitle );
+        $slug = preg_replace( '/_\d+$/', '', $slug );
+        return str_replace( '_', ' ', $slug );
     }
 
     /**

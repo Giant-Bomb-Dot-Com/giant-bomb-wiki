@@ -198,24 +198,43 @@ class RecordMapper
         Title $title,
         string $type,
     ): string {
+        // smw Has name is the canonical display name set by entity templates
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has name"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $name = trim($first->getString());
+                    if ($name !== "") {
+                        return $name;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        // fallback: strip entity prefix, trailing _NNNN legacy id, underscores
         $text = $title->getText();
         $services = MediaWikiServices::getInstance();
         $config = $services->getMainConfig();
         $map = (array) $config->get("AlgoliaTypePrefixMap");
         $prefix = $map[$type] ?? null;
-        $candidate = $text;
         if (is_string($prefix) && $prefix !== "") {
             $prefixWithSlash = $prefix . "/";
             if (strpos($text, $prefixWithSlash) === 0) {
-                $candidate = substr($text, strlen($prefixWithSlash));
+                $text = substr($text, strlen($prefixWithSlash));
             }
         }
-        $parts = explode("/", $candidate);
+        $parts = explode("/", $text);
         $leaf = end($parts);
-        if ($leaf === false || $leaf === "") {
-            return $candidate;
-        }
-        return $leaf;
+        $candidate = $leaf !== false && $leaf !== "" ? $leaf : $text;
+        $candidate = preg_replace('/_\d+$/', '', $candidate);
+        return str_replace("_", " ", $candidate);
     }
 
     private static function getExcerptForTitle(Title $title): ?string
