@@ -59,39 +59,17 @@ class RecordMapper
             "_updatedAt" => null,
         ];
 
-        if ($type === "Game") {
-            $template = self::getGameTemplateFields($title);
-            if (
-                isset($template["deck"]) &&
-                is_string($template["deck"]) &&
-                $template["deck"] !== ""
-            ) {
-                $record["excerpt"] = self::truncatePlaintext(
-                    strip_tags($template["deck"]),
-                    280,
-                );
-            }
-            if (
-                isset($template["image"]) &&
-                is_string($template["image"]) &&
-                $template["image"] !== ""
-            ) {
-                $thumb = self::resolveImageThumbUrl($template["image"], 640);
-                if ($thumb) {
-                    $record["thumbnail"] = $thumb;
-                }
-            }
+        // deck + thumbnail use the same SMW -> wikitext -> fallback chain across all types.
+        // games are usually best-populated; other types had been silently falling through.
+        $deck = self::getEntityDeck($title);
+        if ($deck !== null && $deck !== "") {
+            $record["excerpt"] = self::truncatePlaintext(
+                strip_tags($deck),
+                280,
+            );
         }
-        if ($record["thumbnail"] === null) {
-            $record["thumbnail"] = self::getThumbnailForTitle($title);
-        }
-        if ($record["thumbnail"] === null) {
-            $legacyImage = LegacyImageHelper::findLegacyImageForTitle($title);
-            if ($legacyImage !== null) {
-                $record["thumbnail"] =
-                    $legacyImage["thumb"] ?? $legacyImage["full"];
-            }
-        }
+
+        $record["thumbnail"] = self::getEntityImage($title);
         if ($record["excerpt"] === null || $record["excerpt"] === "") {
             $fromExtract = self::getExcerptForTitle($title);
             if (is_string($fromExtract) && $fromExtract !== "") {
@@ -110,23 +88,121 @@ class RecordMapper
 		return $record;
 	}
 
-    private static function getGameTemplateFields(Title $title): array
+    private static function getEntityImage(Title $title): ?string
     {
-        $out = ["deck" => null, "image" => null];
-        $services = MediaWikiServices::getInstance();
-        $page = $services->getWikiPageFactory()->newFromTitle($title);
-        $content = $page ? $page->getContent() : null;
-        if (!$content) {
-            return $out;
+        // 1. SMW Has image (set by every entity template)
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has image"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $resolved = self::resolveImageReference($first->getString(), 640);
+                    if ($resolved) {
+                        return $resolved;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
         }
-        $text = $content->getText();
-        if (preg_match('/\| Deck=([^\n]+)/', $text, $m)) {
-            $out["deck"] = trim($m[1]);
+
+        // 2. wikitext Image= (loose match; covers pre-SMW-rebuild pages and any spacing)
+        $text = self::getPageWikitext($title);
+        if ($text !== "" && preg_match('/\|\s*Image\s*=\s*([^\n|]+)/i', $text, $m)) {
+            $resolved = self::resolveImageReference(trim($m[1]), 640);
+            if ($resolved) {
+                return $resolved;
+            }
         }
-        if (preg_match('/\| Image=([^\n]+)/', $text, $m)) {
-            $out["image"] = trim($m[1]);
+
+        // 3. mediawiki PageImages api
+        $pageImage = self::getThumbnailForTitle($title);
+        if ($pageImage) {
+            return $pageImage;
         }
-        return $out;
+
+        // 4. legacy <div id="imageData"> json blob
+        $legacyImage = LegacyImageHelper::findLegacyImageForTitle($title);
+        if ($legacyImage !== null) {
+            return $legacyImage["thumb"] ?? $legacyImage["full"] ?? null;
+        }
+
+        return null;
+    }
+
+    // resolves a raw Has image / Image= value to a public url.
+    // http(s) -> as-is; mw File: -> 640px thumb; else assume legacy gb cdn path.
+    private static function resolveImageReference(string $value, int $width): ?string
+    {
+        $value = trim($value);
+        if ($value === "") {
+            return null;
+        }
+        if (stripos($value, "http") === 0) {
+            return $value;
+        }
+        // SMW stores spaces as '+' (per template's #replace); mw File: lookup wants spaces
+        $fileName = str_replace("+", " ", $value);
+        $thumb = self::resolveImageThumbUrl($fileName, $width);
+        if ($thumb) {
+            return $thumb;
+        }
+        // not in the local file repo; treat as legacy gb cdn path
+        return "https://www.giantbomb.com/a/uploads/" . ltrim($value, "/");
+    }
+
+    private static function getEntityDeck(Title $title): ?string
+    {
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has deck"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $deck = trim($first->getString());
+                    if ($deck !== "") {
+                        return $deck;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        $text = self::getPageWikitext($title);
+        if ($text !== "" && preg_match('/\|\s*Deck\s*=\s*([^\n|]+)/i', $text, $m)) {
+            $deck = trim($m[1]);
+            if ($deck !== "") {
+                return $deck;
+            }
+        }
+
+        return null;
+    }
+
+    private static function getPageWikitext(Title $title): string
+    {
+        static $cache = [];
+        $key = $title->getPrefixedDBkey();
+        if (array_key_exists($key, $cache)) {
+            return $cache[$key];
+        }
+        try {
+            $page = MediaWikiServices::getInstance()
+                ->getWikiPageFactory()
+                ->newFromTitle($title);
+            $content = $page ? $page->getContent() : null;
+            return $cache[$key] = $content ? $content->getText() : "";
+        } catch (\Throwable $e) {
+            return $cache[$key] = "";
+        }
     }
 
     private static function resolveImageThumbUrl(
