@@ -74,6 +74,7 @@ COPY --chown=www-data:www-data ./extensions/AlgoliaSearch /var/www/html/extensio
 COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
 COPY --chown=www-data:www-data ./extensions/GbSessionProvider /var/www/html/extensions/GbSessionProvider
 COPY --chown=www-data:www-data ./extensions/GBGallery /var/www/html/extensions/GBGallery
+COPY --chown=www-data:www-data ./extensions/GiantBombModerationBridge /var/www/html/extensions/GiantBombModerationBridge
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)

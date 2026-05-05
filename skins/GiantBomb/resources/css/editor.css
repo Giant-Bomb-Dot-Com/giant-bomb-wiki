@@ -43,6 +43,18 @@
   background-color: #f8f9fa;
 }
 
+/* Moderation notifications */
+.mw-notification-area-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 500;
+}
+
 /* Table Header alignment */
 div.mw-body-content form.createbox div.mw-parser-output table.formtable th {
   vertical-align: middle;
@@ -184,6 +196,168 @@ div.mw-body-content
   background-color: #666;
 }
 
+/* OO-UI-Modal */
+/* --- OO-UI Modal & File Upload Dark Theme --- */
+
+/* Main Frame & Containers */
+body .oo-ui-windowManager-modal > .oo-ui-dialog {
+  background-color: var(
+    --background-color-backdrop-light,
+    rgba(50, 50, 50, 0.65)
+  );
+  transition-property: opacity;
+  transition-duration: 250ms;
+}
+
+.oo-ui-windowManager-modal > .oo-ui-dialog > .oo-ui-window-frame,
+.oo-ui-window-frame .oo-ui-window-body,
+.oo-ui-selectFileInputWidget.oo-ui-selectFileWidget-dropTarget {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.oo-ui-selectFileInputWidget.oo-ui-widget-enabled.oo-ui-selectFileInputWidget-dropTarget {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body .mw-upload-bookletLayout-filePreview {
+  background-color: #666;
+}
+
+body .oo-ui-processDialog-navigation {
+  background-color: #252525;
+}
+
+.oo-ui-progressBarWidget.oo-ui-widget-enabled .oo-ui-progressBarWidget-bar {
+  background-color: var(--background-color-progressive, #b1601c);
+}
+
+.oo-ui-windowManager-modal > .oo-ui-dialog > .oo-ui-window-frame {
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+/* Header & Footer Bars */
+.oo-ui-window-frame .oo-ui-processDialog-head,
+.oo-ui-window-frame .oo-ui-processDialog-foot {
+  background-color: #252525;
+  border-color: #333;
+}
+
+.oo-ui-window-frame .oo-ui-processDialog-title {
+  color: #ffffff;
+}
+
+/* File Upload Widget Specifics */
+.oo-ui-selectFileInputWidget.oo-ui-selectFileWidget-dropTarget {
+  border: 2px dashed #444;
+}
+
+.oo-ui-selectFileInputWidget-thumbnail {
+  background-color: #252525;
+  border-right: 1px solid #333;
+}
+
+.oo-ui-selectFileInputWidget-dropLabel {
+  color: #666;
+}
+
+/* Inputs (Text & File Info) */
+body .oo-ui-window-frame .oo-ui-textInputWidget-type-text input,
+body .oo-ui-selectFileInputWidget-info.oo-ui-textInputWidget-type-search input {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body .oo-ui-window-frame .oo-ui-textInputWidget-type-text input {
+  border: 1px solid #333;
+}
+
+body .oo-ui-selectFileInputWidget-info.oo-ui-textInputWidget-type-search input {
+  color: #888; /* Muted filename text */
+  border: none;
+}
+
+/* Buttons */
+/* Standard / Framed Buttons */
+body
+  .oo-ui-window-frame
+  .oo-ui-buttonElement-framed
+  > .oo-ui-buttonElement-button,
+body .oo-ui-selectFileInputWidget-selectButton .oo-ui-buttonElement-button {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffffff;
+}
+
+/* Progressive (Primary) Buttons */
+body
+  .oo-ui-window-frame
+  .oo-ui-flaggedElement-progressive
+  > .oo-ui-buttonElement-button {
+  background: linear-gradient(180deg, #b05f1c 0%, #b1601c 100%);
+  border-color: #b05f1c;
+}
+
+/* Hover States */
+body
+  .oo-ui-window-frame
+  .oo-ui-buttonElement-framed
+  > .oo-ui-buttonElement-button:hover,
+.oo-ui-selectFileInputWidget-selectButton .oo-ui-buttonElement-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* Force all indicators to white using a filter */
+.oo-ui-indicatorElement-indicator {
+  filter: invert(1);
+}
+
+/* Error/Message Overlay Container */
+body .oo-ui-processDialog-errors {
+  background-color: rgba(50, 50, 50, 0.9); /* Matches main modal body */
+}
+
+/* Error Title ("Something went wrong") */
+body .oo-ui-processDialog-errors-title {
+  color: #ffffff;
+  border-bottom: 1px solid #333;
+}
+
+/* Message Widget (The box containing the text) */
+.oo-ui-messageWidget.oo-ui-messageWidget-block {
+  background-color: #252525;
+  border: 1px solid #444;
+  color: #ffffff;
+}
+
+/* The Label/Text inside the message */
+body .oo-ui-messageWidget .oo-ui-labelElement-label {
+  color: #666;
+}
+
+/* Action area at the bottom of the error screen */
+body .oo-ui-processDialog-errors-actions {
+  background-color: #252525;
+  border-top: 1px solid #333;
+}
+
+/* Buttons on the error screen (Dismiss / Try Again) */
+body .oo-ui-processDialog-errors-actions .oo-ui-buttonElement-button {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffffff;
+}
+
+body .oo-ui-processDialog-errors-actions .oo-ui-buttonElement-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* OOUI Modal styles end */
+
 /* ACE CODE EDITOR */
 .wikiEditor-ui .ace_print-margin {
   width: 0;
@@ -239,11 +413,11 @@ div.mw-body-content
   background-color: #272822;
 }
 
-.mw-widget-dateInputWidget-handle {
-  background-color: #1a1a1a !important;
+body .mw-widget-dateInputWidget-handle {
+  background-color: #1a1a1a;
 }
 
-.mw-widget-dateInputWidget-calendar {
-  background-color: #666 !important;
+body .mw-widget-dateInputWidget-calendar {
+  background-color: #666;
 }
 /* END ACE CODE EDITOR */

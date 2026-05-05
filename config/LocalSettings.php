@@ -391,6 +391,7 @@ wfLoadExtension("AlgoliaSearch");
 wfLoadExtension("UrlGetParameters");
 wfLoadExtension("GiantBombMetaTags");
 wfLoadExtension("Moderation");
+wfLoadExtension("GiantBombModerationBridge");
 wfLoadExtension("GBGallery");
 
 # =============================================================================
