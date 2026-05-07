@@ -43,6 +43,7 @@ services:
       - wiki-data:/var/www/html/images
       - ./tests:/var/www/html/gb-tests
       - ./extensions/GbSessionProvider:/var/www/html/extensions/GbSessionProvider
+      - ./extensions/GBModeration:/var/www/html/extensions/GBModeration:cached
       - ./extensions/GBGallery:/var/www/html/extensions/GBGallery:cached
       # Import scripts
       - ./import_templates:/var/www/html/maintenance/import_templates:cached

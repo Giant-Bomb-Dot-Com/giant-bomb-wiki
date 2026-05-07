@@ -111,4 +111,5 @@ HTML Structure
 <div class="gb-location-content">
 <div class="gb-location-main">
 <div class="gb-location-wiki-content">
+__NOEDITSECTION__
 </includeonly>

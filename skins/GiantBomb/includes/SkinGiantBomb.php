@@ -3,54 +3,68 @@
 use GiantBomb\Skin\Helpers\PageHelper;
 use MediaWiki\MediaWikiServices;
 
-class SkinGiantBomb extends SkinTemplate {
-    public $skinname = 'giantbomb';
-    public $stylename = 'GiantBomb';
-    public $template = 'GiantBombTemplate';
+class SkinGiantBomb extends SkinTemplate
+{
+    public $skinname = "giantbomb";
+    public $stylename = "GiantBomb";
+    public $template = "GiantBombTemplate";
     public $useHeadElement = true;
 
-    public function initPage( OutputPage $out ) {
-        parent::initPage( $out );
-        
-        $out->addMeta( 'viewport', 'width=device-width, initial-scale=1.0' );
+    public function initPage(OutputPage $out)
+    {
+        parent::initPage($out);
+
+        $out->addMeta("viewport", "width=device-width, initial-scale=1.0");
 
         // Pass header asset URL to JavaScript
-        $headerAssetsUrl = getenv('GB_SITE_SERVER');
-        $out->addJsConfigVars( 'wgHeaderAssetsUrl', $headerAssetsUrl );
+        $headerAssetsUrl = getenv("GB_SITE_SERVER");
+        $out->addJsConfigVars("wgHeaderAssetsUrl", $headerAssetsUrl);
 
-        $out->addModuleStyles( 'skins.giantbomb.styles' );
-        $out->addModules( [ 'skins.giantbomb', 'skins.giantbomb.js', 'skins.giantbomb.wikijs' ] );
-        
-        $gtmId = getenv( 'GTM_CONTAINER_ID' );
-        if ( $gtmId ) {
-            $out->addHeadItem( 'gtm-head', 
+        $out->addModuleStyles("skins.giantbomb.styles");
+        $out->addModules([
+            "skins.giantbomb",
+            "skins.giantbomb.js",
+            "skins.giantbomb.wikijs",
+        ]);
+
+        $gtmId = getenv("GTM_CONTAINER_ID");
+        if ($gtmId) {
+            $out->addHeadItem(
+                "gtm-head",
                 "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" .
-                "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," .
-                "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" .
-                "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" .
-                "})(window,document,'script','dataLayer','" . htmlspecialchars( $gtmId ) . "');</script>"
+                    "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," .
+                    "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" .
+                    "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" .
+                    "})(window,document,'script','dataLayer','" .
+                    htmlspecialchars($gtmId) .
+                    "');</script>",
             );
         }
     }
 
-    public static function onOutputPageBodyAttributes( OutputPage $out, Skin $skin, array &$bodyAttrs ) {
+    public static function onOutputPageBodyAttributes(
+        OutputPage $out,
+        Skin $skin,
+        array &$bodyAttrs,
+    ) {
         $user = $skin->getUser();
-        if ( $user->isRegistered() && $user->isAllowed( 'gb-premium' ) ) {
-            $bodyAttrs['class'] .= ' _rx7q';
+        if ($user->isRegistered() && $user->isAllowed("gb-premium")) {
+            $bodyAttrs["class"] .= " _rx7q";
         }
     }
 
-    public static function onParserAfterTidy( Parser &$parser, &$text ) {
+    public static function onParserAfterTidy(Parser &$parser, &$text)
+    {
         $text = preg_replace(
             '/(<div\s+id=["\']imageData["\'][^>]*>)/',
             '$1</div>',
-            $text
+            $text,
         );
 
         $text = preg_replace(
             '/\bclass="((?:[^"]*\s)?gb-\w+-sidebar(?:\s[^"]*)?)"/',
             'class="$1 gb-sidebar"',
-            $text
+            $text,
         );
 
         return true;
@@ -60,149 +74,188 @@ class SkinGiantBomb extends SkinTemplate {
      * Add SEO meta tags for template-rendered game pages.
      * Reads SMW properties to populate OpenGraph, Twitter cards, and meta description.
      */
-    public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+    public static function onBeforePageDisplay(OutputPage &$out, Skin &$skin)
+    {
         $title = $out->getTitle();
-        if ( !$title ) {
+        if (!$title) {
             return;
         }
 
         $request = $out->getRequest();
-        $action = $request->getText( 'action', 'view' );
-        $isViewAction = $action === 'view' || $action === 'purge' || $action === '';
-        $isFrontFacing = $isViewAction
-            && !$title->isSpecialPage()
-            && $title->getNamespace() >= 0
-            && $title->getNamespace() % 2 === 0;
+        $action = $request->getText("action", "view");
+        $isViewAction =
+            $action === "view" || $action === "purge" || $action === "";
+        $isFrontFacing =
+            $isViewAction &&
+            !$title->isSpecialPage() &&
+            $title->getNamespace() >= 0 &&
+            $title->getNamespace() % 2 === 0;
 
-        if ( $isFrontFacing ) {
-            $out->addHeadItem( 'pubnation',
-                '<script src="//scripts.pubnation.com/tags/4812f039-a343-4e18-89f9-d9461276ff90.js" async="" data-noptimize="1" data-cfasync="false"></script>'
+        if ($isFrontFacing) {
+            $out->addHeadItem(
+                "pubnation",
+                '<script src="//scripts.pubnation.com/tags/4812f039-a343-4e18-89f9-d9461276ff90.js" async="" data-noptimize="1" data-cfasync="false"></script>',
             );
         }
 
         $pageTitle = $title->getText();
-        
+
         // Process game, character, or franchise pages rendered via templates
-        $isGamePage = strpos( $pageTitle, 'Games/' ) === 0 && 
-                      substr_count( $pageTitle, '/' ) === 1;
-        $isCharacterPage = strpos( $pageTitle, 'Characters/' ) === 0 && 
-                           substr_count( $pageTitle, '/' ) === 1;
-        $isFranchisePage = strpos( $pageTitle, 'Franchises/' ) === 0 && 
-                           substr_count( $pageTitle, '/' ) === 1;
-        
-        if ( !$isGamePage && !$isCharacterPage && !$isFranchisePage ) {
+        $isGamePage =
+            strpos($pageTitle, "Games/") === 0 &&
+            substr_count($pageTitle, "/") === 1;
+        $isCharacterPage =
+            strpos($pageTitle, "Characters/") === 0 &&
+            substr_count($pageTitle, "/") === 1;
+        $isFranchisePage =
+            strpos($pageTitle, "Franchises/") === 0 &&
+            substr_count($pageTitle, "/") === 1;
+
+        if (!$isGamePage && !$isCharacterPage && !$isFranchisePage) {
             return;
         }
-        
-        if ( $isCharacterPage ) {
-            self::addCharacterSeoTags( $out, $title, $pageTitle );
+
+        if ($isCharacterPage) {
+            self::addCharacterSeoTags($out, $title, $pageTitle);
             return;
         }
-        
-        if ( $isFranchisePage ) {
-            self::addFranchiseSeoTags( $out, $title, $pageTitle );
+
+        if ($isFranchisePage) {
+            self::addFranchiseSeoTags($out, $title, $pageTitle);
             return;
         }
 
         // Get SMW properties for this page
         $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
+        $subject = \SMW\DIWikiPage::newFromTitle($title);
 
-        $wikitext = self::getPageWikitext( $title );
+        $wikitext = self::getPageWikitext($title);
 
-        $gameName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: self::cleanSlugFallback( $pageTitle, 'Games/' );
+        $gameName =
+            self::getSMWPropertyValue($store, $subject, "Has name") ?:
+            self::extractTemplateNameFromWikitext($wikitext) ?:
+            self::cleanSlugFallback($pageTitle, "Games/");
 
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
+        $deck = self::getSMWPropertyValue($store, $subject, "Has deck") ?: "";
+        if ($deck === "") {
+            $deck = self::extractFirstParagraph($wikitext);
         }
 
-        $out->setHTMLTitle( $gameName . ' (Game) - ' . $GLOBALS['wgSitename'] );
+        $out->setHTMLTitle($gameName . " (Game) - " . $GLOBALS["wgSitename"]);
 
         $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $gameName . ' - Game info, reviews, and more on Giant Bomb Wiki.';
+        if ($metaDescription === "") {
+            $metaDescription =
+                $gameName .
+                " - Game info, reviews, and more on Giant Bomb Wiki.";
         }
 
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
+        $out->addMeta(
+            "description",
+            PageHelper::sanitizeMetaText($metaDescription),
+        );
 
         $canonicalUrl = $title->getFullURL();
-        $out->setCanonicalUrl( $canonicalUrl );
-        
+        $out->setCanonicalUrl($canonicalUrl);
+
         // Get cover image (SMW property first, then legacy imageData fallback)
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
+        $metaImage = self::getPageImage($title, $store, $subject);
+
         // Add OpenGraph tags
-        PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
-            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'video.game',
-            'og:locale' => 'en_US',
-        ], $metaImage );
-        
+        PageHelper::addOpenGraphTags(
+            $out,
+            [
+                "og:title" => $gameName . " (Game) - " . $GLOBALS["wgSitename"],
+                "og:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "og:url" => $canonicalUrl,
+                "og:site_name" => $GLOBALS["wgSitename"],
+                "og:type" => "video.game",
+                "og:locale" => "en_US",
+            ],
+            $metaImage,
+        );
+
         // Add Twitter Card tags
-        PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
-            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $gameName );
-        
+        PageHelper::addTwitterTags(
+            $out,
+            [
+                "twitter:card" => $metaImage
+                    ? "summary_large_image"
+                    : "summary",
+                "twitter:title" =>
+                    $gameName . " (Game) - " . $GLOBALS["wgSitename"],
+                "twitter:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "twitter:site" => "@giantbomb",
+            ],
+            $metaImage,
+            $gameName,
+        );
+
         // Add JSON-LD structured data for VideoGame
         $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'VideoGame',
-            'name' => $gameName,
-            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
+            "@context" => "https://schema.org",
+            "@type" => "VideoGame",
+            "name" => $gameName,
+            "description" => PageHelper::sanitizeMetaText($metaDescription),
+            "url" => $canonicalUrl,
         ];
-        
-        if ( $metaImage ) {
-            $jsonLd['image'] = $metaImage;
+
+        if ($metaImage) {
+            $jsonLd["image"] = $metaImage;
         }
-        
+
         // Get release date
-        $releaseDate = self::getSMWPropertyValue( $store, $subject, 'Has release date' );
-        if ( $releaseDate ) {
-            $jsonLd['datePublished'] = $releaseDate;
+        $releaseDate = self::getSMWPropertyValue(
+            $store,
+            $subject,
+            "Has release date",
+        );
+        if ($releaseDate) {
+            $jsonLd["datePublished"] = $releaseDate;
         }
-        
+
         // Get genres
-        $genres = self::getSMWPropertyValues( $store, $subject, 'Has genres' );
-        if ( !empty( $genres ) ) {
-            $jsonLd['genre'] = array_map( function( $g ) {
-                return str_replace( 'Genres/', '', $g );
-            }, $genres );
+        $genres = self::getSMWPropertyValues($store, $subject, "Has genres");
+        if (!empty($genres)) {
+            $jsonLd["genre"] = array_map(function ($g) {
+                return str_replace("Genres/", "", $g);
+            }, $genres);
         }
-        
+
         $out->addHeadItem(
-            'jsonld-videogame',
-            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
+            "jsonld-videogame",
+            '<script type="application/ld+json">' .
+                json_encode($jsonLd, JSON_UNESCAPED_SLASHES) .
+                "</script>",
         );
     }
 
     /**
      * Get a single SMW property value for a subject.
      */
-    private static function getSMWPropertyValue( $store, $subject, string $propertyName ): ?string {
+    private static function getSMWPropertyValue(
+        $store,
+        $subject,
+        string $propertyName,
+    ): ?string {
         try {
-            $property = new \SMW\DIProperty( $propertyName );
-            $values = $store->getPropertyValues( $subject, $property );
-            if ( !empty( $values ) ) {
-                $value = reset( $values );
-                if ( $value instanceof \SMWDIBlob ) {
+            $property = new \SMW\DIProperty($propertyName);
+            $values = $store->getPropertyValues($subject, $property);
+            if (!empty($values)) {
+                $value = reset($values);
+                if ($value instanceof \SMWDIBlob) {
                     return $value->getString();
-                } elseif ( $value instanceof \SMW\DIWikiPage ) {
+                } elseif ($value instanceof \SMW\DIWikiPage) {
                     return $value->getTitle()->getText();
-                } elseif ( $value instanceof \SMWDITime ) {
+                } elseif ($value instanceof \SMWDITime) {
                     return $value->getMwTimestamp();
                 }
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             // Property doesn't exist or SMW error
         }
         return null;
@@ -211,19 +264,23 @@ class SkinGiantBomb extends SkinTemplate {
     /**
      * Get multiple SMW property values for a subject.
      */
-    private static function getSMWPropertyValues( $store, $subject, string $propertyName ): array {
+    private static function getSMWPropertyValues(
+        $store,
+        $subject,
+        string $propertyName,
+    ): array {
         $result = [];
         try {
-            $property = new \SMW\DIProperty( $propertyName );
-            $values = $store->getPropertyValues( $subject, $property );
-            foreach ( $values as $value ) {
-                if ( $value instanceof \SMWDIBlob ) {
+            $property = new \SMW\DIProperty($propertyName);
+            $values = $store->getPropertyValues($subject, $property);
+            foreach ($values as $value) {
+                if ($value instanceof \SMWDIBlob) {
                     $result[] = $value->getString();
-                } elseif ( $value instanceof \SMW\DIWikiPage ) {
+                } elseif ($value instanceof \SMW\DIWikiPage) {
                     $result[] = $value->getTitle()->getText();
                 }
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             // Property doesn't exist or SMW error
         }
         return $result;
@@ -231,226 +288,303 @@ class SkinGiantBomb extends SkinTemplate {
 
     /**
      * Get the cover/profile image for a page.
-     * 
+     *
      * Checks in order:
      * 1. SMW "Has image" property (preferred - structured data)
      * 2. Legacy imageData div in page content (fallback for old imports)
-     * 
+     *
      * @param \Title $title The page title
      * @param mixed $store Optional SMW store (will be created if not provided)
      * @param mixed $subject Optional SMW subject (will be created if not provided)
      * @return string|null The image URL or null if not found
      */
-    private static function getPageImage( \Title $title, $store = null, $subject = null ): ?string {
+    private static function getPageImage(
+        \Title $title,
+        $store = null,
+        $subject = null,
+    ): ?string {
         // Try SMW "Has image" property first
-        if ( !$store ) {
+        if (!$store) {
             $store = \SMW\StoreFactory::getStore();
         }
-        if ( !$subject ) {
-            $subject = \SMW\DIWikiPage::newFromTitle( $title );
+        if (!$subject) {
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
         }
-        
-        $smwImage = self::getSMWPropertyValue( $store, $subject, 'Has image' );
-        if ( $smwImage ) {
+
+        $smwImage = self::getSMWPropertyValue($store, $subject, "Has image");
+        if ($smwImage) {
             // Has image stores the GB image path (e.g., "scale_large/xxx/filename.jpg")
             // or could be a full URL - check and build appropriately
-            if ( strpos( $smwImage, 'http' ) === 0 ) {
+            if (strpos($smwImage, "http") === 0) {
                 return $smwImage;
             }
             // Assume it's a GB image path - build full URL
-            return 'https://www.giantbomb.com/a/uploads/' . $smwImage;
+            return "https://www.giantbomb.com/a/uploads/" . $smwImage;
         }
-        
+
         // Fall back to parsing legacy imageData from page content
         try {
-            $wikiPage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+            $wikiPage = MediaWikiServices::getInstance()
+                ->getWikiPageFactory()
+                ->newFromTitle($title);
             $content = $wikiPage->getContent();
-            
-            if ( !$content ) {
+
+            if (!$content) {
                 return null;
             }
-            
+
             $text = $content->getText();
-            $imageData = PageHelper::parseLegacyImageData( $text );
-            
-            if ( $imageData && isset( $imageData['infobox'] ) ) {
-                return PageHelper::buildLegacyImageUrl(
-                    $imageData['infobox'],
-                    [ 'scale_super', 'scale_large', 'scale_medium', 'screen_kubrick' ]
-                );
+            $imageData = PageHelper::parseLegacyImageData($text);
+
+            if ($imageData && isset($imageData["infobox"])) {
+                return PageHelper::buildLegacyImageUrl($imageData["infobox"], [
+                    "scale_super",
+                    "scale_large",
+                    "scale_medium",
+                    "screen_kubrick",
+                ]);
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             // Page doesn't exist or content inaccessible
         }
-        
+
         return null;
     }
-    
+
     /**
      * @deprecated Use getPageImage() instead
      */
-    private static function getGameCoverImage( \Title $title ): ?string {
-        return self::getPageImage( $title );
+    private static function getGameCoverImage(\Title $title): ?string
+    {
+        return self::getPageImage($title);
     }
 
     /**
      * Add SEO meta tags for character pages.
      */
-    private static function addCharacterSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
+    private static function addCharacterSeoTags(
+        OutputPage &$out,
+        \Title $title,
+        string $pageTitle,
+    ): void {
         $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
+        $subject = \SMW\DIWikiPage::newFromTitle($title);
 
-        $wikitext = self::getPageWikitext( $title );
+        $wikitext = self::getPageWikitext($title);
 
-        $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: self::cleanSlugFallback( $pageTitle, 'Characters/' );
+        $characterName =
+            self::getSMWPropertyValue($store, $subject, "Has name") ?:
+            self::extractTemplateNameFromWikitext($wikitext) ?:
+            self::cleanSlugFallback($pageTitle, "Characters/");
 
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
+        $deck = self::getSMWPropertyValue($store, $subject, "Has deck") ?: "";
+        if ($deck === "") {
+            $deck = self::extractFirstParagraph($wikitext);
         }
 
-        $out->setHTMLTitle( $characterName . ' (Character) - ' . $GLOBALS['wgSitename'] );
+        $out->setHTMLTitle(
+            $characterName . " (Character) - " . $GLOBALS["wgSitename"],
+        );
 
         $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $characterName . ' - Character info and appearances on Giant Bomb Wiki.';
+        if ($metaDescription === "") {
+            $metaDescription =
+                $characterName .
+                " - Character info and appearances on Giant Bomb Wiki.";
         }
 
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
+        $out->addMeta(
+            "description",
+            PageHelper::sanitizeMetaText($metaDescription),
+        );
 
         $canonicalUrl = $title->getFullURL();
-        $out->setCanonicalUrl( $canonicalUrl );
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
-        PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
-            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'profile',
-            'og:locale' => 'en_US',
-        ], $metaImage );
-        
-        PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
-            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $characterName );
-        
+        $out->setCanonicalUrl($canonicalUrl);
+        $metaImage = self::getPageImage($title, $store, $subject);
+
+        PageHelper::addOpenGraphTags(
+            $out,
+            [
+                "og:title" =>
+                    $characterName . " (Character) - " . $GLOBALS["wgSitename"],
+                "og:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "og:url" => $canonicalUrl,
+                "og:site_name" => $GLOBALS["wgSitename"],
+                "og:type" => "profile",
+                "og:locale" => "en_US",
+            ],
+            $metaImage,
+        );
+
+        PageHelper::addTwitterTags(
+            $out,
+            [
+                "twitter:card" => $metaImage
+                    ? "summary_large_image"
+                    : "summary",
+                "twitter:title" =>
+                    $characterName . " (Character) - " . $GLOBALS["wgSitename"],
+                "twitter:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "twitter:site" => "@giantbomb",
+            ],
+            $metaImage,
+            $characterName,
+        );
+
         // FictionalCharacter is the correct Schema.org type for video game characters
         $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'FictionalCharacter',
-            'name' => $characterName,
-            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
+            "@context" => "https://schema.org",
+            "@type" => "FictionalCharacter",
+            "name" => $characterName,
+            "description" => PageHelper::sanitizeMetaText($metaDescription),
+            "url" => $canonicalUrl,
         ];
-        
-        if ( $metaImage ) {
-            $jsonLd['image'] = $metaImage;
+
+        if ($metaImage) {
+            $jsonLd["image"] = $metaImage;
         }
-        
+
         $out->addHeadItem(
-            'jsonld-character',
-            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
+            "jsonld-character",
+            '<script type="application/ld+json">' .
+                json_encode($jsonLd, JSON_UNESCAPED_SLASHES) .
+                "</script>",
         );
     }
 
     /**
      * Add SEO meta tags for franchise pages.
      */
-    private static function addFranchiseSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
+    private static function addFranchiseSeoTags(
+        OutputPage &$out,
+        \Title $title,
+        string $pageTitle,
+    ): void {
         $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
+        $subject = \SMW\DIWikiPage::newFromTitle($title);
 
-        $wikitext = self::getPageWikitext( $title );
+        $wikitext = self::getPageWikitext($title);
 
-        $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: self::cleanSlugFallback( $pageTitle, 'Franchises/' );
+        $franchiseName =
+            self::getSMWPropertyValue($store, $subject, "Has name") ?:
+            self::extractTemplateNameFromWikitext($wikitext) ?:
+            self::cleanSlugFallback($pageTitle, "Franchises/");
 
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
+        $deck = self::getSMWPropertyValue($store, $subject, "Has deck") ?: "";
+        if ($deck === "") {
+            $deck = self::extractFirstParagraph($wikitext);
         }
 
-        $out->setHTMLTitle( $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'] );
+        $out->setHTMLTitle(
+            $franchiseName . " (Franchise) - " . $GLOBALS["wgSitename"],
+        );
 
         $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $franchiseName . ' - Franchise info, games, and characters on Giant Bomb Wiki.';
+        if ($metaDescription === "") {
+            $metaDescription =
+                $franchiseName .
+                " - Franchise info, games, and characters on Giant Bomb Wiki.";
         }
 
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
+        $out->addMeta(
+            "description",
+            PageHelper::sanitizeMetaText($metaDescription),
+        );
 
         $canonicalUrl = $title->getFullURL();
-        $out->setCanonicalUrl( $canonicalUrl );
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
-        PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
-            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'website',
-            'og:locale' => 'en_US',
-        ], $metaImage );
-        
-        PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
-            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $franchiseName );
-        
+        $out->setCanonicalUrl($canonicalUrl);
+        $metaImage = self::getPageImage($title, $store, $subject);
+
+        PageHelper::addOpenGraphTags(
+            $out,
+            [
+                "og:title" =>
+                    $franchiseName . " (Franchise) - " . $GLOBALS["wgSitename"],
+                "og:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "og:url" => $canonicalUrl,
+                "og:site_name" => $GLOBALS["wgSitename"],
+                "og:type" => "website",
+                "og:locale" => "en_US",
+            ],
+            $metaImage,
+        );
+
+        PageHelper::addTwitterTags(
+            $out,
+            [
+                "twitter:card" => $metaImage
+                    ? "summary_large_image"
+                    : "summary",
+                "twitter:title" =>
+                    $franchiseName . " (Franchise) - " . $GLOBALS["wgSitename"],
+                "twitter:description" => PageHelper::sanitizeMetaText(
+                    $metaDescription,
+                ),
+                "twitter:site" => "@giantbomb",
+            ],
+            $metaImage,
+            $franchiseName,
+        );
+
         $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'CreativeWorkSeries',
-            'name' => $franchiseName,
-            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
+            "@context" => "https://schema.org",
+            "@type" => "CreativeWorkSeries",
+            "name" => $franchiseName,
+            "description" => PageHelper::sanitizeMetaText($metaDescription),
+            "url" => $canonicalUrl,
         ];
-        
-        if ( $metaImage ) {
-            $jsonLd['image'] = $metaImage;
+
+        if ($metaImage) {
+            $jsonLd["image"] = $metaImage;
         }
-        
+
         $out->addHeadItem(
-            'jsonld-franchise',
-            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
+            "jsonld-franchise",
+            '<script type="application/ld+json">' .
+                json_encode($jsonLd, JSON_UNESCAPED_SLASHES) .
+                "</script>",
         );
     }
 
     /**
      * Load a page's raw wikitext, cached per request.
      */
-    private static function getPageWikitext( \Title $title ): string {
+    private static function getPageWikitext(\Title $title): string
+    {
         static $cache = [];
         $key = $title->getPrefixedDBkey();
-        if ( array_key_exists( $key, $cache ) ) {
+        if (array_key_exists($key, $cache)) {
             return $cache[$key];
         }
         try {
-            $wikiPage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+            $wikiPage = MediaWikiServices::getInstance()
+                ->getWikiPageFactory()
+                ->newFromTitle($title);
             $content = $wikiPage->getContent();
-            if ( !$content ) {
-                return $cache[$key] = '';
+            if (!$content) {
+                return $cache[$key] = "";
             }
             return $cache[$key] = $content->getText();
-        } catch ( \Throwable $e ) {
-            return $cache[$key] = '';
+        } catch (\Throwable $e) {
+            return $cache[$key] = "";
         }
     }
 
     // strips entity prefix, trailing legacy id (_NNNN), and underscores.
     // last-resort fallback so we never leak a raw url slug into display surfaces.
-    private static function cleanSlugFallback( string $pageTitle, string $prefix ): string {
-        $slug = str_replace( $prefix, '', $pageTitle );
-        $slug = preg_replace( '/_\d+$/', '', $slug );
-        return str_replace( '_', ' ', $slug );
+    private static function cleanSlugFallback(
+        string $pageTitle,
+        string $prefix,
+    ): string {
+        $slug = str_replace($prefix, "", $pageTitle);
+        $slug = preg_replace('/_\d+$/', "", $slug);
+        return str_replace("_", " ", $slug);
     }
 
     /**
@@ -458,14 +592,16 @@ class SkinGiantBomb extends SkinTemplate {
      * invocation. The template value keeps punctuation (colons, ampersands) that the URL
      * slug strips.
      */
-    private static function extractTemplateNameFromWikitext( string $wikitext ): string {
-        if ( $wikitext === '' ) {
-            return '';
+    private static function extractTemplateNameFromWikitext(
+        string $wikitext,
+    ): string {
+        if ($wikitext === "") {
+            return "";
         }
-        if ( preg_match( '/^\s*\|\s*Name\s*=\s*(.+?)\s*$/mi', $wikitext, $m ) ) {
-            return trim( $m[1] );
+        if (preg_match('/^\s*\|\s*Name\s*=\s*(.+?)\s*$/mi', $wikitext, $m)) {
+            return trim($m[1]);
         }
-        return '';
+        return "";
     }
 
     /**
@@ -473,47 +609,63 @@ class SkinGiantBomb extends SkinTemplate {
      * parameter first, then the first non-trivial <p>...</p> block (legacy HTML-in-wikitext
      * pages), then the first non-markup line. Returns empty if nothing usable is found.
      */
-    private static function extractFirstParagraph( string $wikitext, int $maxLen = 280, int $minLen = 40 ): string {
-        if ( $wikitext === '' ) {
-            return '';
+    private static function extractFirstParagraph(
+        string $wikitext,
+        int $maxLen = 280,
+        int $minLen = 40,
+    ): string {
+        if ($wikitext === "") {
+            return "";
         }
 
-        if ( preg_match( '/^\s*\|\s*Deck\s*=\s*(.+?)\s*$/mi', $wikitext, $m ) ) {
-            $text = PageHelper::sanitizeMetaText( $m[1], $maxLen );
-            if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+        if (preg_match('/^\s*\|\s*Deck\s*=\s*(.+?)\s*$/mi', $wikitext, $m)) {
+            $text = PageHelper::sanitizeMetaText($m[1], $maxLen);
+            if ($text !== "" && mb_strlen($text) >= $minLen) {
                 return $text;
             }
         }
 
-        $stripped = preg_replace( '/\{\{[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/s', '', $wikitext );
-        if ( $stripped === null ) {
+        $stripped = preg_replace(
+            "/\{\{[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/s",
+            "",
+            $wikitext,
+        );
+        if ($stripped === null) {
             $stripped = $wikitext;
         }
 
-        if ( preg_match_all( '/<p[^>]*>(.*?)<\/p>/is', $stripped, $matches ) ) {
-            foreach ( $matches[1] as $candidate ) {
-                $text = PageHelper::sanitizeMetaText( $candidate, $maxLen );
-                if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+        if (preg_match_all("/<p[^>]*>(.*?)<\/p>/is", $stripped, $matches)) {
+            foreach ($matches[1] as $candidate) {
+                $text = PageHelper::sanitizeMetaText($candidate, $maxLen);
+                if ($text !== "" && mb_strlen($text) >= $minLen) {
                     return $text;
                 }
             }
         }
 
-        foreach ( preg_split( '/\r?\n/', $stripped ) as $line ) {
-            $line = trim( $line );
-            if ( $line === '' ) {
+        foreach (preg_split('/\r?\n/', $stripped) as $line) {
+            $line = trim($line);
+            if ($line === "") {
                 continue;
             }
             $first = $line[0];
-            if ( $first === '<' || $first === '{' || $first === '|' || $first === '=' || $first === '*' || $first === '#' || $first === ':' ) {
+            if (
+                $first === "<" ||
+                $first === "{" ||
+                $first === "|" ||
+                $first === "=" ||
+                $first === "*" ||
+                $first === "#" ||
+                $first === ":"
+            ) {
                 continue;
             }
-            $text = PageHelper::sanitizeMetaText( $line, $maxLen );
-            if ( $text !== '' && mb_strlen( $text ) >= $minLen ) {
+            $text = PageHelper::sanitizeMetaText($line, $maxLen);
+            if ($text !== "" && mb_strlen($text) >= $minLen) {
                 return $text;
             }
         }
 
-        return '';
+        return "";
     }
 }

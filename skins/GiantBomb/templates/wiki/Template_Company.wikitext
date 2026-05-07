@@ -170,4 +170,5 @@ HTML Structure
 <div class="gb-company-content">
 <div class="gb-company-main">
 <div class="gb-company-wiki-content">
+__NOEDITSECTION__
 </includeonly>

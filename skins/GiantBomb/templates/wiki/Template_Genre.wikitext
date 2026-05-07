@@ -88,4 +88,5 @@ HTML Structure
 <div class="gb-genre-content">
 <div class="gb-genre-main">
 <div class="gb-genre-wiki-content">
+__NOEDITSECTION__
 </includeonly>
