@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "devDependencies": {
+    "@wdio/cli": "^5.10.0",
+    "@wdio/local-runner": "^5.10.4",
+    "@wdio/mocha-framework": "^5.10.1",
+    "@wdio/sauce-service": "^5.9.3",
+    "@wdio/selenium-standalone-service": "^5.16.5",
+    "@wdio/spec-reporter": "^5.9.3",
+    "@wdio/sync": "^5.10.1",
+    "bluebird": "^3.5.1",
+    "chai": "^3.5.0",
+    "chromedriver": "^75.0.0",
+    "deepmerge": "^1.5.2",
+    "fs-ext": "^1.2.1",
+    "mocha": "^5.2.0",
+    "mwbot": "^1.0.10",
+    "request": "^2.75.0",
+    "url": "^0.11.0",
+    "wdio-chromedriver-service": "^5.0.2",
+    "wdio-mediawiki": "^0.3.0"
+  }
+}

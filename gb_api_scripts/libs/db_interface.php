@@ -1,36 +1,36 @@
 <?php
-interface DbInterface 
+interface DbInterface
 {
     public const ALLOWED_TABLES_FOR_DESCRIPTION = [
-        'wiki_accessory' => true,
-        'wiki_character' => true,
-        'wiki_company' => true,
-        'wiki_concept' => true,
-        'wiki_game' => true,
-        'wiki_game_dlc' => true,
-        'wiki_game_release' => true,
-        'wiki_game_genre' => true,
-        'wiki_game_theme' => true,
-        'wiki_franchise' => true,
-        'wiki_location' => true,
-        'wiki_person' => true,
-        'wiki_platform' => true,
-        'wiki_thing' => true,
+        "wiki_accessory" => true,
+        "wiki_character" => true,
+        "wiki_company" => true,
+        "wiki_concept" => true,
+        "wiki_game" => true,
+        "wiki_game_dlc" => true,
+        "wiki_game_release" => true,
+        "wiki_game_genre" => true,
+        "wiki_game_theme" => true,
+        "wiki_franchise" => true,
+        "wiki_location" => true,
+        "wiki_person" => true,
+        "wiki_platform" => true,
+        "wiki_thing" => true,
     ];
 
     public const ALLOWED_TABLES_FOR_PAGENAME = [
-        'wiki_accessory' => true,
-        'wiki_character' => true,
-        'wiki_company' => true,
-        'wiki_concept' => true,
-        'wiki_game' => true,
-        'wiki_game_genre' => true,
-        'wiki_game_theme' => true,
-        'wiki_franchise' => true,
-        'wiki_location' => true,
-        'wiki_person' => true,
-        'wiki_platform' => true,
-        'wiki_thing' => true,
+        "wiki_accessory" => true,
+        "wiki_character" => true,
+        "wiki_company" => true,
+        "wiki_concept" => true,
+        "wiki_game" => true,
+        "wiki_game_genre" => true,
+        "wiki_game_theme" => true,
+        "wiki_franchise" => true,
+        "wiki_location" => true,
+        "wiki_person" => true,
+        "wiki_platform" => true,
+        "wiki_thing" => true,
     ];
 
     public function getDbw();
@@ -42,15 +42,36 @@ interface DbInterface
     public function getPageName(string $table, int $id);
     public function getImageName(int $id);
     public function getImageData(int $id): array;
-    public function getRelatedPageNames(string $table, array $relationsMap, int $id);
+    public function getRelatedPageNames(
+        string $table,
+        array $relationsMap,
+        int $id,
+    );
     public function getRelatedIds(string $table, array $relationsMap, int $id);
     public function getCreditsFromDB(int $id);
     public function getReleasesFromDB(int $id);
     public function getDLCFromDB(int $id);
-    public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0);
-    public function getNamesToConvert(string $table, $id = false, $force = false);
+    public function getTextToConvert(
+        string $table,
+        $id = false,
+        $force = false,
+        $continue = 0,
+    );
+    public function getNamesToConvert(
+        string $table,
+        $id = false,
+        $force = false,
+    );
     public function getPageEditors();
-    public function updateMediaWikiDescription(string $table, int $id, string $mwDescription);
-    public function updateMediaWikiPageName(string $table, int $id, string $mwPageName);
+    public function updateMediaWikiDescription(
+        string $table,
+        int $id,
+        string $mwDescription,
+    );
+    public function updateMediaWikiPageName(
+        string $table,
+        int $id,
+        string $mwPageName,
+    );
 }
 ?>

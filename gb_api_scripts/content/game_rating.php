@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../libs/resource.php');
+require_once __DIR__ . "/../libs/resource.php";
 
 class Game_rating extends Resource
 {
@@ -12,23 +12,27 @@ class Game_rating extends Resource
 
     /**
      * Matching table fields to api response fields
-     * 
+     *
      * id = id
      * date_created = date_added
      * date_updated = date_last_updated
      * name = name
      * ratingBoard_id = rating_board->id
-     * 
+     *
      * @param array $data The api response array.
-     * @return int 
+     * @return int
      */
     public function process(array $data, array &$crawl): int
     {
-        return $this->insertOrUpdate(self::TABLE_NAME, [
-            'id' => $data['id'],
-            'name' => (is_null($data['name'])) ? '' : $data['name'],
-            'ratingBoard_id' => $data['rating_board']['id'],
-        ], ['id']);
+        return $this->insertOrUpdate(
+            self::TABLE_NAME,
+            [
+                "id" => $data["id"],
+                "name" => is_null($data["name"]) ? "" : $data["name"],
+                "ratingBoard_id" => $data["rating_board"]["id"],
+            ],
+            ["id"],
+        );
     }
 }
 

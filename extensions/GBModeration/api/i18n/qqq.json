@@ -1,0 +1,18 @@
+{
+  "@metadata": {
+    "authors": ["Edward Chernenko"]
+  },
+
+  "apihelp-moderation-approve-example": "{{doc-apihelp-example|moderation}}",
+  "apihelp-moderation-param-modaction": "{{doc-apihelp-param|moderation|modaction}}",
+  "apihelp-moderation-param-modid": "{{doc-apihelp-param|moderation|modid}}",
+  "apihelp-moderation-summary": "{{doc-apihelp-summary|moderation}}",
+  "apihelp-query+moderationpreload-param-mode": "{{doc-apihelp-param|query+moderationpreload|mode}}",
+  "apihelp-query+moderationpreload-param-title": "{{doc-apihelp-param|query+moderationpreload|title}}",
+  "apihelp-query+moderationpreload-param-pageid": "{{doc-apihelp-param|query+moderationpreload|pageid}}",
+  "apihelp-query+moderationpreload-param-section": "{{doc-apihelp-param|query+moderationpreload|section}}",
+  "apihelp-query+moderationpreload-parsed-example": "{{doc-apihelp-example|query+moderationpreload}}",
+  "apihelp-query+moderationpreload-section-example": "{{doc-apihelp-example|query+moderationpreload}}",
+  "apihelp-query+moderationpreload-summary": "{{doc-apihelp-description|query+moderationpreload}}",
+  "apihelp-query+moderationpreload-wikitext-example": "{{doc-apihelp-example|query+moderationpreload}}"
+}

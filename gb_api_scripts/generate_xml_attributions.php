@@ -1,9 +1,9 @@
 <?php
 
-require_once(__DIR__.'/libs/common.php');
-require_once(__DIR__.'/libs/db_connection.php');
-require_once(__DIR__.'/libs/mw_db_wrapper.php');
-require_once(__DIR__.'/libs/pdo_db_wrapper.php');
+require_once __DIR__ . "/libs/common.php";
+require_once __DIR__ . "/libs/db_connection.php";
+require_once __DIR__ . "/libs/mw_db_wrapper.php";
+require_once __DIR__ . "/libs/pdo_db_wrapper.php";
 
 class GenerateXMLAttributions extends Maintenance
 {
@@ -13,11 +13,17 @@ class GenerateXMLAttributions extends Maintenance
     const CHUNK_SIZE = 20000000;
     const LIMIT_SIZE = 20000;
 
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
         $this->addDescription("Attribute edits to the pages to users");
-        $this->addOption('external', 'Uses external db instead of local api db', false, false, 'e');
+        $this->addOption(
+            "external",
+            "Uses external db instead of local api db",
+            false,
+            false,
+            "e",
+        );
     }
 
     /**
@@ -28,19 +34,21 @@ class GenerateXMLAttributions extends Maintenance
     public function execute()
     {
         $tables = [
-            3000 => 'wiki_accessory',
-            3005 => 'wiki_character',
-            3010 => 'wiki_company',
-            3015 => 'wiki_concept',
-            3025 => 'wiki_franchise',
-            3030 => 'wiki_game',
-            3035 => 'wiki_location',
-            3040 => 'wiki_person',
-            3045 => 'wiki_platform',
-            3055 => 'wiki_thing'
+            3000 => "wiki_accessory",
+            3005 => "wiki_character",
+            3010 => "wiki_company",
+            3015 => "wiki_concept",
+            3025 => "wiki_franchise",
+            3030 => "wiki_game",
+            3035 => "wiki_location",
+            3040 => "wiki_person",
+            3045 => "wiki_platform",
+            3055 => "wiki_thing",
         ];
 
-        $db = ($this->getOption('external', false)) ? $this->getExtDb() : $this->getApiDb();
+        $db = $this->getOption("external", false)
+            ? $this->getExtDb()
+            : $this->getApiDb();
 
         $result = $db->getPageEditors();
         $totalItems = count($result);
@@ -60,25 +68,37 @@ class GenerateXMLAttributions extends Maintenance
             }
 
             // get the pagename
-            if (isset($cachedPageName[$row->assoc_type_id.'-'.$row->assoc_id])) {
-                $pageName = $cachedPageName[$row->assoc_type_id.'-'.$row->assoc_id];
-            }
-            else {
-                $pageName = $db->getPageName($tables[$row->assoc_type_id], $row->assoc_id);
+            if (
+                isset(
+                    $cachedPageName[$row->assoc_type_id . "-" . $row->assoc_id],
+                )
+            ) {
+                $pageName =
+                    $cachedPageName[$row->assoc_type_id . "-" . $row->assoc_id];
+            } else {
+                $pageName = $db->getPageName(
+                    $tables[$row->assoc_type_id],
+                    $row->assoc_id,
+                );
                 $cachedPageName = [];
-                $cachedPageName[$row->assoc_type_id.'-'.$row->assoc_id] = $pageName;
+                $cachedPageName[
+                    $row->assoc_type_id . "-" . $row->assoc_id
+                ] = $pageName;
             }
 
-            $dateTime = new DateTime($row->date_moderated, new DateTimeZone('America/Los_Angeles'));
-            $dateTime->setTimezone(new DateTimeZone('UTC'));
-            $timestamp = $dateTime->format(DateTime::ISO8601); 
+            $dateTime = new DateTime(
+                $row->date_moderated,
+                new DateTimeZone("America/Los_Angeles"),
+            );
+            $dateTime->setTimezone(new DateTimeZone("UTC"));
+            $timestamp = $dateTime->format(DateTime::ISO8601);
 
             $data[] = [
-                'title' => $pageName,
-                'timestamp' => $timestamp,
-                'namespace' => 0,
-                'username' => $row->submitter_id,
-                'comment' => $row->submitter_comment,
+                "title" => $pageName,
+                "timestamp" => $timestamp,
+                "namespace" => 0,
+                "username" => $row->submitter_id,
+                "comment" => $row->submitter_comment,
             ];
 
             // limit size of file to either 20mb or 20000 pages
@@ -92,21 +112,28 @@ class GenerateXMLAttributions extends Maintenance
         }
 
         if (!empty($data)) {
-            $filename = sprintf('attribution_%07d.xml', $count);
+            $filename = sprintf("attribution_%07d.xml", $count);
             $this->streamXML($filename, $data);
         }
     }
 
-    public function showProgressBar(int $current, int $total, int $barWidth = 200): void
-    {
-        $percentage = ($total > 0) ? round(($current / $total) * 100) : 0;
+    public function showProgressBar(
+        int $current,
+        int $total,
+        int $barWidth = 200,
+    ): void {
+        $percentage = $total > 0 ? round(($current / $total) * 100) : 0;
         $filledWidth = round($barWidth * ($percentage / 100));
         $emptyWidth = $barWidth - $filledWidth;
 
-        $bar = '[' . str_repeat('=', $filledWidth) . str_repeat(' ', $emptyWidth) . ']';
+        $bar =
+            "[" .
+            str_repeat("=", $filledWidth) .
+            str_repeat(" ", $emptyWidth) .
+            "]";
 
         echo "\r" . $bar . " " . $percentage . "%";
-        
+
         if ($current === $total) {
             echo PHP_EOL;
         }
@@ -115,4 +142,4 @@ class GenerateXMLAttributions extends Maintenance
 
 $maintClass = GenerateXMLAttributions::class;
 
-require_once RUN_MAINTENANCE_IF_MAIN; 
+require_once RUN_MAINTENANCE_IF_MAIN;
