@@ -1,0 +1,70 @@
+.gb-sidebar-reviews .review-contents {
+}
+
+.gb-sidebar-reviews .review-star-bar {
+  display: flex;
+  align-items: center;
+}
+
+.gb-sidebar-reviews .review-star-bar span {
+  width: 75px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.gb-sidebar-reviews .review-bar {
+  background-color: #444;
+  width: 100px;
+  height: 10px;
+  margin: 0 0 0 10px;
+}
+
+.gb-sidebar-reviews .review-bar .review-fill {
+  background-color: #b05f1c;
+  height: 100%;
+}
+
+.gb-sidebar-reviews .stars {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.gb-sidebar-reviews .star {
+  width: 20px;
+  height: 18px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjNDQ0NDQ0IiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
+}
+
+.gb-sidebar-reviews .star-cover {
+  position: absolute;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gb-sidebar-reviews .star-cover::before {
+  content: "";
+  display: block;
+  width: 108px;
+  height: 18px;
+  flex-shrink: 0;
+  background-size: 22px 100%;
+  background-repeat: repeat-x;
+  background-position: left top;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjZmZjYzAwIiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
+}
+
+.gb-sidebar-reviews .gb-review-subtext {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.gb-sidebar-reviews .gb-review-summary-row {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between the text "4.3 stars" and the visual stars */
+  margin-top: 12px; /* Added a slight gap before this whole line starts */
+  margin-bottom: 4px; /* Tightens spacing down to the subtext line */
+}

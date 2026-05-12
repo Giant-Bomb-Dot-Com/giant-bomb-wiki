@@ -1,0 +1,106 @@
+local p = {}
+
+function p.fetchReviews(frame)
+    -- GUID from the template {{ReviewQuery|guid=...}}
+    local guid = frame.args.guid or frame:getParent().args.guid
+    if not guid then return "Error: Missing GUID" end
+    
+	local baseUrl = "https://giantbomb.com/api/public/user-reviews"
+	local apiKey = frame.args.apiKey or ""
+    local allReviews = {}
+    local offset = 0
+    local limit = 20
+    local hasNext = true
+
+    -- Note: In a real Wiki environment, you'd use 'mw.ext.ExternalData' 
+    -- or similar because standard Lua 'http' libraries are disabled.
+    
+    while hasNext do
+    	local url = string.format(
+            "%s?api_key=%s&limit=%d&offset=%d&game_guid=%s&sort=publish_date:desc&format=json",
+            baseUrl, apiKey, limit, offset, guid
+        )
+    	
+          local data = mw.ext.externalData.getExternalData({
+            url = url,
+            format = 'json'
+        })
+        
+        if data and data.__json then
+            data = data.__json
+        end
+
+        if data and data.results then
+            for _, review in ipairs(data.results) do
+                table.insert(allReviews, review)
+            end
+            
+            -- Check pagination
+            if data.pagination and data.pagination.has_next then
+                offset = offset + limit
+            else
+                hasNext = false
+            end
+        else
+            hasNext = false
+        end
+        
+        -- Safety break to prevent infinite loops in Scribunto
+        if offset > 1000 then break end 
+    end
+
+    return allReviews
+end
+
+function p.renderSidebar(frame)
+
+    local allReviews = p.fetchReviews(frame)
+
+    local counts = { [5]=0, [4]=0, [3]=0, [2]=0, [1]=0 }
+    local totalScore = 0
+    local reviewCount = #allReviews
+
+    for _, review in ipairs(allReviews) do
+        -- Convert 100-point scale to 1-5 stars
+        local stars = math.floor(review.score / 20)
+        if stars < 1 then stars = 1 end
+        
+        counts[stars] = counts[stars] + 1
+        totalScore = totalScore + stars
+    end
+
+    local avgScore = reviewCount > 0 and (totalScore / reviewCount) or 0
+
+    -- TODO: Add section for staff reviews
+    -- local html = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('STAFF')
+    
+    -- Build the header
+    local header = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('What the users think')
+
+    local html = mw.html.create('div'):addClass('gb-sidebar-section-content')
+
+    -- Create Bars
+    for i = 5, 1, -1 do
+        local row = html:tag('div'):addClass('review-star-bar')
+        row:tag('span'):wikitext(i .. ' ★ (' .. counts[i] .. ')')
+        
+        local barContainer = row:tag('div'):addClass("review-bar")
+        local barWidth = reviewCount > 0 and (counts[i] / reviewCount * 100) or 0
+        barContainer:tag('div'):addClass("review-fill"):css('width', barWidth .. 'px')
+    end
+
+    local row = html:tag('div'):addClass('gb-review-summary-row')
+    row:tag('span'):addClass('gb-review-score-text'):wikitext(string.format("%.1f ", avgScore))
+    local starScore = (avgScore / 5) * 100
+    local starContainer = row:tag('div'):addClass('stars')
+    for i = 5, 1, -1 do
+        starContainer:tag('div'):addClass('star')
+    end
+    starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
+
+    html:tag('div'):addClass('gb-review-subtext'):wikitext("Average score of " .. reviewCount .. " user reviews")
+
+    return tostring(header) .. tostring(html)
+end
+
+return p

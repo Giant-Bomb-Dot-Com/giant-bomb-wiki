@@ -172,6 +172,11 @@ class ImportWikiTemplates extends Maintenance
             "Template:GameRatingSidebar" => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
 
+        // Game Reviews page templates and modules
+        $gameReviewTemplates = [
+            "Module:ReviewQuery" => "$moduleDir/Module_ReviewQuery.wikitext",
+        ];
+
         //Forms
         $formTemplates = [
             "Form:Accessory" => "$formDir/Form_Accessory.wikitext",
@@ -301,6 +306,7 @@ class ImportWikiTemplates extends Maintenance
             "ratingboard" => $ratingBoardTemplates,
             "region" => $regionTemplates,
             "gamerating" => $gameRatingTemplates,
+            "gamereview" => $gameReviewTemplates,
             "rootpages" => $rootPageTemplates,
             "form" => $formTemplates,
             "errors" => $errorTemplates,
