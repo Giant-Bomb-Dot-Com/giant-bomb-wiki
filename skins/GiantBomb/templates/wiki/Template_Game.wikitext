@@ -185,5 +185,4 @@ HTML Structure
 <div class="gb-game-content">
 <div class="gb-game-main">
 <div class="gb-game-wiki-content">
-__NOEDITSECTION__
 </includeonly>

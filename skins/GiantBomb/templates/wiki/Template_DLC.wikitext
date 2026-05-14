@@ -140,5 +140,4 @@ HTML Structure
 <div class="gb-dlc-content">
 <div class="gb-dlc-main">
 <div class="gb-dlc-wiki-content">
-__NOEDITSECTION__
 </includeonly>

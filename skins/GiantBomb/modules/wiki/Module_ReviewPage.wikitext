@@ -1,29 +1,5 @@
 local p = {}
-
-local entityConfig = {
-    ["Games"]       = { label = "Game",       cssPrefix = "gb-game",       hasReviews = true },
-    ["Characters"]  = { label = "Character",  cssPrefix = "gb-character",  hasReviews = false },
-    ["Companies"]   = { label = "Company",    cssPrefix = "gb-company",    hasReviews = false },
-    ["Concepts"]    = { label = "Concept",    cssPrefix = "gb-concept",    hasReviews = false },
-    ["Franchises"]  = { label = "Franchise Wiki", cssPrefix = "gb-franchise", hasReviews = false },
-    ["Platforms"]   = { label = "Platform",   cssPrefix = "gb-platform",   hasReviews = false },
-    ["People"]      = { label = "Person",     cssPrefix = "gb-person",     hasReviews = false },
-    ["Locations"]   = { label = "Location",   cssPrefix = "gb-location",   hasReviews = false },
-    ["Objects"]     = { label = "Object",     cssPrefix = "gb-object",     hasReviews = false },
-    ["Genres"]      = { label = "Genre",      cssPrefix = "gb-genre",      hasReviews = false },
-    ["Themes"]      = { label = "Theme",      cssPrefix = "gb-theme",      hasReviews = false },
-    ["Accessories"] = { label = "Accessory",  cssPrefix = "gb-accessory",  hasReviews = false },
-    ["DLCs"]        = { label = "DLC",        cssPrefix = "gb-dlc",        hasReviews = false },
-    ["Releases"]    = { label = "Release",    cssPrefix = "gb-release",    hasReviews = false },
-}
-
-local function getEntityType(parentPage)
-    local rootPrefix = parentPage:match("^([^/]+)/")
-    if rootPrefix and entityConfig[rootPrefix] then
-        return entityConfig[rootPrefix], rootPrefix
-    end
-    return nil, nil
-end
+local reviewQuery = require("Module:ReviewQuery")
 
 local function queryParentProperties(parentPage)
     if not mw.smw then
@@ -33,6 +9,7 @@ local function queryParentProperties(parentPage)
         "[[" .. parentPage .. "]]",
         "?Has name=name",
         "?Has deck=deck",
+        "?Has guid=guid",
         "?Has image=image",
         "?Has background image=backgroundImage",
         limit = 1
@@ -46,16 +23,18 @@ end
 function p.render(frame)
     local currentTitle = mw.title.getCurrentTitle()
     local parentPage = currentTitle.baseText
-    local config, rootPrefix = getEntityType(parentPage)
+    local config = { label = "Game",       cssPrefix = "gb-game",       hasReviews = true }
 
     if not config then
-        return '<div class="gb-images-page"><div class="gb-images-content"><div class="gb-images-main"><div class="gb-images-wiki-content">'
+        return '<div class="gb-reviews-page"><div class="gb-reviews-content"><div class="gb-reviews-main"><div class="gb-reviews-wiki-content">'
     end
 
     local props = queryParentProperties(parentPage)
     local name = props.name or parentPage:match("[^/]+$") or parentPage
     local deck = props.deck or ""
     local css = config.cssPrefix
+
+    if props.guid then frame.args.guid = props.guid end
 
     local coverHtml = ""
     if props.image and props.image ~= "" then
@@ -79,16 +58,12 @@ function p.render(frame)
 
     local tabs = {}
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '|' .. config.label .. ']]</span>')
-    table.insert(tabs, '<span class="' .. css .. '-tabs-tab ' .. css .. '-tabs-tab--active">Images</span>')
-    if config.hasReviews then
-        table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Reviews|Reviews]]</span>')
-    end
+    table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Images|Images]]</span>')
+    table.insert(tabs, '<span class="' .. css .. '-tabs-tab ' .. css .. '-tabs-tab--active">Reviews</span>')    
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>')
 
     local fullPage = currentTitle.prefixedText
-    local actions = '<div class="gb-wiki-actions">'
-        .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, "action=edit")) .. ' Edit]</span>'
-        .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, "action=history")) .. ' History]</span>'
+    local actions = '<div class="gb-wiki-actions">'                
         .. '</div>'
 
     local html = '<div class="' .. css .. '-page">'
@@ -112,9 +87,10 @@ function p.render(frame)
         .. actions
         .. '</div>'
         .. '</div>'
-        .. '<div class="' .. css .. '-content gb-images-content">'
-        .. '<div class="' .. css .. '-main gb-images-main">'
-        .. '<div class="' .. css .. '-wiki-content">'
+        .. '<div class="' .. css .. '-content gb-reviews-content">'
+        .. '<div class="' .. css .. '-main gb-reviews-main">'
+        .. '<div class="' .. css .. '-wiki-content">'        
+        .. reviewQuery.renderReviewContent(frame)
 
     return frame:preprocess(html)
 end

@@ -396,6 +396,8 @@ wfLoadExtension("GBGallery");
 wfLoadExtension("VisualEditor");
 wfLoadExtension("VEForAll");
 wfLoadExtension("ExternalData");
+wfLoadExtension("GBEnvLuaBridge");
+wfLoadExtension("GBVirtualReviewPages");
 
 # =============================================================================
 # Editor
@@ -870,17 +872,3 @@ if ($wikiEnv === "dev") {
         "GbSessionProvider" => "/var/log/mediawiki/gb_session_provider.log",
     ];
 }
-
-#pass API key
-$wgGbApiKey = getenv("GB_API_KEY") === false ? "" : getenv("GB_API_KEY");
-
-$wgHooks['ParserGetVariableValueSwitch'][] = function ( &$parser, &$cache, $magicWordId, &$ret, $frame ) use ( $wgGbApiKey ) {
-    if ( $magicWordId === 'gb_api_key' ) {
-        $ret = $wgGbApiKey;
-    }
-    return true;
-};
-$wgHooks['MagicWordId'][] = function ( &$magicWords ) {
-    $magicWords[] = 'gb_api_key';
-    return true;
-};

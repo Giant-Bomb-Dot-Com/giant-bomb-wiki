@@ -76,8 +76,8 @@ body.page-Main_Page #siteSub,
 }
 
 /* Show it once the JS adds the 'is-ready' class */
-.lua-form-wrapper.is-ready {
-  display: block;
+.lua-form-wrapper.is-ready, .view-toggle.is-ready {
+  display: block !important;
 }
 
 /* Remove the arrow icon and blue color from card links */
@@ -129,4 +129,8 @@ body.page-Main_Page #siteSub,
 
 .clickable-box {
   cursor: pointer;
+}
+
+.view-btn.active {
+  background-color: #44446e;
 }

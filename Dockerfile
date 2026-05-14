@@ -76,6 +76,8 @@ COPY --chown=www-data:www-data ./extensions/GiantBombResolve /var/www/html/exten
 COPY --chown=www-data:www-data ./extensions/GiantBombMetaTags /var/www/html/extensions/GiantBombMetaTags
 COPY --chown=www-data:www-data ./extensions/GbSessionProvider/ /var/www/html/extensions/GbSessionProvider
 COPY --chown=www-data:www-data ./extensions/GBModeration /var/www/html/extensions/GBModeration
+COPY --chown=www-data:www-data ./extensions/GBEnvLuaBridge /var/www/html/extensions/GBEnvLuaBridge
+COPY --chown=www-data.www-data ./extensions/GBVirtualReviewPages /var/www/html/extensions/GBVirtualReviewPages
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)

@@ -1,36 +1,77 @@
-.gb-sidebar-reviews .review-contents {
+.gb-sidebar-reviews .gb-review-footer,
+.gb-reviews-main .gb-review-footer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 16px
 }
 
-.gb-sidebar-reviews .review-star-bar {
+.gb-sidebar-reviews .review-star-bar,
+.gb-sidebar-section-content .review-star-bar {
   display: flex;
   align-items: center;
 }
 
-.gb-sidebar-reviews .review-star-bar span {
+.gb-sidebar-reviews .review-star-bar span,
+.gb-sidebar-section-content .review-star-bar span {
   width: 75px;
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
 }
 
-.gb-sidebar-reviews .review-bar {
+.gb-sidebar-reviews .review-bar,
+.gb-sidebar-section-content .review-bar {
   background-color: #444;
-  width: 100px;
+  flex-grow: 1;
   height: 10px;
   margin: 0 0 0 10px;
+  position: relative;
 }
 
-.gb-sidebar-reviews .review-bar .review-fill {
+.gb-sidebar-reviews .review-bar .review-fill,
+.gb-sidebar-section-content .review-bar .review-fill {
   background-color: #b05f1c;
   height: 100%;
 }
 
-.gb-sidebar-reviews .stars {
+.gb-reviews-main .user-review {  
+  margin-top: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #333;
+}
+
+.gb-reviews-main .user-review:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.review-metadata {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-metadata .review-details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gb-sidebar-reviews .stars,
+.gb-sidebar-section-content .stars,
+.review-metadata .stars {
   position: relative;
   display: inline-flex;
   gap: 2px;
 }
 
-.gb-sidebar-reviews .star {
+.gb-sidebar-reviews .star,
+.gb-sidebar-section-content .star,
+.review-metadata .star {
   width: 20px;
   height: 18px;
   background-size: contain;
@@ -38,13 +79,17 @@
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjNDQ0NDQ0IiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
 }
 
-.gb-sidebar-reviews .star-cover {
+.gb-sidebar-reviews .star-cover,
+.gb-sidebar-section-content .star-cover,
+.review-metadata .star-cover {
   position: absolute;
   height: 100%;
   overflow: hidden;
 }
 
-.gb-sidebar-reviews .star-cover::before {
+.gb-sidebar-reviews .star-cover::before,
+.gb-sidebar-section-content .star-cover::before,
+.review-metadata .star-cover::before {
   content: "";
   display: block;
   width: 108px;
@@ -56,15 +101,59 @@
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjZmZjYzAwIiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
 }
 
-.gb-sidebar-reviews .gb-review-subtext {
+.gb-sidebar-reviews .gb-review-subtext,
+.gb-sidebar-section-content .gb-review-subtext,
+.review-metadata .gb-review-subtext {
   font-size: 0.9em;
   color: #888;
 }
 
-.gb-sidebar-reviews .gb-review-summary-row {
+.gb-sidebar-reviews .gb-review-summary-row,
+.gb-sidebar-section-content .gb-review-summary-row,
+.review-metadata .gb-review-summary-row {
   display: flex;
   align-items: center;
   gap: 10px; /* Space between the text "4.3 stars" and the visual stars */
   margin-top: 12px; /* Added a slight gap before this whole line starts */
   margin-bottom: 4px; /* Tightens spacing down to the subtext line */
+}
+
+.gb-reviews-content .review-details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gb-reviews-content .user-avatar-frame img {
+  margin: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.gb-reviews-content .review-details-stack .author-text {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.gb-review-button.gb-button {
+    display: inline-flex;
+    border: 1px solid #b05f1c;
+}
+
+.gb-review-button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.gb-review-button a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.gb-review-button a:visited {
+  color: #fff;
+  text-decoration: none;
 }

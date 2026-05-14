@@ -1,12 +1,18 @@
 local p = {}
 
+local cachedReviews = nil
+
 function p.fetchReviews(frame)
+    if cachedReviews then 
+        return cachedReviews 
+    end
+
     -- GUID from the template {{ReviewQuery|guid=...}}
     local guid = frame.args.guid or frame:getParent().args.guid
     if not guid then return "Error: Missing GUID" end
     
 	local baseUrl = "https://giantbomb.com/api/public/user-reviews"
-	local apiKey = frame.args.apiKey or ""
+	local apiKey = mw.ext.gbenv.getApiKey()
     local allReviews = {}
     local offset = 0
     local limit = 20
@@ -49,7 +55,8 @@ function p.fetchReviews(frame)
         if offset > 1000 then break end 
     end
 
-    return allReviews
+    cachedReviews = allReviews
+    return cachedReviews
 end
 
 function p.renderSidebar(frame)
@@ -75,8 +82,8 @@ function p.renderSidebar(frame)
     -- local html = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('STAFF')
     
     -- Build the header
-    local header = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('What the users think')
-
+    local header = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('What the users think')    
+    
     local html = mw.html.create('div'):addClass('gb-sidebar-section-content')
 
     -- Create Bars
@@ -84,13 +91,17 @@ function p.renderSidebar(frame)
         local row = html:tag('div'):addClass('review-star-bar')
         row:tag('span'):wikitext(i .. ' ★ (' .. counts[i] .. ')')
         
-        local barContainer = row:tag('div'):addClass("review-bar")
+        local barContainer = row:tag('div'):addClass('review-bar')
         local barWidth = reviewCount > 0 and (counts[i] / reviewCount * 100) or 0
-        barContainer:tag('div'):addClass("review-fill"):css('width', barWidth .. 'px')
+        barContainer:tag('div'):addClass("review-fill"):css('width', barWidth .. '%')
     end
 
-    local row = html:tag('div'):addClass('gb-review-summary-row')
+    local footer = html:tag('div'):addClass('gb-review-footer')
+    local scoreColumn = footer:tag('div'):addClass('gb-review-score-column')
+
+    local row = scoreColumn:tag('div'):addClass('gb-review-summary-row')
     row:tag('span'):addClass('gb-review-score-text'):wikitext(string.format("%.1f ", avgScore))
+
     local starScore = (avgScore / 5) * 100
     local starContainer = row:tag('div'):addClass('stars')
     for i = 5, 1, -1 do
@@ -98,9 +109,89 @@ function p.renderSidebar(frame)
     end
     starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
 
-    html:tag('div'):addClass('gb-review-subtext'):wikitext("Average score of " .. reviewCount .. " user reviews")
+    scoreColumn:tag('div'):addClass('gb-review-subtext'):wikitext("Average score of " .. reviewCount .. " user reviews")
+    footer:tag('div'):addClass('gb-review-button'):addClass('gb-button'):wikitext('[https://giantbomb.com/user-reviews/new Add new review]')
 
     return tostring(header) .. tostring(html)
+end
+
+function p.renderReviewContent(frame)
+    local allReviews = p.fetchReviews(frame)
+
+    if not allReviews or #allReviews == 0 then
+        return "<p>No reviews found.</p>"
+    end
+    
+    -- Force the Table of Contents to render at the very top of this block
+    local output = {}
+    
+    for _, review in ipairs(allReviews) do
+        -- Construct the specific Giant Bomb URL structure
+        local reviewUrl = string.format("https://giantbomb.com/%s", 
+            tostring(review.url)
+        )
+
+        table.insert(output, '<div class="user-review">')
+        
+        -- Generate clean wikitext headers using standard MediaWiki external link syntax
+        local headingWikitext = string.format("=== [%s %s] ===", reviewUrl, review.title)
+        table.insert(output, headingWikitext)
+        
+        -- Build the metadata block below the header
+        local metaContainer = mw.html.create('div')
+            :addClass('review-metadata')            
+
+        if review.owner and review.owner.avatar and review.owner.avatar.url then
+            local altText = review.owner.avatar.alt or (review.owner.username .. "'s avatar")
+            metaContainer:tag('span')
+                :addClass('user-avatar-frame')
+                :wikitext(string.format("%s", review.owner.avatar.url))
+        end
+
+        local detailsStack = metaContainer:tag('div')
+            :addClass('review-details-stack')
+            
+        local stars = math.floor(review.score / 20)
+        if stars < 1 then stars = 1 end
+        if stars > 5 then stars = 5 end -- Safety cap
+        
+        local starPercentage = (stars / 5) * 100
+        
+        local starContainer = detailsStack:tag('div'):addClass('stars')
+        for i = 1, 5 do
+            starContainer:tag('div'):addClass('star')
+        end
+        starContainer:tag('div')
+            :addClass("star-cover")
+            :css('width', starPercentage .. '%')        
+
+        local authorHtml = ""
+        if review.owner and review.owner.username then             
+            local userLink = "https://giantbomb.com/profile/" .. review.owner.username
+            authorHtml = authorHtml .. " by " .. string.format("[%s %s]", userLink, review.owner.username) .. " on "
+        end
+        local date = mw.language.getContentLanguage():formatDate('F, j Y', review.publish_date)
+        authorHtml = authorHtml .. date
+        detailsStack:tag('span'):addClass('author-text'):wikitext(authorHtml)
+            
+        table.insert(output, tostring(metaContainer))
+        
+        -- Build the excerpt paragraph
+        local excerptContainer = mw.html.create('p')
+            :addClass('review-excerpt')
+            :wikitext(review.excerpt)
+            
+        table.insert(output, tostring(excerptContainer))
+        table.insert(output, '</div>')
+    end
+
+    local sidebarHtml = p.renderSidebar(frame)
+    
+    table.insert(output, 1, sidebarHtml)
+    table.insert(output, 2, "__TOC__")
+
+    -- Join elements with newlines for correct wikitext parsing
+    return table.concat(output, "\n")
 end
 
 return p

@@ -119,5 +119,4 @@ HTML Structure
 <div class="gb-object-content">
 <div class="gb-object-main">
 <div class="gb-object-wiki-content">
-__NOEDITSECTION__
 </includeonly>

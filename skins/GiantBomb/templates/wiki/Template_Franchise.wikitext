@@ -108,5 +108,4 @@ Your wiki content here...
 <div class="gb-franchise-content">
 <div class="gb-franchise-main">
 <div class="gb-franchise-wiki-content">
-__NOEDITSECTION__
 </includeonly>

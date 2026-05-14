@@ -133,5 +133,4 @@ Your wiki content here...
 <div class="gb-character-content">
 <div class="gb-character-main">
 <div class="gb-character-wiki-content">
-__NOEDITSECTION__
 </includeonly>

@@ -211,11 +211,6 @@ $(function () {
     $wrapper.replaceWith($mainNav);
   });
 
-  $(".view-toggle").each(function () {
-    var $container = $(this);
-    $container.addClass("is-ready");
-  });
-
   var fallbackUrl =
     "https://www.giantbomb.com/a/uploads/original/11/110673/3026329-gb_default-16_9.png";
   var fallbackAlt = "gb_default-16_9.png";
@@ -234,5 +229,43 @@ $(function () {
 
       // Replace the link with the image
       $link.replaceWith($newImg);
+    });
+
+    /* Add view toggle buttons for list/grid layout */
+    $(".view-toggle").each(function () {
+      var $container = $(this);
+      
+      // Prevent duplicate if script runs multiple times
+      if ($container.hasClass("is-ready")) return;
+
+      var viewButtonsHtml = 
+        '<button class="view-btn view-list">' +
+          '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect y="2" width="16" height="2"></rect> <rect y="7" width="16" height="2"></rect> <rect y="12" width="16" height="2"></rect></svg> List' +
+        '</button> ' +
+        '<button class="view-btn view-grid active">' +
+          '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect width="7" height="7"></rect> <rect x="9" width="7" height="7"></rect> <rect y="9" width="7" height="7"></rect> <rect x="9" y="9" width="7" height="7"></rect></svg> Grid' +
+        '</button>';
+
+      $container.html(viewButtonsHtml).show();
+
+      $container.on("click", ".view-btn", function (e) {
+        e.preventDefault();
+        var $clickedBtn = $(this);
+
+        if ($clickedBtn.hasClass("active")) return;
+
+        $container.find(".view-btn").removeClass("active");
+        $clickedBtn.addClass("active");
+
+        var $pageWrapper = $(".listing-page.games-page");
+
+        if ($clickedBtn.hasClass("view-list")) {
+          $pageWrapper.addClass("view-list").removeClass("view-grid");
+        } else {
+          $pageWrapper.addClass("view-grid").removeClass("view-list");
+        }
+      });
+
+      $container.addClass("is-ready");
     });
 });
