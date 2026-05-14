@@ -36,7 +36,7 @@ RUN cd /var/www/html \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-result-formats \
- && php /usr/local/bin/composer require --no-update mediawiki/semantic-scribunto dev-master \
+ && php /usr/local/bin/composer require --no-update "mediawiki/semantic-scribunto:^2.3" dev-master \
  && php /usr/local/bin/composer require --no-update "wikimedia/css-sanitizer:^5.5.0" \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update edwardspec/mediawiki-aws-s3:0.14.0 \
  && docker-php-ext-configure zip \
