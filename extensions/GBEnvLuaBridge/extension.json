@@ -1,16 +1,16 @@
 {
-    "name": "GBEnvLuaBridge",
-    "version": "1.0.0",
-    "author": "Giant Bomb Engineering",
-    "description": "Exposes the GB_API_KEY environment variable directly to Lua modules",
-    "type": "other",
-    "AutoloadClasses": {
-        "MediaWiki\\Extension\\GBEnvLuaBridge\\EnvLuaLibrary": "EnvLuaLibrary.php"
-    },
-    "Hooks": {
-        "ScribuntoExternalLibraries": [
-            "MediaWiki\\Extension\\GBEnvLuaBridge\\EnvLuaLibrary::onScribuntoExternalLibraries"
-        ]
-    },
-    "manifest_version": 2
+  "name": "GBEnvLuaBridge",
+  "version": "1.0.0",
+  "author": "Giant Bomb Engineering",
+  "description": "Exposes the GB_API_KEY environment variable directly to Lua modules",
+  "type": "other",
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GBEnvLuaBridge\\EnvLuaLibrary": "EnvLuaLibrary.php"
+  },
+  "Hooks": {
+    "ScribuntoExternalLibraries": [
+      "MediaWiki\\Extension\\GBEnvLuaBridge\\EnvLuaLibrary::onScribuntoExternalLibraries"
+    ]
+  },
+  "manifest_version": 2
 }

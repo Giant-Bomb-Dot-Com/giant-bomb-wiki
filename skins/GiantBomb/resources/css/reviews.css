@@ -1,11 +1,11 @@
 .gb-sidebar-reviews .gb-review-footer,
-.gb-reviews-main .gb-review-footer{
+.gb-reviews-main .gb-review-footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  margin-top: 16px
+  margin-top: 16px;
 }
 
 .gb-sidebar-reviews .review-star-bar,
@@ -36,7 +36,7 @@
   height: 100%;
 }
 
-.gb-reviews-main .user-review {  
+.gb-reviews-main .user-review {
   margin-top: 8px;
   margin-bottom: 24px;
   border-bottom: 1px solid #333;
@@ -139,8 +139,8 @@
 }
 
 .gb-review-button.gb-button {
-    display: inline-flex;
-    border: 1px solid #b05f1c;
+  display: inline-flex;
+  border: 1px solid #b05f1c;
 }
 
 .gb-review-button a {

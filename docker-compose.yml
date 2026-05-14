@@ -45,7 +45,7 @@ services:
       - ./extensions/GbSessionProvider:/var/www/html/extensions/GbSessionProvider
       - ./extensions/GBModeration:/var/www/html/extensions/GBModeration:cached
       - ./extensions/GBGallery:/var/www/html/extensions/GBGallery:cached
-      - ./extensions/GBEnvLuaBridge:/var/www/html/extensions/GBEnvLuaBridge:cached     
+      - ./extensions/GBEnvLuaBridge:/var/www/html/extensions/GBEnvLuaBridge:cached
       - ./extensions/GBVirtualReviewPages:/var/www/html/extensions/GBVirtualReviewPages:cached
       # Import scripts
       - ./import_templates:/var/www/html/maintenance/import_templates:cached

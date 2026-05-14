@@ -231,41 +231,41 @@ $(function () {
       $link.replaceWith($newImg);
     });
 
-    /* Add view toggle buttons for list/grid layout */
-    $(".view-toggle").each(function () {
-      var $container = $(this);
-      
-      // Prevent duplicate if script runs multiple times
-      if ($container.hasClass("is-ready")) return;
+  /* Add view toggle buttons for list/grid layout */
+  $(".view-toggle").each(function () {
+    var $container = $(this);
 
-      var viewButtonsHtml = 
-        '<button class="view-btn view-list">' +
-          '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect y="2" width="16" height="2"></rect> <rect y="7" width="16" height="2"></rect> <rect y="12" width="16" height="2"></rect></svg> List' +
-        '</button> ' +
-        '<button class="view-btn view-grid active">' +
-          '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect width="7" height="7"></rect> <rect x="9" width="7" height="7"></rect> <rect y="9" width="7" height="7"></rect> <rect x="9" y="9" width="7" height="7"></rect></svg> Grid' +
-        '</button>';
+    // Prevent duplicate if script runs multiple times
+    if ($container.hasClass("is-ready")) return;
 
-      $container.html(viewButtonsHtml).show();
+    var viewButtonsHtml =
+      '<button class="view-btn view-list">' +
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect y="2" width="16" height="2"></rect> <rect y="7" width="16" height="2"></rect> <rect y="12" width="16" height="2"></rect></svg> List' +
+      "</button> " +
+      '<button class="view-btn view-grid active">' +
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect width="7" height="7"></rect> <rect x="9" width="7" height="7"></rect> <rect y="9" width="7" height="7"></rect> <rect x="9" y="9" width="7" height="7"></rect></svg> Grid' +
+      "</button>";
 
-      $container.on("click", ".view-btn", function (e) {
-        e.preventDefault();
-        var $clickedBtn = $(this);
+    $container.html(viewButtonsHtml).show();
 
-        if ($clickedBtn.hasClass("active")) return;
+    $container.on("click", ".view-btn", function (e) {
+      e.preventDefault();
+      var $clickedBtn = $(this);
 
-        $container.find(".view-btn").removeClass("active");
-        $clickedBtn.addClass("active");
+      if ($clickedBtn.hasClass("active")) return;
 
-        var $pageWrapper = $(".listing-page.games-page");
+      $container.find(".view-btn").removeClass("active");
+      $clickedBtn.addClass("active");
 
-        if ($clickedBtn.hasClass("view-list")) {
-          $pageWrapper.addClass("view-list").removeClass("view-grid");
-        } else {
-          $pageWrapper.addClass("view-grid").removeClass("view-list");
-        }
-      });
+      var $pageWrapper = $(".listing-page.games-page");
 
-      $container.addClass("is-ready");
+      if ($clickedBtn.hasClass("view-list")) {
+        $pageWrapper.addClass("view-list").removeClass("view-grid");
+      } else {
+        $pageWrapper.addClass("view-grid").removeClass("view-list");
+      }
     });
+
+    $container.addClass("is-ready");
+  });
 });

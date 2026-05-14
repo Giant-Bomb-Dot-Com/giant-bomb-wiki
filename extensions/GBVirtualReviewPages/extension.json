@@ -1,18 +1,16 @@
 {
-    "name": "GBVirtualReviewPages",
-    "version": "1.1.0",
-    "author": [
-        "Giant Bomb Engineering"
-    ],
-    "description": "Dynamically handles virtual /Reviews subpages and prevents physical database entry creation.",
-    "manifest_version": 2,
-    "AutoloadClasses": {
-        "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks": "src/Hooks.php"
-    },
-    "Hooks": {
-        "BeforeInitialize": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onBeforeInitialize",
-        "TitleIsAlwaysKnown": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onTitleIsAlwaysKnown",
-        "MediaWikiPerformAction": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onMediaWikiPerformAction",
-        "getUserPermissionsErrors": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onGetUserPermissionsErrors"
-    }
+  "name": "GBVirtualReviewPages",
+  "version": "1.1.0",
+  "author": ["Giant Bomb Engineering"],
+  "description": "Dynamically handles virtual /Reviews subpages and prevents physical database entry creation.",
+  "manifest_version": 2,
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks": "src/Hooks.php"
+  },
+  "Hooks": {
+    "BeforeInitialize": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onBeforeInitialize",
+    "TitleIsAlwaysKnown": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onTitleIsAlwaysKnown",
+    "MediaWikiPerformAction": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onMediaWikiPerformAction",
+    "getUserPermissionsErrors": "MediaWiki\\Extension\\GBVirtualReviewPages\\Hooks::onGetUserPermissionsErrors"
+  }
 }
