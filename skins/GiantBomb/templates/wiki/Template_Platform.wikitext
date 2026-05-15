@@ -150,5 +150,4 @@ HTML Structure
 <div class="gb-platform-content">
 <div class="gb-platform-main">
 <div class="gb-platform-wiki-content">
-__NOEDITSECTION__
 </includeonly>

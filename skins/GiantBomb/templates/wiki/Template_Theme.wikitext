@@ -88,5 +88,4 @@ HTML Structure
 <div class="gb-theme-content">
 <div class="gb-theme-main">
 <div class="gb-theme-wiki-content">
-__NOEDITSECTION__
 </includeonly>

@@ -171,7 +171,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:GameRatingEnd" => "$templateDir/Template_GameRatingEnd.wikitext",
             "Template:GameRatingSidebar" => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
-
+        
         //Forms
         $formTemplates = [
             "Form:Accessory" => "$formDir/Form_Accessory.wikitext",
@@ -218,6 +218,11 @@ class ImportWikiTemplates extends Maintenance
             "Template:ImagesPage" => "$templateDir/Template_ImagesPage.wikitext",
             "Template:ImagesPageEnd" => "$templateDir/Template_ImagesPageEnd.wikitext",
             "Module:ImagesPage" => "$moduleDir/Module_ImagesPage.wikitext",
+
+            //reviews page
+            "Template:ReviewLayout" => "$templateDir/Template_ReviewLayout.wikitext",
+            "Module:ReviewQuery" => "$moduleDir/Module_ReviewQuery.wikitext",
+            "Module:ReviewPage" => "$moduleDir/Module_ReviewPage.wikitext",
 
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",

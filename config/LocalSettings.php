@@ -395,6 +395,9 @@ wfLoadExtension("GBModeration");
 wfLoadExtension("GBGallery");
 wfLoadExtension("VisualEditor");
 wfLoadExtension("VEForAll");
+wfLoadExtension("ExternalData");
+wfLoadExtension("GBEnvLuaBridge");
+wfLoadExtension("GBVirtualReviewPages");
 
 # =============================================================================
 # Editor
