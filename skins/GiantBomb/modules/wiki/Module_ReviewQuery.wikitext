@@ -52,6 +52,18 @@ function p.fetchReviews(guid)
     return cachedReviews
 end
 
+local function newUserReviewUrl(guid)
+    local base = 'https://giantbomb.com/user-reviews/new'
+    if guid == nil or guid == '' then
+        return base
+    end
+    guid = mw.text.trim(tostring(guid))
+    if guid == '' then
+        return base
+    end
+    return base .. '?guid=' .. mw.uri.encode(guid, 'QUERY')
+end
+
 function p._renderSidebar(guid, hideReadButton)
 
     local allReviews = p.fetchReviews(guid)
@@ -106,22 +118,64 @@ function p._renderSidebar(guid, hideReadButton)
     if not hideReadButton then
         footer:tag('div'):addClass('gb-review-button'):addClass('gb-review-button--primary'):addClass('gb-button'):wikitext('[[' .. reviewsPage .. '|Read reviews]]')
     end
-    footer:tag('div'):addClass('gb-review-button'):addClass('gb-button'):wikitext('[https://giantbomb.com/user-reviews/new Add your review]')
+    footer:tag('div'):addClass('gb-review-button'):addClass('gb-button')
+        :wikitext('[' .. newUserReviewUrl(guid) .. ' Add your review]')
 
     return tostring(header) .. tostring(html)
 end
 
+local function trimGuid(v)
+    if v == nil then
+        return nil
+    end
+    v = tostring(v)
+    v = mw.text.trim(v)
+    if v == '' then
+        return nil
+    end
+    return v
+end
+
+--- Resolve Giant Bomb game guid: frame args, parent invoke, then #show on current title (game pages only).
+local function resolveGuidFromFrame(frame)
+    local guid = trimGuid(frame.args and frame.args.guid)
+    if guid then
+        return guid
+    end
+    local parent = frame:getParent()
+    if parent and parent.args then
+        guid = trimGuid(parent.args.guid)
+        if guid then
+            return guid
+        end
+    end
+    local page = mw.title.getCurrentTitle().prefixedText
+    guid = trimGuid(frame:callParserFunction('#show', page, '?Has guid', 'link=none'))
+    return guid
+end
+
 function p.renderSidebar(frame)
-    local guid = frame.args.guid or frame:getParent().args.guid
+    local guid = resolveGuidFromFrame(frame)
     return p._renderSidebar(guid)
 end
 
 function p.renderReviewContent(frame)
-    local guid = frame.args.guid or frame:getParent().args.guid
+    local guid = trimGuid(frame.args and frame.args.guid)
+    if not guid then
+        local parent = frame:getParent()
+        if parent and parent.args then
+            guid = trimGuid(parent.args.guid)
+        end
+    end
     local allReviews = p.fetchReviews(guid)
 
     if not allReviews or #allReviews == 0 then
-        return "<p>No reviews found.</p>"
+        local sidebarHtml = p._renderSidebar(guid, true)
+        return table.concat({
+            sidebarHtml,
+            "__NOTOC__",
+            '<p class="gb-reviews-empty">No reviews found.</p>',
+        }, "\n")
     end
     
     local output = {}

@@ -40,6 +40,11 @@
   display: none;
 }
 
+.gb-reviews-empty {
+  margin: 20px 0 0;
+  color: #aaa;
+}
+
 .gb-reviews-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
