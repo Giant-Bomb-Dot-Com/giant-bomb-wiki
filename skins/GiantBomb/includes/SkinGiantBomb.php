@@ -576,15 +576,15 @@ class SkinGiantBomb extends SkinTemplate
         }
     }
 
-    // strips entity prefix, trailing legacy id (_NNNN), and underscores.
-    // last-resort fallback so we never leak a raw url slug into display surfaces.
-    private static function cleanSlugFallback(
-        string $pageTitle,
-        string $prefix,
-    ): string {
-        $slug = str_replace($prefix, "", $pageTitle);
-        $slug = preg_replace('/_\d+$/', "", $slug);
-        return str_replace("_", " ", $slug);
+    // Last-resort fallback when neither SMW nor the template provides a name.
+    // Strips the entity prefix and any trailing legacy disambiguation id (e.g.
+    // "Games/Sprout 64629" -> "Sprout"). Threshold is >=5 trailing digits so
+    // legitimate year/sequel numbers survive: "Halo 2600", "Madden NFL 2008",
+    // "FIFA 99", "Tekken 7".
+    private static function cleanSlugFallback( string $pageTitle, string $prefix ): string {
+        $slug = str_replace( $prefix, '', $pageTitle );
+        $slug = str_replace( '_', ' ', $slug );
+        return rtrim( preg_replace( '/[ _]\d{5,}$/', '', $slug ) );
     }
 
     /**

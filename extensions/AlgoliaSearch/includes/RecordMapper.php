@@ -291,7 +291,9 @@ class RecordMapper
         Title $title,
         string $type,
     ): string {
-        // smw Has name is the canonical display name set by entity templates
+        // smw Has name is the canonical display name set by entity templates;
+        // trust it as-is so legitimate digit-ending names survive ("Halo 2600",
+        // "Madden 2008", "Star Wars Episode 1").
         try {
             $store = \SMW\StoreFactory::getStore();
             $subject = \SMW\DIWikiPage::newFromTitle($title);
@@ -311,7 +313,7 @@ class RecordMapper
         } catch (\Throwable $e) {
         }
 
-        // fallback: strip entity prefix, trailing _NNNN legacy id, underscores
+        // fallback: strip entity prefix and trailing legacy disambiguation id.
         $text = $title->getText();
         $services = MediaWikiServices::getInstance();
         $config = $services->getMainConfig();
@@ -326,8 +328,30 @@ class RecordMapper
         $parts = explode("/", $text);
         $leaf = end($parts);
         $candidate = $leaf !== false && $leaf !== "" ? $leaf : $text;
-        $candidate = preg_replace('/_\d+$/', "", $candidate);
-        return str_replace("_", " ", $candidate);
+        $candidate = str_replace("_", " ", $candidate);
+        return self::stripLegacyDisambigSuffix($candidate);
+    }
+
+    /**
+     * Strip a trailing legacy disambiguation id from a name.
+     *
+     * When the import script encountered two GB-API entities with the same
+     * display name, it appended the entity id to the page slug so MediaWiki
+     * could store both ("Games/Sprout" + "Games/Sprout_64629"). When the
+     * fallback display path runs on the disambiguated page, the leftover id
+     * shows through as "Sprout 64629". This helper strips that.
+     *
+     * Threshold is intentionally >=5 trailing digits so legitimate year and
+     * sequel numbers survive: "Halo 2600", "Madden NFL 2008", "FIFA 99",
+     * "Tekken 7", "Borderlands 3". GB-API disambig ids in practice are
+     * all 5-6 digits (the screenshots showed 63052, 64629, 65309).
+     *
+     * @param string $name Candidate display name (spaces or underscores ok).
+     * @return string Name with any trailing legacy disambig id removed.
+     */
+    public static function stripLegacyDisambigSuffix(string $name): string
+    {
+        return preg_replace('/[ _]\d{5,}$/', "", rtrim($name));
     }
 
     private static function getExcerptForTitle(Title $title): ?string
