@@ -132,4 +132,5 @@ HTML Structure
 <div class="gb-concept-content">
 <div class="gb-concept-main">
 <div class="gb-concept-wiki-content">
+__NOEDITSECTION__
 </includeonly>

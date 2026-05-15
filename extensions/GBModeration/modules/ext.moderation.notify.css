@@ -1,0 +1,13 @@
+#postedit-modqueued a {
+  font-weight: bold;
+}
+
+#pending-review {
+  display: inline-block;
+  padding: 5px;
+  margin: 10px;
+  margin-left: 0;
+  font-weight: bold;
+  font-size: 120%;
+  text-transform: uppercase;
+}

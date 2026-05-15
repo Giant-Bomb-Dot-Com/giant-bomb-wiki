@@ -1,0 +1,63 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "es2017": true,
+    "amd": true,
+    "mocha": true
+  },
+  "globals": {
+    "browser": "writable",
+    "__filename": "readonly",
+    "module": "writable"
+  },
+  "rules": {
+    // These rules either don't make sense for Mocha tests or make them less readable
+    "brace-style": "off",
+    "indent": "off",
+    "func-call-spacing": "off",
+    "max-statements-per-line": "off",
+    "one-var": "off",
+    "no-implicit-globals": "off",
+    "no-jquery/no-global-selector": "off",
+    "no-jquery/no-event-shorthand": "off",
+    "no-multi-spaces": "off",
+    "no-multiple-empty-lines": "off",
+    "no-unused-expressions": "off",
+    "spaced-comment": "off",
+    "vars-on-top": "off",
+
+    // Relaxed line length limit for Mocha tests:
+    // to avoid splitting the test name in it() calls, comments, etc.
+    "max-len": [
+      "warn",
+      {
+        "code": 100,
+        "ignoreComments": true,
+        "ignoreStrings": true
+      }
+    ],
+
+    // These global exceptions should be replaced by local eslint-disable comment
+    "no-underscore-dangle": "warn",
+
+    // FIXME: this should be fixed
+    "array-bracket-spacing": "warn",
+    "computed-property-spacing": "warn",
+    "eqeqeq": "warn",
+    "keyword-spacing": "warn",
+    "new-parens": "warn",
+    "no-redeclare": "warn",
+    "operator-linebreak": "warn",
+    "semi": "warn",
+    "space-before-function-paren": "warn",
+    "space-infix-ops": "warn",
+    "space-in-parens": "warn",
+    "space-unary-ops": "warn",
+    "quotes": "warn",
+
+    // TODO: missing documentation: this can be fixed
+    "valid-jsdoc": "off"
+  }
+}

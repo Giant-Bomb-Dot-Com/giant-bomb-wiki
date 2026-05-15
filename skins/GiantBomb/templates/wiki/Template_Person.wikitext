@@ -155,4 +155,5 @@ HTML Structure
 <div class="gb-person-content">
 <div class="gb-person-main">
 <div class="gb-person-wiki-content">
+__NOEDITSECTION__
 </includeonly>

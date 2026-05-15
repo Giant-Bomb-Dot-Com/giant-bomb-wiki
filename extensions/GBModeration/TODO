@@ -1,0 +1,26 @@
+TODO:
+
+Low-prio:
+* (feature) Special page to list users blocked via "Mark as spammer".
+* (feature) modaction=promote for quickly assigning "automoderated" flag.
+* (feature) Support gzip compression and external storage of mod_text.
+* (feature) Backup previous text when a pending change is modified.
+	This would prevent situation when a user has accidentally deleted
+	important text in his own pending change, and the old text wasn't
+	recoverable.
+	It would also make [action=editchange] safe from moderator's errors,
+	and would allow to log what exactly did the moderator change.
+	Note: this backup must be in a separate SQL table.
+	Not having "edit history" in moderation table simplifies everything.
+* (feature) Support MCR (multi-content revisions) - editing of non-main slots.
+	Note: this is easier to implement after MW 1.31 becomes deprecated,
+	because 1.31 didn't support MCR.
+* (feature) Make it possible to Approve edits caused by Special:ChangeContentModel.
+* (feature) Add "rejected edits" link for moderators in ContributionsToolLinks hook.
+	It's not a simple UI change, because "moderation" SQL table currently
+	doesn't have an index for selecting edits by author.
+* (feature) Should ApproveHook update timestamps of upload/move logs?
+* (UX) Automatically reject null edits during modaction=merge.
+
+FIXME:
+* "Move associated talk page" checkbox should work for intercepted page moves.

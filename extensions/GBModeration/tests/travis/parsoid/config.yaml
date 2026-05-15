@@ -1,0 +1,13 @@
+# Parsoid configuration.
+
+worker_heartbeat_timeout: 300000
+
+logging:
+  level: warn
+
+services:
+  - module: ../src/lib/index.js
+    entrypoint: apiServiceWorker
+    conf:
+      mwApis:
+        - uri: "http://moderation.example.com/mediawiki/api.php"

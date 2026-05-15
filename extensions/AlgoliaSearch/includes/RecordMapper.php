@@ -77,16 +77,16 @@ class RecordMapper
             }
         }
 
-		if ( is_string( $record['thumbnail'] ) ) {
-			$record['thumbnail'] = self::rewriteCdnUrl( $record['thumbnail'] );
-		}
+        if (is_string($record["thumbnail"])) {
+            $record["thumbnail"] = self::rewriteCdnUrl($record["thumbnail"]);
+        }
 
-		$timestamps = self::getRevisionTimestamps($title);
-		$record["_updatedAt"] = $timestamps["latest"] ?? null;
-		$record["publishDate"] = $timestamps["first"] ?? null;
+        $timestamps = self::getRevisionTimestamps($title);
+        $record["_updatedAt"] = $timestamps["latest"] ?? null;
+        $record["publishDate"] = $timestamps["first"] ?? null;
 
-		return $record;
-	}
+        return $record;
+    }
 
     private static function getEntityImage(Title $title): ?string
     {
@@ -101,7 +101,10 @@ class RecordMapper
             if ($vals) {
                 $first = reset($vals);
                 if ($first instanceof \SMWDIBlob) {
-                    $resolved = self::resolveImageReference($first->getString(), 640);
+                    $resolved = self::resolveImageReference(
+                        $first->getString(),
+                        640,
+                    );
                     if ($resolved) {
                         return $resolved;
                     }
@@ -113,7 +116,10 @@ class RecordMapper
         // 2. wikitext Image= (loose match; covers pre-SMW-rebuild pages and any spacing).
         // [^\n|}] keeps us from gobbling the closing }} when Image= is the last parameter.
         $text = self::getPageWikitext($title);
-        if ($text !== "" && preg_match('/\|\s*Image\s*=\s*([^\n|}]+)/i', $text, $m)) {
+        if (
+            $text !== "" &&
+            preg_match('/\|\s*Image\s*=\s*([^\n|}]+)/i', $text, $m)
+        ) {
             $resolved = self::resolveImageReference(trim($m[1]), 640);
             if ($resolved) {
                 return $resolved;
@@ -129,7 +135,7 @@ class RecordMapper
         // 4. legacy <div id="imageData"> json blob
         $legacyImage = LegacyImageHelper::findLegacyImageForTitle($title);
         if ($legacyImage !== null) {
-            return $legacyImage["thumb"] ?? $legacyImage["full"] ?? null;
+            return $legacyImage["thumb"] ?? ($legacyImage["full"] ?? null);
         }
 
         return null;
@@ -137,11 +143,13 @@ class RecordMapper
 
     // resolves a raw Has image / Image= value to a public url.
     // http(s) -> as-is; mw File: -> 640px thumb; else assume legacy gb cdn path.
-    private static function resolveImageReference(string $value, int $width): ?string
-    {
+    private static function resolveImageReference(
+        string $value,
+        int $width,
+    ): ?string {
         // belt-and-suspenders: strip trailing whitespace / template-close braces so we
         // can't ever leak '}}' into a thumbnail URL even if upstream regex misbehaves.
-        $value = preg_replace('/[\s}]+$/', '', trim($value)) ?? "";
+        $value = preg_replace('/[\s}]+$/', "", trim($value)) ?? "";
         if ($value === "") {
             return null;
         }
@@ -180,8 +188,11 @@ class RecordMapper
         }
 
         $text = self::getPageWikitext($title);
-        if ($text !== "" && preg_match('/\|\s*Deck\s*=\s*([^\n|}]+)/i', $text, $m)) {
-            $deck = preg_replace('/[\s}]+$/', '', trim($m[1])) ?? "";
+        if (
+            $text !== "" &&
+            preg_match('/\|\s*Deck\s*=\s*([^\n|}]+)/i', $text, $m)
+        ) {
+            $deck = preg_replace('/[\s}]+$/', "", trim($m[1])) ?? "";
             if ($deck !== "") {
                 return $deck;
             }
@@ -239,25 +250,28 @@ class RecordMapper
         return is_string($url) && $url !== "" ? $url : null;
     }
 
-    private static function rewriteCdnUrl( string $url ): string {
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$cdnBase = $config->get( 'AlgoliaImageCdnBase' );
-		if ( !is_string( $cdnBase ) || $cdnBase === '' ) {
-			return $url;
-		}
+    private static function rewriteCdnUrl(string $url): string
+    {
+        $config = MediaWikiServices::getInstance()->getMainConfig();
+        $cdnBase = $config->get("AlgoliaImageCdnBase");
+        if (!is_string($cdnBase) || $cdnBase === "") {
+            return $url;
+        }
 
-		$bucketName = $config->get( 'AWSBucketName' );
-		if ( !is_string( $bucketName ) || $bucketName === '' ) {
-			return $url;
-		}
+        $bucketName = $config->get("AWSBucketName");
+        if (!is_string($bucketName) || $bucketName === "") {
+            return $url;
+        }
 
-		$gcsPrefix = 'https://storage.googleapis.com/' . $bucketName . '/';
-		if ( strpos( $url, $gcsPrefix ) === 0 ) {
-			return rtrim( $cdnBase, '/' ) . '/' . substr( $url, strlen( $gcsPrefix ) );
-		}
+        $gcsPrefix = "https://storage.googleapis.com/" . $bucketName . "/";
+        if (strpos($url, $gcsPrefix) === 0) {
+            return rtrim($cdnBase, "/") .
+                "/" .
+                substr($url, strlen($gcsPrefix));
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
     private static function truncatePlaintext(string $text, int $limit): string
     {
@@ -312,7 +326,7 @@ class RecordMapper
         $parts = explode("/", $text);
         $leaf = end($parts);
         $candidate = $leaf !== false && $leaf !== "" ? $leaf : $text;
-        $candidate = preg_replace('/_\d+$/', '', $candidate);
+        $candidate = preg_replace('/_\d+$/', "", $candidate);
         return str_replace("_", " ", $candidate);
     }
 
@@ -373,49 +387,55 @@ class RecordMapper
         return null;
     }
 
-	private static function getCategoriesForPageId( int $pageId ): array {
-		$services = MediaWikiServices::getInstance();
-		$dbr = $services->getDBLoadBalancer()->getConnection( \DB_REPLICA );
+    private static function getCategoriesForPageId(int $pageId): array
+    {
+        $services = MediaWikiServices::getInstance();
+        $dbr = $services->getDBLoadBalancer()->getConnection(\DB_REPLICA);
 
-		// Exclude hidden categories (tracking/maintenance categories marked with __HIDDENCAT__)
-		$rows = $dbr->newSelectQueryBuilder()
-			->select( 'cl_to' )
-			->from( 'categorylinks' )
-			->leftJoin( 'page', null, [
-				'page_title = cl_to',
-				'page_namespace' => NS_CATEGORY,
-			] )
-			->leftJoin( 'page_props', null, [
-				'pp_page = page_id',
-				'pp_propname' => 'hiddencat',
-			] )
-			->where( [
-				'cl_from' => $pageId,
-				'pp_value IS NULL',
-			] )
-			->caller( __METHOD__ )
-			->fetchResultSet();
+        // Exclude hidden categories (tracking/maintenance categories marked with __HIDDENCAT__)
+        $rows = $dbr
+            ->newSelectQueryBuilder()
+            ->select("cl_to")
+            ->from("categorylinks")
+            ->leftJoin("page", null, [
+                "page_title = cl_to",
+                "page_namespace" => NS_CATEGORY,
+            ])
+            ->leftJoin("page_props", null, [
+                "pp_page = page_id",
+                "pp_propname" => "hiddencat",
+            ])
+            ->where([
+                "cl_from" => $pageId,
+                "pp_value IS NULL",
+            ])
+            ->caller(__METHOD__)
+            ->fetchResultSet();
 
-		$categories = [];
-		foreach ( $rows as $row ) {
-			$categories[] = str_replace( '_', ' ', (string)$row->cl_to );
-		}
+        $categories = [];
+        foreach ($rows as $row) {
+            $categories[] = str_replace("_", " ", (string) $row->cl_to);
+        }
 
-		$config = $services->getMainConfig();
-		$excludePatterns = (array)$config->get( 'AlgoliaExcludeCategoryPatterns' );
-		if ( $excludePatterns ) {
-			$categories = array_filter( $categories, static function ( string $cat ) use ( $excludePatterns ) {
-				foreach ( $excludePatterns as $pattern ) {
-					if ( preg_match( $pattern, $cat ) ) {
-						return false;
-					}
-				}
-				return true;
-			} );
-		}
+        $config = $services->getMainConfig();
+        $excludePatterns = (array) $config->get(
+            "AlgoliaExcludeCategoryPatterns",
+        );
+        if ($excludePatterns) {
+            $categories = array_filter($categories, static function (
+                string $cat,
+            ) use ($excludePatterns) {
+                foreach ($excludePatterns as $pattern) {
+                    if (preg_match($pattern, $cat)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
 
-		return array_values( array_unique( $categories ) );
-	}
+        return array_values(array_unique($categories));
+    }
 
     private static function getRevisionTimestamps(Title $title): array
     {

@@ -1,0 +1,9 @@
+List of known limitations:
+
+===============================================================================
+Limitation:
+	Unless the user has 'skip-moderation' right,
+	reverting image to previous version won't be allowed.
+Why:
+	Reverting images bypasses doUpload() and related hooks.
+===============================================================================

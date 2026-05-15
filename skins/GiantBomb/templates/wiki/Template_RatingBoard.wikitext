@@ -83,4 +83,5 @@ HTML Structure
 <div class="gb-ratingboard-content">
 <div class="gb-ratingboard-main">
 <div class="gb-ratingboard-wiki-content">
+__NOEDITSECTION__
 </includeonly>

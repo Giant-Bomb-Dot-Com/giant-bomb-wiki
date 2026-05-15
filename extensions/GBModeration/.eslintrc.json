@@ -1,0 +1,31 @@
+{
+  "root": true,
+  "extends": ["wikimedia/client", "wikimedia/jquery", "wikimedia/mediawiki"],
+  "rules": {
+    // These rules are not applicable,
+    // because some of our scripts MUST interfere with third-party widgets.
+    "no-jquery/no-global-selector": "off",
+
+    // Don't want to disable console.log() with "why not preloaded" results
+    // (this information is helpful for users who are trying to determine why).
+    "no-console": "off",
+
+    // Types to allow in jsDoc comments.
+    "jsdoc/no-undefined-types": ["warn", { "definedTypes": ["Deferred"] }]
+  },
+  "overrides": [
+    {
+      "files": ["tests/selenium/**/*.js"],
+      "rules": {
+        "jsdoc/check-alignment": "off",
+        "jsdoc/check-tag-names": "off",
+        "jsdoc/multiline-blocks": "off",
+        "jsdoc/require-asterisk-prefix": "off",
+        "jsdoc/require-param": "off",
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-returns": "off",
+        "jsdoc/require-returns-type": "off"
+      }
+    }
+  ]
+}

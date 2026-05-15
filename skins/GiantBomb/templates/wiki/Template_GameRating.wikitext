@@ -82,4 +82,5 @@ HTML Structure
 <div class="gb-gamerating-content">
 <div class="gb-gamerating-main">
 <div class="gb-gamerating-wiki-content">
+__NOEDITSECTION__
 </includeonly>

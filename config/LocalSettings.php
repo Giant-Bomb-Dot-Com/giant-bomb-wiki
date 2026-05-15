@@ -236,6 +236,7 @@ $wgJobRunRate = 0.25;
 $wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
+$wgMaxUploadSize = 2 * 1024 * 1024; // 2 MB
 
 if ($wikiEnv == "prod") {
     $uploadsSubdir = getenv("UPLOADS_SUBDIR");
@@ -390,9 +391,32 @@ wfLoadExtension("GiantBombResolve");
 wfLoadExtension("AlgoliaSearch");
 wfLoadExtension("UrlGetParameters");
 wfLoadExtension("GiantBombMetaTags");
-wfLoadExtension("Moderation");
-wfLoadExtension("GiantBombModerationBridge");
+wfLoadExtension("GBModeration");
 wfLoadExtension("GBGallery");
+wfLoadExtension("VisualEditor");
+wfLoadExtension("VEForAll");
+
+# =============================================================================
+# Editor
+# =============================================================================
+$wgVisualEditorEnableWikitext = false;
+$wgDefaultUserOptions['visualeditor-enable'] = 1;
+$wgDefaultUserOptions['visualeditor-editor'] = 'wikitext'; // We still want the default to be the wikieditor and we can just enable the visual editor in pageforms on the sections we want.
+$wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-wt';
+$wgDefaultUserOptions['usebetatoolbar'] = 1; 
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
+$wgHooks['VEForAllToolbarConfigNormal'][] = function( &$defaultConfig ) {
+    if ( isset( $defaultConfig[4] ) ) {
+        $defaultConfig[4]['include'][] = 'media';
+    }
+};
+
+$wgHooks['VEForAllToolbarConfigWide'][] = function( &$defaultConfig ) {
+    if ( isset( $defaultConfig[4] ) ) {
+        $defaultConfig[4]['include'][] = 'media';
+    }
+};
+
 
 # =============================================================================
 # GBGALLERY (legacy CDN image galleries)

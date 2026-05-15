@@ -857,6 +857,10 @@ td.diff-marker {
   color: #e0e0e0;
 }
 
+.mw-logevent-loglines .mw-logline-delete {
+  color: #333;
+}
+
 /* Description lists */
 .mw-body-content dl dt {
   color: #fff;
@@ -1079,4 +1083,40 @@ hr {
 
 .wikitable a:visited {
   color: #8ab4e0 !important;
+}
+
+/* Moderation pending link */
+.usermessage:has(a[title="Special:Moderation"]) {
+  background-color: #1a1a1a;
+  border: 1px solid #444444;
+  border-left: 4px solid #b05f1c; /* Accent edge using progressive color */
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.usermessage a[title="Special:Moderation"] {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Spaces the icon from the text */
+  transition: color 0.2s ease;
+}
+
+.usermessage a[title="Special:Moderation"]::before {
+  content: "🔗";
+  font-size: 14px;
+  color: #44446e; /* Applies the requested icon color */
+  display: inline-block;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.usermessage a[title="Special:Moderation"]:hover {
+  color: #b05f1c;
+  text-decoration: none;
 }

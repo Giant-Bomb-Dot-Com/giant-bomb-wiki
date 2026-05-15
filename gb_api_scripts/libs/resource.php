@@ -10,7 +10,7 @@ use Wikimedia\Rdbms\MysqliResultWrapper;
  *
  * Defines common methods the wiki content classes should use and implement
  */
-abstract class Resource 
+abstract class Resource
 {
     const RELEASE_DATE_TYPE_USE_DATE = 0;
     const RELEASE_DATE_TYPE_MONTH_YEAR = 1;
@@ -25,7 +25,7 @@ abstract class Resource
      *
      * @param IDatabase $dbw Primay db for writes
      */
-    public function __construct(DbInterface $dbw, bool $crawlRelations = false) 
+    public function __construct(DbInterface $dbw, bool $crawlRelations = false)
     {
         $this->dbw = $dbw;
         $this->crawlRelations = $crawlRelations;
@@ -73,15 +73,18 @@ abstract class Resource
 
     /**
      * Inserts a new entry or updates it if it exists
-     * 
+     *
      * @param string $tableName The name of the table to be used in the query.
      * @param array  $data Associative array where key is the table column.
      * @param array  $uniquePrimaryKeys The primary key(s) of the table. Can be Id or composite keys.
      * @return int
      * @throws UnexpectedValueException
      */
-    public function insertOrUpdate(string $tableName, array $data, array $uniquePrimaryKeys = []): int
-    {
+    public function insertOrUpdate(
+        string $tableName,
+        array $data,
+        array $uniquePrimaryKeys = [],
+    ): int {
         $dataForUpdate = array_diff_key($data, array_flip($uniquePrimaryKeys));
         $diffCount = count($dataForUpdate);
 
@@ -89,55 +92,65 @@ abstract class Resource
         // so we return its id if it exists
         if ($diffCount <= 1) {
             $qb = $this->getDb()->newSelectQueryBuilder();
-            $qb->select('*')
-               ->from($tableName)
-               ->where($data)
-               ->caller(__METHOD__);
+            $qb->select("*")
+                ->from($tableName)
+                ->where($data)
+                ->caller(__METHOD__);
 
             $result = $qb->fetchRow();
 
             if ($result !== false) {
                 $set = json_decode(json_encode($result), true);
-                echo "Duplicate found in " . $tableName . " table with data: " . http_build_query($set, '', ' ') . "\r\n";
+                echo "Duplicate found in " .
+                    $tableName .
+                    " table with data: " .
+                    http_build_query($set, "", " ") .
+                    "\r\n";
 
-                return (isset($set['id'])) ? $set['id'] : 0;
+                return isset($set["id"]) ? $set["id"] : 0;
+            } else {
+                $this->getDb()->insert($tableName, [$data], __METHOD__);
             }
-            else {
-                $this->getDb()->insert(
-                    $tableName,
-                    [$data],
-                    __METHOD__
-                );
-            }
-        }
-        else {
-
+        } else {
             // insert if new, update if exists
-            $this->getDb()->upsert( 
-                $tableName, 
-                [$data],          
-                [$uniquePrimaryKeys],  
-                $dataForUpdate,              
-                __METHOD__              
+            $this->getDb()->upsert(
+                $tableName,
+                [$data],
+                [$uniquePrimaryKeys],
+                $dataForUpdate,
+                __METHOD__,
             );
         }
 
-        $insertId = (int)$this->getDb()->insertId();
+        $insertId = (int) $this->getDb()->insertId();
 
         if ($insertId === 0) {
-            if (isset($data['id'])) {
-                echo "Updated " . $tableName . " table with ID " . $data['id'] . "\r\n";
+            if (isset($data["id"])) {
+                echo "Updated " .
+                    $tableName .
+                    " table with ID " .
+                    $data["id"] .
+                    "\r\n";
+            } else {
+                echo "Updated " .
+                    $tableName .
+                    " table with composite data: " .
+                    http_build_query($data, "", " ") .
+                    "\r\n";
             }
-            else {
-                echo "Updated " . $tableName . " table with composite data: " . http_build_query($data, '', ' ') . "\r\n";
-            }
-        }
-        else {
+        } else {
             if ($diffCount == 0) {
-                echo "Added to " . $tableName . " table with composite data: " . http_build_query($data, '', ' ') . "\r\n";
-            }
-            else {
-                echo "Added to " . $tableName . " table with ID " . $insertId . "\r\n";
+                echo "Added to " .
+                    $tableName .
+                    " table with composite data: " .
+                    http_build_query($data, "", " ") .
+                    "\r\n";
+            } else {
+                echo "Added to " .
+                    $tableName .
+                    " table with ID " .
+                    $insertId .
+                    "\r\n";
             }
         }
 
@@ -146,7 +159,7 @@ abstract class Resource
 
     /**
      * Get ids from the content
-     * 
+     *
      * @param int $offset
      * @param int $limit
      * @return array
@@ -154,7 +167,7 @@ abstract class Resource
     public function getIds(int $offset, int $limit)
     {
         $qb = $this->getDb()->newSelectQueryBuilder();
-        $qb->field('id')
+        $qb->field("id")
             ->from(static::TABLE_NAME)
             ->offset($offset)
             ->limit($limit)
@@ -165,56 +178,69 @@ abstract class Resource
 
     /**
      * Get rows with descriptions that have not been converted yet
-     * 
+     *
      * @param int|false $id
      * @param bool $force
      * @return array
      */
     public function getTextToConvert($id = false, $force = false, $continue = 0)
     {
-        return $this->dbw->getTextToConvert(static::TABLE_NAME, $id, $force, $continue);
+        return $this->dbw->getTextToConvert(
+            static::TABLE_NAME,
+            $id,
+            $force,
+            $continue,
+        );
     }
 
     /**
      * Get rows with names that have not been converted yet
-     * 
+     *
      * @param int|false $id
      * @param bool $force
      * @return array
      */
-    public function getNamesToConvert($id = false, $force = false, $continue = 0)
-    {
-        return $this->dbw->getNamesToConvert(static::TABLE_NAME, $id, $force, $continue);
+    public function getNamesToConvert(
+        $id = false,
+        $force = false,
+        $continue = 0,
+    ) {
+        return $this->dbw->getNamesToConvert(
+            static::TABLE_NAME,
+            $id,
+            $force,
+            $continue,
+        );
     }
 
     /**
      * Get the page name
-     * 
+     *
      * @param int $id
      * @param string|null $table
-     * 
+     *
      * @return string|false
      */
     public function getPageName(int $id, string $table = null)
     {
-        $table = (is_null($table)) ? static::TABLE_NAME : $table;
+        $table = is_null($table) ? static::TABLE_NAME : $table;
         return $this->dbw->getPageName($table, $id);
     }
 
     /**
      * Get the wiki object by id
-     * 
+     *
      * @param int $id
      */
     public function getById(int $id)
     {
-        $prefix = function($element) { 
-            return 'o.'.$element;
+        $prefix = function ($element) {
+            return "o." . $element;
         };
 
         $fields = array_map($prefix, static::TABLE_FIELDS);
 
-        return $this->dbw->getById(static::TABLE_NAME, $fields, $id);  
+        return $this->dbw->getById(static::TABLE_NAME, $fields, $id);
     }
 
     /**
@@ -222,13 +248,13 @@ abstract class Resource
      */
     public function getAll(int $continue = 0)
     {
-        $prefix = function($element) { 
-            return 'o.'.$element;
+        $prefix = function ($element) {
+            return "o." . $element;
         };
 
         $fields = array_map($prefix, static::TABLE_FIELDS);
 
-        return $this->dbw->getAll(static::TABLE_NAME, $fields, $continue);  
+        return $this->dbw->getAll(static::TABLE_NAME, $fields, $continue);
     }
 
     /**
@@ -236,46 +262,58 @@ abstract class Resource
      */
     public function getByOverwrittenFlag()
     {
-        $prefix = function($element) { 
-            return 'o.'.$element;
+        $prefix = function ($element) {
+            return "o." . $element;
         };
 
         $fields = array_map($prefix, static::TABLE_FIELDS);
 
-        return $this->dbw->getByOverwrittenFlag(static::TABLE_NAME, $fields);  
+        return $this->dbw->getByOverwrittenFlag(static::TABLE_NAME, $fields);
     }
 
     /**
      * Stores the media wiki description in the mw_formatted_description field
-     * 
+     *
      * @param int $id
      * @param string $mwDescription
      */
     public function updateMediaWikiDescription(int $id, string $mwDescription)
     {
-        return $this->dbw->updateMediaWikiDescription(static::TABLE_NAME, $id, $mwDescription);
+        return $this->dbw->updateMediaWikiDescription(
+            static::TABLE_NAME,
+            $id,
+            $mwDescription,
+        );
     }
 
     /**
      * Stores the media wiki page name in the mw_page_name field
-     * 
+     *
      * @param int $id
      * @param string $mwPageName
      */
     public function updateMediaWikiPageName(int $id, string $mwPageName)
     {
-        return $this->dbw->updateMediaWikiPageName(static::TABLE_NAME, $id, $mwPageName);
+        return $this->dbw->updateMediaWikiPageName(
+            static::TABLE_NAME,
+            $id,
+            $mwPageName,
+        );
     }
 
     /**
      * Loops through the relation table map to obtain a comma delimited list of relation page names
-     * 
+     *
      * @param int $id
      * @return string
      */
     public function getRelationsFromDB(int $id): string
     {
-        $result = $this->dbw->getRelatedPageNames(static::TABLE_NAME, static::RELATION_TABLE_MAP, $id);
+        $result = $this->dbw->getRelatedPageNames(
+            static::TABLE_NAME,
+            static::RELATION_TABLE_MAP,
+            $id,
+        );
 
         $relations = [];
         foreach (array_keys(static::RELATION_TABLE_MAP) as $key) {
@@ -287,7 +325,7 @@ abstract class Resource
 
     /**
      * Gets credits for a game
-     * 
+     *
      * @param int $id
      */
     public function getCreditsFromDB(int $id)
@@ -317,43 +355,65 @@ abstract class Resource
 
     /**
      * Determines if a wiki type has relations by the defined constant RELATION_TABLE_MAP
-     * 
+     *
      * @return bool
      */
     public function hasRelations(): bool
     {
-        return defined('static::RELATION_TABLE_MAP');
+        return defined("static::RELATION_TABLE_MAP");
     }
 
     /**
      * Fills in the connector tables
-     * 
+     *
      * @param array $map A mapping table defining the field names and table name
      * @param int   $mainFieldId The id of the main field
      * @param array &$crawl A queue of the next entities to pull from the API
      * @param array $relations An array that includes the id of the relation field
      */
-    public function addRelations(array $map, int $mainFieldId, array $relations, array &$crawl): void
-    {
+    public function addRelations(
+        array $map,
+        int $mainFieldId,
+        array $relations,
+        array &$crawl,
+    ): void {
         foreach ($relations as $entry) {
-            $this->insertOrUpdate($map["table"], 
-                                 [$map["mainField"] => $mainFieldId, $map["relationField"] => $entry["id"]], 
-                                 [$map["mainField"], $map["relationField"]]);
+            $this->insertOrUpdate(
+                $map["table"],
+                [
+                    $map["mainField"] => $mainFieldId,
+                    $map["relationField"] => $entry["id"],
+                ],
+                [$map["mainField"], $map["relationField"]],
+            );
 
-            if ($this->crawlRelations && isset($entry['api_detail_url'])) {
-                preg_match('/(\w+)\/(\d{4})\-(\d+)/', $entry['api_detail_url'], $match);
+            if ($this->crawlRelations && isset($entry["api_detail_url"])) {
+                preg_match(
+                    "/(\w+)\/(\d{4})\-(\d+)/",
+                    $entry["api_detail_url"],
+                    $match,
+                );
 
                 switch ($match[1]) {
-                    case 'developer': $resource = 'company'; break;
-                    case 'publisher': $resource = 'company'; break;
-                    case 'enemy': $resource = 'character'; break;
-                    case 'friend': $resource ='character'; break;
-                    default: $resource = $match[1];
+                    case "developer":
+                        $resource = "company";
+                        break;
+                    case "publisher":
+                        $resource = "company";
+                        break;
+                    case "enemy":
+                        $resource = "character";
+                        break;
+                    case "friend":
+                        $resource = "character";
+                        break;
+                    default:
+                        $resource = $match[1];
                 }
 
-                $crawl[sprintf('%s/%s-%s', $resource, $match[2], $match[3])] = [
-                    'related_type_id' => (int)$match[2],
-                    'related_id' => (int)$match[3]
+                $crawl[sprintf("%s/%s-%s", $resource, $match[2], $match[3])] = [
+                    "related_type_id" => (int) $match[2],
+                    "related_id" => (int) $match[3],
                 ];
             }
         }
@@ -361,14 +421,14 @@ abstract class Resource
 
     /**
      * Loops through the results and saves each one
-     * 
+     *
      * @param array $data The response from the api call.
      * @return array
      */
     public function save(array $data): array
     {
         try {
-            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__); 
+            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 0;", __METHOD__);
 
             // TODO: batch save?
 
@@ -379,10 +439,15 @@ abstract class Resource
 
             echo "Total proccessed: " . count($data) . "\r\n";
         } catch (Exceoption $e) {
-            wfLogWarning("Error during ".__METHOD__." with disabled FK checks: " . $e->getMessage());
+            wfLogWarning(
+                "Error during " .
+                    __METHOD__ .
+                    " with disabled FK checks: " .
+                    $e->getMessage(),
+            );
             throw $e;
         } finally {
-            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 1;", __METHOD__); 
+            $this->getDb()->query("SET FOREIGN_KEY_CHECKS = 1;", __METHOD__);
         }
 
         return $relations;
@@ -390,12 +455,16 @@ abstract class Resource
 
     public function getRelatedIds(int $id)
     {
-        return $this->dbw->getRelatedIds(static::TABLE_NAME, static::RELATION_TABLE_MAP, $id);
+        return $this->dbw->getRelatedIds(
+            static::TABLE_NAME,
+            static::RELATION_TABLE_MAP,
+            $id,
+        );
     }
 
     /**
      * Match the api fields to the db fields
-     * 
+     *
      * @param array $data
      * @param array &$relations
      * @return int

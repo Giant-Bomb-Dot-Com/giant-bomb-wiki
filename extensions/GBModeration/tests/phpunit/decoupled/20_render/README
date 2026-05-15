@@ -1,0 +1,6 @@
+[tests/phpunit/decoupled/render/*] - "Render" subsection of decoupled testsuite.
+
+These tests
+
+- DO: pre-fill the 'moderation' SQL table.
+- CHECK AFTERWARDS: HTML returned by Special:Moderation.

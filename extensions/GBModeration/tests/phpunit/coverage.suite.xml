@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This configuration file is only used when generating Code Coverage report.
+	Normal PHPUnit testsuite uses [tests/phpunit/suite.xml] from MediaWiki core, NOT this file.
+-->
+<phpunit bootstrap="../../../../tests/phpunit/bootstrap.maintenance.php"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
+
+	colors="true"
+	backupGlobals="false"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	forceCoversAnnotation="true"
+	stopOnFailure="false"
+	timeoutForSmallTests="10"
+	timeoutForMediumTests="30"
+	timeoutForLargeTests="60"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	beStrictAboutOutputDuringTests="true"
+	verbose="false">
+	<testsuites>
+		<testsuite name="consequence">
+			<directory>consequence</directory>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">../..</directory>
+			<exclude>
+				<directory suffix=".php">..</directory>
+				<directory suffix=".php">../../vendor/</directory>
+				<file>../../Moderation.php</file>
+				<file>../../Moderation.alias.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+</phpunit>

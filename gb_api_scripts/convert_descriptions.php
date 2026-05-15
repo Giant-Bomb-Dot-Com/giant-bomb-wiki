@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/convert_descriptions_base.php';
+require_once __DIR__ . "/convert_descriptions_base.php";
 
 class ConvertToMWDescriptions extends ConvertToMWDescriptionsBase
 {

@@ -170,4 +170,5 @@ HTML Structure
 <div class="gb-release-content">
 <div class="gb-release-main">
 <div class="gb-release-wiki-content">
+__NOEDITSECTION__
 </includeonly>

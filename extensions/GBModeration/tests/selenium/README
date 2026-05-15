@@ -1,0 +1,48 @@
+This is the Selenium testsuite of Extension:Moderation.
+
+== Purpose ==
+
+This testsuite ensures that Moderation works with JavaScript-based editors
+of Extension:VisualEditor and Extension:MobileFrontend.
+
+This is ONLY for tests which require executing JavaScript in the browser.
+Everything else should be in the PHPUnit testsuite (see README.testsuite).
+
+== Needed tests ==
+
+1. notify: after saving the edit, you should see "Success: your edit
+   has been sent to moderation" message (instead of the usual postedit message).
+
+2. ajaxhook: when you save an edit in VisualEditor/MobileFrontend, they should
+   be fooled into thinking that the edit was saved successfully (instead of
+   freaking out "Unknown error: moderation-edit-queued").
+
+3. preload: when you open an editor of VisualEditor/MobileFrontend while your
+   previous edit on this page is still awaiting moderation, the text of your
+   version should be substituted into the edit form.
+
+== How to run ==
+
+To run this testsuite, you need the following:
+
+- Selenium: http://www.seleniumhq.org/download/
+- chromedriver: https://sites.google.com/a/chromium.org/chromedriver/downloads
+- geckodriver: https://github.com/mozilla/geckodriver/releases
+- Node.js: https://nodejs.org/en/download/
+
+On most Linux distributions, these are available as packages.
+
+Before you start the testsuite, run Selenium server in background:
+java -jar /usr/local/selenium-server-standalone-3.4.0.jar
+(change path and version in this command)
+
+To install the testsuite (only needed once): 1) enter [tests/selenium] directory under [extensions/Moderation]. 2) run the following:
+npm install
+
+To run the tests: 1) enter [tests/selenium] directory under [extensions/Moderation]. 2) run the following:
+./node_modules/.bin/wdio --baseUrl 'http://hostname.of.your.wiki'
+
+== Customizing ==
+
+See http://webdriver.io/guide/testrunner/configurationfile.html
+Configuration file is [extensions/Moderation/tests/selenium/wdio.conf.js]

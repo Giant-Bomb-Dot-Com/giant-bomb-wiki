@@ -1,0 +1,13 @@
+#!/bin/sh
+
+exec 1>&2
+
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.php$' | xargs -r realpath)
+if [ "x$FILES" = "x" ]; then
+	exit 0 # Nothing changed, this is probably "git commit --amend"
+fi
+
+(
+	./vendor/bin/parallel-lint -j 10 $FILES || { echo "Pre-commit hook: lint failed."; exit 1; }
+	./vendor/bin/phpcs -ps $FILES || { echo "Pre-commit hook: phpcs check failed."; exit 1; }
+)

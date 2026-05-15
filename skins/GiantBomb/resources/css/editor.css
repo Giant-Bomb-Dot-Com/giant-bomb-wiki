@@ -43,6 +43,18 @@
   background-color: #f8f9fa;
 }
 
+#bodyContent #mw-content-text .permissions-errors {
+  background-color: #fcf4f4;
+  border: 1px solid #d33;
+  border-left-width: 5px;
+  border-radius: 4px;
+  color: #000;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 1.5em;
+  padding: 15px 20px;
+}
+
 /* Moderation notifications */
 .mw-notification-area-overlay {
   position: absolute;
@@ -52,7 +64,7 @@
   width: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 500;
+  z-index: 1500;
 }
 
 /* Table Header alignment */
@@ -330,11 +342,11 @@ body .oo-ui-processDialog-errors-title {
 .oo-ui-messageWidget.oo-ui-messageWidget-block {
   background-color: #252525;
   border: 1px solid #444;
-  color: #ffffff;
 }
 
 /* The Label/Text inside the message */
-body .oo-ui-messageWidget .oo-ui-labelElement-label {
+body .oo-ui-messageWidget .oo-ui-labelElement-label,
+body .oo-ui-window-frame .oo-ui-flaggedElement-error .oo-ui-labelElement-label {
   color: #666;
 }
 
@@ -357,6 +369,177 @@ body .oo-ui-processDialog-errors-actions .oo-ui-buttonElement-button:hover {
 }
 
 /* OOUI Modal styles end */
+
+/* --- WikiEditor Toolbar Dialog --- */
+
+/* Main Container & Frame */
+.oo-ui-windowManager-modal > .oo-ui-dialog.oo-ui-window-active {
+  z-index: 10;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 0;
+}
+
+/* Header/Title Bar */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-titlebar {
+  background: #252525;
+  border: none;
+  border-bottom: 1px solid #333;
+  border-radius: 7px 7px 0 0;
+  padding: 12px 16px;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Close Button in Title Bar */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-titlebar-close {
+  background: transparent;
+  border: none;
+  filter: invert(1); /* Inverts icon to match dark background */
+  right: 16px;
+}
+
+/* Dialog Content Area */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-content {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 16px;
+}
+
+/* Form Fields & Labels */
+.ui-dialog.wikiEditor-toolbar-dialog fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog .wikieditor-toolbar-field-wrapper {
+  margin-bottom: 12px;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog label {
+  color: #ffffff;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Help text styling */
+.ui-dialog.wikiEditor-toolbar-dialog .wikieditor-toolbar-file-alt-help {
+  color: #888;
+  font-size: 11px;
+}
+
+/* Text Inputs, Selects, & Dropdowns */
+.ui-dialog.wikiEditor-toolbar-dialog input[type="text"],
+.ui-dialog.wikiEditor-toolbar-dialog select {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+/* Dropdown specific padding overrides */
+.ui-dialog.wikiEditor-toolbar-dialog select {
+  width: 100%;
+  background-image: none;
+}
+
+/* Small input sizes (e.g., Size field) */
+.ui-dialog.wikiEditor-toolbar-dialog input[size] {
+  width: auto;
+}
+
+/* Focus States for Inputs */
+.ui-dialog.wikiEditor-toolbar-dialog input[type="text"]:focus,
+.ui-dialog.wikiEditor-toolbar-dialog select:focus {
+  border-color: #b05f1c;
+}
+
+/* Layout Options Container */
+.ui-dialog.wikiEditor-toolbar-dialog .wikieditor-toolbar-file-options {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog
+  .wikieditor-toolbar-file-options
+  .wikieditor-toolbar-field-wrapper {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Dialog Button/Footer Pane */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-buttonpane {
+  background-color: #252525;
+  border: none;
+  border-top: 1px solid #333;
+  padding: 12px 16px;
+  margin-top: 0;
+}
+
+/* Dialog Buttons Base Styling */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-weight: normal;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* Style "Insert" & "Upload" as Primary/Progressive Buttons */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:first-child,
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:last-child {
+  background: linear-gradient(180deg, #b05f1c 0%, #b1601c 100%);
+  border-color: #b05f1c;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:first-child:hover,
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:last-child:hover {
+  background: #b1601c;
+  border-color: #ffffff;
+}
+
+/* Style the "Cancel" Button as a Secondary Button */
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:nth-child(2) {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  font-weight: normal;
+}
+
+.ui-dialog.wikiEditor-toolbar-dialog .ui-button:nth-child(2):hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* --- WikiEditor Toolbar Dialog END --- */
 
 /* ACE CODE EDITOR */
 .wikiEditor-ui .ace_print-margin {
@@ -421,3 +604,325 @@ body .mw-widget-dateInputWidget-calendar {
   background-color: #666;
 }
 /* END ACE CODE EDITOR */
+
+/* --- Visual Editor --- */
+
+/* Base Toolbar Background & Border */
+body .ve-ui-toolbar .oo-ui-toolbar-bar,
+body .ve-area-wrapper .oo-ui-toolbar {
+  background-color: #252525;
+  border: 1px solid #333;
+  border-bottom: 1px solid #1a1a1a;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Tool Buttons Base Styling */
+body .ve-ui-toolbar .oo-ui-tool-link,
+body .ve-ui-toolbar .oo-ui-popupToolGroup-handle {
+  background: #252525;
+  color: #ffffff;
+  border: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Tool Button Labels */
+body .ve-ui-toolbar .oo-ui-labelElement-label {
+  color: #ffffff;
+}
+
+/* Invert All Tool Icons to Match White Text */
+body .ve-ui-toolbar .oo-ui-iconElement-icon,
+body .ve-ui-toolbar .oo-ui-indicatorElement-indicator {
+  filter: invert(1);
+}
+
+/* Tool Button Hover States */
+body .ve-ui-toolbar .oo-ui-tool-link:hover,
+body .ve-ui-toolbar .oo-ui-popupToolGroup-handle:hover,
+body .ve-ui-toolbar .oo-ui-popupToolGroup-active .oo-ui-popupToolGroup-handle,
+body .ve-ui-toolbar .oo-ui-tool.oo-ui-widget-enabled > .oo-ui-tool-link:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* Active Tools in Toolbar (e.g., Bold clicked) */
+body .ve-ui-toolbar .oo-ui-tool-active .oo-ui-tool-link {
+  background-color: #3a3a3a;
+  border-bottom: 2px solid #b05f1c;
+}
+
+/* --- Dropdowns & Tool Popups (e.g., Paragraph, Style, Insert menus) --- */
+
+/* Overlay Container */
+body .oo-ui-toolbar-popups .oo-ui-popupToolGroup-tools,
+body .oo-ui-popupWidget-popup,
+body .ve-ui-toolbar .oo-ui-popupToolGroup-tools {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 4px 0;
+}
+
+/* Dropdown Menu Header Labels */
+body .oo-ui-popupToolGroup-header {
+  color: #888;
+  font-weight: bold;
+  background-color: #252525;
+  padding: 8px 12px;
+  display: block;
+}
+
+/* Dropdown Menu Items */
+body .oo-ui-toolbar-popups .oo-ui-tool .oo-ui-tool-link,
+body .oo-ui-popupWidget-popup .oo-ui-tool .oo-ui-tool-link {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Dropdown Item Hover States */
+body .oo-ui-toolbar-popups .oo-ui-tool .oo-ui-tool-link:hover,
+body .oo-ui-popupWidget-popup .oo-ui-tool .oo-ui-tool-link:hover {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-left: 3px solid #b05f1c;
+}
+
+/* Fix active items inside the dropdown */
+body .oo-ui-tool-active .oo-ui-tool-link {
+  background-color: #3a3a3a;
+}
+
+/* --- The Editor Writing Area/Canvas --- */
+body .ve-ce-surface,
+body .ve-ui-surface .ve-ce-documentNode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 16px;
+}
+
+/* 1. MAIN DIALOG CONTAINERS */
+body .ui-dialog.wikiEditor-toolbar-dialog,
+body .oo-ui-windowManager-modal > .oo-ui-dialog > .oo-ui-window-frame {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 0;
+}
+
+/* Base Body Content inside Modals */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-content,
+body .oo-ui-window-frame .oo-ui-window-body {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 16px;
+}
+
+/* 2. HEADERS & TITLE BARS */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-titlebar,
+body .oo-ui-window-frame .oo-ui-processDialog-head {
+  background: #252525;
+  border: none;
+  border-bottom: 1px solid #333;
+  border-radius: 7px 7px 0 0;
+  padding: 12px 16px;
+}
+
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-title,
+body .oo-ui-window-frame .oo-ui-processDialog-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Header/Title Close & Navigation Icons */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-titlebar-close,
+body .oo-ui-window-frame .oo-ui-iconElement-icon:not(.oo-ui-icon-error) {
+  filter: invert(1);
+}
+
+/* 3. INPUT FIELDS & TEXT AREAS */
+body .ui-dialog.wikiEditor-toolbar-dialog input[type="text"],
+body .ui-dialog.wikiEditor-toolbar-dialog select,
+body .oo-ui-window-frame .oo-ui-textInputWidget input,
+body .oo-ui-window-frame .oo-ui-textInputWidget textarea,
+body .oo-ui-textInputWidget-type-search input {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+/* Text Input & Dropdown Focus States */
+body .ui-dialog.wikiEditor-toolbar-dialog input[type="text"]:focus,
+body .ui-dialog.wikiEditor-toolbar-dialog select:focus,
+body .oo-ui-window-frame .oo-ui-textInputWidget-type-text input:focus {
+  border-color: #b05f1c;
+}
+
+/* Form labels and headers in the content areas */
+body .ui-dialog.wikiEditor-toolbar-dialog label,
+body .oo-ui-window-frame label,
+body .oo-ui-window-frame .oo-ui-labelElement-label {
+  color: #ffffff;
+}
+
+/* 4. FOOTERS & BUTTON PANES */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-dialog-buttonpane,
+body .oo-ui-window-frame .oo-ui-processDialog-foot {
+  background-color: #252525;
+  border: none;
+  border-top: 1px solid #333;
+  padding: 12px 16px;
+  margin-top: 0;
+}
+
+/* 5. STANDARD DIALOG BUTTONS */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button,
+body
+  .oo-ui-window-frame
+  .oo-ui-buttonElement-framed
+  > .oo-ui-buttonElement-button {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-weight: normal;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Standard Button Hover States */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:hover,
+body
+  .oo-ui-window-frame
+  .oo-ui-buttonElement-framed
+  > .oo-ui-buttonElement-button:hover {
+  background-color: #3a3a3a;
+  border-color: #b05f1c;
+}
+
+/* 6. PRIMARY/PROGRESSIVE ACTION BUTTONS (e.g., Insert, Save, Upload) */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:first-child,
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:last-child,
+body
+  .oo-ui-window-frame
+  .oo-ui-flaggedElement-progressive
+  > .oo-ui-buttonElement-button {
+  background: linear-gradient(180deg, #b05f1c 0%, #b1601c 100%);
+  border-color: #b05f1c;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Hover States for Primary Buttons */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:first-child:hover,
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:last-child:hover,
+body
+  .oo-ui-window-frame
+  .oo-ui-flaggedElement-progressive
+  > .oo-ui-buttonElement-button:hover {
+  background: #b1601c;
+  border-color: #ffffff;
+}
+
+/* Style Cancel & Secondary buttons */
+body .ui-dialog.wikiEditor-toolbar-dialog .ui-button:nth-child(2),
+body
+  .oo-ui-window-frame
+  .oo-ui-flaggedElement-cancel
+  > .oo-ui-buttonElement-button {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+}
+
+body
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+  > .oo-ui-popupToolGroup-handle:hover {
+  background-color: #3a3a3a;
+}
+
+body
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled
+  > .oo-ui-popupToolGroup-handle:active,
+body
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled.oo-ui-tool-active
+  > .oo-ui-popupToolGroup-handle,
+body
+  .oo-ui-popupToolGroup.oo-ui-widget-enabled.oo-ui-popupToolGroup-active
+  > .oo-ui-popupToolGroup-handle {
+  background-color: #3a3a3a;
+  color: #b1601c;
+  box-shadow: none;
+}
+
+body
+  .oo-ui-processDialog-actions-safe
+  .oo-ui-widget-enabled.oo-ui-iconElement:not(.oo-ui-labelElement)
+  > .oo-ui-buttonElement-button:hover {
+  background-color: #2a2a2a;
+  border-right-color: #333;
+}
+
+/* --- Tab Container (The wrapper for Search & Upload tabs) --- */
+body .oo-ui-tabSelectWidget-framed {
+  background-color: #252525;
+  border-bottom: 1px solid #333;
+}
+
+/* Base style for both active and unselected tabs */
+body .oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  margin-right: 4px;
+}
+
+/* State: Tab is unselected and you hover over it */
+body .oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget:hover {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #b05f1c;
+}
+
+/* State: Tab is currently active/selected (Search or Upload) */
+body
+  .oo-ui-tabSelectWidget-framed
+  .oo-ui-tabOptionWidget.oo-ui-optionWidget-selected {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border-color: #333 #333 #1a1a1a #333; /* Hides bottom border to merge with panel */
+  border-top: 2px solid #b1601c; /* Highlights active tab with signature orange */
+}
+
+/* Hovering over the active/selected tab */
+body
+  .oo-ui-tabSelectWidget-framed
+  .oo-ui-tabOptionWidget.oo-ui-optionWidget-selected:hover {
+  background-color: #1a1a1a;
+  cursor: default;
+}
+
+/* --- Visual Editor END --- */
+
+body .mw-debug-pane {
+  background-color: #333;
+}

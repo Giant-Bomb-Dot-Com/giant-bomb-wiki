@@ -1,0 +1,6 @@
+This is ModerationTestsuite framework, which is used by blackbox integration tests:
+
+1. tests/phpunit/blackbox/ - individual tests.
+2. tests/phpunit/decoupled/ - decoupled tests: Intercept, Queue, Render and Action.
+
+This framework is NOT used by regular unit tests (tests/phpunit/consequence/\*.php).
