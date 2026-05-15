@@ -396,6 +396,9 @@ wfLoadExtension("GBGallery");
 wfLoadExtension("VisualEditor");
 wfLoadExtension("VEForAll");
 wfLoadExtension("ExternalData");
+$wgExternalDataSources["*"]["allowed urls"] = [
+    "https://giantbomb.com/api/",
+];
 wfLoadExtension("GBEnvLuaBridge");
 wfLoadExtension("GBVirtualReviewPages");
 
