@@ -1,6 +1,7 @@
 #mw-editing-your-version {
-  border: 2px solid #7c8;
+  border: 2px solid #3a6638;
   padding: 5px;
-  background-color: #afb;
+  background-color: rgba(60, 140, 60, 0.2);
+  color: #ccc;
   margin-bottom: 5px;
 }
