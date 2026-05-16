@@ -1,18 +1,18 @@
 local p = {}
 
 local entityConfig = {
-    ["Games"]       = { label = "Game",       cssPrefix = "gb-game",       hasReviews = true },
-    ["Characters"]  = { label = "Character",  cssPrefix = "gb-character",  hasReviews = false },
-    ["Companies"]   = { label = "Company",    cssPrefix = "gb-company",    hasReviews = false },
-    ["Concepts"]    = { label = "Concept",    cssPrefix = "gb-concept",    hasReviews = false },
-    ["Franchises"]  = { label = "Franchise Wiki", cssPrefix = "gb-franchise", hasReviews = false },
-    ["Platforms"]   = { label = "Platform",   cssPrefix = "gb-platform",   hasReviews = false },
-    ["People"]      = { label = "Person",     cssPrefix = "gb-person",     hasReviews = false },
-    ["Locations"]   = { label = "Location",   cssPrefix = "gb-location",   hasReviews = false },
-    ["Objects"]     = { label = "Object",     cssPrefix = "gb-object",     hasReviews = false },
+    ["Games"]       = { label = "Game",       cssPrefix = "gb-game",       hasReviews = true,  sidebar = "GameSidebar" },
+    ["Characters"]  = { label = "Character",  cssPrefix = "gb-character",  hasReviews = false, sidebar = "CharacterSidebar" },
+    ["Companies"]   = { label = "Company",    cssPrefix = "gb-company",    hasReviews = false, sidebar = "CompanySidebar" },
+    ["Concepts"]    = { label = "Concept",    cssPrefix = "gb-concept",    hasReviews = false, sidebar = "ConceptSidebar" },
+    ["Franchises"]  = { label = "Franchise Wiki", cssPrefix = "gb-franchise", hasReviews = false, sidebar = "FranchiseSidebar" },
+    ["Platforms"]   = { label = "Platform",   cssPrefix = "gb-platform",   hasReviews = false, sidebar = "PlatformSidebar" },
+    ["People"]      = { label = "Person",     cssPrefix = "gb-person",     hasReviews = false, sidebar = "PersonSidebar" },
+    ["Locations"]   = { label = "Location",   cssPrefix = "gb-location",   hasReviews = false, sidebar = "LocationSidebar" },
+    ["Objects"]     = { label = "Object",     cssPrefix = "gb-object",     hasReviews = false, sidebar = "ObjectSidebar" },
     ["Genres"]      = { label = "Genre",      cssPrefix = "gb-genre",      hasReviews = false },
     ["Themes"]      = { label = "Theme",      cssPrefix = "gb-theme",      hasReviews = false },
-    ["Accessories"] = { label = "Accessory",  cssPrefix = "gb-accessory",  hasReviews = false },
+    ["Accessories"] = { label = "Accessory",  cssPrefix = "gb-accessory",  hasReviews = false, sidebar = "AccessorySidebar" },
     ["DLCs"]        = { label = "DLC",        cssPrefix = "gb-dlc",        hasReviews = false },
     ["Releases"]    = { label = "Release",    cssPrefix = "gb-release",    hasReviews = false },
 }
@@ -35,7 +35,8 @@ local function queryParentProperties(parentPage)
         "?Has deck=deck",
         "?Has image=image",
         "?Has background image=backgroundImage",
-        limit = 1
+        limit = 1,
+        link = 'none'
     })
     if result and result[1] then
         return result[1]
@@ -45,7 +46,8 @@ end
 
 function p.render(frame)
     local currentTitle = mw.title.getCurrentTitle()
-    local parentPage = currentTitle.baseText
+    local fullPage = currentTitle.prefixedText
+    local parentPage = fullPage:gsub("/Images$", "")
     local config, rootPrefix = getEntityType(parentPage)
 
     if not config then
@@ -57,23 +59,27 @@ function p.render(frame)
     local deck = props.deck or ""
     local css = config.cssPrefix
 
+    local coverImg = frame:callParserFunction('#show', parentPage, '?Has image', 'link=none')
+    if coverImg == '' then coverImg = nil end
+
+    local bgImg = frame:callParserFunction('#show', parentPage, '?Has background image', 'link=none')
+    if bgImg == '' then bgImg = nil end
+
     local coverHtml = ""
-    if props.image and props.image ~= "" then
-        local img = props.image
-        if img:sub(1, 4) == "http" then
-            coverHtml = '<div style="display:none;" id="coverImageData">' .. img .. '</div>'
+    if coverImg then
+        if coverImg:sub(1, 4) == "http" then
+            coverHtml = '<div style="display:none;" id="coverImageData">' .. coverImg .. '</div>'
         else
-            coverHtml = '<div style="display:none;" id="coverImageData">[[File:' .. img .. '|300px|link=]]</div>'
+            coverHtml = '<div style="display:none;" id="coverImageData">[[File:' .. coverImg .. '|300px|link=]]</div>'
         end
     end
 
     local backgroundHtml = ""
-    if props.backgroundImage and props.backgroundImage ~= "" then
-        local img = props.backgroundImage
-        if img:sub(1, 4) == "http" then
-            backgroundHtml = '<div style="display:none;" id="backgroundImageData">' .. img .. '</div>'
+    if bgImg then
+        if bgImg:sub(1, 4) == "http" then
+            backgroundHtml = '<div style="display:none;" id="backgroundImageData">' .. bgImg .. '</div>'
         else
-            backgroundHtml = '<div style="display:none;" id="backgroundImageData">[[File:' .. img .. '|300px|link=]]</div>'
+            backgroundHtml = '<div style="display:none;" id="backgroundImageData">[[File:' .. bgImg .. '|300px|link=]]</div>'
         end
     end
 
@@ -85,7 +91,6 @@ function p.render(frame)
     end
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>')
 
-    local fullPage = currentTitle.prefixedText
     local actions = '<div class="gb-wiki-actions">'
         .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, "action=edit")) .. ' Edit]</span>'
         .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, "action=history")) .. ' History]</span>'
@@ -120,7 +125,53 @@ function p.render(frame)
 end
 
 function p.close(frame)
-    return '</div></div></div></div>'
+    local currentTitle = mw.title.getCurrentTitle()
+    local fullPage = currentTitle.prefixedText
+    local parentPage = fullPage:gsub("/Images$", "")
+    local config = getEntityType(parentPage)
+
+    if not config or not config.sidebar then
+        return '</div></div></div></div>'
+    end
+
+    local css = config.cssPrefix
+
+    local function show(prop, opts)
+        local val = frame:callParserFunction('#show', parentPage, '?' .. prop, opts or '')
+        return val ~= '' and val or nil
+    end
+
+    local function showList(prop)
+        return frame:callParserFunction('#show', parentPage, '?' .. prop, 'format=list', 'link=all', 'sep=<br/>', 'limit=50')
+    end
+
+    local parts = {}
+    table.insert(parts, '<div class="gb-sidebar-section">')
+    table.insert(parts, '<div class="gb-sidebar-section-header">Game details</div>')
+    table.insert(parts, '<div class="gb-sidebar-section-content"><dl class="gb-game-details">')
+
+    local name = show('Has name', 'link=none') or parentPage:match("[^/]+$") or parentPage
+    local details = {
+        { 'Name', name },
+        { 'Platform', showList('Has platforms') },
+        { 'Developer', showList('Has developers') },
+        { 'Publisher', showList('Has publishers') },
+        { 'Genre', showList('Has genres') },
+        { 'Theme', showList('Has themes') },
+    }
+    for _, d in ipairs(details) do
+        if d[2] and d[2] ~= '' then
+            table.insert(parts, '<dt>' .. d[1] .. '</dt><dd>' .. d[2] .. '</dd>')
+        end
+    end
+
+    table.insert(parts, '</dl></div></div>')
+
+    return '</div></div>'
+        .. '<div class="' .. css .. '-sidebar gb-images-sidebar">'
+        .. table.concat(parts)
+        .. '</div>'
+        .. '</div></div>'
 end
 
 return p

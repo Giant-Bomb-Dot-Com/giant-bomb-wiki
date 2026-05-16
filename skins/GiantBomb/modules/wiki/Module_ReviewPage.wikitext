@@ -12,7 +12,8 @@ local function queryParentProperties(parentPage)
         "?Has guid=guid",
         "?Has image=image",
         "?Has background image=backgroundImage",
-        limit = 1
+        limit = 1,
+        link = 'none'
     })
     if result and result[1] then
         return result[1]
@@ -22,37 +23,39 @@ end
 
 function p.render(frame)
     local currentTitle = mw.title.getCurrentTitle()
-    local parentPage = currentTitle.baseText
-    local config = { label = "Game",       cssPrefix = "gb-game",       hasReviews = true }
-
-    if not config then
-        return '<div class="gb-reviews-page"><div class="gb-reviews-content"><div class="gb-reviews-main"><div class="gb-reviews-wiki-content">'
-    end
+    local fullPage = currentTitle.prefixedText
+    local parentPage = fullPage:gsub("/Reviews$", "")
+    local config = { label = "Game", cssPrefix = "gb-game", hasReviews = true }
 
     local props = queryParentProperties(parentPage)
     local name = props.name or parentPage:match("[^/]+$") or parentPage
     local deck = props.deck or ""
     local css = config.cssPrefix
 
-    if props.guid then frame.args.guid = props.guid end
+    local guid = frame:callParserFunction('#show', parentPage, '?Has guid', 'link=none')
+    if guid == '' then guid = nil end
+
+    local coverImg = frame:callParserFunction('#show', parentPage, '?Has image', 'link=none')
+    if coverImg == '' then coverImg = nil end
+
+    local bgImg = frame:callParserFunction('#show', parentPage, '?Has background image', 'link=none')
+    if bgImg == '' then bgImg = nil end
 
     local coverHtml = ""
-    if props.image and props.image ~= "" then
-        local img = props.image
-        if img:sub(1, 4) == "http" then
-            coverHtml = '<div style="display:none;" id="coverImageData">' .. img .. '</div>'
+    if coverImg then
+        if coverImg:sub(1, 4) == "http" then
+            coverHtml = '<div style="display:none;" id="coverImageData">' .. coverImg .. '</div>'
         else
-            coverHtml = '<div style="display:none;" id="coverImageData">[[File:' .. img .. '|300px|link=]]</div>'
+            coverHtml = '<div style="display:none;" id="coverImageData">[[File:' .. coverImg .. '|300px|link=]]</div>'
         end
     end
 
     local backgroundHtml = ""
-    if props.backgroundImage and props.backgroundImage ~= "" then
-        local img = props.backgroundImage
-        if img:sub(1, 4) == "http" then
-            backgroundHtml = '<div style="display:none;" id="backgroundImageData">' .. img .. '</div>'
+    if bgImg then
+        if bgImg:sub(1, 4) == "http" then
+            backgroundHtml = '<div style="display:none;" id="backgroundImageData">' .. bgImg .. '</div>'
         else
-            backgroundHtml = '<div style="display:none;" id="backgroundImageData">[[File:' .. img .. '|300px|link=]]</div>'
+            backgroundHtml = '<div style="display:none;" id="backgroundImageData">[[File:' .. bgImg .. '|300px|link=]]</div>'
         end
     end
 
@@ -62,9 +65,45 @@ function p.render(frame)
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab ' .. css .. '-tabs-tab--active">Reviews</span>')    
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>')
 
-    local fullPage = currentTitle.prefixedText
-    local actions = '<div class="gb-wiki-actions">'                
-        .. '</div>'
+    local actions = '<div class="gb-wiki-actions">' .. '</div>'
+
+    local localFrame = {
+        args = {
+            guid = guid,
+        },
+    }
+    setmetatable(localFrame, { __index = frame })
+
+    local function show(prop, opts)
+        local val = frame:callParserFunction('#show', parentPage, '?' .. prop, opts or '')
+        return val ~= '' and val or nil
+    end
+
+    local function showList(prop)
+        return frame:callParserFunction('#show', parentPage, '?' .. prop, 'format=list', 'link=all', 'sep=<br/>', 'limit=50')
+    end
+
+    local sidebarParts = {}
+    table.insert(sidebarParts, '<div class="gb-sidebar-section">')
+    table.insert(sidebarParts, '<div class="gb-sidebar-section-header">Game details</div>')
+    table.insert(sidebarParts, '<div class="gb-sidebar-section-content"><dl class="gb-game-details">')
+
+    local details = {
+        { 'Name', show('Has name', 'link=none') or name },
+        { 'Platform', showList('Has platforms') },
+        { 'Developer', showList('Has developers') },
+        { 'Publisher', showList('Has publishers') },
+        { 'Genre', showList('Has genres') },
+        { 'Theme', showList('Has themes') },
+    }
+    for _, d in ipairs(details) do
+        if d[2] and d[2] ~= '' then
+            table.insert(sidebarParts, '<dt>' .. d[1] .. '</dt><dd>' .. d[2] .. '</dd>')
+        end
+    end
+
+    table.insert(sidebarParts, '</dl></div></div>')
+    local sidebarHtml = table.concat(sidebarParts)
 
     local html = '<div class="' .. css .. '-page">'
         .. coverHtml
@@ -74,7 +113,7 @@ function p.render(frame)
         .. '<div class="' .. css .. '-hero-cover"></div>'
         .. '<div class="' .. css .. '-hero-info">'
         .. '<div class="' .. css .. '-hero-title">' .. mw.text.nowiki(name) .. '</div>'
-        .. '<div class="' .. css .. '-hero-meta"><span class="' .. css .. '-hero-type">' .. string.upper(config.label) .. '</span> &#187; Images</div>'
+        .. '<div class="' .. css .. '-hero-meta"><span class="' .. css .. '-hero-type">' .. string.upper(config.label) .. '</span> &#187; Reviews</div>'
         .. '<div class="' .. css .. '-hero-deck">' .. mw.text.nowiki(deck) .. '</div>'
         .. '</div>'
         .. '</div>'
@@ -89,14 +128,19 @@ function p.render(frame)
         .. '</div>'
         .. '<div class="' .. css .. '-content gb-reviews-content">'
         .. '<div class="' .. css .. '-main gb-reviews-main">'
-        .. '<div class="' .. css .. '-wiki-content">'        
-        .. reviewQuery.renderReviewContent(frame)
+        .. '<div class="' .. css .. '-wiki-content">'
+        .. reviewQuery.renderReviewContent(localFrame)
+        .. '</div></div>'
+        .. '<div class="' .. css .. '-sidebar gb-reviews-sidebar">'
+        .. sidebarHtml
+        .. '</div>'
+        .. '</div>'
 
     return frame:preprocess(html)
 end
 
 function p.close(frame)
-    return '</div></div></div></div>'
+    return '</div>'
 end
 
 return p

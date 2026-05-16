@@ -1,4 +1,35 @@
 .modconflict {
-  /* Edit conflict detected */
-  background-color: #faa;
+  background-color: rgba(180, 60, 60, 0.25);
+  color: #e0e0e0;
+}
+
+.modconflict a {
+  color: #6ba4d9;
+}
+
+.modconflict a:hover {
+  color: #8ec1f0;
+}
+
+.modline {
+  color: #ccc;
+  padding: 4px 6px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+}
+
+.modline .comment {
+  color: #999;
+}
+
+.modline .mw-plusminus-neg {
+  color: #e06060;
+}
+
+.modline .mw-plusminus-pos {
+  color: #6ec56e;
+}
+
+.modline .mw-plusminus-null {
+  color: #888;
 }
