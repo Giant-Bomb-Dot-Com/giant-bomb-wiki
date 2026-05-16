@@ -2,7 +2,7 @@ local p = {}
 
 local cachedReviews = nil
 
--- API returns score as 0–100 (percent). Clamp so bad/stale values can't produce >5 "stars" in aggregates.
+-- API score is 0-100; clamp for aggregation (prevents outliers from skewing averages).
 local function clampScore(score)
     local n = tonumber(score)
     if not n then
@@ -126,7 +126,7 @@ function p._renderSidebar(guid, hideReadButton)
         end
     end
 
-    -- Average out of 5 (API score is 0–100 → divide by 20).
+    -- average / 5 where API score equals percent of 100
     local avgOutOfFive = scoredCount > 0 and (rawSum / scoredCount / 20) or 0
 
     local currentPage = mw.title.getCurrentTitle().prefixedText
@@ -183,7 +183,6 @@ local function trimGuid(v)
     return v
 end
 
---- Resolve Giant Bomb game guid: frame args, parent invoke, then #show on current title (game pages only).
 local function resolveGuidFromFrame(frame)
     local guid = trimGuid(frame.args and frame.args.guid)
     if guid then
@@ -241,7 +240,6 @@ function p.renderReviewContent(frame)
             :addClass('review-metadata')            
 
         if review.owner and review.owner.avatar and review.owner.avatar.url then
-            local altText = review.owner.avatar.alt or (review.owner.username .. "'s avatar")
             metaContainer:tag('span')
                 :addClass('user-avatar-frame')
                 :wikitext(string.format("%s", review.owner.avatar.url))
