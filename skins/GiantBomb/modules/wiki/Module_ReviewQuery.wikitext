@@ -17,7 +17,7 @@ local function clampScore(score)
     return n
 end
 
--- Histogram buckets 1..5; score 0-100 maps with ceil(score/20).
+-- Whole-star bucket for histogram (1–5): map 0–100 score onto five slots, round **up**.
 local function histogramStarBucket(score)
     local s = clampScore(score)
     if not s then
