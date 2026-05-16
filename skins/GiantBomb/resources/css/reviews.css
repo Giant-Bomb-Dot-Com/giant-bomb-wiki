@@ -88,6 +88,15 @@
   position: relative;
   display: inline-flex;
   gap: 2px;
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
+}
+
+/* Per-review row: star-cover width is a % of .stars; stretched column layouts were making .stars
+   full-column wide so gold strip appeared to fill all five stars regardless of score. */
+.review-metadata .stars {
+  align-self: flex-start;
 }
 
 .gb-sidebar-reviews .star,

@@ -2,6 +2,37 @@ local p = {}
 
 local cachedReviews = nil
 
+-- API returns score as 0–100 (percent). Clamp so bad/stale values can't produce >5 "stars" in aggregates.
+local function clampScore(score)
+    local n = tonumber(score)
+    if not n then
+        return nil
+    end
+    if n < 0 then
+        n = 0
+    end
+    if n > 100 then
+        n = 100
+    end
+    return n
+end
+
+-- Whole-star bucket for histogram (1–5): map 0–100 score onto five slots, round **up**.
+local function histogramStarBucket(score)
+    local s = clampScore(score)
+    if not s then
+        return nil
+    end
+    local stars = math.ceil(s / 20)
+    if stars < 1 then
+        stars = 1
+    end
+    if stars > 5 then
+        stars = 5
+    end
+    return stars
+end
+
 function p.fetchReviews(guid)
     if cachedReviews then 
         return cachedReviews 
@@ -64,23 +95,39 @@ local function newUserReviewUrl(guid)
     return base .. '?guid=' .. mw.uri.encode(guid, 'QUERY')
 end
 
+local function absoluteGiantBombUrl(path)
+    path = mw.text.trim(tostring(path or ''))
+    if path:match('^https?://') then
+        return path
+    end
+    path = path:gsub('^/+', '')
+    if path == '' then
+        return 'https://giantbomb.com/'
+    end
+    return 'https://giantbomb.com/' .. path
+end
+
 function p._renderSidebar(guid, hideReadButton)
 
     local allReviews = p.fetchReviews(guid)
 
     local counts = { [5]=0, [4]=0, [3]=0, [2]=0, [1]=0 }
-    local totalScore = 0
+    local rawSum = 0
+    local scoredCount = 0
     local reviewCount = #allReviews
 
     for _, review in ipairs(allReviews) do
-        local stars = math.floor(review.score / 20)
-        if stars < 1 then stars = 1 end
-        
-        counts[stars] = counts[stars] + 1
-        totalScore = totalScore + stars
+        local s = clampScore(review.score)
+        if s then
+            local bucket = histogramStarBucket(review.score)
+            counts[bucket] = counts[bucket] + 1
+            rawSum = rawSum + s
+            scoredCount = scoredCount + 1
+        end
     end
 
-    local avgScore = reviewCount > 0 and (totalScore / reviewCount) or 0
+    -- Average out of 5 (API score is 0–100 → divide by 20).
+    local avgOutOfFive = scoredCount > 0 and (rawSum / scoredCount / 20) or 0
 
     local currentPage = mw.title.getCurrentTitle().prefixedText
     local reviewsPage = currentPage:match('/Reviews$') and currentPage or (currentPage .. '/Reviews')
@@ -95,7 +142,7 @@ function p._renderSidebar(guid, hideReadButton)
         row:tag('span'):wikitext(i .. ' ★ (' .. counts[i] .. ')')
         
         local barContainer = row:tag('div'):addClass('review-bar')
-        local barWidth = reviewCount > 0 and (counts[i] / reviewCount * 100) or 0
+        local barWidth = scoredCount > 0 and (counts[i] / scoredCount * 100) or 0
         barContainer:tag('div'):addClass("review-fill"):css('width', barWidth .. '%')
     end
 
@@ -104,9 +151,9 @@ function p._renderSidebar(guid, hideReadButton)
 
     local row = scoreColumn:tag('div'):addClass('gb-review-summary-row')
     row:tag('span'):addClass('gb-review-score-text')
-        :wikitext('[[' .. reviewsPage .. '|' .. string.format("%.1f ", avgScore) .. ']]')
+        :wikitext('[[' .. reviewsPage .. '|' .. string.format("%.2f/5 ", avgOutOfFive) .. ']]')
 
-    local starScore = (avgScore / 5) * 100
+    local starScore = (avgOutOfFive / 5) * 100
     local starContainer = row:tag('div'):addClass('stars')
     for i = 5, 1, -1 do
         starContainer:tag('div'):addClass('star')
@@ -182,9 +229,7 @@ function p.renderReviewContent(frame)
     table.insert(output, '<div class="gb-reviews-grid">')
     
     for _, review in ipairs(allReviews) do
-        local reviewUrl = string.format("https://giantbomb.com/%s", 
-            tostring(review.url)
-        )
+        local reviewUrl = absoluteGiantBombUrl(review.url)
 
         table.insert(output, '<div class="user-review">')
         
@@ -205,12 +250,8 @@ function p.renderReviewContent(frame)
         local detailsStack = metaContainer:tag('div')
             :addClass('review-details-stack')
             
-        local stars = math.floor(review.score / 20)
-        if stars < 1 then stars = 1 end
-        if stars > 5 then stars = 5 end
-        
-        local starPercentage = (stars / 5) * 100
-        
+        local s = clampScore(review.score) or 0
+        local starPercentage = s
         local starContainer = detailsStack:tag('div'):addClass('stars')
         for i = 1, 5 do
             starContainer:tag('div'):addClass('star')
