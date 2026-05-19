@@ -190,7 +190,9 @@
 .gb-review-button.gb-button {
   display: inline-flex;
   border: 1px solid #b05f1c;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .gb-review-button.gb-button:hover {
@@ -202,8 +204,8 @@
   border-color: #524883;
 }
 
-.gb-review-button--primary.gb-button a,
-.gb-review-button--primary.gb-button a:visited {
+.gb-review-button.gb-button a,
+.gb-review-button.gb-button a:visited {
   color: #fff;
   font-weight: bold;
 }
