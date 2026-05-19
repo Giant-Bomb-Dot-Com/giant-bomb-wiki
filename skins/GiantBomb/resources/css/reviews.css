@@ -93,8 +93,6 @@
   max-width: 100%;
 }
 
-/* Per-review row: star-cover width is a % of .stars; stretched column layouts were making .stars
-   full-column wide so gold strip appeared to fill all five stars regardless of score. */
 .review-metadata .stars {
   align-self: flex-start;
 }
@@ -162,9 +160,9 @@
 .review-metadata .gb-review-summary-row {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between the text "4.3 stars" and the visual stars */
-  margin-top: 12px; /* Added a slight gap before this whole line starts */
-  margin-bottom: 4px; /* Tightens spacing down to the subtext line */
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 4px;
 }
 
 .gb-reviews-content .review-details-stack {
