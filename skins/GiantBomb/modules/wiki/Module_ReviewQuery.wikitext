@@ -41,6 +41,7 @@ function p.fetchReviews(guid)
     if not guid or guid == '' then return {} end
     
     local baseUrl = "https://giantbomb.com/api/public/user-reviews"
+    local apiKey = mw.ext.gbenv.getApiKey()
     local allReviews = {}
     local offset = 0
     local limit = 20
@@ -48,8 +49,8 @@ function p.fetchReviews(guid)
     
     while hasNext do
         local url = string.format(
-            "%s?limit=%d&offset=%d&game_guid=%s&sort=publish_date:desc&format=json",
-            baseUrl, limit, offset, guid
+            "%s?limit=%d&offset=%d&game_guid=%s&api_key=%s&sort=publish_date:desc&format=json",
+            baseUrl, limit, offset, guid, apiKey
         )
     
         local values, errors = mw.ext.externalData.getExternalData({
