@@ -1,5 +1,6 @@
 vendor/
 node_modules/
+extensions/ExternalData/
 images/
 cache/
 logs/
@@ -17,6 +18,11 @@ import_templates/guid_map.csv
 gcs_key.json
 .env
 .env.migration
+.env.me
+
+# Personal prod-like wiki_db143 (Cloud SQL backup) — see docker/local-prod-db/README.md
+docker-compose.me.yml
+.local/
 
 docs/
 gb_api_scripts/import_xml/*.xml
