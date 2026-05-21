@@ -34,13 +34,16 @@ class CacheHelper {
     private $prefix = 'giantbomb';
     
     /** @var bool Whether to log cache hits/misses */
-    private $debugLogging = true;
+    private $debugLogging = false;
     
     /** @var string Database table name for cache versions */
     private const VERSION_TABLE = 'giantbomb_cache_versions';
     
     /** @var bool Whether the version table has been verified to exist */
     private static $tableVerified = false;
+
+    /** @var array in-process version cache keyed by prefix */
+    private static array $versionCache = [];
     
     // Common TTL constants (in seconds)
     const TTL_MINUTE = 60;
@@ -327,27 +330,34 @@ class CacheHelper {
     }
     
     /**
-     * Get the current version number for a cache prefix
-     * 
-     * Versions are stored in the database to persist across PHP processes
-     * (APCu is per-process so can't be used for this).
-     * 
+     * Get the current version number for a cache prefix.
+     *
+     * Versions are stored in the database to persist across PHP processes.
+     * An in-process static cache avoids repeated DB round-trips within a
+     * single request when multiple cache keys share the same prefix.
+     *
      * @param string $prefix The cache prefix
      * @return int The version number (defaults to 1)
      */
     private function getPrefixVersion(string $prefix): int {
+        if (isset(self::$versionCache[$prefix])) {
+            return self::$versionCache[$prefix];
+        }
+
         $this->ensureVersionTable();
-        
+
         $dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
-        
+
         $row = $dbr->selectRow(
             self::VERSION_TABLE,
             ['version'],
             ['prefix' => $prefix],
             __METHOD__
         );
-        
-        return $row ? (int)$row->version : 1;
+
+        $version = $row ? (int)$row->version : 1;
+        self::$versionCache[$prefix] = $version;
+        return $version;
     }
     
     /**
@@ -378,13 +388,12 @@ class CacheHelper {
             __METHOD__
         );
         
-        $setResult = $dbw->affectedRows() > 0;
-        
+        unset(self::$versionCache[$prefix]);
+
         if ($this->debugLogging) {
-            $status = $setResult ? 'success' : 'FAILED';
-            error_log("✓ Cache VERSION INCREMENT: {$prefix} (v{$currentVersion} -> v{$newVersion}) [{$status}]");
+            error_log("✓ Cache VERSION INCREMENT: {$prefix} (v{$currentVersion} -> v{$newVersion})");
         }
-        
+
         return $newVersion;
     }
     

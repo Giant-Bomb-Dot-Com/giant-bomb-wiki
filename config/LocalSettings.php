@@ -25,7 +25,7 @@ $wgAPIMaxResultSize = $wgMaxArticleSize * 4096;  # Must be >= MaxArticleSize * 4
 $wgMaxPPNodeCount = 2000000;        # Max preprocessor node count (default 1000000)
 $wgMaxTemplateDepth = 100;          # Max template recursion depth (default 40)
 $wgMaxPPExpandDepth = 100;          # Max preprocessor expand depth (default 40)
-$wgExpensiveParserFunctionLimit = 500;  # Expensive parser function limit (default 100)
+$wgExpensiveParserFunctionLimit = 200;  # Expensive parser function limit (default 100)
 
 $wgSitename = "Giant Bomb Video Game Wiki";
 $wgMetaNamespace = "Gb";
@@ -134,6 +134,17 @@ $wgExternalDataSources['gb_api_dump'] = [
     'password' => getenv("MARIADB_PASSWORD")
 ];
 
+// user reviews - public endpoint, no API key needed
+$wgExternalDataAllowGetters = true;
+$wgExternalDataSources['giantbomb_user_reviews'] = [
+	'url' => 'https://giantbomb.com/api/public/user-reviews',
+	'format' => 'json',
+	'allowed urls' => [
+		'https://giantbomb.com/api/public/user-reviews*',
+		'https://www.giantbomb.com/api/public/user-reviews*',
+	],
+];
+
 $wgExternalDatabases['external_db'] = [
     'class' => 'DatabaseLoadBalancer',
     'hosts' => [
@@ -218,9 +229,8 @@ if ( $wikiEnv === 'dev' ) {
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
-# Jobs disabled on page views - run via cron/systemd instead
-# this can be set to 0.5 to run every other page, .25 every 4, etc. not set at all = 1 so on every page save
-$wgJobRunRate = 0.25;
+# jobs run via cron/systemd, not on page views
+$wgJobRunRate = 0;
 
 # =============================================================================
 # UPLOADS & IMAGES
@@ -363,6 +373,7 @@ wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'Popups' );
 wfLoadExtension( 'Scribunto' );
+wfLoadExtension( 'ExternalData' );
 wfLoadExtension( 'SemanticExtraSpecialProperties' );
 wfLoadExtension( 'SemanticMediaWiki' );
 wfLoadExtension( 'SemanticResultFormats' );
@@ -380,6 +391,8 @@ wfLoadExtension( 'UrlGetParameters' );
 wfLoadExtension( 'GiantBombMetaTags' );
 wfLoadExtension( 'Moderation' );
 wfLoadExtension( 'GBGallery' );
+wfLoadExtension( 'GBEnvLuaBridge' );
+wfLoadExtension( 'GBVirtualReviewPages' );
 
 # =============================================================================
 # GBGALLERY (legacy CDN image galleries)
@@ -438,10 +451,10 @@ $smwgFixedProperties = [
     '_CDAT' => 'smw_credate',   // Indexes Creation date
 ];
 
-# SMW query limits
-$smwgQUpperbound = 200000;
+# SMW query limits - keep these sane
+$smwgQUpperbound = 5000;
 $smwgQMaxInlineLimit = 500;
-$smwgQMaxLimit = 200000;
+$smwgQMaxLimit = 5000;
 $smwgQMaxSize = 100;
 
 $wgPFEnableStringFunctions = true;
@@ -522,150 +535,81 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 $wgScribuntoEngineConf['luastandalone']['errorFile'] = '/var/log/mediawiki/lua_err.log';
 $wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 209715200; # bytes, 200 MB
 
-# Auto-append {{GameEnd}} to game pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
+# auto-append missing closing templates
+$wgHooks['ParserBeforeInternalParse'][] = function ( &$parser, &$text, &$strip_state ) {
     $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Games/' ) === 0 ) {
-        if ( preg_match( '/\{\{Game\s*[\|\}]/i', $text ) && stripos( $text, '{{GameEnd}}' ) === false ) {
-            $text .= "\n{{GameEnd}}";
-        }
+    if ( !$title ) {
+        return true;
     }
-    return true;
-};
 
-# Auto-append {{CharacterEnd}} to character pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Characters/' ) === 0 ) {
-        if ( preg_match( '/\{\{Character\s*[\|\}]/i', $text ) && stripos( $text, '{{CharacterEnd}}' ) === false ) {
-            $text .= "\n{{CharacterEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{FranchiseEnd}} to franchise pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Franchises/' ) === 0 ) {
-        if ( preg_match( '/\{\{Franchise\s*[\|\}]/i', $text ) && stripos( $text, '{{FranchiseEnd}}' ) === false ) {
-            $text .= "\n{{FranchiseEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{ConceptEnd}} to concept pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Concepts/' ) === 0 ) {
-        if ( preg_match( '/\{\{Concept\s*[\|\}]/i', $text ) && stripos( $text, '{{ConceptEnd}}' ) === false ) {
-            $text .= "\n{{ConceptEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{PlatformEnd}} to platform pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Platforms/' ) === 0 ) {
-        if ( preg_match( '/\{\{Platform\s*[\|\}]/i', $text ) && stripos( $text, '{{PlatformEnd}}' ) === false ) {
-            $text .= "\n{{PlatformEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{CompanyEnd}} to company pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Companies/' ) === 0 ) {
-        if ( preg_match( '/\{\{Company\s*[\|\}]/i', $text ) && stripos( $text, '{{CompanyEnd}}' ) === false ) {
-            $text .= "\n{{CompanyEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{PersonEnd}} to person pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'People/' ) === 0 ) {
-        if ( preg_match( '/\{\{Person\s*[\|\}]/i', $text ) && stripos( $text, '{{PersonEnd}}' ) === false ) {
-            $text .= "\n{{PersonEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{ObjectEnd}} to object pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Objects/' ) === 0 ) {
-        if ( preg_match( '/\{\{Object\s*[\|\}]/i', $text ) && stripos( $text, '{{ObjectEnd}}' ) === false ) {
-            $text .= "\n{{ObjectEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{LocationEnd}} to location pages missing it
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( $title && strpos( $title->getText(), 'Locations/' ) === 0 ) {
-        if ( preg_match( '/\{\{Location\s*[\|\}]/i', $text ) && stripos( $text, '{{LocationEnd}}' ) === false ) {
-            $text .= "\n{{LocationEnd}}";
-        }
-    }
-    return true;
-};
-
-# Auto-append {{TypeEnd}} templates to pages missing them
-$wgHooks['ParserBeforeInternalParse'][] = function( &$parser, &$text, &$strip_state ) {
-    $title = $parser->getTitle();
-    if ( !$title ) return true;
-
-    $pageTypes = [
-        'Accessories/' => 'Accessory',
-        'Themes/' => 'Theme',
-        'Genres/' => 'Genre',
-        'DLCs/' => 'DLC',
-        'Releases/' => 'Release',
+    static $prefixMap = [
+        'Games/'        => 'Game',
+        'Characters/'   => 'Character',
+        'Franchises/'   => 'Franchise',
+        'Concepts/'     => 'Concept',
+        'Platforms/'    => 'Platform',
+        'Companies/'    => 'Company',
+        'People/'       => 'Person',
+        'Objects/'      => 'Object',
+        'Locations/'    => 'Location',
+        'Accessories/'  => 'Accessory',
+        'Themes/'       => 'Theme',
+        'Genres/'       => 'Genre',
+        'DLCs/'         => 'DLC',
+        'Releases/'     => 'Release',
         'RatingBoards/' => 'RatingBoard',
-        'Regions/' => 'Region',
-        'GameRatings/' => 'GameRating',
+        'Regions/'      => 'Region',
+        'GameRatings/'  => 'GameRating',
     ];
 
-    foreach ( $pageTypes as $prefix => $type ) {
-        if ( strpos( $title->getText(), $prefix ) === 0 ) {
+    $titleText = $title->getText();
+
+    if ( str_ends_with( $titleText, '/Images' )
+        && preg_match( '/\{\{ImagesPage\s*[\|\}]/i', $text )
+        && stripos( $text, '{{ImagesPageEnd}}' ) === false
+    ) {
+        $text .= "\n{{ImagesPageEnd}}";
+        return true;
+    }
+
+    foreach ( $prefixMap as $prefix => $type ) {
+        if ( strpos( $titleText, $prefix ) === 0 ) {
             $endTag = "{{{$type}End}}";
-            if ( preg_match( '/\{\{' . $type . '\s*[\|\}]/i', $text ) && stripos( $text, $endTag ) === false ) {
+            if ( preg_match( '/\{\{' . $type . '\s*[\|\}]/i', $text )
+                && stripos( $text, $endTag ) === false
+            ) {
                 $text .= "\n$endTag";
             }
             break;
         }
     }
+
     return true;
 };
 
-# Auto-append {{ImagesPageEnd}} to /Images subpages missing it
-$wgHooks["ParserBeforeInternalParse"][] = function (
-    &$parser,
-    &$text,
-    &$strip_state,
-) {
-    $title = $parser->getTitle();
-    if (!$title) {
+// render /Images subpages even without a real article - injects the template and returns 200
+$wgHooks['ShowMissingArticle'][] = function ( Article $article ) {
+    $title = $article->getTitle();
+    if ( !str_ends_with( $title->getText(), '/Images' ) ) {
         return true;
     }
-    if (str_ends_with($title->getText(), "/Images")) {
-        if (
-            preg_match("/\{\{ImagesPage\s*[\|\}]/i", $text) &&
-            stripos($text, "{{ImagesPageEnd}}") === false
-        ) {
-            $text .= "\n{{ImagesPageEnd}}";
-        }
+
+    $context = $article->getContext();
+    $out     = $context->getOutput();
+    $out->setStatusCode( 200 );
+
+    $parsedOutput = MediaWiki\MediaWikiServices::getInstance()
+        ->getParser()
+        ->parse( '{{ImagesPage}}', $title, ParserOptions::newFromContext( $context ) );
+    $out->addParserOutput( $parsedOutput );
+
+    return false;
+};
+
+$wgHooks['TitleIsAlwaysKnown'][] = function ( Title $title, &$isKnown ) {
+    if ( str_ends_with( $title->getText(), '/Images' ) ) {
+        $isKnown = true;
+        return false;
     }
     return true;
 };
@@ -704,6 +648,9 @@ $wgNamespaceProtection[828] = ['editinterface'];
 
 
 function RestrictImportExport(&$list) {
+    if ( defined( 'MW_NO_SESSION' ) ) {
+        return true;
+    }
     if (!RequestContext::getMain()->getUser()->isAllowed('editinterface')) {
         unset($list['Export']);
         unset($list['Import']);
@@ -722,7 +669,8 @@ $wgGbSessionProviderJWKSUri = 'https://giantbomb.com/.well-known/jwks.json';
 if ( $wikiEnv === 'dev' ) {
     $wgDebugToolbar = true;
     $wgShowDebug = true;
-    $wgDebugLogFile = getenv('MW_LOG_DIR') . "debug-{$wgDBname}.log";
+    $mwLogDir = getenv( 'MW_LOG_DIR' ) ?: '/var/log/mediawiki';
+    $wgDebugLogFile = rtrim( $mwLogDir, '/' ) . "/debug-{$wgDBname}.log";
     $wgDebugLogGroups = [
         // log channel -> log path
         'GbSessionProvider' => '/var/log/mediawiki/gb_session_provider.log',

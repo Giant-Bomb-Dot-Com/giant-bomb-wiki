@@ -11,6 +11,14 @@ if [ -f /var/.installed ] && [ -f /config/LocalSettings.php ] && [ ! -f /var/www
     echo "Copied /config/LocalSettings.php to /var/www/html/"
 fi
 
+# dev: sync LocalSettings from /config on every start
+if [ "$MV_ENV" = "dev" ] && [ -f /config/LocalSettings.php ]; then
+    cp /config/LocalSettings.php /var/www/html/LocalSettings.php
+    chown www-data:www-data /var/www/html/LocalSettings.php
+    touch /var/.installed
+    echo "Dev: synced /config/LocalSettings.php to /var/www/html/"
+fi
+
 # Run dev startup script if in dev mode and script exists
 if [ "$MV_ENV" = "dev" ] && [ -f /docker/dev-startup.sh ]; then
     echo "Running dev startup script..."

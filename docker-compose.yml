@@ -44,6 +44,9 @@ services:
       - ./tests:/var/www/html/gb-tests
       - ./extensions/GbSessionProvider:/var/www/html/extensions/GbSessionProvider
       - ./extensions/GBGallery:/var/www/html/extensions/GBGallery:cached
+      - ./extensions/GBEnvLuaBridge:/var/www/html/extensions/GBEnvLuaBridge:cached
+      - ./extensions/GBVirtualReviewPages:/var/www/html/extensions/GBVirtualReviewPages:cached
+      - ./extensions/ExternalData:/var/www/html/extensions/ExternalData:cached
       # Import scripts
       - ./import_templates:/var/www/html/maintenance/import_templates:cached
       - ./gb_api_scripts:/var/www/html/gb_api_scripts:cached
@@ -53,6 +56,7 @@ services:
       - MV_ENV=dev
       - COMPOSER_ROOT_VERSION=1.43.6
       - REDIS_HOST=redis
+      - MW_LOG_DIR=/var/log/mediawiki
     restart: unless-stopped
 
   redis:

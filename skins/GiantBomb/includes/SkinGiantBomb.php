@@ -57,8 +57,8 @@ class SkinGiantBomb extends SkinTemplate {
     }
 
     /**
-     * Add SEO meta tags for template-rendered game pages.
-     * Reads SMW properties to populate OpenGraph, Twitter cards, and meta description.
+     * Add SEO meta tags for game, character, and franchise pages.
+     * SMW lookups are cached per revision in WANObjectCache.
      */
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
         $title = $out->getTitle();
@@ -81,107 +81,125 @@ class SkinGiantBomb extends SkinTemplate {
         }
 
         $pageTitle = $title->getText();
-        
-        // Process game, character, or franchise pages rendered via templates
-        $isGamePage = strpos( $pageTitle, 'Games/' ) === 0 && 
-                      substr_count( $pageTitle, '/' ) === 1;
-        $isCharacterPage = strpos( $pageTitle, 'Characters/' ) === 0 && 
-                           substr_count( $pageTitle, '/' ) === 1;
-        $isFranchisePage = strpos( $pageTitle, 'Franchises/' ) === 0 && 
-                           substr_count( $pageTitle, '/' ) === 1;
-        
+
+        $isGamePage      = strpos( $pageTitle, 'Games/' ) === 0      && substr_count( $pageTitle, '/' ) === 1;
+        $isCharacterPage = strpos( $pageTitle, 'Characters/' ) === 0 && substr_count( $pageTitle, '/' ) === 1;
+        $isFranchisePage = strpos( $pageTitle, 'Franchises/' ) === 0 && substr_count( $pageTitle, '/' ) === 1;
+
         if ( !$isGamePage && !$isCharacterPage && !$isFranchisePage ) {
             return;
         }
-        
-        if ( $isCharacterPage ) {
-            self::addCharacterSeoTags( $out, $title, $pageTitle );
-            return;
-        }
-        
-        if ( $isFranchisePage ) {
-            self::addFranchiseSeoTags( $out, $title, $pageTitle );
-            return;
-        }
 
-        // Get SMW properties for this page
-        $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
-
-        $wikitext = self::getPageWikitext( $title );
-
-        $gameName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Games/', '', $pageTitle );
-
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
-        }
-
-        $out->setHTMLTitle( $gameName . ' (Game) - ' . $GLOBALS['wgSitename'] );
-
-        $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $gameName . ' - Game info, reviews, and more on Giant Bomb Wiki.';
-        }
-
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-
+        $seoData    = self::getCachedSeoData( $title );
+        $name       = $seoData['name'];
+        $deck       = $seoData['deck'];
+        $metaImage  = $seoData['metaImage'];
         $canonicalUrl = $title->getFullURL();
+
+        if ( $isCharacterPage ) {
+            $typeLabel  = 'Character';
+            $ogType     = 'profile';
+            $schemaType = 'FictionalCharacter';
+        } elseif ( $isFranchisePage ) {
+            $typeLabel  = 'Franchise';
+            $ogType     = 'website';
+            $schemaType = 'CreativeWorkSeries';
+        } else {
+            $typeLabel  = 'Game';
+            $ogType     = 'video.game';
+            $schemaType = 'VideoGame';
+        }
+
+        $htmlTitle = $name . " ($typeLabel) - " . $GLOBALS['wgSitename'];
+        $metaDescription = $deck !== ''
+            ? $deck
+            : $name . " — $typeLabel info on Giant Bomb Wiki.";
+
+        $out->setHTMLTitle( $htmlTitle );
+        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
         $out->setCanonicalUrl( $canonicalUrl );
-        
-        // Get cover image (SMW property first, then legacy imageData fallback)
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
-        // Add OpenGraph tags
+
         PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
+            'og:title'       => $htmlTitle,
             'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'video.game',
-            'og:locale' => 'en_US',
+            'og:url'         => $canonicalUrl,
+            'og:site_name'   => $GLOBALS['wgSitename'],
+            'og:type'        => $ogType,
+            'og:locale'      => 'en_US',
         ], $metaImage );
-        
-        // Add Twitter Card tags
+
         PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $gameName . ' (Game) - ' . $GLOBALS['wgSitename'],
+            'twitter:card'        => $metaImage ? 'summary_large_image' : 'summary',
+            'twitter:title'       => $htmlTitle,
             'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $gameName );
-        
-        // Add JSON-LD structured data for VideoGame
+            'twitter:site'        => '@giantbomb',
+        ], $metaImage, $name );
+
         $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'VideoGame',
-            'name' => $gameName,
+            '@context'    => 'https://schema.org',
+            '@type'       => $schemaType,
+            'name'        => $name,
             'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
+            'url'         => $canonicalUrl,
         ];
-        
         if ( $metaImage ) {
             $jsonLd['image'] = $metaImage;
         }
-        
-        // Get release date
-        $releaseDate = self::getSMWPropertyValue( $store, $subject, 'Has release date' );
-        if ( $releaseDate ) {
-            $jsonLd['datePublished'] = $releaseDate;
+        if ( $isGamePage ) {
+            if ( $seoData['releaseDate'] ) {
+                $jsonLd['datePublished'] = $seoData['releaseDate'];
+            }
+            if ( !empty( $seoData['genres'] ) ) {
+                $jsonLd['genre'] = array_map(
+                    static fn( $g ) => str_replace( 'Genres/', '', $g ),
+                    $seoData['genres']
+                );
+            }
         }
-        
-        // Get genres
-        $genres = self::getSMWPropertyValues( $store, $subject, 'Has genres' );
-        if ( !empty( $genres ) ) {
-            $jsonLd['genre'] = array_map( function( $g ) {
-                return str_replace( 'Genres/', '', $g );
-            }, $genres );
-        }
-        
+
         $out->addHeadItem(
-            'jsonld-videogame',
+            'jsonld-' . strtolower( $schemaType ),
             '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
+        );
+    }
+
+    /**
+     * SEO data for a page, cached per revision in WANObjectCache.
+     *
+     * @param \Title $title
+     * @return array{name:string, deck:string, metaImage:string|null, releaseDate:string|null, genres:array}
+     */
+    private static function getCachedSeoData( \Title $title ): array {
+        $wanCache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+        $cacheKey = $wanCache->makeKey( 'gb-page-seo', $title->getArticleID(), $title->getLatestRevID() );
+
+        return $wanCache->getWithSetCallback(
+            $cacheKey,
+            WANObjectCache::TTL_WEEK,
+            static function () use ( $title ) {
+                $store   = \SMW\StoreFactory::getStore();
+                $subject = \SMW\DIWikiPage::newFromTitle( $title );
+                $wikitext = self::getPageWikitext( $title );
+
+                $fallbackName = preg_replace( '#^[^/]+/#', '', $title->getText() );
+
+                $name = self::getSMWPropertyValue( $store, $subject, 'Has name' )
+                    ?: self::extractTemplateNameFromWikitext( $wikitext )
+                    ?: $fallbackName;
+
+                $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
+                if ( $deck === '' ) {
+                    $deck = self::extractFirstParagraph( $wikitext );
+                }
+
+                return [
+                    'name'        => $name,
+                    'deck'        => $deck,
+                    'metaImage'   => self::getPageImage( $title, $store, $subject ),
+                    'releaseDate' => self::getSMWPropertyValue( $store, $subject, 'Has release date' ),
+                    'genres'      => self::getSMWPropertyValues( $store, $subject, 'Has genres' ),
+                ];
+            }
         );
     }
 
@@ -291,137 +309,6 @@ class SkinGiantBomb extends SkinTemplate {
      */
     private static function getGameCoverImage( \Title $title ): ?string {
         return self::getPageImage( $title );
-    }
-
-    /**
-     * Add SEO meta tags for character pages.
-     */
-    private static function addCharacterSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
-        $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
-
-        $wikitext = self::getPageWikitext( $title );
-
-        $characterName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Characters/', '', $pageTitle );
-
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
-        }
-
-        $out->setHTMLTitle( $characterName . ' (Character) - ' . $GLOBALS['wgSitename'] );
-
-        $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $characterName . ' - Character info and appearances on Giant Bomb Wiki.';
-        }
-
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-
-        $canonicalUrl = $title->getFullURL();
-        $out->setCanonicalUrl( $canonicalUrl );
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
-        PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
-            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'profile',
-            'og:locale' => 'en_US',
-        ], $metaImage );
-        
-        PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $characterName . ' (Character) - ' . $GLOBALS['wgSitename'],
-            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $characterName );
-        
-        // FictionalCharacter is the correct Schema.org type for video game characters
-        $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'FictionalCharacter',
-            'name' => $characterName,
-            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
-        ];
-        
-        if ( $metaImage ) {
-            $jsonLd['image'] = $metaImage;
-        }
-        
-        $out->addHeadItem(
-            'jsonld-character',
-            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
-        );
-    }
-
-    /**
-     * Add SEO meta tags for franchise pages.
-     */
-    private static function addFranchiseSeoTags( OutputPage &$out, \Title $title, string $pageTitle ): void {
-        $store = \SMW\StoreFactory::getStore();
-        $subject = \SMW\DIWikiPage::newFromTitle( $title );
-
-        $wikitext = self::getPageWikitext( $title );
-
-        $franchiseName = self::getSMWPropertyValue( $store, $subject, 'Has name' )
-                    ?: self::extractTemplateNameFromWikitext( $wikitext )
-                    ?: str_replace( 'Franchises/', '', $pageTitle );
-
-        $deck = self::getSMWPropertyValue( $store, $subject, 'Has deck' ) ?: '';
-        if ( $deck === '' ) {
-            $deck = self::extractFirstParagraph( $wikitext );
-        }
-
-        $out->setHTMLTitle( $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'] );
-
-        $metaDescription = $deck;
-        if ( $metaDescription === '' ) {
-            $metaDescription = $franchiseName . ' - Franchise info, games, and characters on Giant Bomb Wiki.';
-        }
-
-        $out->addMeta( 'description', PageHelper::sanitizeMetaText( $metaDescription ) );
-
-        $canonicalUrl = $title->getFullURL();
-        $out->setCanonicalUrl( $canonicalUrl );
-        $metaImage = self::getPageImage( $title, $store, $subject );
-        
-        PageHelper::addOpenGraphTags( $out, [
-            'og:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
-            'og:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'og:url' => $canonicalUrl,
-            'og:site_name' => $GLOBALS['wgSitename'],
-            'og:type' => 'website',
-            'og:locale' => 'en_US',
-        ], $metaImage );
-        
-        PageHelper::addTwitterTags( $out, [
-            'twitter:card' => $metaImage ? 'summary_large_image' : 'summary',
-            'twitter:title' => $franchiseName . ' (Franchise) - ' . $GLOBALS['wgSitename'],
-            'twitter:description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'twitter:site' => '@giantbomb',
-        ], $metaImage, $franchiseName );
-        
-        $jsonLd = [
-            '@context' => 'https://schema.org',
-            '@type' => 'CreativeWorkSeries',
-            'name' => $franchiseName,
-            'description' => PageHelper::sanitizeMetaText( $metaDescription ),
-            'url' => $canonicalUrl,
-        ];
-        
-        if ( $metaImage ) {
-            $jsonLd['image'] = $metaImage;
-        }
-        
-        $out->addHeadItem(
-            'jsonld-franchise',
-            '<script type="application/ld+json">' . json_encode( $jsonLd, JSON_UNESCAPED_SLASHES ) . '</script>'
-        );
     }
 
     /**

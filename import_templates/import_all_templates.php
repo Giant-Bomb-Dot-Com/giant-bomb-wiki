@@ -41,6 +41,7 @@ class ImportWikiTemplates extends Maintenance
         $formDir = "$IP/skins/GiantBomb/forms/wiki";
         $pagesDir = "$IP/skins/GiantBomb/pages/wiki";
         $templateDir = "$IP/skins/GiantBomb/templates/wiki";
+        $errorDir = "$IP/skins/GiantBomb/pages/wiki/errors";
         $type = $this->getOption("type", "all");
 
         // Shared templates used by multiple page types
@@ -170,7 +171,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:GameRatingEnd" => "$templateDir/Template_GameRatingEnd.wikitext",
             "Template:GameRatingSidebar" => "$templateDir/Template_GameRatingSidebar.wikitext",
         ];
-
+        
         //Forms
         $formTemplates = [
             "Form:Accessory" => "$formDir/Form_Accessory.wikitext",
@@ -195,6 +196,11 @@ class ImportWikiTemplates extends Maintenance
             "Form:Theme" => "$formDir/Form_Theme.wikitext",
         ];
 
+        //Errors
+        $errorTemplates = [
+            "MediaWiki:Paramvalidator-badupload-inisize" => "$errorDir/Paramvalidator-badupload-inisize.wikitext",
+        ];
+
         $rootPageTemplates = [
             "Main_Page" => "$pagesDir/Main_Page.wikitext",
 
@@ -212,6 +218,11 @@ class ImportWikiTemplates extends Maintenance
             "Template:ImagesPage" => "$templateDir/Template_ImagesPage.wikitext",
             "Template:ImagesPageEnd" => "$templateDir/Template_ImagesPageEnd.wikitext",
             "Module:ImagesPage" => "$moduleDir/Module_ImagesPage.wikitext",
+
+            //reviews page
+            "Template:ReviewLayout" => "$templateDir/Template_ReviewLayout.wikitext",
+            "Module:ReviewQuery" => "$moduleDir/Module_ReviewQuery.wikitext",
+            "Module:ReviewPage" => "$moduleDir/Module_ReviewPage.wikitext",
 
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",
@@ -297,6 +308,7 @@ class ImportWikiTemplates extends Maintenance
             "gamerating" => $gameRatingTemplates,
             "rootpages" => $rootPageTemplates,
             "form" => $formTemplates,
+            "errors" => $errorTemplates,
         ];
 
         // Build template list based on type
