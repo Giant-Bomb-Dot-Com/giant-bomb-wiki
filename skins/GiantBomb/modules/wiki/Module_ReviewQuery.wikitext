@@ -83,7 +83,9 @@ function p.renderSidebar(frame)
     starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
 
     scoreColumn:tag('div'):addClass('gb-review-subtext'):wikitext("Average score of " .. reviewCount .. " user reviews")
-    footer:tag('div'):addClass('gb-review-button'):addClass('gb-button'):wikitext('[https://giantbomb.com/user-reviews/new Add new review]')
+    local guid = frame.args.guid or frame:getParent().args.guid or ""
+    local reviewNewUrl = 'https://giantbomb.com/user-reviews/new' .. (guid ~= "" and ('?game_guid=' .. guid) or "")
+    footer:tag('div'):addClass('gb-review-button'):addClass('gb-button'):wikitext('[' .. reviewNewUrl .. ' Add new review]')
 
     return tostring(header) .. tostring(html)
 end
