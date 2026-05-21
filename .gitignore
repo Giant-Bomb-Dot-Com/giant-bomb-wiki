@@ -44,3 +44,14 @@ gb_api_scripts/import_xml/*.xml
 /gb_api_scripts/libs/ProdGuidResolver.php
 /gb_api_scripts/libs/docker_local_db.php
 /import_templates/fixEscapedSlashPageTitles.php
+docker/local-prod-db/00-grant-wiki_db143.sql
+docker/local-prod-db/benchmark-compare.ps1
+docker/local-prod-db/benchmark-wiki.ps1
+docker/local-prod-db/finalize-prod-db.ps1
+docker/local-prod-db/import-wiki_db143.ps1
+docker/local-prod-db/import-wiki_db143.sh
+docker/local-prod-db/mysql-8-prod-like.cnf
+docker/local-prod-db/PERFORMANCE-prod.md
+docker/local-prod-db/PERFORMANCE.md
+docker/local-prod-db/README.md
+docker/local-prod-db/status-prod-db.ps1
