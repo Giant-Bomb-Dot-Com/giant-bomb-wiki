@@ -229,8 +229,7 @@ if ( $wikiEnv === 'dev' ) {
 $wgUseETag = true;
 $wgInvalidateCacheOnLocalSettingsChange = true;
 
-# jobs run via cron/systemd, not on page views
-$wgJobRunRate = 0;
+$wgJobRunRate = 0.25;
 
 # =============================================================================
 # UPLOADS & IMAGES

@@ -9,6 +9,10 @@ function gbenv.getApiKey()
     return php.getApiKey()
 end
 
+function gbenv.fetchUserReviews( guid, offset, limit )
+    return php.fetchUserReviews( guid, offset or 0, limit or 50 )
+end
+
 mw.ext.gbenv = gbenv
 
 return gbenv

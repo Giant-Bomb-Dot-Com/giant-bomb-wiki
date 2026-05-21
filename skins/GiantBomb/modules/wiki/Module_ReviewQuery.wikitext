@@ -3,45 +3,28 @@ local p = {}
 local cachedReviews = nil
 
 function p.fetchReviews(frame)
-    if cachedReviews then 
-        return cachedReviews 
+    if cachedReviews then
+        return cachedReviews
     end
 
-    -- GUID from the template {{ReviewQuery|guid=...}}
     local guid = frame.args.guid or frame:getParent().args.guid
-    if not guid then return "Error: Missing GUID" end
-    
-	local baseUrl = "https://giantbomb.com/api/public/user-reviews"
-	local apiKey = mw.ext.gbenv.getApiKey()
+    if not guid or guid == "" then
+        return {}
+    end
+
     local allReviews = {}
     local offset = 0
-    local limit = 20
+    local limit = 50
     local hasNext = true
+    local maxPages = 2
 
-    -- Note: In a real Wiki environment, you'd use 'mw.ext.ExternalData' 
-    -- or similar because standard Lua 'http' libraries are disabled.
-    
-    while hasNext do
-    	local url = string.format(
-            "%s?api_key=%s&limit=%d&offset=%d&game_guid=%s&sort=publish_date:desc&format=json",
-            baseUrl, apiKey, limit, offset, guid
-        )
-    	
-          local data = mw.ext.externalData.getExternalData({
-            url = url,
-            format = 'json'
-        })
-        
-        if data and data.__json then
-            data = data.__json
-        end
+    while hasNext and (offset / limit) < maxPages do
+        local data = mw.ext.gbenv.fetchUserReviews(guid, offset, limit)
 
         if data and data.results then
             for _, review in ipairs(data.results) do
                 table.insert(allReviews, review)
             end
-            
-            -- Check pagination
             if data.pagination and data.pagination.has_next then
                 offset = offset + limit
             else
@@ -50,9 +33,6 @@ function p.fetchReviews(frame)
         else
             hasNext = false
         end
-        
-        -- Safety break to prevent infinite loops in Scribunto
-        if offset > 1000 then break end 
     end
 
     cachedReviews = allReviews
@@ -68,25 +48,18 @@ function p.renderSidebar(frame)
     local reviewCount = #allReviews
 
     for _, review in ipairs(allReviews) do
-        -- Convert 100-point scale to 1-5 stars
-        local stars = math.floor(review.score / 20)
-        if stars < 1 then stars = 1 end
-        
+        local rawScore = tonumber(review.score) or 0
+        local stars = math.max(1, math.min(5, math.floor(rawScore / 20)))
         counts[stars] = counts[stars] + 1
         totalScore = totalScore + stars
     end
 
     local avgScore = reviewCount > 0 and (totalScore / reviewCount) or 0
 
-    -- TODO: Add section for staff reviews
-    -- local html = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('STAFF')
-    
-    -- Build the header
-    local header = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('What the users think')    
+    local header = mw.html.create('div'):addClass('gb-sidebar-section-header'):wikitext('What the users think')
     
     local html = mw.html.create('div'):addClass('gb-sidebar-section-content')
 
-    -- Create Bars
     for i = 5, 1, -1 do
         local row = html:tag('div'):addClass('review-star-bar')
         row:tag('span'):wikitext(i .. ' ★ (' .. counts[i] .. ')')
@@ -118,42 +91,26 @@ end
 function p.renderReviewContent(frame)
     local allReviews = p.fetchReviews(frame)
 
-    if not allReviews or #allReviews == 0 then
-        return "<p>No reviews found.</p>"
-    end
-    
-    -- Force the Table of Contents to render at the very top of this block
     local output = {}
-    
-    for _, review in ipairs(allReviews) do
-        -- Construct the specific Giant Bomb URL structure
-        local reviewUrl = string.format("https://giantbomb.com/%s", 
-            tostring(review.url)
-        )
 
+    for _, review in ipairs(allReviews) do
+        local reviewUrl = "https://giantbomb.com/" .. tostring(review.url or "")
         table.insert(output, '<div class="user-review">')
+        table.insert(output, string.format("=== [%s %s] ===", reviewUrl, review.title or ""))
         
-        -- Generate clean wikitext headers using standard MediaWiki external link syntax
-        local headingWikitext = string.format("=== [%s %s] ===", reviewUrl, review.title)
-        table.insert(output, headingWikitext)
-        
-        -- Build the metadata block below the header
         local metaContainer = mw.html.create('div')
-            :addClass('review-metadata')            
+            :addClass('review-metadata')
 
         if review.owner and review.owner.avatar and review.owner.avatar.url then
-            local altText = review.owner.avatar.alt or (review.owner.username .. "'s avatar")
             metaContainer:tag('span')
                 :addClass('user-avatar-frame')
-                :wikitext(string.format("%s", review.owner.avatar.url))
+                :wikitext(review.owner.avatar.url)
         end
 
         local detailsStack = metaContainer:tag('div')
             :addClass('review-details-stack')
             
-        local stars = math.floor(review.score / 20)
-        if stars < 1 then stars = 1 end
-        if stars > 5 then stars = 5 end -- Safety cap
+        local stars = math.max(1, math.min(5, math.floor((tonumber(review.score) or 0) / 20)))
         
         local starPercentage = (stars / 5) * 100
         
@@ -170,13 +127,12 @@ function p.renderReviewContent(frame)
             local userLink = "https://giantbomb.com/profile/" .. review.owner.username
             authorHtml = authorHtml .. " by " .. string.format("[%s %s]", userLink, review.owner.username) .. " on "
         end
-        local date = mw.language.getContentLanguage():formatDate('F, j Y', review.publish_date)
+        local date = review.publish_date and mw.language.getContentLanguage():formatDate('F, j Y', review.publish_date) or ""
         authorHtml = authorHtml .. date
         detailsStack:tag('span'):addClass('author-text'):wikitext(authorHtml)
             
         table.insert(output, tostring(metaContainer))
-        
-        -- Build the excerpt paragraph
+
         local excerptContainer = mw.html.create('p')
             :addClass('review-excerpt')
             :wikitext(review.excerpt)
@@ -186,11 +142,9 @@ function p.renderReviewContent(frame)
     end
 
     local sidebarHtml = p.renderSidebar(frame)
-    
     table.insert(output, 1, sidebarHtml)
     table.insert(output, 2, "__TOC__")
 
-    -- Join elements with newlines for correct wikitext parsing
     return table.concat(output, "\n")
 end
 
