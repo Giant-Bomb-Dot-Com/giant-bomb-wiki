@@ -148,10 +148,7 @@ function p._renderSidebar(guid, hideReadButton)
 
         local staffContent = staffContainer:tag('div'):addClass('gb-sidebar-section-review')
 
-        local starContainer = staffContent:tag('div'):addClass('stars')
-        for i = 5, 1, -1 do
-            starContainer:tag('div'):addClass('star')
-        end
+        local starContainer = staffContent:tag('div'):addClass('stars')        
         starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
 
         staffContent:tag('div'):addClass('gb-sidebar-section-deck'):wikitext('"' .. staffReviewDeck .. '"')
@@ -206,9 +203,6 @@ function p._renderSidebar(guid, hideReadButton)
 
     local starScore = (avgOutOfFive / 5) * 100
     local starContainer = row:tag('div'):addClass('stars')
-    for i = 5, 1, -1 do
-        starContainer:tag('div'):addClass('star')
-    end
     starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
 
     scoreColumn:tag('div'):addClass('gb-review-subtext')
@@ -303,9 +297,6 @@ function p.renderReviewContent(frame)
         local s = clampScore(review.score) or 0
         local starPercentage = s
         local starContainer = detailsStack:tag('div'):addClass('stars')
-        for i = 1, 5 do
-            starContainer:tag('div'):addClass('star')
-        end
         starContainer:tag('div')
             :addClass("star-cover")
             :css('width', starPercentage .. '%')        
