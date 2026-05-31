@@ -7,8 +7,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
-{{{for template|Object}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
+{{{for template|Object}}}
 {| class="formtable"
+|-
+! GUID:
+| {{{field|Guid|property=Has guid|default=uuid|restricted=nobody}}}
 |-
 ! Name: 
 | {{{field|Name|mandatory|property=Has name}}}

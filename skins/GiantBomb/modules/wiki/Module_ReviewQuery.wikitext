@@ -1,6 +1,7 @@
 local p = {}
 
-local cachedReviews = nil
+local cachedStaffReviews = nil
+local cachedUserReviews = nil
 
 -- API score is 0-100; clamp for aggregation (prevents outliers from skewing averages).
 local function clampScore(score)
@@ -33,19 +34,17 @@ local function histogramStarBucket(score)
     return stars
 end
 
-function p.fetchReviews(guid)
-    if cachedReviews then 
-        return cachedReviews 
-    end
-
+function p.fetchReviews(guid,type)
     if not guid or guid == '' then return {} end
-    
+
     local baseUrl = "https://giantbomb.com/api/public/user-reviews"
     local apiKey = mw.ext.gbenv.getApiKey()
-    local allReviews = {}
+    local reviews = {}
     local offset = 0
     local limit = 20
     local hasNext = true
+
+    if( type == 'STAFF' ) then baseUrl = "https://giantbomb.com/api/public/reviews" end
     
     while hasNext do
         local url = string.format(
@@ -65,7 +64,7 @@ function p.fetchReviews(guid)
 
         if data and data.results then
             for _, review in ipairs(data.results) do
-                table.insert(allReviews, review)
+                table.insert(reviews, review)
             end
             
             if data.pagination and data.pagination.has_next then
@@ -79,9 +78,23 @@ function p.fetchReviews(guid)
         
         if offset > 1000 then break end 
     end
+    return reviews
+end
 
-    cachedReviews = allReviews
-    return cachedReviews
+function p.fetchStaffReviews(guid)
+    if cachedStaffReviews then 
+        return cachedStaffReviews 
+    end
+    cachedStaffReviews = p.fetchReviews(guid,"STAFF")
+    return cachedStaffReviews
+end
+
+function p.fetchUserReviews(guid)
+    if cachedUserReviews then 
+        return cachedUserReviews 
+    end
+    cachedUserReviews = p.fetchReviews(guid,"USERS")
+    return cachedUserReviews
 end
 
 local function newUserReviewUrl(guid)
@@ -108,16 +121,53 @@ local function absoluteGiantBombUrl(path)
     return 'https://giantbomb.com/' .. path
 end
 
-function p._renderSidebar(guid, hideReadButton)
+function p._renderSidebar(guid, hideReadButton)    
+    -- STAFF
+    local staffReview = nil
+    local staffReviews = p.fetchStaffReviews(guid)
+    local staffSection = ""
 
-    local allReviews = p.fetchReviews(guid)
+    --We may have more than 1, but for now, we are just using 1, which will be the latest.
+    if staffReviews ~= nil then staffReview = staffReviews[1] end
+    if staffReview ~= nil then
+        local staffReviewURL = "https://giantbomb.com/reviews/" .. staffReview.slug
+        local staffBG = staffReview.featured_image.url
+        local staffReviewDeck = staffReview.deck    
+        local avgOutOfFive = staffReview.score
+        local starScore = (avgOutOfFive / 5) * 100
+        local staffReviewer = "Giantbomb"
+        if staffReview.reviewer ~= nil and staffReview.reviewer.name ~= nil then 
+            staffReviewer = staffReview.reviewer.name 
+        end
+        
+        local staffHeader = mw.html.create('div'):addClass('gb-sidebar-section-header')
+            :wikitext('[' .. staffReviewURL .. ' Giant Bomb Review]')
+        
+        local staffContainer = mw.html.create('div'):addClass('gb-sidebar-section-content'):wikitext(staffBG)
+        staffContainer:tag('div'):addClass('gb-sidebar-section-overlay')
 
+        local staffContent = staffContainer:tag('div'):addClass('gb-sidebar-section-review')
+
+        local starContainer = staffContent:tag('div'):addClass('stars')
+        for i = 5, 1, -1 do
+            starContainer:tag('div'):addClass('star')
+        end
+        starContainer:tag('div'):addClass("star-cover"):css('width', starScore .. '%')
+
+        staffContent:tag('div'):addClass('gb-sidebar-section-deck'):wikitext('"' .. staffReviewDeck .. '"')
+        staffContent:tag('div'):addClass('gb-sidebar-section-author'):wikitext('— [' .. staffReviewURL .. ' ' .. staffReviewer .. ']')
+
+        staffSection = tostring(staffHeader) .. tostring(staffContainer)
+    end
+
+    -- USERS
+    local userReviews = p.fetchUserReviews(guid)
     local counts = { [5]=0, [4]=0, [3]=0, [2]=0, [1]=0 }
     local rawSum = 0
     local scoredCount = 0
-    local reviewCount = #allReviews
+    local reviewCount = #userReviews
 
-    for _, review in ipairs(allReviews) do
+    for _, review in ipairs(userReviews) do
         local s = clampScore(review.score)
         if s then
             local bucket = histogramStarBucket(review.score)
@@ -134,7 +184,7 @@ function p._renderSidebar(guid, hideReadButton)
     local reviewsPage = currentPage:match('/Reviews$') and currentPage or (currentPage .. '/Reviews')
 
     local header = mw.html.create('div'):addClass('gb-sidebar-section-header')
-        :wikitext('[[' .. reviewsPage .. '|What the users think]]')    
+        :wikitext('[[' .. reviewsPage .. '|What the users think]]')
     
     local html = mw.html.create('div'):addClass('gb-sidebar-section-content')
 
@@ -169,7 +219,7 @@ function p._renderSidebar(guid, hideReadButton)
     footer:tag('div'):addClass('gb-review-button'):addClass('gb-button')
         :wikitext('[' .. newUserReviewUrl(guid) .. ' Add your review]')
 
-    return tostring(header) .. tostring(html)
+    return tostring(staffSection) .. tostring(header) .. tostring(html)
 end
 
 local function trimGuid(v)
@@ -214,9 +264,9 @@ function p.renderReviewContent(frame)
             guid = trimGuid(parent.args.guid)
         end
     end
-    local allReviews = p.fetchReviews(guid)
+    local userReviews = p.fetchUserReviews(guid)
 
-    if not allReviews or #allReviews == 0 then
+    if not userReviews or #userReviews == 0 then
         local sidebarHtml = p._renderSidebar(guid, true)
         return table.concat({
             sidebarHtml,
@@ -228,7 +278,7 @@ function p.renderReviewContent(frame)
     local output = {}
     table.insert(output, '<div class="gb-reviews-grid">')
     
-    for _, review in ipairs(allReviews) do
+    for _, review in ipairs(userReviews) do
         local reviewUrl = absoluteGiantBombUrl(review.url)
 
         table.insert(output, '<div class="user-review">')
@@ -241,6 +291,7 @@ function p.renderReviewContent(frame)
             :addClass('review-metadata')            
 
         if review.owner and review.owner.avatar and review.owner.avatar.url then
+            local altText = review.owner.avatar.alt or (review.owner.username .. "'s avatar")
             metaContainer:tag('span')
                 :addClass('user-avatar-frame')
                 :wikitext(string.format("%s", review.owner.avatar.url))
