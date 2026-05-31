@@ -33,6 +33,7 @@ RUN chown -R www-data:www-data /var/www/html
 # See https://issues.apache.org/jira/browse/IGNITE-27681
 RUN cd /var/www/html \
  && sed -i -e "s/9.6.19/\^9.6.19/" composer.json \
+ && sed -i -e "s/5.4.45/\^5.4.45/" composer.json \
  && COMPOSER=composer.local.json php /usr/local/bin/composer require --no-update mediawiki/semantic-media-wiki \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-extra-special-properties \
  && php /usr/local/bin/composer require --no-update mediawiki/semantic-result-formats \
