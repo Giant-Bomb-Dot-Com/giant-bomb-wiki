@@ -1445,7 +1445,6 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
 .gb-sidebar-section-review .stars {
   position: relative;
   display: inline-flex;
-  justify-content: center;
   margin-bottom: 25px;
   transform: scale(1.5);
 }
