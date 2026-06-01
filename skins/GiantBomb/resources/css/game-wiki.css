@@ -435,35 +435,6 @@
   padding-top: 0.5rem;
 }
 
-/* ============================================
-   SIDEBAR (RIGHT)
-   ============================================ */
-.gb-game-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* Sidebar Section */
-.gb-sidebar-section {
-  background: #252525;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.gb-sidebar-section-header {
-  background: #333;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  margin: 0;
-}
-
-.gb-sidebar-section-content {
-  padding: 1rem;
-}
-
 /* Game Details Table */
 .gb-game-details {
   margin: 0;
@@ -1415,4 +1386,122 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
   width: 100%;
   height: auto;
   clear: none;
+}
+
+/* ============================================
+   SIDEBAR (RIGHT)
+   ============================================ */
+.gb-game-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Sidebar Section */
+.gb-sidebar-section {
+  background: #252525;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gb-sidebar-section-content:has(.gb-sidebar-section-review) {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.gb-sidebar-section-content img,
+.wiki-game-page .mw-parser-output .gb-sidebar-section-content img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  max-height: none;
+}
+
+.gb-sidebar-section-review {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gb-sidebar-section-review .stars {
+  position: relative;
+  display: inline-flex;
+  margin-bottom: 25px;
+  transform: scale(1.5);
+}
+
+.gb-sidebar-section-author {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.gb-sidebar-section-author a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+
+.gb-sidebar-section-author a:hover {
+  text-decoration: underline;
+}
+
+.gb-sidebar-section-deck {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  font-style: italic;
+  font-weight: 400;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.gb-sidebar-section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.75));
+  z-index: 2;
+}
+
+.gb-sidebar-section-header {
+  background: #333;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.gb-sidebar-section-header a:link,
+.gb-sidebar-section-header a.selflink,
+.gb-sidebar-section-header a.selflink:hover,
+.gb-sidebar-section-header a:visited,
+.gb-sidebar-section-author a:link,
+.gb-sidebar-section-author a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.gb-sidebar-section-content {
+  padding: 1rem;
 }

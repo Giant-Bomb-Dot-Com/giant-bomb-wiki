@@ -86,47 +86,28 @@
 .gb-sidebar-section-content .stars,
 .review-metadata .stars {
   position: relative;
-  display: inline-flex;
-  gap: 2px;
-  flex: 0 0 auto;
-  width: max-content;
-  max-width: 100%;
-}
-
-.review-metadata .stars {
-  align-self: flex-start;
-}
-
-.gb-sidebar-reviews .star,
-.gb-sidebar-section-content .star,
-.review-metadata .star {
-  width: 20px;
-  height: 18px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjNDQ0NDQ0IiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
+  display: inline-block;
+  width: 112px;
+  height: 20px;
+  background-repeat: repeat-x;
+  background-position: left top;
+  background-size: 23px 100%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjRDRBRjM3IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTSAxMiAxNy4yNyBMIDE4LjE4IDIxIEwgMTYuNTQgMTMuOTcgTCAyMiA5LjI0IEwgMTQuODEgOC42MiBMIDEyIDIgTCA5LjE5IDguNjIgTCAyIDkuMjQgTCA3LjQ2IDEzLjk3IEwgNS44MiAyMSBaIi8+PC9zdmc+");
 }
 
 .gb-sidebar-reviews .star-cover,
 .gb-sidebar-section-content .star-cover,
 .review-metadata .star-cover {
   position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   overflow: hidden;
-}
-
-.gb-sidebar-reviews .star-cover::before,
-.gb-sidebar-section-content .star-cover::before,
-.review-metadata .star-cover::before {
-  content: "";
-  display: block;
-  width: 108px;
-  height: 18px;
-  flex-shrink: 0;
-  background-size: 22px 100%;
+  pointer-events: none;
   background-repeat: repeat-x;
   background-position: left top;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjZmZjYzAwIiBkPSJNMjU5LjMgMTcuOEwxOTQgMTUwLjIgNDcuOSAxNzEuNWMtMjYuMiAzLjgtMzYuNyAzNi4xLTE3LjcgNTQuNmwxMDUuNyAxMDMtMjUgMTQ1LjVjLTQuNSAyNi4zIDIzLjIgNDYgNDYuNCAzMy43TDI4OCA0MzkuNmwxMzAuNyA2OC43YzIzLjIgMTIuMiA1MC45LTcuNCA0Ni40LTMzLjdsLTI1LTE0NS41IDEwNS43LTEwM2MxOS0xOC41IDguNS01MC44LTE3LjctNTQuNkwzODIgMTUwLjIgMzE2LjcgMTcuOGMtMTEuNy0yMy42LTQ1LjYtMjMuOS01Ny40IDB6Ii8+PC9zdmc+");
+  background-size: 23px 100%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0Q0QUYzNyIgZD0iTSAxMiAxNy4yNyBMIDE4LjE4IDIxIEwgMTYuNTQgMTMuOTcgTCAyMiA5LjI0IEwgMTQuODEgOC42MiBMIDEyIDIgTCA5LjE5IDguNjIgTCAyIDkuMjQgTCA3LjQ2IDEzLjk3IEwgNS44MiAyMSBaIi8+PC9zdmc+");
 }
 
 .gb-sidebar-reviews .gb-review-subtext,

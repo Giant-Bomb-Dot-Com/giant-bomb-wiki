@@ -20,8 +20,11 @@ if a page with that name already exists, you will be sent to a form to edit that
 {{{standard input|save}}}
 {{{standard input|preview}}}
 {{{standard input|cancel}}}
-{{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}{{{field|Guid|property=Has guid|default=uuid|hidden|restricted}}}
+{{{for template|DlcSubobject|multiple|add button text=Add dlc|label=DLCs|displayed fields when minimized=Name,Platform}}}
 {| class="formtable"
+|-
+! GUID:
+| {{{field|Guid|property=Has guid|default=uuid|restricted=nobody}}}
 |-
 ! Game: 
 | {{{field|Game|mandatory|property=Has games|input type=tokens|max values=1|values from category=Games|default={{BASEPAGENAME}}|existing values only}}}
