@@ -1,0 +1,65 @@
+# Personal overlay: Cloud SQL–sized wiki_db143 for local performance work.
+# NOT for CI or shared dev — copy to docker-compose.me.yml (gitignored).
+#
+#   cp docker-compose.me.example.yml docker-compose.me.yml
+#   cp .env.me.example .env.me
+#   mkdir -p .local/db-backups .local/mysql-prod-data
+#   # place wiki_db143 dump in .local/db-backups/ (see docker/local-prod-db/README.md)
+#   docker compose -f docker-compose.yml -f docker-compose.me.yml up -d
+#   ./docker/local-prod-db/import-wiki_db143.sh
+#
+# Stop default stack first if port 3306 is in use:
+#   docker compose down
+
+services:
+  db:
+    image: mysql:8.0.41
+    platform: linux/amd64
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --skip-name-resolve=0
+      # Inline tuning (Windows bind-mount cnf is often world-writable and ignored by MySQL 8)
+      - --innodb_buffer_pool_size=4G
+      - --innodb_log_file_size=512M
+      - --innodb_flush_log_at_trx_commit=2
+      - --max_allowed_packet=1G
+      - --net_read_timeout=3600
+      - --net_write_timeout=3600
+      - --wait_timeout=28800
+    env_file:
+      - .env
+      - .env.me
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DATABASE:-wiki_db143}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.local/mysql-prod-data:/var/lib/mysql
+      - ./docker/local-prod-db/mysql-8-prod-like.cnf:/etc/mysql/conf.d/99-prod-like.cnf
+      - ./.local/db-backups:/backups:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 8G
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MARIADB_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 120s
+
+  wiki:
+    env_file:
+      - .env
+      - .env.me
+    environment:
+      MARIADB_DATABASE: wiki_db143
+      DB_NAME: wiki_db143
+      MW_DB_NAME: wiki_db143
+      MW_LOG_DIR: /var/log/mediawiki

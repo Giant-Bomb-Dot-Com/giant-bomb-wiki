@@ -18,6 +18,9 @@ gcs_key.json
 .env
 .env.migration
 debug-gb_wiki.log
+.local/
+docker/local-prod-db/
+extensions/ExternalData/
 
 docs/
 gb_api_scripts/import_xml/*.xml
