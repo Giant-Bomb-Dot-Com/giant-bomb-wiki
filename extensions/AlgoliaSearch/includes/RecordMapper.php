@@ -59,39 +59,17 @@ class RecordMapper
             "_updatedAt" => null,
         ];
 
-        if ($type === "Game") {
-            $template = self::getGameTemplateFields($title);
-            if (
-                isset($template["deck"]) &&
-                is_string($template["deck"]) &&
-                $template["deck"] !== ""
-            ) {
-                $record["excerpt"] = self::truncatePlaintext(
-                    strip_tags($template["deck"]),
-                    280,
-                );
-            }
-            if (
-                isset($template["image"]) &&
-                is_string($template["image"]) &&
-                $template["image"] !== ""
-            ) {
-                $thumb = self::resolveImageThumbUrl($template["image"], 640);
-                if ($thumb) {
-                    $record["thumbnail"] = $thumb;
-                }
-            }
+        // deck + thumbnail use the same SMW -> wikitext -> fallback chain across all types.
+        // games are usually best-populated; other types had been silently falling through.
+        $deck = self::getEntityDeck($title);
+        if ($deck !== null && $deck !== "") {
+            $record["excerpt"] = self::truncatePlaintext(
+                strip_tags($deck),
+                280,
+            );
         }
-        if ($record["thumbnail"] === null) {
-            $record["thumbnail"] = self::getThumbnailForTitle($title);
-        }
-        if ($record["thumbnail"] === null) {
-            $legacyImage = LegacyImageHelper::findLegacyImageForTitle($title);
-            if ($legacyImage !== null) {
-                $record["thumbnail"] =
-                    $legacyImage["thumb"] ?? $legacyImage["full"];
-            }
-        }
+
+        $record["thumbnail"] = self::getEntityImage($title);
         if ($record["excerpt"] === null || $record["excerpt"] === "") {
             $fromExtract = self::getExcerptForTitle($title);
             if (is_string($fromExtract) && $fromExtract !== "") {
@@ -99,34 +77,146 @@ class RecordMapper
             }
         }
 
-		if ( is_string( $record['thumbnail'] ) ) {
-			$record['thumbnail'] = self::rewriteCdnUrl( $record['thumbnail'] );
-		}
+        if (is_string($record["thumbnail"])) {
+            $record["thumbnail"] = self::rewriteCdnUrl($record["thumbnail"]);
+        }
 
-		$timestamps = self::getRevisionTimestamps($title);
-		$record["_updatedAt"] = $timestamps["latest"] ?? null;
-		$record["publishDate"] = $timestamps["first"] ?? null;
+        $timestamps = self::getRevisionTimestamps($title);
+        $record["_updatedAt"] = $timestamps["latest"] ?? null;
+        $record["publishDate"] = $timestamps["first"] ?? null;
 
-		return $record;
-	}
+        return $record;
+    }
 
-    private static function getGameTemplateFields(Title $title): array
+    private static function getEntityImage(Title $title): ?string
     {
-        $out = ["deck" => null, "image" => null];
-        $services = MediaWikiServices::getInstance();
-        $page = $services->getWikiPageFactory()->newFromTitle($title);
-        $content = $page ? $page->getContent() : null;
-        if (!$content) {
-            return $out;
+        // 1. SMW Has image (set by every entity template)
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has image"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $resolved = self::resolveImageReference(
+                        $first->getString(),
+                        640,
+                    );
+                    if ($resolved) {
+                        return $resolved;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
         }
-        $text = $content->getText();
-        if (preg_match('/\| Deck=([^\n]+)/', $text, $m)) {
-            $out["deck"] = trim($m[1]);
+
+        // 2. wikitext Image= (loose match; covers pre-SMW-rebuild pages and any spacing).
+        // [^\n|}] keeps us from gobbling the closing }} when Image= is the last parameter.
+        $text = self::getPageWikitext($title);
+        if (
+            $text !== "" &&
+            preg_match('/\|\s*Image\s*=\s*([^\n|}]+)/i', $text, $m)
+        ) {
+            $resolved = self::resolveImageReference(trim($m[1]), 640);
+            if ($resolved) {
+                return $resolved;
+            }
         }
-        if (preg_match('/\| Image=([^\n]+)/', $text, $m)) {
-            $out["image"] = trim($m[1]);
+
+        // 3. mediawiki PageImages api
+        $pageImage = self::getThumbnailForTitle($title);
+        if ($pageImage) {
+            return $pageImage;
         }
-        return $out;
+
+        // 4. legacy <div id="imageData"> json blob
+        $legacyImage = LegacyImageHelper::findLegacyImageForTitle($title);
+        if ($legacyImage !== null) {
+            return $legacyImage["thumb"] ?? ($legacyImage["full"] ?? null);
+        }
+
+        return null;
+    }
+
+    // resolves a raw Has image / Image= value to a public url.
+    // http(s) -> as-is; mw File: -> 640px thumb; else assume legacy gb cdn path.
+    private static function resolveImageReference(
+        string $value,
+        int $width,
+    ): ?string {
+        // belt-and-suspenders: strip trailing whitespace / template-close braces so we
+        // can't ever leak '}}' into a thumbnail URL even if upstream regex misbehaves.
+        $value = preg_replace('/[\s}]+$/', "", trim($value)) ?? "";
+        if ($value === "") {
+            return null;
+        }
+        if (stripos($value, "http") === 0) {
+            return $value;
+        }
+        // SMW stores spaces as '+' (per template's #replace); mw File: lookup wants spaces
+        $fileName = str_replace("+", " ", $value);
+        $thumb = self::resolveImageThumbUrl($fileName, $width);
+        if ($thumb) {
+            return $thumb;
+        }
+        // not in the local file repo; treat as legacy gb cdn path
+        return "https://www.giantbomb.com/a/uploads/" . ltrim($value, "/");
+    }
+
+    private static function getEntityDeck(Title $title): ?string
+    {
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has deck"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $deck = trim($first->getString());
+                    if ($deck !== "") {
+                        return $deck;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        $text = self::getPageWikitext($title);
+        if (
+            $text !== "" &&
+            preg_match('/\|\s*Deck\s*=\s*([^\n|}]+)/i', $text, $m)
+        ) {
+            $deck = preg_replace('/[\s}]+$/', "", trim($m[1])) ?? "";
+            if ($deck !== "") {
+                return $deck;
+            }
+        }
+
+        return null;
+    }
+
+    private static function getPageWikitext(Title $title): string
+    {
+        static $cache = [];
+        $key = $title->getPrefixedDBkey();
+        if (array_key_exists($key, $cache)) {
+            return $cache[$key];
+        }
+        try {
+            $page = MediaWikiServices::getInstance()
+                ->getWikiPageFactory()
+                ->newFromTitle($title);
+            $content = $page ? $page->getContent() : null;
+            return $cache[$key] = $content ? $content->getText() : "";
+        } catch (\Throwable $e) {
+            return $cache[$key] = "";
+        }
     }
 
     private static function resolveImageThumbUrl(
@@ -160,25 +250,28 @@ class RecordMapper
         return is_string($url) && $url !== "" ? $url : null;
     }
 
-    private static function rewriteCdnUrl( string $url ): string {
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$cdnBase = $config->get( 'AlgoliaImageCdnBase' );
-		if ( !is_string( $cdnBase ) || $cdnBase === '' ) {
-			return $url;
-		}
+    private static function rewriteCdnUrl(string $url): string
+    {
+        $config = MediaWikiServices::getInstance()->getMainConfig();
+        $cdnBase = $config->get("AlgoliaImageCdnBase");
+        if (!is_string($cdnBase) || $cdnBase === "") {
+            return $url;
+        }
 
-		$bucketName = $config->get( 'AWSBucketName' );
-		if ( !is_string( $bucketName ) || $bucketName === '' ) {
-			return $url;
-		}
+        $bucketName = $config->get("AWSBucketName");
+        if (!is_string($bucketName) || $bucketName === "") {
+            return $url;
+        }
 
-		$gcsPrefix = 'https://storage.googleapis.com/' . $bucketName . '/';
-		if ( strpos( $url, $gcsPrefix ) === 0 ) {
-			return rtrim( $cdnBase, '/' ) . '/' . substr( $url, strlen( $gcsPrefix ) );
-		}
+        $gcsPrefix = "https://storage.googleapis.com/" . $bucketName . "/";
+        if (strpos($url, $gcsPrefix) === 0) {
+            return rtrim($cdnBase, "/") .
+                "/" .
+                substr($url, strlen($gcsPrefix));
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
     private static function truncatePlaintext(string $text, int $limit): string
     {
@@ -198,24 +291,67 @@ class RecordMapper
         Title $title,
         string $type,
     ): string {
+        // smw Has name is the canonical display name set by entity templates;
+        // trust it as-is so legitimate digit-ending names survive ("Halo 2600",
+        // "Madden 2008", "Star Wars Episode 1").
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                new \SMW\DIProperty("Has name"),
+            );
+            if ($vals) {
+                $first = reset($vals);
+                if ($first instanceof \SMWDIBlob) {
+                    $name = trim($first->getString());
+                    if ($name !== "") {
+                        return $name;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        // fallback: strip entity prefix and trailing legacy disambiguation id.
         $text = $title->getText();
         $services = MediaWikiServices::getInstance();
         $config = $services->getMainConfig();
         $map = (array) $config->get("AlgoliaTypePrefixMap");
         $prefix = $map[$type] ?? null;
-        $candidate = $text;
         if (is_string($prefix) && $prefix !== "") {
             $prefixWithSlash = $prefix . "/";
             if (strpos($text, $prefixWithSlash) === 0) {
-                $candidate = substr($text, strlen($prefixWithSlash));
+                $text = substr($text, strlen($prefixWithSlash));
             }
         }
-        $parts = explode("/", $candidate);
+        $parts = explode("/", $text);
         $leaf = end($parts);
-        if ($leaf === false || $leaf === "") {
-            return $candidate;
-        }
-        return $leaf;
+        $candidate = $leaf !== false && $leaf !== "" ? $leaf : $text;
+        $candidate = str_replace("_", " ", $candidate);
+        return self::stripLegacyDisambigSuffix($candidate);
+    }
+
+    /**
+     * Strip a trailing legacy disambiguation id from a name.
+     *
+     * When the import script encountered two GB-API entities with the same
+     * display name, it appended the entity id to the page slug so MediaWiki
+     * could store both ("Games/Sprout" + "Games/Sprout_64629"). When the
+     * fallback display path runs on the disambiguated page, the leftover id
+     * shows through as "Sprout 64629". This helper strips that.
+     *
+     * Threshold is intentionally >=5 trailing digits so legitimate year and
+     * sequel numbers survive: "Halo 2600", "Madden NFL 2008", "FIFA 99",
+     * "Tekken 7", "Borderlands 3". GB-API disambig ids in practice are
+     * all 5-6 digits (the screenshots showed 63052, 64629, 65309).
+     *
+     * @param string $name Candidate display name (spaces or underscores ok).
+     * @return string Name with any trailing legacy disambig id removed.
+     */
+    public static function stripLegacyDisambigSuffix(string $name): string
+    {
+        return preg_replace('/[ _]\d{5,}$/', "", rtrim($name));
     }
 
     private static function getExcerptForTitle(Title $title): ?string
@@ -275,49 +411,55 @@ class RecordMapper
         return null;
     }
 
-	private static function getCategoriesForPageId( int $pageId ): array {
-		$services = MediaWikiServices::getInstance();
-		$dbr = $services->getDBLoadBalancer()->getConnection( \DB_REPLICA );
+    private static function getCategoriesForPageId(int $pageId): array
+    {
+        $services = MediaWikiServices::getInstance();
+        $dbr = $services->getDBLoadBalancer()->getConnection(\DB_REPLICA);
 
-		// Exclude hidden categories (tracking/maintenance categories marked with __HIDDENCAT__)
-		$rows = $dbr->newSelectQueryBuilder()
-			->select( 'cl_to' )
-			->from( 'categorylinks' )
-			->leftJoin( 'page', null, [
-				'page_title = cl_to',
-				'page_namespace' => NS_CATEGORY,
-			] )
-			->leftJoin( 'page_props', null, [
-				'pp_page = page_id',
-				'pp_propname' => 'hiddencat',
-			] )
-			->where( [
-				'cl_from' => $pageId,
-				'pp_value IS NULL',
-			] )
-			->caller( __METHOD__ )
-			->fetchResultSet();
+        // Exclude hidden categories (tracking/maintenance categories marked with __HIDDENCAT__)
+        $rows = $dbr
+            ->newSelectQueryBuilder()
+            ->select("cl_to")
+            ->from("categorylinks")
+            ->leftJoin("page", null, [
+                "page_title = cl_to",
+                "page_namespace" => NS_CATEGORY,
+            ])
+            ->leftJoin("page_props", null, [
+                "pp_page = page_id",
+                "pp_propname" => "hiddencat",
+            ])
+            ->where([
+                "cl_from" => $pageId,
+                "pp_value IS NULL",
+            ])
+            ->caller(__METHOD__)
+            ->fetchResultSet();
 
-		$categories = [];
-		foreach ( $rows as $row ) {
-			$categories[] = str_replace( '_', ' ', (string)$row->cl_to );
-		}
+        $categories = [];
+        foreach ($rows as $row) {
+            $categories[] = str_replace("_", " ", (string) $row->cl_to);
+        }
 
-		$config = $services->getMainConfig();
-		$excludePatterns = (array)$config->get( 'AlgoliaExcludeCategoryPatterns' );
-		if ( $excludePatterns ) {
-			$categories = array_filter( $categories, static function ( string $cat ) use ( $excludePatterns ) {
-				foreach ( $excludePatterns as $pattern ) {
-					if ( preg_match( $pattern, $cat ) ) {
-						return false;
-					}
-				}
-				return true;
-			} );
-		}
+        $config = $services->getMainConfig();
+        $excludePatterns = (array) $config->get(
+            "AlgoliaExcludeCategoryPatterns",
+        );
+        if ($excludePatterns) {
+            $categories = array_filter($categories, static function (
+                string $cat,
+            ) use ($excludePatterns) {
+                foreach ($excludePatterns as $pattern) {
+                    if (preg_match($pattern, $cat)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
 
-		return array_values( array_unique( $categories ) );
-	}
+        return array_values(array_unique($categories));
+    }
 
     private static function getRevisionTimestamps(Title $title): array
     {

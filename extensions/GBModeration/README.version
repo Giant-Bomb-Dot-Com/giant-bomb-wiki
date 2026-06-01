@@ -1,0 +1,12 @@
+1) Version has the following format: x.y.z, e.g. 1.0.35.
+2) Version is updated after any change in the PHP code, SQL or CSS/JS.
+3) Version is not updated after changes in testsuite and documentation.
+4) extension.json MUST be updated when version changes.
+
+Note: if some feature is being developed in a different Git branch
+(e.g. "some-feature1"), then you need to update version number only once
+(before merging this branch into master).
+
+== Translations ==
+
+Updates merged from 'translatewiki' to 'master' don't change the version.

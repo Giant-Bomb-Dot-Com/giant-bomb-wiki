@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ruleset>
+	<file>.</file>
+	<arg name="extensions" value="php,php5,inc" />
+	<arg name="encoding" value="UTF-8" />
+
+	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
+		<!-- Don't want to apply this -->
+		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
+
+	</rule>
+
+	<rule ref="MediaWiki.Files.ClassMatchesFilename.NotMatch">
+		<!-- Benchmark scripts should have short names, not full class names -->
+		<exclude-pattern>*/tests/benchmarks/*</exclude-pattern>
+
+		<!-- This test is named ModerationActionUnitTest
+			to avoid class name collision with [decoupled/30_action/ModerationActionTest.php] -->
+		<exclude-pattern>*/tests/phpunit/consequence/ModerationActionTest\.php</exclude-pattern>
+
+		<!-- This test is named ModerationNotifyModeratorIntegrationTest
+			to avoid class name collision with [tests/phpunit/consequence/ModerationNotifyModeratorTest.php] -->
+		<exclude-pattern>*/tests/phpunit/blackbox/ModerationNotifyModeratorTest.php</exclude-pattern>
+
+		<!-- This test is named ModerationPreloadIntegrationTest
+			to avoid class name collision with [tests/phpunit/consequence/ModerationPreloadTest.php] -->
+		<exclude-pattern>*/tests/phpunit/blackbox/ModerationPreloadTest.php</exclude-pattern>
+
+		<!-- This test is named ModerationPageFormsIntegrationTest
+			to avoid class name collision with [tests/phpunit/consequence/ModerationPageFormsTest.php] -->
+		<exclude-pattern>*/tests/phpunit/blackbox/ModerationPageFormsTest.php</exclude-pattern>
+
+		<!-- Excluded (temporarily?) to not rename the existing files -->
+		<exclude-pattern>*/tests/phpunit/framework/ModerationTestSet\.php</exclude-pattern>
+		<exclude-pattern>*/tests/phpunit/framework/ModerationPendingChangeTestSet\.php</exclude-pattern>
+		<exclude-pattern>*/tests/phpunit/framework/bot/response/ModerationTestsuiteBotResponseTrait\.php</exclude-pattern>
+		<exclude-pattern>*/tests/phpunit/framework/engine/cli/MockAutoLoader\.php</exclude-pattern>
+	</rule>
+
+	<rule ref="MediaWiki.NamingConventions.ValidGlobalName">
+		<properties>
+			<!-- Global variable $IP must be used directly in [ModerationTestsuiteCliEngine.php] -->
+			<property name="ignoreList" type="array" value="$IP" />
+		</properties>
+	</rule>
+</ruleset>

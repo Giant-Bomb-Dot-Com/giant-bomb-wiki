@@ -23,7 +23,7 @@
     "ext.gbgallery": {
       "localBasePath": "resources",
       "remoteExtPath": "GBGallery/resources",
-      "scripts": [ "gbgallery.js" ]
+      "scripts": ["gbgallery.js"]
     }
   },
   "config": {

@@ -1,0 +1,11 @@
+node_modules
+nohup.out
+.*.mocked.php
+vendor
+composer.lock
+.eslintcache
+.phpunit.result.cache
+
+# Symbolic link to tests/phpunit/unit/HookRunnerTest.php,
+# where having /unit/ in the path is a hardcoded requirement from MediaWiki core.
+tests/phpunit/consequence/HookRunnerTest.php

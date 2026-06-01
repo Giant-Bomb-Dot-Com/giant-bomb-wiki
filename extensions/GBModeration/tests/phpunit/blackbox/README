@@ -1,0 +1,17 @@
+These are blackbox integration tests.
+
+They use ModerationTestsuite framework (tests/phpunit/framework) to query index.php/api.php,
+which results in MediaWiki being used in the same manner as when actual users do something.
+
+These tests are rather thorough, but they have two serious disadvantages:
+
+1. they are much slower than regular unit tests (tests/phpunit/consequence),
+   because invoking index.php/api.php calls way more code than what we want to test,
+2. it's not possible for PHPUnit to generate code coverage report from these tests,
+   because they are invoked in a separate process, etc.
+
+See also:
+
+1. tests/phpunit/decoupled - these are also blackbox integration tests, but instead of
+   invidivual scenarios they check four main situations: Intercept, Queue, Render and Action.
+2. tests/phpunit/consequence - regular unit tests (much faster).

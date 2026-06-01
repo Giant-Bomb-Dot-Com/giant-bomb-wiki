@@ -1,0 +1,18 @@
+{
+  "@metadata": {
+    "authors": ["Edward Chernenko"]
+  },
+
+  "apihelp-moderation-approve-example": "Approve pending change #123.",
+  "apihelp-moderation-param-modaction": "Moderation-related action to perform.",
+  "apihelp-moderation-param-modid": "ID of the pending change.",
+  "apihelp-moderation-summary": "Performs moderation-related action like Approve or Reject.",
+  "apihelp-query+moderationpreload-param-mode": "Expected format, either wikitext or parsed HTML.",
+  "apihelp-query+moderationpreload-param-title": "Title of the page. Cannot be used together with <var>$1pageid</var>.",
+  "apihelp-query+moderationpreload-param-pageid": "Page ID of the page. Cannot be used together with <var>$1title</var>.",
+  "apihelp-query+moderationpreload-param-section": "Only retrieve the content of this section number.",
+  "apihelp-query+moderationpreload-parsed-example": "Get HTML of the pending edit by this user in the page Dog.",
+  "apihelp-query+moderationpreload-section-example": "Get wikitext of section #2 (third section) of the pending edit by this user in the page Cat.",
+  "apihelp-query+moderationpreload-summary": "If the current user made an edit which is currently awaiting moderation, retrieve the text of this revision.",
+  "apihelp-query+moderationpreload-wikitext-example": "Get wikitext of the pending edit by this user in the page Cat."
+}

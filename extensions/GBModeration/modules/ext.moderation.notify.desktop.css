@@ -1,0 +1,20 @@
+#pending-review {
+  border: 3px solid #f00;
+}
+
+/*
+	Notification "your edit was queued" must be very noticeable,
+	so that new user wouldn't be confused if the edit was saved or not.
+*/
+.mw-notification-area.mw-notification-area-modqueued {
+  position: static;
+  margin-left: auto;
+  margin-right: auto;
+  width: max-content;
+  font-size: 0.9em;
+  line-height: 25px;
+}
+
+.skin-vector-2022 .mw-notification-area-overlay {
+  z-index: 3;
+}

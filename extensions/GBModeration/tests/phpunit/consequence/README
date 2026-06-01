@@ -1,0 +1,7 @@
+This directory (tests/phpunit/consequence) contains normal unit tests.
+
+They check individual parts of the code, making use of MockConsequenceManager when possible
+to avoid repeating the same operation in multiple tests.
+Because of that, these tests are much faster than blackbox tests.
+
+See also: blackbox integration testsuite (tests/phpunit/blackbox and tests/phpunit/decoupled).

@@ -1,0 +1,371 @@
+{
+  "name": "GBModeration",
+  "version": "1.9.3.1",
+  "author": "Edward Chernenko, Giant Bomb Engineering",
+  "url": "https://www.mediawiki.org/wiki/Extension:Moderation",
+  "descriptionmsg": "moderation-desc",
+  "license-name": "GPL-3.0+",
+  "type": "antispam",
+  "requires": {
+    "MediaWiki": ">= 1.43.0"
+  },
+  "GroupPermissions": {
+    "automoderated": {
+      "skip-moderation": true,
+      "skip-move-moderation": true
+    },
+    "moderator": {
+      "moderation": true
+    },
+    "checkuser": {
+      "moderation-checkuser": true
+    },
+    "bot": {
+      "skip-moderation": true,
+      "skip-move-moderation": true
+    },
+    "sysop": {
+      "skip-moderation": true,
+      "skip-move-moderation": true,
+      "moderation": true
+    }
+  },
+  "AddGroups": {
+    "sysop": ["automoderated"]
+  },
+  "RemoveGroups": {
+    "sysop": ["automoderated"]
+  },
+  "GrantPermissions": {
+    "basic": {
+      "skip-moderation": true
+    }
+  },
+  "AvailableRights": ["moderation", "skip-moderation", "skip-move-moderation"],
+  "SpecialPages": {
+    "Moderation": {
+      "class": "MediaWiki\\Moderation\\SpecialModeration",
+      "services": [
+        "Moderation.ActionFactory",
+        "Moderation.EntryFactory",
+        "Moderation.NotifyModerator",
+        "LinkBatchFactory"
+      ]
+    }
+  },
+  "ActionFilteredLogs": {
+    "moderation": {
+      "approve": ["approve", "approveall", "approve-move"],
+      "reject": ["reject", "rejectall"],
+      "block": ["block", "unblock"],
+      "merge": ["merge"]
+    }
+  },
+  "APIModules": {
+    "moderation": {
+      "class": "MediaWiki\\Moderation\\ApiModeration",
+      "services": ["Moderation.ActionFactory"]
+    }
+  },
+  "APIPropModules": {
+    "moderationpreload": {
+      "class": "MediaWiki\\Moderation\\ApiQueryModerationPreload",
+      "services": ["Moderation.Preload"]
+    }
+  },
+  "LogTypes": ["moderation"],
+  "LogRestrictions": {
+    "moderation": "moderation"
+  },
+  "LogActionsHandlers": {
+    "moderation/*": "MediaWiki\\Moderation\\ModerationLogFormatter"
+  },
+  "MessagesDirs": {
+    "Moderation": ["i18n", "api/i18n"]
+  },
+  "ExtensionMessagesFiles": {
+    "ModerationAlias": "Moderation.alias.php"
+  },
+  "AutoloadClasses": {
+    "MediaWiki\\Moderation\\ApiModeration": "api/ApiModeration.php",
+    "MediaWiki\\Moderation\\ApiQueryModerationPreload": "api/ApiQueryModerationPreload.php",
+    "MediaWiki\\Moderation\\ActionFactory": "action/ActionFactory.php",
+    "MediaWiki\\Moderation\\ActionLinkRenderer": "util/ActionLinkRenderer.php",
+    "MediaWiki\\Moderation\\AddLogEntryConsequence": "lib/consequence/AddLogEntryConsequence.php",
+    "MediaWiki\\Moderation\\ApproveEditConsequence": "lib/consequence/ApproveEditConsequence.php",
+    "MediaWiki\\Moderation\\ApproveMoveConsequence": "lib/consequence/ApproveMoveConsequence.php",
+    "MediaWiki\\Moderation\\ApproveUploadConsequence": "lib/consequence/ApproveUploadConsequence.php",
+    "MediaWiki\\Moderation\\BlockUserConsequence": "lib/consequence/BlockUserConsequence.php",
+    "MediaWiki\\Moderation\\ConsequenceManager": "lib/consequence/manager/ConsequenceManager.php",
+    "MediaWiki\\Moderation\\DeleteRowFromModerationTableConsequence": "lib/consequence/DeleteRowFromModerationTableConsequence.php",
+    "MediaWiki\\Moderation\\EditFormOptions": "util/EditFormOptions.php",
+    "MediaWiki\\Moderation\\EntryFactory": "lib/entry/EntryFactory.php",
+    "MediaWiki\\Moderation\\ForgetAnonIdConsequence": "lib/consequence/ForgetAnonIdConsequence.php",
+    "MediaWiki\\Moderation\\GiveAnonChangesToNewUserConsequence": "lib/consequence/GiveAnonChangesToNewUserConsequence.php",
+    "MediaWiki\\Moderation\\Hook\\HookRunner": "lib/Hook/HookRunner.php",
+    "MediaWiki\\Moderation\\Hook\\ModerationContinueEditingLinkHook": "lib/Hook/ModerationContinueEditingLinkHook.php",
+    "MediaWiki\\Moderation\\Hook\\ModerationInterceptHook": "lib/Hook/ModerationInterceptHook.php",
+    "MediaWiki\\Moderation\\Hook\\ModerationPendingHook": "lib/Hook/ModerationPendingHook.php",
+    "MediaWiki\\Moderation\\IConsequence": "lib/consequence/IConsequence.php",
+    "MediaWiki\\Moderation\\IConsequenceManager": "lib/consequence/manager/IConsequenceManager.php",
+    "MediaWiki\\Moderation\\InsertRowIntoModerationTableConsequence": "lib/consequence/InsertRowIntoModerationTableConsequence.php",
+    "MediaWiki\\Moderation\\InvalidatePendingTimeCacheConsequence": "lib/consequence/InvalidatePendingTimeCacheConsequence.php",
+    "MediaWiki\\Moderation\\MarkAsConflictConsequence": "lib/consequence/MarkAsConflictConsequence.php",
+    "MediaWiki\\Moderation\\MarkAsMergedConsequence": "lib/consequence/MarkAsMergedConsequence.php",
+    "MediaWiki\\Moderation\\ModifyPendingChangeConsequence": "lib/consequence/ModifyPendingChangeConsequence.php",
+    "MediaWiki\\Moderation\\NewChangeFactory": "lib/NewChangeFactory.php",
+    "MediaWiki\\Moderation\\PendingEdit": "lib/entry/PendingEdit.php",
+    "MediaWiki\\Moderation\\QueueEditConsequence": "lib/consequence/QueueEditConsequence.php",
+    "MediaWiki\\Moderation\\QueueMoveConsequence": "lib/consequence/QueueMoveConsequence.php",
+    "MediaWiki\\Moderation\\QueueUploadConsequence": "lib/consequence/QueueUploadConsequence.php",
+    "MediaWiki\\Moderation\\RejectAllConsequence": "lib/consequence/RejectAllConsequence.php",
+    "MediaWiki\\Moderation\\RejectOneConsequence": "lib/consequence/RejectOneConsequence.php",
+    "MediaWiki\\Moderation\\RememberAnonIdConsequence": "lib/consequence/RememberAnonIdConsequence.php",
+    "MediaWiki\\Moderation\\RollbackResistantQuery": "util/RollbackResistantQuery.php",
+    "MediaWiki\\Moderation\\SendNotificationEmailConsequence": "lib/consequence/SendNotificationEmailConsequence.php",
+    "MediaWiki\\Moderation\\TagRevisionAsMergedConsequence": "lib/consequence/TagRevisionAsMergedConsequence.php",
+    "MediaWiki\\Moderation\\TimestampTools": "util/TimestampTools.php",
+    "MediaWiki\\Moderation\\UnblockUserConsequence": "lib/consequence/UnblockUserConsequence.php",
+    "MediaWiki\\Moderation\\WatchOrUnwatchConsequence": "lib/consequence/WatchOrUnwatchConsequence.php",
+    "MediaWiki\\Moderation\\ModerationAction": "action/ModerationAction.php",
+    "MediaWiki\\Moderation\\ModerationActionApprove": "action/ModerationActionApprove.php",
+    "MediaWiki\\Moderation\\ModerationActionBlock": "action/ModerationActionBlock.php",
+    "MediaWiki\\Moderation\\ModerationActionEditChange": "action/review/ModerationActionEditChange.php",
+    "MediaWiki\\Moderation\\ModerationActionEditChangeSubmit": "action/review/ModerationActionEditChangeSubmit.php",
+    "MediaWiki\\Moderation\\ModerationActionMerge": "action/ModerationActionMerge.php",
+    "MediaWiki\\Moderation\\ModerationActionPreview": "action/review/ModerationActionPreview.php",
+    "MediaWiki\\Moderation\\ModerationActionReject": "action/ModerationActionReject.php",
+    "MediaWiki\\Moderation\\ModerationActionShow": "action/ModerationActionShow.php",
+    "MediaWiki\\Moderation\\ModerationActionShowImage": "action/ModerationActionShowImage.php",
+    "MediaWiki\\Moderation\\ModerationAjaxHook": "util/ModerationAjaxHook.php",
+    "MediaWiki\\Moderation\\ModerationApiHooks": "hooks/ModerationApiHooks.php",
+    "MediaWiki\\Moderation\\ModerationApprovableEntry": "lib/entry/ModerationApprovableEntry.php",
+    "MediaWiki\\Moderation\\ModerationApproveHook": "hooks/ModerationApproveHook.php",
+    "MediaWiki\\Moderation\\ModerationBlockCheck": "util/ModerationBlockCheck.php",
+    "MediaWiki\\Moderation\\ModerationCanSkip": "util/ModerationCanSkip.php",
+    "MediaWiki\\Moderation\\ModerationCompatTools": "util/ModerationCompatTools.php",
+    "MediaWiki\\Moderation\\ModerationEditHooks": "hooks/ModerationEditHooks.php",
+    "MediaWiki\\Moderation\\ModerationEditChangePage": "action/review/ModerationEditChangePage.php",
+    "MediaWiki\\Moderation\\ModerationEntryEdit": "lib/entry/ModerationEntryEdit.php",
+    "MediaWiki\\Moderation\\ModerationEntryFormatter": "lib/entry/ModerationEntryFormatter.php",
+    "MediaWiki\\Moderation\\ModerationEntry": "lib/entry/ModerationEntry.php",
+    "MediaWiki\\Moderation\\ModerationEntryMove": "lib/entry/ModerationEntryMove.php",
+    "MediaWiki\\Moderation\\ModerationEntryUpload": "lib/entry/ModerationEntryUpload.php",
+    "MediaWiki\\Moderation\\ModerationError": "lib/exception/ModerationError.php",
+    "MediaWiki\\Moderation\\ModerationLogFormatter": "ModerationLogFormatter.php",
+    "MediaWiki\\Moderation\\ModerationMoveHooks": "hooks/ModerationMoveHooks.php",
+    "MediaWiki\\Moderation\\ModerationNewChange": "lib/ModerationNewChange.php",
+    "MediaWiki\\Moderation\\ModerationNotifyModerator": "hooks/ModerationNotifyModerator.php",
+    "MediaWiki\\Moderation\\ModerationPageForms": "plugins/ModerationPageForms.php",
+    "MediaWiki\\Moderation\\ModerationPreload": "hooks/ModerationPreload.php",
+    "MediaWiki\\Moderation\\ModerationQueuedSuccessException": "lib/exception/ModerationQueuedSuccessException.php",
+    "MediaWiki\\Moderation\\ModerationUpdater": "hooks/ModerationUpdater.php",
+    "MediaWiki\\Moderation\\ModerationUploadHooks": "hooks/ModerationUploadHooks.php",
+    "MediaWiki\\Moderation\\ModerationUploadStorage": "lib/ModerationUploadStorage.php",
+    "MediaWiki\\Moderation\\ModerationVersionCheck": "util/ModerationVersionCheck.php",
+    "MediaWiki\\Moderation\\ModerationViewableEntry": "lib/entry/ModerationViewableEntry.php",
+    "MediaWiki\\Moderation\\SpecialModeration": "SpecialModeration.php",
+    "MediaWiki\\Moderation\\GBFileCleanupHelper": "lib/consequence/GBFileCleanupHelper.php"
+  },
+  "ResourceModules": {
+    "ext.moderation.ajaxhook": {
+      "scripts": "ext.moderation.ajaxhook.js",
+      "targets": ["desktop", "mobile"]
+    },
+    "ext.moderation.edit": {
+      "styles": "ext.moderation.edit.css"
+    },
+    "ext.moderation.mf.notify": {
+      "scripts": ["mobilefrontend/notify.mf.js"],
+      "styles": ["mobilefrontend/notify.mf.css"],
+      "targets": ["desktop", "mobile"],
+      "dependencies": [
+        "mediawiki.notification",
+        "ext.moderation.ajaxhook",
+        "mobile.startup"
+      ],
+      "messages": [
+        "mobile-frontend-editor-success-new-page",
+        "mobile-frontend-editor-success-landmark-1",
+        "mobile-frontend-editor-success"
+      ]
+    },
+    "ext.moderation.mf.preload33": {
+      "scripts": ["mobilefrontend/preload33.mf.js"],
+      "targets": ["desktop", "mobile"],
+      "dependencies": ["mediawiki.api", "mediawiki.Uri"]
+    },
+    "ext.moderation.notify": {
+      "scripts": "ext.moderation.notify.js",
+      "styles": "ext.moderation.notify.css",
+      "dependencies": [
+        "mediawiki.cookie",
+        "mediawiki.jqueryMsg",
+        "mediawiki.user",
+        "mediawiki.Uri",
+        "mediawiki.util"
+      ],
+      "messages": [
+        "moderation-edit-queued",
+        "moderation-pending-review",
+        "moderation-suggest-signup"
+      ],
+      "targets": ["desktop", "mobile"]
+    },
+    "ext.moderation.notify.desktop": {
+      "scripts": "ext.moderation.notify.desktop.js",
+      "styles": "ext.moderation.notify.desktop.css",
+      "targets": ["desktop", "mobile"]
+    },
+    "ext.moderation.special.ajax": {
+      "scripts": "ext.moderation.special.ajax.js",
+      "styles": "ext.moderation.special.ajax.css",
+      "dependencies": ["mediawiki.api", "mediawiki.Uri"],
+      "messages": ["moderation-block", "moderation-unblock"]
+    },
+    "ext.moderation.special.css": {
+      "styles": "ext.moderation.special.css"
+    },
+    "ext.moderation.ve": {
+      "scripts": ["visualeditor/ajaxhook.ve.js", "visualeditor/preload.ve.js"],
+      "targets": ["desktop", "mobile"],
+      "dependencies": [
+        "mediawiki.api",
+        "mediawiki.Title",
+        "ext.visualEditor.targetLoader",
+        "ext.moderation.ajaxhook"
+      ]
+    }
+  },
+  "ResourceFileModulePaths": {
+    "localBasePath": "modules",
+    "remoteExtPath": "Moderation/modules"
+  },
+  "HookHandlers": {
+    "api": {
+      "class": "MediaWiki\\Moderation\\ModerationApiHooks",
+      "services": ["Moderation.CanSkip", "Moderation.Preload"]
+    },
+    "approveHook": {
+      "factory": "MediaWiki\\Moderation\\ModerationApproveHook::hookHandlerFactory"
+    },
+    "edit": {
+      "class": "MediaWiki\\Moderation\\ModerationEditHooks",
+      "services": [
+        "Moderation.ConsequenceManager",
+        "Moderation.CanSkip",
+        "Moderation.EditFormOptions",
+        "Moderation.HookRunner"
+      ]
+    },
+    "editFormOptions": {
+      "factory": "MediaWiki\\Moderation\\EditFormOptions::hookHandlerFactory"
+    },
+    "move": {
+      "class": "MediaWiki\\Moderation\\ModerationMoveHooks",
+      "services": [
+        "Moderation.ConsequenceManager",
+        "Moderation.CanSkip",
+        "Moderation.EditFormOptions"
+      ]
+    },
+    "notifyModerator": {
+      "factory": "MediaWiki\\Moderation\\ModerationNotifyModerator::hookHandlerFactory"
+    },
+    "pageForms": {
+      "class": "MediaWiki\\Moderation\\ModerationPageForms",
+      "services": ["Moderation.Preload"]
+    },
+    "preload": {
+      "factory": "MediaWiki\\Moderation\\ModerationPreload::hookHandlerFactory"
+    },
+    "updater": {
+      "class": "MediaWiki\\Moderation\\ModerationUpdater"
+    },
+    "upload": {
+      "class": "MediaWiki\\Moderation\\ModerationUploadHooks",
+      "services": [
+        "Moderation.ConsequenceManager",
+        "Moderation.CanSkip",
+        "Moderation.EditFormOptions"
+      ]
+    }
+  },
+  "Hooks": {
+    "AlternateEdit": "preload",
+    "ApiBeforeMain": "api",
+    "ApiCheckCanExecute": "api",
+    "BeforePageDisplay": "edit",
+    "ChangeTagsAllowedAdd": "edit",
+    "CheckUserInsertChangesRow": "approveHook",
+    "CheckUserInsertLogEventRow": "approveHook",
+    "CheckUserInsertPrivateEventRow": "approveHook",
+    "EchoCanAbortNewMessagesAlert": "notifyModerator",
+    "EditFilter": "editFormOptions",
+    "EditFormInitialText": "preload",
+    "EditFormPreloadText": "preload",
+    "EditPage::showEditForm:fields": "edit",
+    "FileUpload": "approveHook",
+    "GetNewMessagesAlert": "notifyModerator",
+    "getUserPermissionsErrors": "upload",
+    "LoadExtensionSchemaUpdates": "updater",
+    "ListDefinedTags": "edit",
+    "LocalUserCreated": "preload",
+    "ModerationContinueEditingLink": "pageForms",
+    "MultiContentSave": "edit",
+    "PageSaveComplete": "edit",
+    "PageForms::EditFormInitialText": "pageForms",
+    "PageForms::EditFormPreloadText": "pageForms",
+    "PageMoveCompleting": "approveHook",
+    "RecentChange_save": "approveHook",
+    "RevisionFromEditComplete": "approveHook",
+    "SpecialPageBeforeExecute": "editFormOptions",
+    "TitleMove": "move",
+    "UploadVerifyUpload": "upload",
+    "wgQueryPages": "api"
+  },
+  "config": {
+    "ModerationEnable": {
+      "value": true,
+      "description": "If false, new edits are applied as usual (not sent to moderation)."
+    },
+    "ModerationTimeToOverrideRejection": {
+      "value": 1209600,
+      "description": "Time (in seconds) after which rejected edit could no longer be approved."
+    },
+    "ModerationPreviewLink": {
+      "value": false,
+      "description": "If true, Preview link is shown for pending edits. Normally you shouldn't enable this (when following Best Practices, approval/rejection depends on content, not formatting)."
+    },
+    "ModerationNotificationEnable": {
+      "value": false,
+      "description": "If true, administrator is notified of new changes that await moderation."
+    },
+    "ModerationNotificationNewOnly": {
+      "value": false,
+      "description": "If true, only notify about new pages, not all edits."
+    },
+    "ModerationEmail": {
+      "value": "",
+      "description": "Email address to send notifications to."
+    },
+    "ModerationUseAjax": {
+      "value": false,
+      "description": "Experimental: if true, enable Ajax handling of links on Special:Moderation."
+    },
+    "ModerationOnlyInNamespaces": {
+      "value": [],
+      "description": "If set to an array of namespace numbers (e.g. NS_MAIN, NS_FILE), moderation is only enabled in these namespaces (edits in other namespaces will bypass moderation). Default (empty array): moderation is enabled everywhere."
+    },
+    "ModerationIgnoredInNamespaces": {
+      "value": [],
+      "description": "If set to an array of namespace numbers (e.g. NS_MAIN, NS_FILE), non-automoderated users can bypass moderation in these namespaces. Default (empty array): moderation can't be bypassed anywhere."
+    },
+    "ModerationEnableEditChange": {
+      "value": false,
+      "description": "If true, moderators are allowed to edit pending changes before approving. DANGEROUS: moderator can accidentally delete the text of pending change. Enable this only when you use Moderation for pre-publish review."
+    }
+  },
+  "ServiceWiringFiles": ["hooks/ServiceWiring.php"],
+  "manifest_version": 2
+}

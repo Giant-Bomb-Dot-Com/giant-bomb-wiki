@@ -1,0 +1,333 @@
+List of changes between releases of Extension:Moderation.
+
+== master branch (1.9.x versions) ==
+
+No changes since Moderation 1.9.3.
+
+== Moderation 1.9.3 ==
+
+Note: this version requires MediaWiki 1.43+. MediaWiki 1.39 is no longer supported.
+
+Features:
+* Support MediaWiki 1.44.
+
+Refactoring, performance optimizations:
+* Removed legacy code for MediaWiki 1.39-1.42.
+
+== Moderation 1.8.31 ==
+
+Features:
+* "Return to <title>" link is now shown after successful Approve.
+* Support SQLite.
+* Viewing already rejected edits will show "Rejected by" information instead of Reject link.
+
+Refactoring, performance optimizations:
+* Reduced the number of SQL queries when using PostgreSQL.
+* Shortened SQL query in InsertRowIntoModerationTable.
+* Moved timestamp-related methods to TimestampTools service.
+* Moved all PHP classes to namespace MediaWiki\Moderation.
+* Switched MySQL/PostgreSQL-specific database patches to engine-agnostic JSON format.
+
+== Moderation 1.8.22 ==
+
+Features:
+* Support MediaWiki 1.43.
+* Support temporary accounts.
+* Support visual editing mode of MobileFrontend editor.
+* If trying to Approve fails due to null edit, the change is now automatically rejected.
+
+Bugfixes:
+* "Edit change" now truncates very long edit summaries instead of showing an error.
+* "Continue editing" link now points to VisualEditor if the user just used VisualEditor.
+* Fixed "moderation-merged" tag being unnecessarily added if the moderator
+didn't modify the page while using modaction=merge.
+
+== Moderation 1.8.9 ==
+
+Note: this version requires MediaWiki 1.39+. MediaWiki 1.35 is no longer supported.
+
+Features:
+* Support MediaWiki 1.42.
+* Support Vector 2022 skin.
+
+Bugfixes:
+* Very long edit summaries are now truncated instead of showing an error.
+
+Refactoring, performance optimizations:
+* Removed legacy code for MediaWiki 1.35-1.38.
+
+== Moderation 1.7.9 ==
+
+Features:
+* Support MediaWiki 1.39-1.41.
+
+== Moderation 1.6.22 ==
+
+Note: this version requires MediaWiki 1.35+. MediaWiki 1.31 is no longer supported.
+
+Features:
+* Support MediaWiki 1.37-1.38.
+* Better support of VisualEditor in MediaWiki 1.36-1.37.
+* Better support of AbuseFilter and CheckUser in MediaWiki 1.36-1.37
+(tags and XFF of approved edit are preserved).
+* Allow AbuseFilter to tag intercepted edits as "place this to Spam folder"
+by adding "moderation-spam" tag to them.
+
+Security updates:
+* Restricted imagerotate API (rotate/reupload existing image) to automoderated
+users, because this action can't be intercepted by Moderation.
+
+Refactoring, performance optimizations:
+* Removed legacy code for MediaWiki 1.31-1.34.
+* Removed legacy code for supporting obsolete (pre-1.35) DB schema.
+* Provide type-checking interfaces for hooks that are called by Moderation itself.
+* Refactoring of hook classes (strict type checks, dependency injection).
+* Refactoring of API and special page classes (dependency injection).
+* Refactoring of action classes (dependency injection).
+
+== Moderation 1.5.36 ==
+
+Features:
+* Support MediaWiki 1.36.
+* API: Support sectiontitle= parameter of api.php?action=edit.
+
+Bugfixes:
+* Move/upload via API won't unnecessarily Unwatch affected pages.
+* Fixed rare error during ApproveAll when some of the timestamp changes
+need to be ignored, while others don't need to be ignored.
+* Fixed post-approval adjustments to rev_timestamp (restoring time when
+the author did the change) not being applied:
+	* to post-Move redirects,
+	* when ApproveAll simultaneously approves Edit and Move on same page,
+	* when approving a Move that overwrites an existing redirect.
+* PostgreSQL: fixed incorrect value returned by NewChange::queue().
+* PostgreSQL: order of edits during ApproveAll is now the same as with MySQL.
+* PostgreSQL: Special:Moderation no longer shows day/month in today's timestamps.
+* Fixed error when returning false from ModerationIntercept hook.
+
+Refactoring, performance optimizations:
+* Reduced the number of SQL queries during RejectAll.
+* Major refactoring of everything (Consequence classes).
+* Major refactoring of everything (replacing static methods with Services).
+* Better performance of move/upload via API.
+* Reduced the number of SQL queries when upload is intercepted.
+* Refactoring of ModerationApproveHook class.
+* Removed static variables like NewChange::$LastInsertId.
+* Removed unneeded configuration variables like $wgModerationForceAjaxHook.
+
+Compatibility:
+* Moderation won't intercept comments of Extension:CommentStreams,
+because CommentStreams incorrectly assumes "edit queued" to be an error.
+
+Warnings fixed:
+* Fixed post-approval warning when using Moderation with Extension:Flow.
+
+Troubleshooting tools:
+* Added debug log to ModerationApproveHook.
+
+== Moderation 1.4.20 ==
+
+Note: this version requires MediaWiki 1.31+. MediaWiki 1.27 is no longer supported.
+
+Features:
+* Support MediaWiki 1.34.
+* Support MobileFrontend editor in MW 1.33-1.34.
+* Support anonymous uploads (if allowed in $wgGroupPermissions).
+* Support PostgreSQL.
+
+Bugfixes:
+* Default value of mod_stash_key is now NULL, not empty string.
+* mod_minor field is now 0 or 1 (not EDIT_MINOR, which is 4).
+
+Warnings fixed:
+* Replaced deprecated ApiBase::dieUsage()
+* Replaced deprecated EditPage::$mTitle
+* Replaced deprecated Linker::link()
+* Replaced deprecated StreamFile::send404Message()
+* Replaced deprecated Title::GAID_FOR_UPDATE
+* Replaced deprecated UploadBase::stashFile()
+* Replaced deprecated $wgContLang, $wgUser, $wgRequest
+* Replaced deprecated wfMemcKey()
+
+Refactoring, performance optimizations:
+* Removed legacy code for MediaWiki 1.27-1.30.
+
+== Moderation 1.4.0 ==
+
+Features:
+* Support MediaWiki 1.32.
+* Support MediaWiki 1.33 (except MobileFrontend editor).
+* Support installation without update.php via web updater of MediaWiki.
+* When moderator manually resolves an edit conflict, resulting edit
+is now tagged as "merged edit of another user".
+* API: implement api.php?modaction=show
+* API: implement api.php?action=query&list=querypage&qppage=Moderation
+* Extension:Echo won't suppress "New changes are pending" notification.
+* (disabled by default) Allow moderator to modify text before approval.
+
+Bugfixes:
+* modaction=show now correctly shows non-image uploads (e.g. OGG file).
+* Two clicks on "Mark as spammer" link no longer create 2 log entries.
+* Log entry of "moderation/approve" now records "revid" for uploads.
+* Module "jquery.cookie" is now loaded before "ext.moderation.notify".
+* Default value of mod_page2_namespace is now 0, not empty string.
+* modaction=approveall now works for User:0 (where "0" is username).
+* VisualEditor: fixed bug that prevented preloading of long wikitext.
+* AbuseFilter: fixed AbuseFilter not being called for moves in MW 1.33.
+
+UI changes:
+* Notifications are no longer sent for edits in Spam folder.
+* Diffs on Special:Moderation are now properly colored in MW 1.31+.
+* If editor is anonymous, Whois link is now shown to non-checkusers.
+* Removed "external link" icon after Whois links on Special:Moderation.
+* CSS style of Special:Moderation is no longer lazy-loaded.
+* Log messages now use {{gender:}} syntax for non-English translations.
+* modaction=merge now warns if the change has already been merged.
+* Result of (un)blocking an already (un)blocked user is now "success".
+
+Warnings fixed:
+* Replaced deprecated ParserOptions::setEditSection()
+* Replaced deprecated FileRepo::streamFile()
+* Replaced deprecated OutputPage::addWikiText()
+
+Refactoring, performance optimizations:
+* Replaced wfMessage() with $context->msg() whenever possible.
+* Made some static methods non-static in NotifyModerator class.
+
+== Moderation 1.3.0 ==
+
+Note: please run update.php (there are changes to DB schema).
+
+Features:
+* Support MediaWiki 1.31.
+* Page moves are now intercepted by Moderation.
+* Special:Log/moderation can now be filtered by subtype.
+* Made "Watch this file" checkbox work even if upload was intercepted.
+
+Bugfixes:
+* Special:Moderation will no longer have duplicated rows.
+* Approve won't restore the timestamp of approved edit if the page already
+has newer revisions (to avoid incorrect order of History).
+* Post-queue notification email is now sent in the language of the wiki.
+* Links in notification email now use canonical URLs.
+* Redlinks are now correctly displayed on Special:Log/moderation.
+* mod_new_len is no longer calculated before PreSaveTransform.
+
+UI changes:
+* Special:Upload now shows user-friendly "Success! Uploaded!" message
+(not styled as an error) when the upload is queued for moderation.
+* Special:Moderation now highlights large changes (>500 bytes).
+* modaction=show no longer shows Approve link for null edits.
+
+Warnings fixed:
+* Replaced deprecated SpecialPage::getTitle()
+* JavaScript: replaced deprecated postWithToken('edit', ...)
+
+Refactoring, performance optimizations:
+* Reduced the number of SQL queries during ApproveAll.
+* Faster rendering of Merged folder of Special:Moderation.
+* Faster rendering of Special:Log/moderation: used LinkBatch.
+* Major refactoring of code that queues new edits (ModerationNewChange class).
+* Major refactoring of "approve change" logic (subclasses of ModerationEntry).
+* Refactoring of SpecialModeration::formatResult (ModerationEntryFormatter).
+* Refactoring of diff generation logic (ModerationViewableEntry).
+* Removed unneeded checks around doWatchOrUnwatch().
+* Removed more legacy code for MediaWiki 1.23-1.26.
+* Notification emails are now delayed via DeferredUpdates.
+
+Configuration:
+* Added skip-move-moderation right (allows to bypass moderation of page moves).
+* Default: sysops and bots can bypass moderation.
+* Default: sysops can use Special:Moderation.
+* Default: sysops can add/remove "automoderated" group.
+
+== Moderation 1.2.0 ==
+
+Note: this version requires MediaWiki 1.27+. MediaWiki 1.23 is no longer supported.
+Note: please run update.php (there are changes to DB schema).
+
+Features:
+* Support MediaWiki 1.30.
+* Support uploads via API and MultiUpload-like extensions in MediaWiki 1.28+.
+* In-wiki notification "New changes await moderation" is now shown to moderators.
+* Allowed to disable/enable Moderation on per-namespace basis via
+$wgModerationIgnoredInNamespaces and $wgModerationOnlyInNamespaces.
+* Support third-party Extension:PageForms (editing via Special:FormEdit).
+* AbuseFilter: tags set by AbuseFilter are now preserved by Moderation.
+
+UI changes:
+* Moderation is now listed under Antispam section of Special:SpecialPages.
+
+Security updates:
+* Restricted filerevert API (revert image to older version) to automoderated
+users, because this action can't be intercepted by Moderation.
+* Fixed improper escaping of user-provided mod_comment on Special:Moderation.
+
+Bugfixes:
+* Fixed situation when JobQueueError (caused by another extension) resulted in
+duplicate rows on Special:Moderation.
+* Fixed "404 Not Found" not being sent for missing stash images (MW 1.28+).
+* In $wgModerationUseAjax mode, Preview is no longer treated as one-click action.
+* Field mod_title now uses underscores (as other MediaWiki tables), not spaces.
+
+Documentation:
+* Explained each configuration variable in extension.json.
+
+Refactoring, performance optimizations:
+* Removed legacy code for MediaWiki 1.23-1.26.
+* Replaced PHP syntax array() with shorter []
+
+== Moderation 1.1.0.3 ==
+
+Security release for legacy MediaWiki 1.23 (obsolete LTS).
+Unlike Moderation 1.2.0, this release has no changes except those needed for security.
+If you are at MediaWiki 1.27+, please use Moderation 1.2.0.
+
+Security updates:
+* Restricted filerevert API (revert image to older version) to automoderated
+users, because this action can't be intercepted by Moderation.
+* Fixed improper escaping of user-provided mod_comment on Special:Moderation.
+
+== Moderation 1.1.0 ==
+
+Features:
+* Support MediaWiki 1.28-1.29.
+* VisualEditor: Support Internet Explorer 11.
+* API: Support for prependtext/appendtext parameters (action=edit).
+* API: Provide moderation API (action=moderation).
+* Made "Watch this page" checkbox work even if edit was intercepted by Moderation.
+* Support situation when user got deleted (e.g. via [removeUnusedAccounts.php]).
+* Made sure that successfully queued edit won't be lost if DB rollback happens.
+* (disabled by default) Experimental Ajax handling of links on Special:Moderation.
+
+UI changes:
+* Added "pending review" icon to postedit notification.
+* Added link to Special:Log/moderation on Special:Moderation.
+* Now showing date on Special:Moderation.
+
+Bugfixes:
+* Fixed incorrect preloading of section #0.
+* Fixed incorrect calculation of mod_new_len when editing section.
+* Fixed bug that caused user-agent (for CheckUser extension) not to be preserved during ApproveAll.
+* Fixed issue of user sometimes becoming logged out after registration.
+* MobileFrontend: Fixed bug that caused pending edit not to preload when creating a new article.
+* VisualEditor: fixed error "String.split is not a function" in Chrome.
+
+Warnings fixed:
+* Fixed warning when MediaWiki uses alternate editor.
+* Fixed PHP 7.0 warnings (missing static).
+* Fixed warning "explicit commit of implicit transaction".
+* Removed obsolete hook AuthPluginAutoCreate for MediaWiki 1.27+.
+
+Refactoring, performance optimizations:
+* Faster rendering of Special:Moderation: used LinkBatch.
+* Simplified error handling of "file not found in stash".
+* Refactoring of ModerationPreload class.
+* Major refactoring of ajaxhook JavaScript.
+
+Configuration:
+* Added skip-moderation to $wgGrantPermissions['basic'] (MediaWiki 1.28+ only).
+
+== Moderation 1.0.0 ==
+
+First stable release.

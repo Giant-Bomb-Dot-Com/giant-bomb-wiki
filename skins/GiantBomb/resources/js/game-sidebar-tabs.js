@@ -204,7 +204,16 @@
     const targetLinks = document.querySelectorAll(contentSelectors.join(", "));
 
     for (const link of targetLinks) {
+      // Don't strip text if the link is actually an image wrapper
+      if (
+        link.querySelector("img") ||
+        link.classList.contains("mw-file-description")
+      ) {
+        continue;
+      }
+
       let text = link.textContent;
+
       // Strip prefixes
       for (const prefix of prefixes) {
         if (text.startsWith(prefix)) {

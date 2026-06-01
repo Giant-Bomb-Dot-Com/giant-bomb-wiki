@@ -20,13 +20,6 @@ function p.renderSidebar(frame)
             query = query .. " [[Name::~" .. currentLetter .. "*]]"
         end
     end
-    
-    local companyPages = mw.smw.ask({
-	    query,
-	    "?Display title of=display", -- Request the special property
-	    "limit=500",
-	    "mainlabel=page"
-	})
 
 	-- Prepare the A-Z options for the dropdown
     local letterOptions = {{ val = "All", label = "All" }, { val = "#", label = "#" }}
@@ -48,7 +41,7 @@ function p.renderSidebar(frame)
     	:attr('id','search-filter')
     	:attr('name','search_filter')
         :attr('value',currentSearchFilter)
-    	:attr('placeholder','Search games for matching people...')
+    	:attr('placeholder','Search name...')
     	:addClass('filter-input')
     
     -- LETTER SELECT

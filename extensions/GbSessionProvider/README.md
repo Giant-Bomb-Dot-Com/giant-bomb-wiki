@@ -1,10 +1,9 @@
-GbSessionProvider
-=================
+# GbSessionProvider
 
 The _GbSessionProvider_ is an identity extension for Mediawiki. It automatically creates a Mediawiki session based on prior authentication, using a JWT cookie session issued by a Giant Bomb Next system (GBN). If necessary, the extension creates a Mediawiki user on behalf of the verified GBN session cookie.
 
-What this extension does relies on the understanding of how Mediawiki handles authentication and authorization, and how it is extensible. 
-https://www.mediawiki.org/wiki/Manual:SessionManager_and_AuthManager#SessionProvider. 
+What this extension does relies on the understanding of how Mediawiki handles authentication and authorization, and how it is extensible.
+https://www.mediawiki.org/wiki/Manual:SessionManager_and_AuthManager#SessionProvider.
 
 Its basic flow follows a Mediawiki example to use a cookie already set by an external authentication system. https://www.mediawiki.org/wiki/Manual:SessionManager_and_AuthManager/SessionProvider_examples
 
@@ -14,10 +13,10 @@ Users are automatically logged into Mediawiki upon successful verification. If t
 
 ## Pre-requisites
 
-* Mediawiki 1.43.5+ (LTE)
-* access to the `gb_wiki` cookie from Giant Bomb Next
-* a way to verify the cookie
-  * https://giantbomb.com/.well-known/jwks.json
+- Mediawiki 1.43.5+ (LTE)
+- access to the `gb_wiki` cookie from Giant Bomb Next
+- a way to verify the cookie
+  - https://giantbomb.com/.well-known/jwks.json
 
 ## Development
 
@@ -34,7 +33,8 @@ The PHP code resides in this repo and gets copied to the container during the /i
 ### Testing JWT
 
 In `config/LocalSettings.php` locate the following configuration settings for the extension GbSessionProvider.
-* `$wgGbSessionProviderJWKSUri` is a string with URI for the JWKS
+
+- `$wgGbSessionProviderJWKSUri` is a string with URI for the JWKS
 
 Previously there was a config to have the wiki insert the `gb_wiki` cookie to test, but this was removed.
 

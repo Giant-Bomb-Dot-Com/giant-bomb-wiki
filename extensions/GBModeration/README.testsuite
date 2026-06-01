@@ -1,0 +1,41 @@
+Extension:Moderation has an automated testsuite.
+
+== What is the automated testsuite? ==
+
+This is a collection of tests which check operability of Moderation extension.
+
+By running those tests, we can check if some modification to Moderation or to
+the MediaWiki core itself (e.g. when new version of MediaWiki is released)
+causes a regression (side effect bug).
+
+The tests of Moderation are focused on "black box" testing,
+meaning that instead of checking internal database only,
+we check the exact behavior that real users face by duplicating their actions
+and looking at the results through the user interface
+and parts of MediaWiki API not related to Moderation.
+
+== Invocation ==
+
+WARNING: THIS TEST DOESN'T PRESERVE EXISTING DATABASE. EVERYTHING IS DELETED.
+
+1) Install PHPunit.
+
+2) Go into the MediaWiki directory.
+
+3) Run the following command:
+
+tests/phpunit/phpunit.php extensions/Moderation
+
+== Writing new tests ==
+
+File [tests/phpunit/framework/ModerationTestsuite.php] is the general framework
+for blackbox testing of Extension:Moderation.
+
+It provides the following:
+
+1) methods to access the MediaWiki API.
+
+2) automated creation of test users and clean test environment.
+
+3) methods to fetch Special:Moderation, parse it into the array of entries
+(ModerationTestsuiteEntry) and compare two snapshots of Special:Moderation.

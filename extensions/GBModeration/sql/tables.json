@@ -1,0 +1,409 @@
+[
+  {
+    "name": "moderation",
+    "comment": "This table is very similar to the recentchanges table. It lists:\n1) not yet approved changes,\nrejected changes (for some period of time).\n\nIt does NOT list approved changes or logs.\n'Who approved what' information is in the general logging table.",
+    "columns": [
+      {
+        "name": "mod_id",
+        "comment": "Unique ID of this change.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "autoincrement": true
+        }
+      },
+      {
+        "name": "mod_timestamp",
+        "comment": "Time when this change was made by user.",
+        "type": "mwtimestamp",
+        "options": {
+          "notnull": true,
+          "CustomSchemaOptions": {
+            "allowInfinite": true
+          }
+        }
+      },
+      {
+        "name": "mod_user",
+        "comment": "user.user_id of the author of this change, 0 for anonymous edits.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_user_text",
+        "comment": "user.user_name of the author of this change, 0 for anonymous edits.",
+        "type": "binary",
+        "options": { "notnull": true, "length": 255 }
+      },
+      {
+        "name": "mod_cur_id",
+        "comment": "page.page_id of the affected page, 0 if this page didn't exist when the change was made.",
+        "type": "integer",
+        "options": { "unsigned": true, "notnull": true }
+      },
+      {
+        "name": "mod_namespace",
+        "comment": "page.page_namespace of the affected page.",
+        "type": "integer",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_title",
+        "comment": "page.page_title of the affected page.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "length": 255,
+          "default": ""
+        }
+      },
+      {
+        "name": "mod_comment",
+        "comment": "Short description of this change (written by its author), can be an empty string.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "length": 255,
+          "default": ""
+        }
+      },
+      {
+        "name": "mod_minor",
+        "comment": "1 if this is a minor edit, 0 otherwise.",
+        "type": "mwtinyint",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_bot",
+        "comment": "1 if this is a bot edit, 0 otherwise.",
+        "type": "mwtinyint",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_new",
+        "comment": "1 if this change creates a new page, 0 otherwise.",
+        "type": "mwtinyint",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_last_oldid",
+        "comment": "page.page_latest of the affected page at the moment when this edit was queued for moderation.\nIf later, when the edit is approved, this revision is no longer the latest, a diff will be generated and the latest revision will be patched.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_ip",
+        "comment": "Recorded IP address the edit was made from. If $wgPutIPinRC=true when this change gets Approved, this value will be written into recentchanges.rc_ip.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "default": "",
+          "length": 40
+        }
+      },
+      {
+        "name": "mod_old_len",
+        "comment": "Length in bytes (revision.rev_len) of the text of the previous revision (which has rev_id=mod_last_oldid).",
+        "type": "integer",
+        "options": { "notnull": false }
+      },
+      {
+        "name": "mod_new_len",
+        "comment": "Length in bytes of this proposed (not yet Approved) revision.",
+        "type": "integer",
+        "options": { "notnull": false }
+      },
+      {
+        "name": "mod_header_xff",
+        "comment": "Contents of 'X-Forwarded-For' request header. Provided to Extension:CheckUser if this change gets Approved.",
+        "type": "binary",
+        "options": {
+          "notnull": false,
+          "length": 255,
+          "default": ""
+        }
+      },
+      {
+        "name": "mod_header_ua",
+        "comment": "Contents of 'User-Agent' request header. Provided to Extension:CheckUser if this change gets Approved.",
+        "type": "binary",
+        "options": {
+          "notnull": false,
+          "length": 255,
+          "default": ""
+        }
+      },
+      {
+        "name": "mod_tags",
+        "comment": "Newline-separated list of ChangeTags (tags assigned by Extension:AbuseFilter, etc.), empty string if there aren't any tags.",
+        "type": "blob",
+        "options": { "notnull": false, "length": 65535 }
+      },
+      {
+        "name": "mod_preload_id",
+        "comment": "Identifies both logged-in and anonymous users. Allows user to continue editing the pending version (even if not logged in). See ModerationPreload.php for details.",
+        "type": "binary",
+        "options": { "notnull": true, "length": 256 }
+      },
+      {
+        "name": "mod_rejected",
+        "comment": "1 if rejected, 0 otherwise.",
+        "type": "mwtinyint",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_rejected_by_user",
+        "comment": "user.user_id of the moderator who rejected this change.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_rejected_by_user_text",
+        "comment": "user.user_name of the moderator who rejected this change.",
+        "type": "binary",
+        "options": { "notnull": false, "length": 255 }
+      },
+      {
+        "name": "mod_rejected_batch",
+        "comment": "1 if this change was rejected via Reject All action (which rejects all changes by this user), 0 otherwise.",
+        "type": "mwtinyint",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_rejected_auto",
+        "comment": "1 if this change was rejected automatically, 0 otherwise. Automatic rejection happens if a moderator previously used 'Mark as spammer' action on the author of this change. It also happens when Extension:AbuseFilter adds 'moderation-spam' tag to the change.",
+        "type": "mwtinyint",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_preloadable",
+        "comment": "Whether the user can continue changing this edit. mod_preloadable=0 means Yes (pending edits and edits with rejected_auto=1). mod_preloadable=mod_id means No (merged and rejected edits). This allows user A to have only 1 pending edit on the page B, but also an unlimited number of previously rejected edits on the page B.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_conflict",
+        "comment": "0 for most changes. Set to 1 if moderator tried to Approve this change, but \"needs manual merging\" error has occured.",
+        "type": "mwtinyint",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_merged_revid",
+        "comment": "If not 0, moderator has already merged this, and this value is revision.rev_id of the result.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mod_text",
+        "comment": "Resulting text of the proposed edit.",
+        "type": "blob",
+        "options": {
+          "notnull": false,
+          "length": 16777215
+        }
+      },
+      {
+        "name": "mod_stash_key",
+        "comment": "uploadstash.us_key (if this change is uploading an image). NULL for normal edits, page moves, etc.",
+        "type": "binary",
+        "options": {
+          "notnull": false,
+          "length": 255,
+          "default": null
+        }
+      },
+      {
+        "name": "mod_type",
+        "comment": "Type of change, e.g. 'edit' or 'move'. Note: uploads use mod_type=edit, because they modify the text of File:Something page.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "default": "edit",
+          "length": 16
+        }
+      },
+      {
+        "name": "mod_page2_namespace",
+        "comment": "page.page_namespace of the second affected page (not used for mod_type=edit). When renaming the page (mod_type=move), this is the new pagename.",
+        "type": "integer",
+        "options": { "notnull": true, "default": 0 }
+      },
+      {
+        "name": "mod_page2_title",
+        "comment": "page.page_title of the second affected page (not used for mod_type=edit). When renaming the page (mod_type=move), this is the new pagename.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "length": 255,
+          "default": ""
+        }
+      }
+    ],
+    "indexes": [
+      {
+        "name": "moderation_load",
+        "comment": "Used in EntryFactory::findPendingEdit().",
+        "columns": [
+          "mod_preloadable",
+          "mod_type",
+          "mod_namespace",
+          "mod_title",
+          "mod_preload_id"
+        ],
+        "unique": true
+      },
+      {
+        "name": "moderation_approveall",
+        "comment": "Used in modaction=approveall, see EntryFactory::findAllApprovableEntries().",
+        "columns": ["mod_user_text", "mod_rejected", "mod_conflict"],
+        "unique": false
+      },
+      {
+        "name": "moderation_rejectall",
+        "comment": "Used in modaction=rejectall, see RejectAllConsequence.",
+        "columns": ["mod_user_text", "mod_rejected", "mod_merged_revid"],
+        "unique": false
+      },
+      {
+        "name": "moderation_folder_pending",
+        "comment": "Used on Special:Moderation to view Pending folder. Field mod_timestamp is last, because it is used for sorting.",
+        "columns": ["mod_rejected", "mod_merged_revid", "mod_timestamp"],
+        "unique": false
+      },
+      {
+        "name": "moderation_folder_rejected",
+        "comment": "Used on Special:Moderation to view Rejected folder. Field mod_timestamp is last, because it is used for sorting.",
+        "columns": [
+          "mod_rejected",
+          "mod_rejected_auto",
+          "mod_merged_revid",
+          "mod_timestamp"
+        ],
+        "unique": false
+      },
+      {
+        "name": "moderation_folder_merged",
+        "comment": "Used on Special:Moderation to view Merged folder. Field mod_timestamp is last, because it is used for sorting.",
+        "columns": ["mod_merged_revid", "mod_timestamp"],
+        "unique": false
+      },
+      {
+        "name": "moderation_folder_spam",
+        "comment": "Used on Special:Moderation to view Spam folder. Field mod_timestamp is last, because it is used for sorting.",
+        "columns": ["mod_rejected_auto", "mod_timestamp"],
+        "unique": false
+      },
+      {
+        "name": "moderation_signup",
+        "comment": "Used when an anonymous user with pending changes creates an account, see GiveAnonChangesToNewUserConsequence.",
+        "columns": ["mod_preload_id", "mod_preloadable"],
+        "unique": false
+      }
+    ],
+    "pk": ["mod_id"]
+  },
+  {
+    "name": "moderation_block",
+    "comment": "List of users which should have their changes automatically rejected (sent to the Spam folder). Moderation blocks don't expire and don't support IP ranges (only a single IP).",
+    "columns": [
+      {
+        "name": "mb_id",
+        "comment": "Primary key.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "autoincrement": true
+        }
+      },
+      {
+        "name": "mb_address",
+        "comment": "user.user_name of the blocked user (if registered) or blocked IP address (if anonymous).",
+        "type": "blob",
+        "options": {
+          "notnull": true,
+          "length": 255
+        }
+      },
+      {
+        "name": "mb_user",
+        "comment": "user.user_id of the blocked user, 0 if not registered.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mb_by",
+        "comment": "user.user_id of the moderator who blocked this user.",
+        "type": "integer",
+        "options": {
+          "unsigned": true,
+          "notnull": true,
+          "default": 0
+        }
+      },
+      {
+        "name": "mb_by_text",
+        "comment": "user.user_name of the moderator who blocked this user.",
+        "type": "binary",
+        "options": {
+          "notnull": true,
+          "length": 255,
+          "default": ""
+        }
+      },
+      {
+        "name": "mb_timestamp",
+        "comment": "Time when this user was blocked.",
+        "type": "mwtimestamp",
+        "options": { "notnull": true }
+      }
+    ],
+    "indexes": [
+      {
+        "name": "moderation_block_address",
+        "comment": "Used for isModerationBlocked() and in ModerationEntryFormatter.",
+        "columns": ["mb_address"],
+        "options": { "lengths": [255] },
+        "unique": true
+      }
+    ],
+    "pk": ["mb_id"]
+  }
+]

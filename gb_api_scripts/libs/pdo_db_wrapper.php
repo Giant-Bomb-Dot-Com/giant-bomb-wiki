@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__.'/db_interface.php');
-require_once(__DIR__.'/common.php');
+require_once __DIR__ . "/db_interface.php";
+require_once __DIR__ . "/common.php";
 
 class PdoDbWrapper implements DbInterface
 {
@@ -8,10 +8,10 @@ class PdoDbWrapper implements DbInterface
     private PDO $dbConnection;
     private string $version;
 
-    public function __construct(PDO $dbConnection) 
+    public function __construct(PDO $dbConnection)
     {
         $this->dbConnection = $dbConnection;
-        $this->version = 'external';
+        $this->version = "external";
     }
 
     public function getVersion(): string
@@ -21,29 +21,29 @@ class PdoDbWrapper implements DbInterface
 
     public function getById(string $table, array $fields, int $id)
     {
-        $fieldString = implode(',',$fields);
+        $fieldString = implode(",", $fields);
 
         $sql = "SELECT {$fieldString}
                   FROM {$table} AS o
                  WHERE o.id = :id AND o.deleted = 0";
 
-        return [$this->fetchObject($sql, ['id' => $id])];
+        return [$this->fetchObject($sql, ["id" => $id])];
     }
 
     public function getAll(string $table, array $fields, int $continue = 0)
     {
-        $fieldString = implode(',',$fields);
+        $fieldString = implode(",", $fields);
 
         $sql = "SELECT {$fieldString}
                   FROM {$table} AS o
                  WHERE o.deleted = 0 AND id > :continue";
 
-        return $this->fetchAllObjects($sql, ['continue' => $continue]);
+        return $this->fetchAllObjects($sql, ["continue" => $continue]);
     }
 
     public function getByOverwrittenFlag(string $table, array $fields)
     {
-        $fieldString = implode(',',$fields);
+        $fieldString = implode(",", $fields);
 
         $sql = "SELECT {$fieldString}
                   FROM {$table} AS o
@@ -56,17 +56,20 @@ class PdoDbWrapper implements DbInterface
     {
         $sql = "SELECT mw_page_name FROM {$table} WHERE id = :id";
 
-        return $this->fetchField($sql, ['id' => $id]);
+        return $this->fetchField($sql, ["id" => $id]);
     }
 
-    public function getRelatedPageNames(string $table, array $relationsMap, int $id)
-    {
+    public function getRelatedPageNames(
+        string $table,
+        array $relationsMap,
+        int $id,
+    ) {
         $aliasId = 1;
 
         $subQueries = [];
         foreach ($relationsMap as $key => $relation) {
-            $currentAlias = 'a'.$aliasId;
-            $nextAlias = 'a'.++$aliasId;
+            $currentAlias = "a" . $aliasId;
+            $nextAlias = "a" . ++$aliasId;
 
             $subQueries[] = sprintf(
                 "(SELECT GROUP_CONCAT(DISTINCT %s.mw_page_name SEPARATOR ',') 
@@ -74,18 +77,25 @@ class PdoDbWrapper implements DbInterface
                LEFT JOIN %s AS %s ON %s.%s = %s.id 
                    WHERE %s.%s = o.id
                 ORDER BY %s.mw_page_name ASC) AS %s",
-                   $nextAlias,
-                   $relation['table'], $currentAlias,
-                   $relation['relationTable'], $nextAlias, $currentAlias, $relation['relationField'], $nextAlias,
-                   $currentAlias, $relation['mainField'],
-                   $nextAlias, $key
+                $nextAlias,
+                $relation["table"],
+                $currentAlias,
+                $relation["relationTable"],
+                $nextAlias,
+                $currentAlias,
+                $relation["relationField"],
+                $nextAlias,
+                $currentAlias,
+                $relation["mainField"],
+                $nextAlias,
+                $key,
             );
         }
 
-        $fields = implode(',', $subQueries);
+        $fields = implode(",", $subQueries);
         $sql = "SELECT {$fields} FROM {$table} AS o WHERE o.id = :id";
 
-        return $this->fetchObject($sql, ['id' => $id]);
+        return $this->fetchObject($sql, ["id" => $id]);
     }
 
     public function getRelatedIds(string $table, array $relationsMap, int $id)
@@ -94,44 +104,51 @@ class PdoDbWrapper implements DbInterface
         foreach ($relationsMap as $key => $relation) {
             $subQueries[] = sprintf(
                 "(SELECT GROUP_CONCAT(%s) FROM %s WHERE %s = %s) AS %s",
-                   $relation['relationField'], $relation['table'], $relation['mainField'], $id, $key,
+                $relation["relationField"],
+                $relation["table"],
+                $relation["mainField"],
+                $id,
+                $key,
             );
         }
 
-        $fields = implode(',', $subQueries);
+        $fields = implode(",", $subQueries);
         $sql = "SELECT {$fields} FROM {$table} WHERE id = :id";
 
-        return $this->fetchObject($sql, ['id' => $id]);
+        return $this->fetchObject($sql, ["id" => $id]);
     }
 
     public function getImageName(int $id)
     {
         $sql = "SELECT path, name FROM image WHERE id = :id";
-        $result = $this->fetchObject($sql, ['id' => $id]);
+        $result = $this->fetchObject($sql, ["id" => $id]);
 
         if (!$result) {
             return null;
         }
 
         // Construct full URL: https://giantbomb.com/a/uploads/original/{path}{name}
-        return 'https://giantbomb.com/a/uploads/original/' . $result->path . $result->name;
+        return "https://giantbomb.com/a/uploads/original/" .
+            $result->path .
+            $result->name;
     }
 
     public function getImageData(int $id): array
     {
-        $sql = "SELECT name, caption, path, mimetype, image_sizes FROM image WHERE id = :id";
-        $result = $this->fetchObject($sql, ['id' => $id]);
+        $sql =
+            "SELECT name, caption, path, mimetype, image_sizes FROM image WHERE id = :id";
+        $result = $this->fetchObject($sql, ["id" => $id]);
 
         if (!$result) {
             return [];
         }
 
         return [
-            'file' => $result->name,
-            'path' => $result->path,
-            'mime' => $result->mimetype,
-            'sizes' => $result->image_sizes,
-            'caption' => $result->caption
+            "file" => $result->name,
+            "path" => $result->path,
+            "mime" => $result->mimetype,
+            "sizes" => $result->image_sizes,
+            "caption" => $result->caption,
         ];
     }
 
@@ -142,9 +159,9 @@ class PdoDbWrapper implements DbInterface
                   JOIN wiki_person AS p ON o.person_id = p.id
                  WHERE o.game_id = :id";
 
-        return $this->fetchAllObjects($sql, ['id' => $id]);
+        return $this->fetchAllObjects($sql, ["id" => $id]);
     }
-    
+
     public function getReleasesFromDB(int $id)
     {
         $sql = "SELECT o.id, o.region_id, o.product_code_type, o.company_code_type, o.rating_id, o.image_id, o.release_date, o.release_date_type, o.product_code, o.company_code, o.name, o.description, o.widescreen_support, o.minimum_players, o.maximum_players, a2.mw_page_name AS developer, a4.mw_page_name AS publisher, a5.mw_page_name AS platform, a6.feature_id as mp_feature_id, a7.resolution_id, a8.feature_id as sp_feature_id, a9.soundsystem_id
@@ -160,7 +177,7 @@ class PdoDbWrapper implements DbInterface
              LEFT JOIN wiki_game_release_to_sound_system AS a9 ON o.id = a9.release_id
                  WHERE o.game_id = :id AND o.deleted = 0";
 
-        return $this->fetchAllObjects($sql, ['id' => $id]);
+        return $this->fetchAllObjects($sql, ["id" => $id]);
     }
 
     public function getDLCFromDB(int $id)
@@ -176,58 +193,64 @@ class PdoDbWrapper implements DbInterface
              LEFT JOIN wiki_game_dlc_type AS a7 ON a6.type_id = a7.id
                  WHERE o.game_id = :id AND o.deleted = 0";
 
-        return $this->fetchAllObjects($sql, ['id' => $id]);
+        return $this->fetchAllObjects($sql, ["id" => $id]);
     }
 
-    public function getTextToConvert(string $table, $id = false, $force = false, $continue = 0)
-    {
+    public function getTextToConvert(
+        string $table,
+        $id = false,
+        $force = false,
+        $continue = 0,
+    ) {
         $params = [];
         if ($id) {
-            $clause = 'id = :id';
-            $params['id'] = $id;
-        }
-        else {
+            $clause = "id = :id";
+            $params["id"] = $id;
+        } else {
             if ($force) {
-                $clause = '1=1';
-            }
-            else {
-                $clause = 'description <> "" AND mw_formatted_description IS NULL';
+                $clause = "1=1";
+            } else {
+                $clause =
+                    'description <> "" AND mw_formatted_description IS NULL';
             }
 
             if ($continue > 0) {
-                $clause .= ' AND id > '.$continue;
+                $clause .= " AND id > " . $continue;
             }
         }
 
-        $sql = "SELECT id, name, description, mw_formatted_description FROM {$table} WHERE ".$clause;
+        $sql =
+            "SELECT id, name, description, mw_formatted_description FROM {$table} WHERE " .
+            $clause;
 
         return $this->fetchAllObjects($sql, $params);
     }
 
-    public function getNamesToConvert(string $table, $id = false, $force = false)
-    {
+    public function getNamesToConvert(
+        string $table,
+        $id = false,
+        $force = false,
+    ) {
         $params = [];
         if ($id) {
-            $clause = 'id = :id';
-            $params['id'] = $id;
-        }
-        else {
+            $clause = "id = :id";
+            $params["id"] = $id;
+        } else {
             if ($force) {
-                $clause = '1=1';
-            }
-            else {
-                $clause = 'mw_page_name IS NULL';
+                $clause = "1=1";
+            } else {
+                $clause = "mw_page_name IS NULL";
             }
         }
 
-        $fields = 'id, name';
-        $order = '';
-        if ($table == 'wiki_game') {
-            $fields .= ', release_date';
-            $order = ' ORDER BY id ASC';
+        $fields = "id, name";
+        $order = "";
+        if ($table == "wiki_game") {
+            $fields .= ", release_date";
+            $order = " ORDER BY id ASC";
         }
 
-        $sql = "SELECT {$fields} FROM {$table} WHERE ".$clause.$order;
+        $sql = "SELECT {$fields} FROM {$table} WHERE " . $clause . $order;
 
         return $this->fetchAllObjects($sql, $params);
     }
@@ -242,29 +265,34 @@ class PdoDbWrapper implements DbInterface
         return $this->fetchAllObjects($sql);
     }
 
-    public function updateMediaWikiDescription(string $table, int $id, string $mwDescription) 
-    {
+    public function updateMediaWikiDescription(
+        string $table,
+        int $id,
+        string $mwDescription,
+    ) {
         $this->descriptionTableCheck($table);
 
         if ($id == 0) {
             $sql = "UPDATE {$table} SET mw_formatted_description = :mwDescription WHERE mw_formatted_description IS NULL";
-            $params = ['mwDescription' => $mwDescription];
-        }
-        else {
+            $params = ["mwDescription" => $mwDescription];
+        } else {
             $sql = "UPDATE {$table} SET mw_formatted_description = :mwDescription WHERE id = :id";
-            $params = ['mwDescription' => $mwDescription, 'id' => $id];
+            $params = ["mwDescription" => $mwDescription, "id" => $id];
         }
 
         return $this->execute($sql, $params);
     }
 
-    public function updateMediaWikiPageName(string $table, int $id, string $mwPageName) 
-    {
-    	$this->pageNameTableCheck($table);
+    public function updateMediaWikiPageName(
+        string $table,
+        int $id,
+        string $mwPageName,
+    ) {
+        $this->pageNameTableCheck($table);
 
-    	$sql = "UPDATE {$table} SET mw_page_name = :mwPageName WHERE id = :id";
+        $sql = "UPDATE {$table} SET mw_page_name = :mwPageName WHERE id = :id";
 
-        return $this->execute($sql, ['mwPageName' => $mwPageName, 'id' => $id]);
+        return $this->execute($sql, ["mwPageName" => $mwPageName, "id" => $id]);
     }
 
     public function hasResults($result): bool
@@ -272,26 +300,26 @@ class PdoDbWrapper implements DbInterface
         return count($result) > 0;
     }
 
-    public function getDbw() 
+    public function getDbw()
     {
-    	return $this;
+        return $this;
     }
 
-    private function descriptionTableCheck(string $table) 
+    private function descriptionTableCheck(string $table)
     {
         if (!isset(self::ALLOWED_TABLES_FOR_DESCRIPTION[$table])) {
             throw new Exception("{$table} is not allowed");
         }
     }
 
-    private function pageNameTableCheck(string $table) 
+    private function pageNameTableCheck(string $table)
     {
-		if (!isset(self::ALLOWED_TABLES_FOR_PAGENAME[$table])) {
-    		throw new Exception("{$table} is not allowed");
-    	}
+        if (!isset(self::ALLOWED_TABLES_FOR_PAGENAME[$table])) {
+            throw new Exception("{$table} is not allowed");
+        }
     }
 
-    private function fetchObject(string $sql, array $params = []): stdClass 
+    private function fetchObject(string $sql, array $params = []): stdClass
     {
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);
@@ -305,7 +333,7 @@ class PdoDbWrapper implements DbInterface
         return $result;
     }
 
-    private function fetchAllObjects(string $sql, array $params = []): array 
+    private function fetchAllObjects(string $sql, array $params = []): array
     {
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);
@@ -313,15 +341,18 @@ class PdoDbWrapper implements DbInterface
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    private function fetchField(string $sql, array $params = [], int $column = 0)
-    {
+    private function fetchField(
+        string $sql,
+        array $params = [],
+        int $column = 0,
+    ) {
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);
 
         return $stmt->fetchColumn(0);
     }
 
-    private function execute(string $sql, array $params = []): int 
+    private function execute(string $sql, array $params = []): int
     {
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($params);

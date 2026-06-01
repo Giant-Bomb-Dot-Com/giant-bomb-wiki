@@ -1,0 +1,12 @@
+This file lists ideas from TODO which were rejected for whatever reason.
+
+===============================================================================
+Rejected idea:
+	Suppress zero edits (when user clicks "Submit" not changing the text).
+Why not:
+	production testing showed that some new users use "edit summary" field
+	to "add" text to sections which look like a list. Many such edits were
+	spotted from different users. All those edits are silently lost in
+	the normal MediaWiki without Moderation. But a moderator can see this
+	text in the summary and add it manually.
+===============================================================================

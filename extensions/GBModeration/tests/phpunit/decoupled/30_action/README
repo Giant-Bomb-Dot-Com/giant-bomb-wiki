@@ -1,0 +1,6 @@
+[tests/phpunit/decoupled/action/*] - "Render" subsection of decoupled testsuite.
+
+These tests
+
+- DO: pre-fill the 'moderation' SQL table and run modaction.
+- CHECK AFTERWARDS: consequences of modaction (new state of SQL table, log entries, etc.).

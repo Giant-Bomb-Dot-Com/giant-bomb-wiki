@@ -1,0 +1,13 @@
+These Git hooks can run 'parallel-lint' and 'phpcs' before each commit.
+To enable them on cloned repository of Moderation:
+
+cd extensions/Moderation
+ln -s ../../tests/git-hooks/pre-commit .git/hooks/
+
+---
+
+Note: this assumes that Moderation is in extensions/Moderation directory
+of the locally installed MediaWiki.
+If this is not the case, add the following to ~/.bashrc:
+
+export MEDIAWIKI_DIRECTORY=/path/to/your/mediawiki
