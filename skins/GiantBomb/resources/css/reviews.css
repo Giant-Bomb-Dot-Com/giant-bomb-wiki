@@ -87,11 +87,11 @@
 .review-metadata .stars {
   position: relative;
   display: inline-block;
-  width: 112px;
+  width: 110px;
   height: 20px;
   background-repeat: repeat-x;
   background-position: left top;
-  background-size: 23px 100%;
+  background-size: 22px 100%;
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjRDRBRjM3IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTSAxMiAxNy4yNyBMIDE4LjE4IDIxIEwgMTYuNTQgMTMuOTcgTCAyMiA5LjI0IEwgMTQuODEgOC42MiBMIDEyIDIgTCA5LjE5IDguNjIgTCAyIDkuMjQgTCA3LjQ2IDEzLjk3IEwgNS44MiAyMSBaIi8+PC9zdmc+");
 }
 
@@ -106,7 +106,7 @@
   pointer-events: none;
   background-repeat: repeat-x;
   background-position: left top;
-  background-size: 23px 100%;
+  background-size: 22px 100%;
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0Q0QUYzNyIgZD0iTSAxMiAxNy4yNyBMIDE4LjE4IDIxIEwgMTYuNTQgMTMuOTcgTCAyMiA5LjI0IEwgMTQuODEgOC42MiBMIDEyIDIgTCA5LjE5IDguNjIgTCAyIDkuMjQgTCA3LjQ2IDEzLjk3IEwgNS44MiAyMSBaIi8+PC9zdmc+");
 }
 
