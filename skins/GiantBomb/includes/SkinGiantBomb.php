@@ -31,7 +31,12 @@ class SkinGiantBomb extends SkinTemplate
         if ($gtmId) {
             $out->addHeadItem(
                 "gtm-head",
-                "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" .
+                "<script>(function(w,d,s,l,i){" .
+                    // Don't count Cloudflare's "Just a moment..." interstitial as a pageview.
+                    // gtag skips all hits when window['ga-disable-<id>'] is true, which is the
+                    // only way to suppress its automatic pageviews. Must run before gtm.js below.
+                    "if(/Just a moment/i.test(d.title)){w['ga-disable-G-M6NX2LEV8H']=true;}" .
+                    "w[l]=w[l]||[];w[l].push({'gtm.start':" .
                     "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," .
                     "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" .
                     "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" .
