@@ -84,7 +84,7 @@ Your wiki content here...
 <meta itemprop="description" content="{{{Deck|}}}" />
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}} franchise?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game franchise. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are in the {{{Name|}}} series?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} franchise includes multiple video game titles." /></div></div></div><!--
 -->{{#if: {{{Image|}}} |<div style="display:none;" id='coverImageData'>{{#ifeq: {{#sub: {{{Image|}}} | 0 | 4 }} | http | {{{Image}}} | [[File:{{{Image}}}|300px|link=]] }}</div>}}<!--
--->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|300px|link=]] }}</div>}}<!--
+-->{{#if: {{{BackgroundImage|}}} |<div style="display:none;" id='backgroundImageData'>{{#ifeq: {{#sub: {{{BackgroundImage|}}} | 0 | 4 }} | http | {{{BackgroundImage}}} | [[File:{{{BackgroundImage}}}|link=]] }}</div>}}<!--
 --><div class="gb-franchise-hero">
 <div class="gb-franchise-hero-container">
 <div class="gb-franchise-hero-cover"></div>
