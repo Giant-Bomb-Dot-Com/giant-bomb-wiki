@@ -28,6 +28,12 @@ RUN if [ "$INSTALL_API" = "false" ]; then \
 
 RUN chown -R www-data:www-data /var/www/html
 
+# guzzle 7.9.2 (pinned exactly by MediaWiki 1.43) now has published security
+# advisories that Composer 2.10+ blocks at dependency-resolution time, which
+# breaks `composer update` below. Disable advisory blocking so the pinned
+# versions still install. Dev/CI image only.
+RUN composer config --global policy.advisories.block false
+
 # INSTALL SEMANTIC MEDIAWIKI
 # Due to an issue with phpunit 9.6.19, we have to force it to update:
 # See https://issues.apache.org/jira/browse/IGNITE-27681

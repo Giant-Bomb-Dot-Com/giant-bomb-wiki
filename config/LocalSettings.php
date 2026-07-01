@@ -468,7 +468,8 @@ if (
 # SEMANTIC MEDIAWIKI
 # =============================================================================
 
-enableSemantics();
+# SMW is registered via wfLoadExtension("SemanticMediaWiki") above.
+# enableSemantics() was removed: it is a deprecated no-op since SMW 7.0.0.
 
 $smwgCacheType = 'redis';
 $smwgMainCacheType = 'redis';
@@ -479,11 +480,11 @@ $smwgFactboxUseCache = true;
 $smwgFactboxCacheRefreshOnPurge = true;
 $smwgAutoRefreshOnPurge = true;
 $smwgEnabledQueryDependencyLinksStore = true;
-$smwgFieldTypeFeatures = SMW_FIELDT_CHAR_NOCASE;
+$smwgFieldTypeFeatures = [ 'char-nocase' ];
 $smwgEnabledFulltextSearch = true;
 $smwgPageSpecialProperties[] = "_CDAT";
 $smwgEnableUpdateJobs = true;
-$smwgFulltextSearchIndexableDataTypes = 2 | 4;
+$smwgFulltextSearchIndexableDataTypes = [ 'blob', 'uri' ];
 $smwgFixedProperties = [
     "_MDAT" => "smw_moddate", // Indexes Modification date
     "_CDAT" => "smw_credate", // Indexes Creation date
@@ -869,7 +870,11 @@ $wgGbSessionProviderJWKSUri = "https://giantbomb.com/.well-known/jwks.json";
 if ($wikiEnv === "dev") {
     $wgDebugToolbar = true;
     $wgShowDebug = true;
-    $wgDebugLogFile = getenv("MW_LOG_DIR") . "debug-{$wgDBname}.log";
+    // MW_LOG_DIR is often unset in dev; getenv() then returns false and the
+    // path collapses to a relative "debug-*.log" that lands in the (non-writable)
+    // docroot. Fall back to the writable log dir while honoring the override.
+    $gbLogDir = getenv("MW_LOG_DIR") ?: "/var/log/mediawiki";
+    $wgDebugLogFile = rtrim($gbLogDir, "/") . "/debug-{$wgDBname}.log";
     $wgDebugLogGroups = [
         // log channel -> log path
         "GbSessionProvider" => "/var/log/mediawiki/gb_session_provider.log",
