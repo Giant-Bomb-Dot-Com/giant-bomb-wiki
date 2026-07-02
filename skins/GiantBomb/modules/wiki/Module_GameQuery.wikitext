@@ -42,32 +42,44 @@ function p.render(frame)
 	
 	-- Filter by title, name, or alias
     if searchFilter ~= "" then
-        -- strip query metachars so input can't break the ask syntax
-        local clean = searchFilter:gsub("[%[%]|<>{}]", "")
+        -- strip query/fulltext metachars so input can't break the ask syntax
+        local clean = searchFilter:gsub("[%[%]|<>{}]", ""):gsub('["%+%-%(%)~@%*:]', " ")
         if clean:find("%S") then
-            local dbSearch = clean:gsub(" ", "_")
-            -- +word* per word = fulltext AND; plain ~*..* is word-OR and way too noisy
-            -- words under the ft min token size (3) break SMW's query engine, skip them
             local words = {}
-            for w in clean:gsub('["%+%-%(%)~@%*]', " "):gmatch("%S+") do
-                if #w >= 3 then
-                    table.insert(words, "+" .. w .. "*")
+            local ftSafe = true
+            for w in clean:gmatch("%S+") do
+                table.insert(words, w)
+                -- digit/short words break AND miss the ft index (FF7, RE4, 64)
+                if not w:match("^%a%a%a+$") then
+                    ftSafe = false
                 end
             end
+            local dbSearch = table.concat(words, "_")
             local base = query
+            -- OR of full conjunctions; SMW has no OR inside a conjunction
+            -- page title substring
             query = base .. " [[~*" .. dbSearch .. "*]]"
-            if #words > 0 then
-                local ft = table.concat(words, " ")
-                -- OR of full conjunctions; SMW has no OR inside a conjunction
-                query = query
-                    .. " OR " .. base .. " [[Has name::~" .. ft .. "]]"
-                    .. " OR " .. base .. " [[Has aliases::~" .. ft .. "]]"
+            -- aliases via like: — the ft index can't hold digit words at all
+            local aliasCond = base
+            for _, w in ipairs(words) do
+                aliasCond = aliasCond .. " [[Has aliases::like:*" .. w .. "*]]"
+            end
+            query = query .. " OR " .. aliasCond
+            -- name via fulltext AND (word-order free); like: on Has name is a
+            -- multi-second scan, and the title branch covers digit words
+            if ftSafe then
+                local ft = {}
+                for _, w in ipairs(words) do
+                    table.insert(ft, "+" .. w .. "*")
+                end
+                query = query .. " OR " .. base
+                    .. " [[Has name::~" .. table.concat(ft, " ") .. "]]"
             end
         end
     end
 
-    -- 2. Execute Query
-    local queryData = mw.smw.getQueryResult({
+    -- 2. Execute Query (pcall: a bad query shows "no results", not a fatal)
+    local ok, queryData = pcall(mw.smw.getQueryResult, {
         query,
         "?Has name",
         "?Has image",
@@ -82,6 +94,9 @@ function p.render(frame)
         sort = sortProp,
         order = sortOrder
     })
+    if not ok then
+        queryData = nil
+    end
 
     -- 3. Debugging / No Results
     if not queryData or not queryData.results or #queryData.results == 0 then
@@ -165,8 +180,8 @@ function p.render(frame)
     -- If count is 0 but we actually HAVE results, the API failed to provide the total.
 	-- We run a quick secondary query to get the total number.
 	if totalResults == 0 and #queryData.results > 0 then
-	    local countQuery = mw.smw.ask({ query, format = "count" })
-	    totalResults = tonumber(countQuery) or 0
+	    local okCount, countQuery = pcall(mw.smw.ask, { query, format = "count" })
+	    totalResults = okCount and tonumber(countQuery) or 0
 	end
     
 	local paginationHtml = ""
