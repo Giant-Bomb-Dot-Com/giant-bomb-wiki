@@ -40,12 +40,30 @@ function p.render(frame)
 	    query = query .. " [[Has platforms::" .. smwValue .. "]]"
 	end
 	
-	-- Filter by Name (using SMW wildcard search)
+	-- Filter by title, name, or alias
     if searchFilter ~= "" then
-		-- REPLACE: Turn spaces into underscores for SMW consistency
-    	local dbSearch  = searchFilter:gsub(" ", "_")
-        -- The ~ operator combined with * wildcards matches titles containing the text
-        query = query .. " [[~*" .. dbSearch  .. "*]] "
+        -- strip query metachars so input can't break the ask syntax
+        local clean = searchFilter:gsub("[%[%]|<>{}]", "")
+        if clean:find("%S") then
+            local dbSearch = clean:gsub(" ", "_")
+            -- +word* per word = fulltext AND; plain ~*..* is word-OR and way too noisy
+            -- words under the ft min token size (3) break SMW's query engine, skip them
+            local words = {}
+            for w in clean:gsub('["%+%-%(%)~@%*]', " "):gmatch("%S+") do
+                if #w >= 3 then
+                    table.insert(words, "+" .. w .. "*")
+                end
+            end
+            local base = query
+            query = base .. " [[~*" .. dbSearch .. "*]]"
+            if #words > 0 then
+                local ft = table.concat(words, " ")
+                -- OR of full conjunctions; SMW has no OR inside a conjunction
+                query = query
+                    .. " OR " .. base .. " [[Has name::~" .. ft .. "]]"
+                    .. " OR " .. base .. " [[Has aliases::~" .. ft .. "]]"
+            end
+        end
     end
 
     -- 2. Execute Query

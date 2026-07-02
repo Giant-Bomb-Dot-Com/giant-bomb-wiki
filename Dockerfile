@@ -56,12 +56,17 @@ RUN cd /var/www/html \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlGetParameters \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData \
- && git clone --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git AWS \
- && sed -i "/'ACL'/d" AWS/s3/AmazonS3FileBackend.php \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  && cd /var/www/html/ \
  && composer update --no-dev
+
+# strip ACL params AFTER composer update — composer reinstalls extensions/AWS
+# last (installer-name AWS) and used to resurrect them; GCS uniform
+# bucket-level access rejects any ACL, breaking uploads. grep guard fails the
+# build if they ever come back.
+RUN sed -i "/'ACL'/d" /var/www/html/extensions/AWS/s3/AmazonS3FileBackend.php \
+ && ! grep -q "'ACL'" /var/www/html/extensions/AWS/s3/AmazonS3FileBackend.php
 
 # GCS uses uniform bucket-level ACL, so re-uploads need ignorewarnings
 RUN sed -i 's/ignorewarnings: false/ignorewarnings: true/' /var/www/html/resources/src/mediawiki.Upload.js

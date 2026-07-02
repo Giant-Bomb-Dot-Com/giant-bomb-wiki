@@ -5,9 +5,17 @@
   "description": "Provides a REST endpoint for resolving wiki GUIDs.",
   "type": "extension",
   "AutoloadClasses": {
-    "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler": "includes/Rest/ResolveHandler.php"
+    "MediaWiki\\Extension\\GiantBombResolve\\Rest\\ResolveHandler": "includes/Rest/ResolveHandler.php",
+    "MediaWiki\\Extension\\GiantBombResolve\\SearchNearMatchHooks": "includes/SearchNearMatchHooks.php"
   },
-  "HookHandlers": [],
+  "HookHandlers": {
+    "SearchNearMatch": {
+      "class": "MediaWiki\\Extension\\GiantBombResolve\\SearchNearMatchHooks"
+    }
+  },
+  "Hooks": {
+    "SearchAfterNoDirectMatch": "SearchNearMatch"
+  },
   "manifest_version": 2,
   "requires": {
     "MediaWiki": ">=1.40.0",

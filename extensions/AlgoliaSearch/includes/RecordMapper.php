@@ -49,6 +49,7 @@ class RecordMapper
             "objectID" => $objectId,
             "type" => $type,
             "title" => self::computeDisplayTitle($title, $type),
+            "aliases" => self::getEntityAliases($title),
             "slug" => $slug,
             "href" => $href,
             "excerpt" => null,
@@ -86,6 +87,83 @@ class RecordMapper
         $record["publishDate"] = $timestamps["first"] ?? null;
 
         return $record;
+    }
+
+    /**
+     * Alt names for search — index settings already list "aliases" as
+     * searchable, this fills them in.
+     *
+     * @return string[]
+     */
+    private static function getEntityAliases(Title $title): array
+    {
+        $aliases = [];
+        $values = self::getSmwBlobProperty($title, "Has aliases", "Aliases");
+        foreach ($values as $raw) {
+            foreach (self::splitAliases($raw) as $alias) {
+                $aliases[] = $alias;
+            }
+        }
+        return array_values(array_unique($aliases));
+    }
+
+    /**
+     * SMW blob property with a wikitext param fallback (pre-SMW-rebuild pages).
+     * getEntityImage/Deck predate this helper; new fields should use it.
+     *
+     * @return string[]
+     */
+    private static function getSmwBlobProperty(
+        Title $title,
+        string $propertyLabel,
+        string $wikitextParam,
+    ): array {
+        $values = [];
+
+        try {
+            $store = \SMW\StoreFactory::getStore();
+            $subject = \SMW\DIWikiPage::newFromTitle($title);
+            $vals = $store->getPropertyValues(
+                $subject,
+                \SMW\DIProperty::newFromUserLabel($propertyLabel),
+            );
+            foreach ($vals as $val) {
+                if ($val instanceof \SMWDIBlob) {
+                    $values[] = $val->getString();
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        if (!$values) {
+            $text = self::getPageWikitext($title);
+            $pattern =
+                '/\|\s*' .
+                preg_quote($wikitextParam, "/") .
+                '\s*=\s*([^\n|}]+)/i';
+            if ($text !== "" && preg_match($pattern, $text, $m)) {
+                $values[] = trim($m[1]);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Comma-separated alias string -> trimmed, non-empty parts.
+     *
+     * @return string[]
+     */
+    private static function splitAliases(string $raw): array
+    {
+        $out = [];
+        foreach (preg_split('/\s*,\s*/', trim($raw)) ?: [] as $part) {
+            $part = trim($part);
+            if ($part !== "") {
+                $out[] = $part;
+            }
+        }
+        return $out;
     }
 
     private static function getEntityImage(Title $title): ?string

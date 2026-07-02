@@ -42,3 +42,4 @@ gb_api_scripts/import_xml/*.xml
 /gb_api_scripts/libs/ProdGuidResolver.php
 /gb_api_scripts/libs/docker_local_db.php
 /import_templates/fixEscapedSlashPageTitles.php
+.env.me

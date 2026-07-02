@@ -38,6 +38,31 @@ class ResolveHandler extends SimpleHandler
         "Genres" => 3060,
     ];
 
+    /**
+     * "(Type)" labels {{DISPLAYTITLE}} appends to entity pages. Fallback only
+     * ("Has name" is primary); exact labels so real parens survive. Keep in
+     * sync with the DISPLAYTITLEs in Template_*.wikitext.
+     */
+    private const DISPLAY_TITLE_TYPE_SUFFIXES = [
+        "Accessory",
+        "Character",
+        "Company",
+        "Concept",
+        "DLC",
+        "Franchise",
+        "Game Rating",
+        "Game",
+        "Genre",
+        "Location",
+        "Object",
+        "Person",
+        "Platform",
+        "Rating Board",
+        "Region",
+        "Release",
+        "Theme",
+    ];
+
     /** @var Config */
     private $config;
 
@@ -164,9 +189,65 @@ class ResolveHandler extends SimpleHandler
         ];
     }
 
+    /**
+     * "Star Fox (Game)" -> "Star Fox". Known type labels only, end only.
+     */
+    private function stripDisplayTitleTypeSuffix(string $title): string
+    {
+        foreach (self::DISPLAY_TITLE_TYPE_SUFFIXES as $type) {
+            $suffix = " (" . $type . ")";
+            if (
+                strlen($title) > strlen($suffix) &&
+                substr($title, -strlen($suffix)) === $suffix
+            ) {
+                return rtrim(substr($title, 0, -strlen($suffix)));
+            }
+        }
+        return $title;
+    }
+
+    /**
+     * Clean entity name from the "Has name" printout (the template's Name= param).
+     */
+    private function extractCleanName(array $first): ?string
+    {
+        $name = $first["printouts"]["Name"] ?? null;
+        if (is_array($name)) {
+            $name = reset($name);
+        }
+        if (is_string($name)) {
+            $name = trim($name);
+            if ($name !== "") {
+                return $name;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Shared by title + displayTitle so they can't drift: "Has name" if set,
+     * else DisplayTitle minus its "(Type)" suffix, else null.
+     */
+    private function resolveCleanTitle(
+        ?string $cleanName,
+        $rawDisplayTitle,
+    ): ?string {
+        if ($cleanName !== null) {
+            return $cleanName;
+        }
+        if (is_string($rawDisplayTitle)) {
+            $trimmed = trim($rawDisplayTitle);
+            if ($trimmed !== "") {
+                return $this->stripDisplayTitleTypeSuffix($trimmed);
+            }
+        }
+        return null;
+    }
+
     private function fetchGuidData(string $guid, array $fields): ?array
     {
-        $query = "[[Has guid::" . $guid . "]]";
+        // always ask for "Has name" — the clean entity name, no "(Type)" suffix
+        $query = "[[Has guid::" . $guid . "]]|?Has name=Name";
         if (
             in_array("image", $fields, true) ||
             in_array("printouts", $fields, true)
@@ -190,13 +271,20 @@ class ResolveHandler extends SimpleHandler
         $pageKey = key($result);
         $titleText = $pageKey ?? ($first["fulltext"] ?? null);
 
+        $cleanName = $this->extractCleanName($first);
+
         $data = [];
         $baseOrigin = $this->getRewriteBaseOrigin();
 
         foreach ($fields as $field) {
             switch ($field) {
                 case "displaytitle":
-                    $data["displayTitle"] = $first["displaytitle"] ?? null;
+                    $rawDisplayTitle = $first["displaytitle"] ?? null;
+                    $data["displayTitle"] =
+                        $this->resolveCleanTitle(
+                            $cleanName,
+                            $rawDisplayTitle,
+                        ) ?? $rawDisplayTitle;
                     break;
                 case "fullurl":
                     $fullUrl = $first["fullurl"] ?? null;
@@ -220,7 +308,10 @@ class ResolveHandler extends SimpleHandler
                     $data["pageId"] = $first["pageid"] ?? null;
                     break;
                 case "printouts":
-                    $data["printouts"] = $first["printouts"] ?? [];
+                    $printouts = $first["printouts"] ?? [];
+                    // "Name" is ours (clean title); keep printouts shape as before
+                    unset($printouts["Name"]);
+                    $data["printouts"] = $printouts;
                     break;
                 case "image":
                     $image = $this->extractPrimaryImageData(
@@ -236,13 +327,14 @@ class ResolveHandler extends SimpleHandler
         if ($titleText) {
             $title = Title::newFromText($titleText);
             if ($title) {
-                // title: human display (DisplayTitle if set, else stripped slug).
+                // title: clean name -> stripped DisplayTitle -> slug-derived.
                 // prefixedTitle: url-form slug (kept verbatim for url construction).
-                $displayTitle = is_string($first["displaytitle"] ?? null)
-                    ? trim($first["displaytitle"])
-                    : "";
-                if ($displayTitle !== "") {
-                    $data["title"] = $displayTitle;
+                $clean = $this->resolveCleanTitle(
+                    $cleanName,
+                    $first["displaytitle"] ?? null,
+                );
+                if ($clean !== null) {
+                    $data["title"] = $clean;
                 } else {
                     $raw = $title->getText();
                     $slashPos = strpos($raw, "/");
