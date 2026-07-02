@@ -25,7 +25,10 @@
   },
   "Hooks": {
     "PageSaveComplete": "AlgoliaHooks",
-    "PageDeleteComplete": "AlgoliaHooks"
+    "PageDeleteComplete": "AlgoliaHooks",
+    "FileUpload": "AlgoliaHooks",
+    "PageMoveComplete": "AlgoliaHooks",
+    "PageUndeleteComplete": "AlgoliaHooks"
   },
   "config": {
     "AlgoliaSearchEnabled": {
