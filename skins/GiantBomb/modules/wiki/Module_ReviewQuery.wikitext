@@ -131,7 +131,7 @@ function p._renderSidebar(guid, hideReadButton)
     if staffReviews ~= nil then staffReview = staffReviews[1] end
     if staffReview ~= nil then
         local staffReviewURL = "https://giantbomb.com/reviews/" .. staffReview.slug
-        local staffBG = staffReview.featured_image.url
+        local staffBG = (staffReview.featured_image and staffReview.featured_image.url) or ""
         local staffReviewDeck = staffReview.deck    
         local avgOutOfFive = staffReview.score
         local starScore = (avgOutOfFive / 5) * 100
