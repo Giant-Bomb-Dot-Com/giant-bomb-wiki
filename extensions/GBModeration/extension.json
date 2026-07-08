@@ -308,7 +308,9 @@
     "FileUpload": "approveHook",
     "GetNewMessagesAlert": "notifyModerator",
     "getUserPermissionsErrors": "upload",
-    "LoadExtensionSchemaUpdates": "updater",
+    "LoadExtensionSchemaUpdates": [
+      "MediaWiki\\Moderation\\ModerationUpdater::onLoadExtensionSchemaUpdates"
+    ],
     "ListDefinedTags": "edit",
     "LocalUserCreated": "preload",
     "ModerationContinueEditingLink": "pageForms",
