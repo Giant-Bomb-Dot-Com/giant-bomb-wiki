@@ -376,6 +376,7 @@ wfLoadExtension("PageImages");
 wfLoadExtension("ParserFunctions");
 wfLoadExtension("Popups");
 wfLoadExtension("Scribunto");
+wfLoadExtension("GBModeration"); #needs to run before SemanticMediaWiki to ensure moderation tables are created before SMW tables
 wfLoadExtension("SemanticExtraSpecialProperties");
 wfLoadExtension("SemanticMediaWiki");
 wfLoadExtension("SemanticResultFormats");
@@ -391,7 +392,6 @@ wfLoadExtension("GiantBombResolve");
 wfLoadExtension("AlgoliaSearch");
 wfLoadExtension("UrlGetParameters");
 wfLoadExtension("GiantBombMetaTags");
-wfLoadExtension("GBModeration");
 wfLoadExtension("GBGallery");
 wfLoadExtension("VisualEditor");
 wfLoadExtension("VEForAll");
