@@ -52,7 +52,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 |}
 {| class="formtable"
 ! style="width: 150px;" | Release Date Type: 
-| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=Full}}}
+| {{{field|ReleaseDateType|property=Has release date type|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=None}}}
 |}
 {{#if: {{#invoke:DateHelper|displayLegacyWarning}} |
 <div id="legacy-warning" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
