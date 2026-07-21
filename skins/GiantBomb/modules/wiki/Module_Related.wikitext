@@ -84,6 +84,38 @@ function p.cards(frame)
         byTitle[plain(r.page)] = r
     end
 
+    -- one ask resolves every badge shortname; per-badge asks in BadgeList
+    -- were an n+1 across the grid
+    local shortMap = {}
+    do
+        local seen, names = {}, {}
+        for _, r in ipairs(results) do
+            local v = r.platforms
+            for _, item in ipairs(type(v) == 'table' and v or { v }) do
+                local t = item and plain(item) or ''
+                if t ~= '' and not seen[t] then
+                    seen[t] = true
+                    names[#names + 1] = t
+                end
+            end
+        end
+        if #names > 0 then
+            local rows = mw.smw.ask{
+                '[[' .. table.concat(names, '||') .. ']]',
+                '?Has short name=shortname',
+                'mainlabel=page',
+                'limit=' .. #names,
+            } or {}
+            for _, r in ipairs(rows) do
+                local sn = type(r.shortname) == 'table' and r.shortname[1]
+                    or r.shortname
+                if sn and sn ~= '' then
+                    shortMap[plain(r.page)] = sn
+                end
+            end
+        end
+    end
+
     local html = mw.html.create('div'):addClass('listing-grid')
     for i = 1, limit do
         local title = titles[i]
@@ -105,12 +137,23 @@ function p.cards(frame)
             )
         end
 
+        local platformsList, shortsList = {}, {}
+        local pv = r.platforms
+        for _, item in ipairs(type(pv) == 'table' and pv or { pv }) do
+            local t = item and plain(item) or ''
+            if t ~= '' then
+                platformsList[#platformsList + 1] = t
+                shortsList[#shortsList + 1] = shortMap[t] or ''
+            end
+        end
+
         html:wikitext(frame:expandTemplate{
             title = 'GameCard',
             args = {
                 url_title = title,
                 title = rows[i].display,
-                platforms = joinValues(r.platforms),
+                platforms = table.concat(platformsList, ', '),
+                platform_short = table.concat(shortsList, ', '),
                 release_date = released ~= '' and released or nil,
                 deck = joinValues(r.deck),
                 image = image,

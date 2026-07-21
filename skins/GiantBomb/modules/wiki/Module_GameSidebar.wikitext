@@ -23,7 +23,6 @@ local function fetch()
             '?Has locations=locations',
             '?Has concepts=concepts',
             '?Has objects=objects',
-            '?Has similar games=similar',
             'mainlabel=-',
             'limit=1',
         })
@@ -63,8 +62,8 @@ local function plain(v)
     return tostring(v)
 end
 
--- the gb image server serves every upload in each rendition bucket ->
--- swap whatever is stored for the small one
+-- scale_* uploads have the whole rendition family -> use the small one.
+-- original-bucket uploads may have no renditions at all, leave those alone
 local function logoUrl(image)
     image = tostring(image)
         :gsub('^Http', 'http')
@@ -74,7 +73,7 @@ local function logoUrl(image)
     if image:sub(1, 4) ~= 'http' then
         return nil
     end
-    return image:gsub('/a/uploads/[%w_]+/', '/a/uploads/scale_small/', 1)
+    return image:gsub('/a/uploads/scale_[%w_]+/', '/a/uploads/scale_small/', 1)
 end
 
 -- one query for every listed company's logo: [title -> url]
@@ -211,7 +210,7 @@ local function listItems(rows, fallbackValues)
     return items
 end
 
-local function accordion(label, items, open, moreHtml)
+local function accordion(label, items, open)
     local cls = open and 'gb-accordion gb-accordion--open' or 'gb-accordion'
     if #items == 0 then
         items = { '<li><em>None</em></li>' }
@@ -219,27 +218,16 @@ local function accordion(label, items, open, moreHtml)
     return '<div class="' .. cls .. '">'
         .. '<div class="gb-accordion-header">' .. label .. '</div>'
         .. '<ul class="gb-accordion-content">' .. table.concat(items)
-        .. (moreHtml or '') .. '</ul></div>'
+        .. '</ul></div>'
 end
 
 function p.accordions(frame)
     local data, related = fetch()
     local out = {}
-
-    -- similar games first, mirroring the company sidebar's games lists
-    local similar = listItems(related.similar, data.similar)
-    if #similar > 0 then
-        local more = '<li class="gb-sidebar-more">['
-            .. mw.title.getCurrentTitle():canonicalUrl()
-            .. '#SimilarGames view all →]</li>'
-        out[#out + 1] = accordion('Similar Games', similar, true, more)
-    end
-
     for i, s in ipairs(SECTIONS) do
         local items = listItems(related[s.key], data[s.key])
-        out[#out + 1] = accordion(s.label, items, #out == 0 and i == 1)
+        out[#out + 1] = accordion(s.label, items, i == 1)
     end
-
     return table.concat(out)
 end
 

@@ -56,7 +56,7 @@ Called from Module:GameQuery not directly used.
             <div class="listing-card-meta">{{{release_date|Unknown Release}}}</div>
             <div class="listing-card-deck">{{{deck|}}}</div>            
             <div class="platform-badges"><!--
-                -->{{#invoke:BadgeList|format|{{{platforms|}}}}}
+                -->{{#invoke:BadgeList|format|{{{platforms|}}}|{{{platform_short|}}}}}
             </div>
         </div>
     </div>

@@ -1,43 +1,30 @@
+-- pure formatting: shortnames arrive pre-resolved from the calling module
+-- (one ask per grid there; per-badge asks here were an n+1 across the page)
 local p = {}
 
 function p.format(frame)
     local input = frame.args[1] or ""
     if input == "" then return "" end
-    
+    local shorts = mw.text.split(frame.args[2] or "", ",")
+
     local items = {}
-    -- Split by comma and clean up prefixes
     for item in input:gmatch("([^,]+)") do
         local trimmed = item:match("^%s*(.-)%s*$")
         if trimmed ~= "" then table.insert(items, trimmed) end
     end
-    
+
     local results = {}
     local maxVisible = 3
     local totalItems = #items
-    
-    for i, name in ipairs(items) do
-        -- 1. Clean the name for display (Remove "Platforms/" prefix)
-        local cleanName = name:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
-        
-        if i <= maxVisible then
-            local displayText = cleanName
 
-            -- 2. Try to fetch the shortname via SMW
-            local platformData = mw.smw.ask({
-                "[[" .. name .. "]]",
-                "?Has short name=shortname",
-                "mainlabel=-"
-            })
-            
-            if platformData and platformData[1] and platformData[1].shortname then
-                local sn = platformData[1].shortname
-                -- If SMW returns a table (multiple shortnames), take the first one
-                displayText = type(sn) == "table" and sn[1] or sn
-            end
-                
+    for i, name in ipairs(items) do
+        local cleanName = name:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
+
+        if i <= maxVisible then
+            local short = shorts[i] and mw.text.trim(shorts[i]) or ""
+            local displayText = short ~= "" and short or cleanName
             table.insert(results, '<span class="platform-badge" title="' .. cleanName  .. '">' .. displayText .. '</span>')
         else
-            -- 3. PLUS BADGE: Tooltip for remaining hidden items
             local remainingNames = {}
             for j = i, totalItems do
                 local n = items[j]:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")
@@ -45,12 +32,12 @@ function p.format(frame)
             end
             local tooltip = table.concat(remainingNames, ", ")
             local count = totalItems - maxVisible
-            
+
             table.insert(results, '<span class="platform-badge plus-badge" title="' .. tooltip .. '">+' .. count .. '</span>')
             break
         end
     end
-    
+
     return table.concat(results, " ")
 end
 

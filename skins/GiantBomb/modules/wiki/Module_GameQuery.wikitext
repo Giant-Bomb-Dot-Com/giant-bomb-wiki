@@ -32,6 +32,46 @@ local function displayName(result)
     return name
 end
 
+-- one ask resolves every badge shortname on the page; per-badge asks in
+-- BadgeList were an n+1 across the whole grid
+local function platformShortMap(results)
+    local seen, names = {}, {}
+    for _, result in ipairs(results) do
+        for _, v in ipairs(result.printouts['Has platforms'] or {}) do
+            local t = type(v) == 'table' and (v.fulltext or '') or tostring(v)
+            if t ~= '' and not seen[t] then
+                seen[t] = true
+                names[#names + 1] = t
+            end
+        end
+    end
+    if #names == 0 then
+        return {}
+    end
+    local ok, rows = pcall(mw.smw.ask, {
+        '[[' .. table.concat(names, '||') .. ']]',
+        '?Has short name=shortname',
+        'mainlabel=page',
+        'limit=' .. #names,
+    })
+    local map = {}
+    if ok and type(rows) == 'table' then
+        for _, r in ipairs(rows) do
+            local page = tostring(r.page or '')
+            local inner = page:match('^%[%[(.-)%]%]$')
+            if inner then
+                page = (inner:match('^(.-)|') or inner):gsub('^:', '')
+            end
+            local sn = type(r.shortname) == 'table' and r.shortname[1]
+                or r.shortname
+            if page ~= '' and sn and sn ~= '' then
+                map[page] = sn
+            end
+        end
+    end
+    return map
+end
+
 function p.render(frame)
     local args = frame.args
     local parentArgs = frame:getParent() and frame:getParent().args or {}
@@ -267,10 +307,18 @@ function p.render(frame)
     end
 
     local html = mw.html.create('div'):addClass('listing-grid')
+    local shortMap = platformShortMap(results)
 
     for _, result in ipairs(results) do
         local fullTitle = result.fulltext or ""
         local cleanTitle = displayName(result)
+
+        local platformsList, shortsList = {}, {}
+        for _, v in ipairs(result.printouts['Has platforms'] or {}) do
+            local t = type(v) == 'table' and (v.fulltext or v.raw or '') or tostring(v)
+            platformsList[#platformsList + 1] = t
+            shortsList[#shortsList + 1] = shortMap[t] or ''
+        end
 
         -- 4. Process Image data from description
         local imageData = getSafe(result, 'Has image', false)
@@ -302,12 +350,13 @@ function p.render(frame)
         html:wikitext(frame:expandTemplate{
             title = 'GameCard',
             args = {
-                url_title    = fullTitle,
-                title        = cleanTitle,
-                platforms    = getSafe(result, 'Has platforms', true),
-                release_date = cleanDate,
-                deck         = getSafe(result, 'Has deck', true),
-                image        = imageData
+                url_title      = fullTitle,
+                title          = cleanTitle,
+                platforms      = table.concat(platformsList, ', '),
+                platform_short = table.concat(shortsList, ', '),
+                release_date   = cleanDate,
+                deck           = getSafe(result, 'Has deck', true),
+                image          = imageData
             }
         })
     end

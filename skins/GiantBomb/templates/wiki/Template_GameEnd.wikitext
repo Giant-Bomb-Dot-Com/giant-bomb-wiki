@@ -27,13 +27,7 @@ This template closes the following divs opened by <code><nowiki>{{Game}}</nowiki
 * <code>.gb-game-wiki-content</code>
 * <code>.gb-game-main</code>
 
-Then renders the Similar Games card grid (ranked via the GBRelated store) and
-the sidebar via <code><nowiki>{{GameSidebar}}</nowiki></code>, and closes:
+Then renders the sidebar via <code><nowiki>{{GameSidebar}}</nowiki></code> and closes:
 * <code>.gb-game-content</code>
 * <code>.gb-game-page</code>
-</noinclude><includeonly></div>
-<div id="SimilarGames" class="gb-games-section" style="clear:both">
-<div class="gb-games-section-header"><h2 class="gb-games-section-title">Similar Games</h2></div>
-{{#invoke:Related|cards|similar|limit=12}}
-</div>
-</div><div class="gb-game-sidebar">{{GameSidebar}}</div></div></div></includeonly>
+</noinclude><includeonly></div></div><div class="gb-game-sidebar">{{GameSidebar}}</div></div></div></includeonly>

@@ -1537,6 +1537,9 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
   max-height: 72px;
   width: auto;
   height: auto;
+  /* dead image url -> no filename spill, the name link below still works */
+  color: transparent;
+  font-size: 0;
 }
 
 .gb-sidebar-company-name {

@@ -10,7 +10,7 @@ read for the ranked accordions (see the GBRelated extension).
 
 ===Sections===
 # '''Game details''' - Name, release date, platforms, developer, publisher, genre, theme, franchise, aliases
-# '''Related content''' - Accordion sections for Similar Games, Characters, Locations, Concepts, Objects, People
+# '''Related content''' - Accordion sections for Characters, Locations, Concepts, Objects, People
 </noinclude><includeonly>
 <div class="gb-sidebar-section">
 <div class="gb-sidebar-reviews">{{#invoke:ReviewQuery|renderSidebar}}</div>
