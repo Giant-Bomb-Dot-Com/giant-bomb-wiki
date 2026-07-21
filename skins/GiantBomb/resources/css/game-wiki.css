@@ -1419,7 +1419,10 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
 }
 
 .gb-sidebar-section-content:has(.gb-sidebar-section-review) img,
-.wiki-game-page .mw-parser-output .gb-sidebar-section-content:has(.gb-sidebar-section-review) img {
+.wiki-game-page
+  .mw-parser-output
+  .gb-sidebar-section-content:has(.gb-sidebar-section-review)
+  img {
   position: absolute;
   top: 0;
   left: 0;
@@ -1518,6 +1521,7 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
 
 .gb-sidebar-company-tile {
   min-width: 0;
+  text-align: center;
 }
 
 .gb-sidebar-company-thumb {
