@@ -147,7 +147,7 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 2rem;
-  align-items: start;
+  /* no align-items: start -> sidebar column stretches to full content height, giving mediavine's sticky sidebar ad its travel space */
 }
 .gb-dlc-main {
   min-width: 0;

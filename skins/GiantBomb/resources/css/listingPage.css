@@ -32,7 +32,8 @@
    ========================================================================== */
 .listing-content {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  /* sidebar must be >= 300px: mediavine desktop units are 300px wide and won't fit/fill in less */
+  grid-template-columns: 1fr 300px;
   gap: 30px;
 }
 
