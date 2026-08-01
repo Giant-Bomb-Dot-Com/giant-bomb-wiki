@@ -2,9 +2,11 @@
 # work every 5, 1G cap (512M got OOM-killed on big SMW parses and leaked
 # stale claims), flock skips a tick if the last one is still running.
 # Cron strips the env, so source /etc/container.env (entrypoint writes it).
+# Each tick logs a heartbeat first -- runJobs is silent on an empty queue,
+# and a forever-empty log is indistinguishable from cron not running.
 # Log: /var/log/mediawiki/jobs-cron.log
 #
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-*/5 * * * * www-data . /etc/container.env 2>/dev/null; flock -n /tmp/jobs-cron.lock php /var/www/html/maintenance/run.php runJobs --maxtime=240 --memory-limit=1G >> /var/log/mediawiki/jobs-cron.log 2>&1
+*/5 * * * * www-data . /etc/container.env 2>/dev/null; date -u "+tick \%FT\%TZ" >> /var/log/mediawiki/jobs-cron.log; flock -n /tmp/jobs-cron.lock php /var/www/html/maintenance/run.php runJobs --maxtime=240 --memory-limit=1G >> /var/log/mediawiki/jobs-cron.log 2>&1

@@ -1,2 +1,6 @@
 # Ensure shell scripts have Unix line endings
 *.sh text eol=lf
+
+# cron files baked into the image must be LF -- with CRLF cron execs "/bin/sh\r"
+# and every job fails silently (took down the prod job queue, Aug 2026)
+docker/* text eol=lf

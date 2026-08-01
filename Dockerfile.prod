@@ -137,5 +137,9 @@ COPY --chmod=644 docker/jobs-cron /etc/cron.d/jobs-cron
 RUN touch /var/log/mediawiki/jobs-cron.log \
  && chown www-data:www-data /var/log/mediawiki/jobs-cron.log
 
+# strip CRs in case the build context came from a CRLF checkout -> cron would
+# exec "/bin/sh\r" and silently run nothing (.gitattributes guards this too)
+RUN sed -i 's/\r$//' /etc/cron.d/jobs-cron /etc/cron.d/sitemap-cron
+
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
