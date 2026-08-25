@@ -1,6 +1,7 @@
 -- game page sidebar: one smw query replaces the per-property #show storm.
 -- accordions come ranked from gb_related, own smw values fill in pre-backfill
 local p = {}
+local plainTitle = require("Module:PlainTitle")
 
 local smwData, store
 
@@ -53,15 +54,6 @@ local function joinLinks(v, sep)
     return table.concat(out, sep or ', ')
 end
 
--- smw hands values back as wikitext links (with a leading colon) -> unwrap
-local function plain(v)
-    local inner = tostring(v):match('^%[%[(.-)%]%]$')
-    if inner then
-        inner = inner:match('^(.-)|') or inner
-        return inner:gsub('^:', '')
-    end
-    return tostring(v)
-end
 
 -- the gb image server serves every upload in each rendition bucket ->
 -- swap whatever is stored for the small one
@@ -82,7 +74,7 @@ local function fetchCompanyLogos(...)
     local titles, seen = {}, {}
     for _, list in ipairs({ ... }) do
         for _, link in ipairs(list) do
-            local t = plain(link)
+            local t = plainTitle.plain(link)
             if t ~= '' and not seen[t] then
                 seen[t] = true
                 titles[#titles + 1] = t
@@ -107,7 +99,7 @@ local function fetchCompanyLogos(...)
             end
             local url = img and logoUrl(img)
             if url then
-                out[plain(r.page)] = url
+                out[plainTitle.plain(r.page)] = url
             end
         end
     end
@@ -120,7 +112,7 @@ local FALLBACK_LOGO =
 local function companyList(v, logos)
     local out = {}
     for _, link in ipairs(values(v)) do
-        local title = plain(link)
+        local title = plainTitle.plain(link)
         local url = logos[title] or FALLBACK_LOGO
         -- [pageUrl imageUrl] -> the parser wraps the external image in the
         -- link, so the thumbnail itself is clickable

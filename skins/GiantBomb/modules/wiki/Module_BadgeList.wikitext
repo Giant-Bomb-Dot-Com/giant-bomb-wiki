@@ -1,4 +1,5 @@
 local p = {}
+local plainTitle = require("Module:PlainTitle")
 
 function p.format(frame)
     local input = frame.args[1] or ""
@@ -32,12 +33,18 @@ function p.format(frame)
             if platformData and platformData[1] and platformData[1].shortname then
                 local sn = platformData[1].shortname
                 -- If SMW returns a table (multiple shortnames), take the first one
-                displayText = type(sn) == "table" and sn[1] or sn
+                displayText = plainTitle.plain(type(sn) == "table" and sn[1] or sn)
             end
-                
-            table.insert(results, '<span class="platform-badge" title="' .. cleanName  .. '">' .. displayText .. '</span>')
+
+            -- 3. resolve the page for the platform
+            local t = mw.title.new(name)
+            local linkText = displayText
+            if t then
+                linkText = '[[' .. name .. '|' .. displayText .. mw.ustring.char(0x200B) .. ']]' --added zero width whitespace character ensures that title is different meaning PC doesn't get replaced by PC(PLATFORM)
+            end
+            table.insert(results, '<span class="platform-badge" title="' .. cleanName .. '">' .. linkText .. '</span>')
         else
-            -- 3. PLUS BADGE: Tooltip for remaining hidden items
+            -- 4. PLUS BADGE: Tooltip for remaining hidden items
             local remainingNames = {}
             for j = i, totalItems do
                 local n = items[j]:gsub("^[Pp][Ll][Aa][Tt][Ff][Oo][Rr][Mm][Ss]/", "")

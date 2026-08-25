@@ -221,6 +221,7 @@ class ImportWikiTemplates extends Maintenance
 
             "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
             "Module:ImageUrl" => "$moduleDir/Module_ImageUrl.wikitext",
+            "Module:PlainTitle" => "$moduleDir/Module_PlainTitle.wikitext",
             "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
 
             //images page

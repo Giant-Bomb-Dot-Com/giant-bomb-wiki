@@ -1,0 +1,14 @@
+local p = {}
+
+-- extracting the plain() function from GameSidebar to be used by multiple modules
+-- smw hands values back as wikitext links (with a leading colon) -> unwrap
+function p.plain(v)
+    local inner = tostring(v):match('^%[%[(.-)%]%]$')
+    if inner then
+        inner = inner:match('^(.-)|') or inner
+        return inner:gsub('^:', '')
+    end
+    return tostring(v)
+end
+
+return p
