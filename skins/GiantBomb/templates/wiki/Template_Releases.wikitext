@@ -1,0 +1,91 @@
+<noinclude>{{#template_params:
+ ParentPage (property=Has superpage)
+}}
+==Documentation==
+This template is used to create release subobjects.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| ParentPage || The parent page.
+|-
+| ReleaseSubobject || The game releases stored as subobjects.
+|-
+| ↳ Game || Game of release.
+|-
+| ↳ Name || Name of release.
+|-
+| ↳ Guid || Guid of release.
+|-
+| ↳ Image || Image of release.
+|-
+| ↳ Region || Region of release.
+|-
+| ↳ Platform || Platform the release is on.
+|-
+| ↳ Rating || Rating of release.
+|-
+| ↳ Developer || Developers of release.
+|-
+| ↳ Publisher || Publishers of release.
+|-
+| ↳ ReleaseDate || Release date of release (ISO, for Full dates).
+|-
+| ↳ ReleaseDateType || Format for release date (Full, Month, Quarter, Year, None).
+|-
+| ↳ MonthPart / MonthYearPart || Month name + year, for Month dates.
+|-
+| ↳ QuarterPart / QuarterYearPart || Q1-Q4 + year, for Quarter dates.
+|-
+| ↳ YearPart || Year, for Year dates.
+|-
+| ↳ ProductCode || Numeric identifier representing the release product.
+|-
+| ↳ ProductCodeType || Type of product code (e.g. UPC).
+|-
+| ↳ CompanyCode || Identifier of release on a console platform
+|-
+| ↳ CompanyCodeType || The company the code is for.
+|-
+| ↳ WidescreenSupport || If the release supports widescreens. (The Rorie Test)
+|-
+| ↳ Resolutions || Resolutions the release supports.
+|-
+| ↳ SoundSystems || Sound systems the release supports.
+|-
+| ↳ SinglePlayerFeatures || Single player features the release supports.
+|-
+| ↳ MultiplayerFeatures || Multi-player features release supports.
+|-
+| ↳ MinimumPlayers || Minimum amount of players the release supports.
+|-
+| ↳ MaximumPlayers || Maximum amount of players the release supports.
+|}
+</noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
+-->{{#ifeq:{{#titleparts:{{FULLPAGENAME}}||-1}}|Releases|[[Category:Releases]]}}<!--
+-->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Release]]
+|format=broadtable
+|link=none
+|mainlabel=-
+|?Has image=Image
+|?Has name=Name
+|?Has region=Region
+|?Has platforms=Platform
+|?Has rating=Rating
+|?Has developers=Developers
+|?Has publishers=Publishers
+|?Has release date=ReleaseDate
+|?Has release date type=ReleaseDateType
+|?Has product code=ProductCode
+|?Has product code type=ProductCodeType
+|?Has company code=CompanyCode
+|?Has company code type=CompanyCodeType
+|?Has widescreen support=WidescreenSupport
+|?Has resolutions=Resolutions
+|?Has sound systems=SoundSystems
+|?Has single player features=SinglePlayerFeatures
+|?Has multiplayer features=MultiplayerFeatures
+|?Has minimum players=MinimumPlayers
+|?Has maximum players=MaximumPlayers
+}}
+</includeonly>

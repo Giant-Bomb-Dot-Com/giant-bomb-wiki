@@ -1,0 +1,26 @@
+{{#subobject: {{#invoke:Identifiers|getReleaseIdentifier|Name={{{Name|}}}|Region={{{Region|}}}|Platform={{{Platform|}}}|Guid={{{Guid|}}}}} |
+|Has object type=Release
+|Has composite name={{{Name|}}} ({{{Platform|}}}, {{{Region|}}})
+|Has games={{{Game|}}}
+|Has name={{{Name|}}}
+|Has guid={{{Guid|}}}
+|Has image={{{Image|}}}
+|Has region={{{Region|}}}
+|Has platforms={{#arraymap:{{{Platform|}}}|,|@@|@@|;}}|+sep=;
+|Has rating={{{Rating|}}}
+|Has developers={{{Developers|}}}|+sep=,
+|Has publishers={{{Publishers|}}}|+sep=,
+|Has release date={{#invoke:DateHelper|getISODateFromParts|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
+|Has release date type={{{ReleaseDateType|}}}
+|Has product code={{{ProductCode|}}}
+|Has product code type={{{ProductCodeType|}}}
+|Has company code={{{CompanyCode|}}}
+|Has company code type={{{CompanyCodeType|}}}
+|Has widescreen support={{{WidescreenSupport|}}}
+|Has resolutions={{{Resolutions|}}}|+sep=,
+|Has sound systems={{{SoundSystems|}}}|+sep=,
+|Has single player features={{{SinglePlayerFeatures|}}}|+sep=,
+|Has multiplayer features={{{MultiplayerFeatures|}}}|+sep=,
+|Has minimum players={{{MinimumPlayers|}}}
+|Has maximum players={{{MaximumPlayers|}}}
+}}
