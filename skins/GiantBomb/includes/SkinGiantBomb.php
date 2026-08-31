@@ -86,7 +86,7 @@ class SkinGiantBomb extends SkinTemplate
 
         $pageTitle = $title->getText();
 
-        if (preg_match('#^([A-Za-z]+/[^/]+)/(Images|Reviews)$#', $pageTitle, $sub)) {
+        if (preg_match('#^([A-Za-z]+/[^/]+)/(Images|Reviews|Releases|DLC)$#', $pageTitle, $sub)) {
             self::addSubpageSeoTags($out, $sub[1], $sub[2]);
             return;
         }
@@ -216,6 +216,8 @@ class SkinGiantBomb extends SkinTemplate
                 return str_replace("Genres/", "", $g);
             }, $genres);
         }
+
+        $jsonLd += self::cachedReleaseJsonLdFields($title);
 
         $out->addHeadItem(
             "jsonld-videogame",
@@ -594,9 +596,20 @@ class SkinGiantBomb extends SkinTemplate
         $deck = self::getSMWPropertyValue($store, $subject, "Has deck") ?: "";
         $metaImage = self::getPageImage($parentTitle, $store, $subject);
 
+        $releaseItems = null;
         if ($kind === "Images") {
             $htmlTitle = "$name Images - " . $GLOBALS["wgSitename"];
             $desc = "Images, screenshots, and artwork for $name.";
+            if ($deck !== "") {
+                $desc .= " " . $deck;
+            }
+        } elseif ($kind === "Releases") {
+            $htmlTitle = "$name Releases - " . $GLOBALS["wgSitename"];
+            $releaseItems = self::getReleaseItems($out->getTitle());
+            $desc = self::buildReleasesSeoDescription($name, $releaseItems);
+        } elseif ($kind === "DLC") {
+            $htmlTitle = "$name DLC - " . $GLOBALS["wgSitename"];
+            $desc = "Downloadable content for $name - add-ons, expansions, release dates, and platforms.";
             if ($deck !== "") {
                 $desc .= " " . $deck;
             }
@@ -641,6 +654,146 @@ class SkinGiantBomb extends SkinTemplate
             $metaImage,
             $name,
         );
+
+        if ($kind === "Releases" && !empty($releaseItems)) {
+            $jsonLd = [
+                "@context" => "https://schema.org",
+                "@type" => "VideoGame",
+                "name" => $name,
+                "url" => $parentTitle->getFullURL(),
+                "mainEntityOfPage" => $canonicalUrl,
+            ];
+            if ($metaImage) {
+                $jsonLd["image"] = $metaImage;
+            }
+            $jsonLd += self::releaseJsonLdFields($releaseItems);
+            $out->addHeadItem(
+                "jsonld-releases",
+                '<script type="application/ld+json">' .
+                    json_encode($jsonLd, JSON_UNESCAPED_SLASHES) .
+                    "</script>",
+            );
+        }
+    }
+
+    // hot path (every game page view) -> wan-cached, keyed by the subpage
+    // revision so release edits refresh it
+    private static function cachedReleaseJsonLdFields(\Title $gameTitle): array
+    {
+        $subpage = \Title::newFromText(
+            $gameTitle->getPrefixedText() . "/Releases",
+        );
+        if (!$subpage || !$subpage->exists()) {
+            return [];
+        }
+        $cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+        return $cache->getWithSetCallback(
+            $cache->makeKey(
+                "gb-release-jsonld",
+                $subpage->getLatestRevID(),
+            ),
+            86400,
+            function () use ($subpage) {
+                return self::releaseJsonLdFields(
+                    self::getReleaseItems($subpage),
+                );
+            },
+        );
+    }
+
+    private static function getReleaseItems(\Title $subpage): array
+    {
+        $wikitext = self::getPageWikitext($subpage);
+        if ($wikitext === "") {
+            return [];
+        }
+        return PageHelper::extractReleaseData($wikitext)["items"];
+    }
+
+    private static function buildReleasesSeoDescription(
+        string $name,
+        array $items,
+    ): string {
+        if (empty($items)) {
+            return "Release information for $name - platforms, regions, dates, ratings, and product codes.";
+        }
+        $platforms = [];
+        foreach ($items as $item) {
+            if ($item["platform"] !== "") {
+                $platforms[$item["platform"]] = true;
+            }
+        }
+        $platforms = array_keys($platforms);
+        $count = count($items);
+        $desc = sprintf(
+            "All %d release%s of %s",
+            $count,
+            $count === 1 ? "" : "s",
+            $name,
+        );
+        if (!empty($platforms)) {
+            $shown = array_slice($platforms, 0, 4);
+            $desc .= " on " . implode(", ", $shown);
+            if (count($platforms) > 4) {
+                $desc .= " and " . (count($platforms) - 4) . " more";
+            }
+        }
+        $desc .= " - release dates, regions, ratings, and product codes.";
+        return $desc;
+    }
+
+    // jsonld fields shared by the game page and the /Releases subpage.
+    // only exact (Full) dates become releasedEvent entries -- fuzzy dates have
+    // an empty ReleaseDate param, so no fabricated precision
+    private static function releaseJsonLdFields(array $items): array
+    {
+        $fields = [];
+        $platforms = [];
+        $events = [];
+        $rating = "";
+        foreach ($items as $item) {
+            if ($item["platform"] !== "") {
+                $platforms[$item["platform"]] = true;
+            }
+            if ($rating === "" && $item["rating"] !== "N/A") {
+                $rating = $item["rating"];
+            }
+            if (strpos($item["rating"], "ESRB") === 0) {
+                $rating = $item["rating"];
+            }
+            if (
+                count($events) < 20 &&
+                preg_match('/^\d{4}-\d{2}-\d{2}$/', $item["releaseDate"])
+            ) {
+                $event = [
+                    "@type" => "PublicationEvent",
+                    "name" => trim(
+                        $item["platform"] .
+                            ($item["region"] !== ""
+                                ? " (" . $item["region"] . ")"
+                                : ""),
+                    ),
+                    "startDate" => $item["releaseDate"],
+                ];
+                if ($item["region"] !== "") {
+                    $event["location"] = [
+                        "@type" => "Country",
+                        "name" => $item["region"],
+                    ];
+                }
+                $events[] = $event;
+            }
+        }
+        if (!empty($platforms)) {
+            $fields["gamePlatform"] = array_keys($platforms);
+        }
+        if ($rating !== "") {
+            $fields["contentRating"] = $rating;
+        }
+        if (!empty($events)) {
+            $fields["releasedEvent"] = $events;
+        }
+        return $fields;
     }
 
     // user aggregate + staff score via the public api, wan-cached 1h

@@ -163,6 +163,7 @@ class ImportWikiTemplates extends Maintenance
         // module first: the subobject templates #invoke it
         $releaseDataTemplates = [
             "Module:Identifiers" => "$moduleDir/Module_Identifiers.wikitext",
+            "Module:GameReleases" => "$moduleDir/Module_GameReleases.wikitext",
             "Template:Releases" => "$templateDir/Template_Releases.wikitext",
             "Template:ReleaseSubobject" =>
                 "$templateDir/Template_ReleaseSubobject.wikitext",

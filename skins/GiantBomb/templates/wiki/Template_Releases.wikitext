@@ -63,29 +63,6 @@ This template is used to create release subobjects.
 |}
 </noinclude><includeonly>{{#set:Has superpage={{{ParentPage|}}}}}<!--
 -->{{#ifeq:{{#titleparts:{{FULLPAGENAME}}||-1}}|Releases|[[Category:Releases]]}}<!--
--->{{#ask: [[-Has subobject::{{FULLPAGENAME}}]] [[Has object type::Release]]
-|format=broadtable
-|link=none
-|mainlabel=-
-|?Has image=Image
-|?Has name=Name
-|?Has region=Region
-|?Has platforms=Platform
-|?Has rating=Rating
-|?Has developers=Developers
-|?Has publishers=Publishers
-|?Has release date=ReleaseDate
-|?Has release date type=ReleaseDateType
-|?Has product code=ProductCode
-|?Has product code type=ProductCodeType
-|?Has company code=CompanyCode
-|?Has company code type=CompanyCodeType
-|?Has widescreen support=WidescreenSupport
-|?Has resolutions=Resolutions
-|?Has sound systems=SoundSystems
-|?Has single player features=SinglePlayerFeatures
-|?Has multiplayer features=MultiplayerFeatures
-|?Has minimum players=MinimumPlayers
-|?Has maximum players=MaximumPlayers
-}}
+-->{{#if:{{#show:{{{ParentPage|}}}|?Has name|link=none}}|{{DISPLAYTITLE:{{#show:{{{ParentPage|}}}|?Has name|link=none}} Releases}}}}<!--
+--><div class="gb-releases-data">{{#invoke:GameReleases|subpage}}</div>
 </includeonly>
