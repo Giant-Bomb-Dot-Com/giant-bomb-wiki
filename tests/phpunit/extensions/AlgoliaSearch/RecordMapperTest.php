@@ -53,6 +53,25 @@ class RecordMapperTest extends MediaWikiIntegrationTestCase
         $this->assertArrayHasKey("thumbnail", $record);
     }
 
+    public function testMapRecordIncludesGuidFromTemplateParam(): void
+    {
+        $title = $this->createPage(
+            "Games/Guid Game",
+            "{{Game|Name=Guid Game|Guid=3030-12345}}",
+        );
+        $record = RecordMapper::mapRecord("Game", $title);
+        $this->assertIsArray($record);
+        $this->assertSame("3030-12345", $record["guid"]);
+    }
+
+    public function testMapRecordGuidNullWhenAbsent(): void
+    {
+        $title = $this->createPage("Games/No Guid Game");
+        $record = RecordMapper::mapRecord("Game", $title);
+        $this->assertIsArray($record);
+        $this->assertNull($record["guid"]);
+    }
+
     public function testMapRecordForCharacter(): void
     {
         $title = $this->createPage("Characters/Test Character");

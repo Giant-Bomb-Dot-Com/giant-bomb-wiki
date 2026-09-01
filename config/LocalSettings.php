@@ -917,6 +917,27 @@ $wgEventRelayerConfig["cdn-url-purges"] = [
 ];
 
 # =============================================================================
+# CATALOG SYNC (giant-bomb-next)
+# =============================================================================
+# Pushes game-page saves to the site's catalog-sync endpoint so catalog rows
+# refresh within seconds. No-op unless the shared key is set, so it's safe to
+# load in dev. See extensions/GBCatalogSync/README.md.
+
+wfLoadExtension("GBCatalogSync");
+$catalogSyncKey = getenv("WIKI_CATALOG_HOOK_KEY");
+if ($catalogSyncKey !== false && trim((string) $catalogSyncKey) !== "") {
+    $wgGBCatalogSyncKey = trim($catalogSyncKey);
+    $wgGBCatalogSyncEnabled = true;
+}
+$catalogSyncEndpoint = getenv("WIKI_CATALOG_SYNC_ENDPOINT");
+if (
+    $catalogSyncEndpoint !== false &&
+    trim((string) $catalogSyncEndpoint) !== ""
+) {
+    $wgGBCatalogSyncEndpoint = trim($catalogSyncEndpoint);
+}
+
+# =============================================================================
 # GOOGLE ANALYTICS (GA4 via Extension:GTag -- gtag.js only, no tag manager)
 # =============================================================================
 
