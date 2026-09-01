@@ -49,6 +49,7 @@ services:
       - ./extensions/GBRelated:/var/www/html/extensions/GBRelated:cached
       - ./extensions/GBVirtualReviewPages:/var/www/html/extensions/GBVirtualReviewPages:cached
       - ./extensions/GBCloudflarePurge:/var/www/html/extensions/GBCloudflarePurge:cached
+      - ./extensions/GBCatalogSync:/var/www/html/extensions/GBCatalogSync:cached
       # Import scripts
       - ./import_templates:/var/www/html/maintenance/import_templates:cached
       - ./gb_api_scripts:/var/www/html/gb_api_scripts:cached

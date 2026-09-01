@@ -1,0 +1,18 @@
+{{#subobject: {{#invoke:Identifiers|getDlcIdentifier|Name={{{Name|}}}|Platform={{{Platform|}}}|Guid={{{Guid|}}}}} |
+|Has object type=Dlc
+|Has composite name={{{Name|}}} ({{{Platform|}}})
+|Has games={{{Game|}}}
+|Has name={{{Name|}}}
+|Has guid={{{Guid|}}}
+|Has aliases={{{Aliases|}}}
+|Has image={{{Image|}}}
+|Has caption={{{Caption|}}}
+|Has deck={{{Deck|}}}
+|Has release date={{#invoke:DateHelper|getISODateFromParts|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
+|Has release date type={{{ReleaseDateType|}}}
+|Has launch price={{{LaunchPrice|}}}
+|Has developers={{{Developers|}}}|+sep=,
+|Has publishers={{{Publishers|}}}|+sep=,
+|Has platforms={{{Platform|}}}
+|Has dlc types={{{DlcTypes|}}}|+sep=,
+}}

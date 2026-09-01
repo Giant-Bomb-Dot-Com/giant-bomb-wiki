@@ -1,0 +1,6 @@
+{
+	"@metadata": {
+		"authors": ["Chuck Zimmerheld"]
+	},
+	"gbcatalogsync-duplicate-guid": "Error shown when a save would set a GUID already used by another page. Parameters: $1 - the GUID, $2 - the page that already holds it."
+}

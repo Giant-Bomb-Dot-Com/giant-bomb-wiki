@@ -109,6 +109,7 @@ COPY --chown=www-data:www-data ./extensions/GBEnvLuaBridge /var/www/html/extensi
 COPY --chown=www-data:www-data ./extensions/GBRelated /var/www/html/extensions/GBRelated
 COPY --chown=www-data.www-data ./extensions/GBVirtualReviewPages /var/www/html/extensions/GBVirtualReviewPages
 COPY --chown=www-data:www-data ./extensions/GBCloudflarePurge /var/www/html/extensions/GBCloudflarePurge
+COPY --chown=www-data:www-data ./extensions/GBCatalogSync /var/www/html/extensions/GBCatalogSync
 RUN cd /var/www/html/extensions/GbSessionProvider && composer update --no-dev
 
 # Installation script for a new wiki (which copies the LocalSettings.php)

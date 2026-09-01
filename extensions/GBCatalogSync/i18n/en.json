@@ -1,0 +1,6 @@
+{
+	"@metadata": {
+		"authors": ["Chuck Zimmerheld"]
+	},
+	"gbcatalogsync-duplicate-guid": "The GUID \"$1\" already belongs to [[$2]]. Every page needs its own GUID — if these pages are duplicates that should be merged, ask a moderator."
+}

@@ -278,3 +278,106 @@ body.rootpage-Releases .printfooter,
 body.rootpage-Releases #catlinks {
   display: none !important;
 }
+
+/* /Releases subpage toc (Module:GameReleases) -- lives in the gb-game-sidebar slot */
+.gb-releases-toc {
+  position: sticky;
+  top: 60px;
+}
+.gb-releases-data .toc {
+  width: 100%;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+}
+.gb-releases-data .toc h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: #fff;
+  border: none;
+}
+.gb-releases-data .toc ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.gb-releases-data .toc li {
+  margin: 0.25rem 0;
+}
+.gb-releases-data .toc a {
+  color: #6ba4d9;
+  text-decoration: none;
+}
+.gb-releases-data .toc a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .gb-releases-toc {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.gb-release-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin: 0 0 2rem;
+}
+.gb-release-card-details {
+  flex: 1;
+  min-width: 0;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.gb-release-card-details tr:nth-child(odd) {
+  background: #161616;
+}
+.gb-release-card-details tr:nth-child(even) {
+  background: #1f1f1f;
+}
+.gb-release-card-details th {
+  width: 220px;
+  text-align: left;
+  font-weight: 500;
+  color: #e0e0e0;
+  padding: 0.55rem 1rem;
+  vertical-align: top;
+}
+.gb-release-card-details td {
+  padding: 0.55rem 1rem;
+  color: #ccc;
+}
+.gb-release-card-details td a {
+  color: #d98a29;
+  text-decoration: none;
+}
+.gb-release-card-details td a:hover {
+  text-decoration: underline;
+}
+.gb-release-card-cover {
+  flex-shrink: 0;
+  width: 170px;
+}
+.gb-release-card-cover img {
+  max-width: 100%;
+  height: auto;
+  float: none;
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .gb-release-card {
+    flex-direction: column-reverse;
+  }
+  .gb-release-card-details th {
+    width: 40%;
+  }
+  .gb-release-card-cover {
+    width: 130px;
+  }
+}

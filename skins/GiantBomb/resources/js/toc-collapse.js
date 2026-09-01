@@ -10,11 +10,16 @@
   }
 
   function init() {
+    var toc = document.getElementById("toc");
+    if (!toc) return;
+    // releases sidebar toc collapses every platform, threshold elsewhere
+    var collapseAll = !!toc.closest(".gb-releases-data");
     var items = document.querySelectorAll("#toc li.toclevel-1");
     for (var i = 0; i < items.length; i++) {
       var li = items[i];
       var sub = li.querySelector(":scope > ul");
-      if (!sub || sub.children.length <= THRESHOLD) continue;
+      if (!sub) continue;
+      if (!collapseAll && sub.children.length <= THRESHOLD) continue;
 
       var count = sub.children.length;
       li.classList.add("gb-toc-collapsed");

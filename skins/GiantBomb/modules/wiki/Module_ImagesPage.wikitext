@@ -89,6 +89,12 @@ function p.render(frame)
     if config.hasReviews then
         table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Reviews|Reviews]]</span>')
     end
+    if rootPrefix == 'Games' then
+        local rel = mw.title.new(parentPage .. '/Releases')
+        if rel and rel.exists then
+            table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Releases|Releases]]</span>')
+        end
+    end
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>')
 
     local actions = '<div class="gb-wiki-actions">'

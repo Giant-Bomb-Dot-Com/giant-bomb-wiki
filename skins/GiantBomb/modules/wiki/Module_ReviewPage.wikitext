@@ -62,7 +62,11 @@ function p.render(frame)
     local tabs = {}
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '|' .. config.label .. ']]</span>')
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Images|Images]]</span>')
-    table.insert(tabs, '<span class="' .. css .. '-tabs-tab ' .. css .. '-tabs-tab--active">Reviews</span>')    
+    table.insert(tabs, '<span class="' .. css .. '-tabs-tab ' .. css .. '-tabs-tab--active">Reviews</span>')
+    local rel = mw.title.new(parentPage .. '/Releases')
+    if rel and rel.exists then
+        table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[' .. parentPage .. '/Releases|Releases]]</span>')
+    end
     table.insert(tabs, '<span class="' .. css .. '-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>')
 
     local actions = '<div class="gb-wiki-actions">' .. '</div>'

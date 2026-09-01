@@ -48,6 +48,7 @@ class RecordMapper
         $record = [
             "objectID" => $objectId,
             "type" => $type,
+            "guid" => self::getEntityGuid($title),
             "title" => self::computeDisplayTitle($title, $type),
             "aliases" => self::getEntityAliases($title),
             "slug" => $slug,
@@ -105,6 +106,33 @@ class RecordMapper
             }
         }
         return array_values(array_unique($aliases));
+    }
+
+    /**
+     * The entity's GB guid (legacy "3030-123" or UUID) so giant-bomb-next can
+     * resolve search hits and re-primes without a wiki round-trip; null when
+     * the page has no valid | Guid= param.
+     */
+    private static function getEntityGuid(Title $title): ?string
+    {
+        $values = self::getSmwBlobProperty($title, "Has guid", "Guid");
+        foreach ($values as $raw) {
+            $guid = preg_replace('/[\s}]+$/', "", trim((string) $raw)) ?? "";
+            // zero-id legacy guids ("3030-0") are junk downstream consumers reject
+            if (preg_match('/^\d{3,4}-0+$/', $guid)) {
+                continue;
+            }
+            if (
+                preg_match('/^\d{3,4}-\d{1,12}$/', $guid) ||
+                preg_match(
+                    '/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i',
+                    $guid,
+                )
+            ) {
+                return $guid;
+            }
+        }
+        return null;
     }
 
     /**

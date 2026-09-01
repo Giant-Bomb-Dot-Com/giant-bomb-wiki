@@ -159,6 +159,18 @@ class ImportWikiTemplates extends Maintenance
             "Template:ReleaseSidebar" => "$templateDir/Template_ReleaseSidebar.wikitext",
         ];
 
+        // /Releases + /DLC subpage data templates (vendored from prod)
+        // module first: the subobject templates #invoke it
+        $releaseDataTemplates = [
+            "Module:Identifiers" => "$moduleDir/Module_Identifiers.wikitext",
+            "Module:GameReleases" => "$moduleDir/Module_GameReleases.wikitext",
+            "Template:Releases" => "$templateDir/Template_Releases.wikitext",
+            "Template:ReleaseSubobject" =>
+                "$templateDir/Template_ReleaseSubobject.wikitext",
+            "Template:DlcSubobject" =>
+                "$templateDir/Template_DlcSubobject.wikitext",
+        ];
+
         // Rating Board page templates
         $ratingBoardTemplates = [
             "Template:RatingBoard" => "$templateDir/Template_RatingBoard.wikitext",
@@ -312,6 +324,7 @@ class ImportWikiTemplates extends Maintenance
             "accessory" => $accessoryTemplates,
             "dlc" => $dlcTemplates,
             "release" => $releaseTemplates,
+            "releasedata" => $releaseDataTemplates,
             "ratingboard" => $ratingBoardTemplates,
             "region" => $regionTemplates,
             "gamerating" => $gameRatingTemplates,

@@ -1,0 +1,56 @@
+{
+  "name": "GBCatalogSync",
+  "version": "0.1.0",
+  "author": ["Chuck Zimmerheld"],
+  "description": "Pushes game-page changes to the giant-bomb-next catalog-sync endpoint. No-op unless enabled with a shared key.",
+  "type": "extension",
+  "manifest_version": 2,
+  "requires": {
+    "MediaWiki": ">=1.43.0"
+  },
+  "AutoloadClasses": {
+    "MediaWiki\\Extension\\GBCatalogSync\\Hooks": "src/Hooks.php"
+  },
+  "MessagesDirs": {
+    "GBCatalogSync": ["i18n"]
+  },
+  "AvailableRights": ["gbcatalogsync-guid-override"],
+  "GroupPermissions": {
+    "sysop": {
+      "gbcatalogsync-guid-override": true
+    },
+    "bot": {
+      "gbcatalogsync-guid-override": true
+    }
+  },
+  "HookHandlers": {
+    "main": {
+      "class": "MediaWiki\\Extension\\GBCatalogSync\\Hooks"
+    }
+  },
+  "Hooks": {
+    "PageSaveComplete": "main",
+    "PageDeleteComplete": "main",
+    "PageMoveComplete": "main",
+    "PageUndeleteComplete": "main",
+    "EditFilterMergedContent": "main"
+  },
+  "config": {
+    "GBCatalogSyncEnabled": {
+      "value": false,
+      "description": "Enable catalog-sync pushes. When false, hooks return immediately."
+    },
+    "GBCatalogSyncEndpoint": {
+      "value": "https://giantbomb.com/api/wiki/catalog-sync",
+      "description": "Receiving endpoint on giant-bomb-next."
+    },
+    "GBCatalogSyncKey": {
+      "value": "",
+      "description": "Shared secret sent as x-gb-internal-key (env WIKI_CATALOG_HOOK_KEY)."
+    },
+    "GBCatalogSyncEnforceUniqueGuid": {
+      "value": true,
+      "description": "Reject saves that point a game page at a guid another page already owns. Users with gbcatalogsync-guid-override are exempt. Independent of the push being enabled."
+    }
+  }
+}

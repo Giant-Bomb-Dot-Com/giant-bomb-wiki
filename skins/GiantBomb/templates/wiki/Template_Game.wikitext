@@ -177,7 +177,7 @@ HTML Structure
 <span class="gb-game-tabs-tab gb-game-tabs-tab--active">Game</span>
 <span class="gb-game-tabs-tab">[[{{FULLPAGENAME}}/Images|Images]]</span>
 <span class="gb-game-tabs-tab">[[{{FULLPAGENAME}}/Reviews|Reviews]]</span>
-<span class="gb-game-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
+{{#ifexist:{{FULLPAGENAME}}/Releases|<span class="gb-game-tabs-tab">[[{{FULLPAGENAME}}/Releases|Releases]]</span>|}}<span class="gb-game-tabs-tab">[[Special:WhatLinksHere/{{FULLPAGENAME}}|Related Pages]]</span>
 </div>
 <div class="gb-wiki-actions"><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=formedit}} Edit]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=history}} History]</span><span class="gb-wiki-action">[{{fullurl:{{FULLPAGENAME}}|action=info}} Page info]</span></div>
 </div>

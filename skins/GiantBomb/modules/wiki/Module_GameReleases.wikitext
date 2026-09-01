@@ -1,0 +1,266 @@
+-- /Releases subpage: game hero + tabs shell, then one smw query -> platform
+-- sections with a card per release. real == headings so the toc groups
+-- platform -> release; __TOC__ lands in the sidebar slot
+local p = {}
+
+local MONTHS = {
+    ['01'] = 'January', ['02'] = 'February', ['03'] = 'March',
+    ['04'] = 'April', ['05'] = 'May', ['06'] = 'June',
+    ['07'] = 'July', ['08'] = 'August', ['09'] = 'September',
+    ['10'] = 'October', ['11'] = 'November', ['12'] = 'December',
+}
+local QUARTERS = { ['01'] = 'Q1', ['04'] = 'Q2', ['07'] = 'Q3', ['10'] = 'Q4' }
+local REGION_ORDER = {
+    ['United States'] = 1, ['United Kingdom'] = 2, ['Japan'] = 3, ['Australia'] = 4,
+}
+
+-- single values arrive bare, multi values as a table -> always a table
+local function values(v)
+    if v == nil then return {} end
+    if type(v) ~= 'table' then return { v } end
+    return v
+end
+
+-- smw hands page values back as wikitext links (with a leading colon) -> unwrap
+local function plain(v)
+    local inner = tostring(v):match('^%[%[(.-)%]%]$')
+    if inner then
+        inner = inner:match('^(.-)|') or inner
+        return inner:gsub('^:', '')
+    end
+    return tostring(v)
+end
+
+-- "Companies/Nintendo EPD" -> [[Companies/Nintendo EPD|Nintendo EPD]]
+local function entityLink(title)
+    local label = title:gsub('^[^/]+/', ''):gsub('_', ' ')
+    return '[[' .. title .. '|' .. label .. ']]'
+end
+
+-- "Ratings/ESRB T" -> [[Ratings/ESRB T|ESRB: T]]
+local function ratingLink(title)
+    local rest = title:gsub('^Ratings/', '')
+    local board, val = rest:match('^(%u+)[_ ](.+)$')
+    local label = board and (board .. ': ' .. val:gsub('_', ' ')) or rest:gsub('_', ' ')
+    return '[[' .. title .. '|' .. label .. ']]'
+end
+
+local function linkList(v)
+    local out = {}
+    for _, item in ipairs(values(v)) do
+        out[#out + 1] = entityLink(plain(item))
+    end
+    return table.concat(out, ', ')
+end
+
+local function fmtDate(iso, dtype)
+    iso = tostring(iso or '')
+    if iso == '' then return '' end
+    local y, m, d = iso:match('^(%d+)-(%d+)-(%d+)')
+    if not y then y, m = iso:match('^(%d+)-(%d+)') end
+    if not y then y = iso:match('^(%d+)') end
+    if dtype == 'Year' or (y and not m) then return y or iso end
+    if dtype == 'Quarter' and m then return (QUARTERS[m] or 'Q1') .. ' ' .. y end
+    if dtype == 'Month' and m then return (MONTHS[m] or '') .. ' ' .. y end
+    if y and m and d then
+        return (MONTHS[m] or '') .. ' ' .. tonumber(d) .. ', ' .. y
+    end
+    if y and m then return (MONTHS[m] or '') .. ' ' .. y end
+    return iso
+end
+
+-- gb serves every upload in each rendition bucket -> use the small one
+local function coverUrl(image)
+    local url = tostring(image or '')
+    if url:sub(1, 4) ~= 'http' then return nil end
+    return url:gsub('/a/uploads/[%w_]+/', '/a/uploads/scale_small/', 1)
+end
+
+local function row(rows, label, value)
+    if value == nil or value == '' then value = 'N/A' end
+    rows[#rows + 1] = '<tr><th>' .. label .. '</th><td>' .. value .. '</td></tr>'
+end
+
+local function card(r)
+    local name = plain(r.name or '')
+    local rows = {}
+    row(rows, 'Release name', name)
+    row(rows, 'Platform', r.platform ~= '' and entityLink(r.platform) or nil)
+    row(rows, 'Region', tostring(r.region or ''))
+    row(rows, 'Developer', linkList(r.devs))
+    row(rows, 'Publisher', linkList(r.pubs))
+    row(rows, 'Release date', fmtDate(r.date, r.datetype))
+    -- code rows only when a code exists, labeled by its type like the old site
+    local pcode = tostring(r.pcode or '')
+    if pcode ~= '' then
+        local label = tostring(r.pcodetype or '')
+        row(rows, label ~= '' and label or 'Product code', pcode)
+    end
+    local ccode = tostring(r.ccode or '')
+    if ccode ~= '' then
+        local label = tostring(r.ccodetype or '')
+        row(rows, label ~= '' and label or 'Company code', ccode)
+    end
+    local rating = plain((values(r.rating))[1] or '')
+    row(rows, 'Rating', rating ~= '' and ratingLink(rating) or nil)
+    row(rows, 'Minimum Players', tostring(r.minp or ''))
+    row(rows, 'Maximum Players', tostring(r.maxp or ''))
+    row(rows, 'Resolutions', linkList(r.res))
+    row(rows, 'Sound Systems', linkList(r.sound))
+    row(rows, 'Singleplayer Features', linkList(r.spf))
+    row(rows, 'Multiplayer Features', linkList(r.mpf))
+    local ws = tostring(r.widescreen or '')
+    row(rows, 'Widescreen Support', ws ~= '' and ws or nil)
+
+    local cover = coverUrl(plain((values(r.image))[1] or ''))
+    local html = { '<div class="gb-release-card">' }
+    html[#html + 1] = '<table class="gb-release-card-details">' .. table.concat(rows) .. '</table>'
+    if cover then
+        html[#html + 1] = '<div class="gb-release-card-cover">' .. cover .. '</div>'
+    end
+    html[#html + 1] = '</div>'
+    return '=== ' .. name .. ' ===\n' .. table.concat(html, '\n') .. '\n'
+end
+
+local function sections(releases)
+    local groups, order = {}, {}
+    for _, r in ipairs(releases) do
+        r.platform = plain((values(r.platform))[1] or '')
+        local label = r.platform:gsub('^Platforms/', ''):gsub('_', ' ')
+        if label == '' then label = 'Other' end
+        if not groups[label] then
+            groups[label] = {}
+            order[#order + 1] = label
+        end
+        groups[label][#groups[label] + 1] = r
+    end
+    table.sort(order)
+
+    local out = {}
+    for _, label in ipairs(order) do
+        local list = groups[label]
+        table.sort(list, function(a, b)
+            local da, db = tostring(a.date or ''), tostring(b.date or '')
+            if da ~= db then
+                if da == '' then return false end
+                if db == '' then return true end
+                return da < db
+            end
+            local ra = REGION_ORDER[tostring(a.region or '')] or 9
+            local rb = REGION_ORDER[tostring(b.region or '')] or 9
+            return ra < rb
+        end)
+        out[#out + 1] = '== ' .. label .. ' releases ==\n'
+        for _, r in ipairs(list) do
+            out[#out + 1] = card(r)
+        end
+    end
+    return table.concat(out, '\n')
+end
+
+local function heroAndTabs(parentPage, fullPage)
+    local props = {}
+    if mw.smw then
+        local res = mw.smw.ask({
+            '[[' .. parentPage .. ']]',
+            '?Has name=name',
+            '?Has deck=deck',
+            '?Has image=image',
+            '?Has background image=bg',
+            limit = 1,
+            link = 'none',
+        })
+        props = (res and res[1]) or {}
+    end
+    local name = tostring(props.name or parentPage:match('[^/]+$') or parentPage)
+    local deck = tostring(props.deck or '')
+    local cover = tostring(plain((values(props.image))[1] or ''))
+    local bg = tostring(plain((values(props.bg))[1] or ''))
+
+    local hidden = ''
+    if cover ~= '' then
+        hidden = hidden .. '<div style="display:none;" id="coverImageData">' ..
+            (cover:sub(1, 4) == 'http' and cover or '[[File:' .. cover .. '|300px|link=]]') .. '</div>'
+    end
+    if bg ~= '' then
+        hidden = hidden .. '<div style="display:none;" id="backgroundImageData">' ..
+            (bg:sub(1, 4) == 'http' and bg or '[[File:' .. bg .. '|300px|link=]]') .. '</div>'
+    end
+
+    local tabs = table.concat({
+        '<span class="gb-game-tabs-tab">[[' .. parentPage .. '|Game]]</span>',
+        '<span class="gb-game-tabs-tab">[[' .. parentPage .. '/Images|Images]]</span>',
+        '<span class="gb-game-tabs-tab">[[' .. parentPage .. '/Reviews|Reviews]]</span>',
+        '<span class="gb-game-tabs-tab gb-game-tabs-tab--active">Releases</span>',
+        '<span class="gb-game-tabs-tab">[[Special:WhatLinksHere/' .. parentPage .. '|Related Pages]]</span>',
+    })
+    local actions = '<div class="gb-wiki-actions">'
+        .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, 'action=formedit')) .. ' Edit]</span>'
+        .. '<span class="gb-wiki-action">[' .. tostring(mw.uri.fullUrl(fullPage, 'action=history')) .. ' History]</span>'
+        .. '</div>'
+
+    return hidden
+        .. '<div class="gb-game-hero"><div class="gb-game-hero-container">'
+        .. '<div class="gb-game-hero-cover"></div>'
+        .. '<div class="gb-game-hero-info">'
+        .. '<div class="gb-game-hero-title">' .. mw.text.nowiki(name) .. '</div>'
+        .. '<div class="gb-game-hero-meta"><span class="gb-game-hero-type">GAME</span> &#187; Releases</div>'
+        .. '<div class="gb-game-hero-deck">' .. mw.text.nowiki(deck) .. '</div>'
+        .. '</div></div></div>'
+        .. '<div class="gb-game-tabs"><div class="gb-game-tabs-container">'
+        .. '<div class="gb-game-tabs-nav">' .. tabs .. '</div>'
+        .. actions
+        .. '</div></div>'
+end
+
+function p.subpage(frame)
+    local fullPage = mw.title.getCurrentTitle().prefixedText
+    local parentPage = fullPage:gsub('/Releases$', '')
+
+    local ok, res = pcall(mw.smw.ask, {
+        '[[-Has subobject::' .. fullPage .. ']]',
+        '[[Has object type::Release]]',
+        '?Has name=name',
+        '?Has image=image',
+        '?Has region=region',
+        '?Has platforms=platform',
+        '?Has rating=rating',
+        '?Has developers=devs',
+        '?Has publishers=pubs',
+        '?Has release date#ISO=date',
+        '?Has release date type=datetype',
+        '?Has product code=pcode',
+        '?Has product code type=pcodetype',
+        '?Has company code=ccode',
+        '?Has company code type=ccodetype',
+        '?Has widescreen support=widescreen',
+        '?Has resolutions=res',
+        '?Has sound systems=sound',
+        '?Has single player features=spf',
+        '?Has multiplayer features=mpf',
+        '?Has minimum players=minp',
+        '?Has maximum players=maxp',
+        'mainlabel=-',
+        'limit=200',
+    })
+    local releases = (ok and type(res) == 'table') and res or {}
+
+    local body
+    if #releases == 0 then
+        body = "''No releases documented yet.''"
+    else
+        body = sections(releases)
+    end
+
+    return '__NOEDITSECTION__\n'
+        .. '<div class="gb-game-page">'
+        .. heroAndTabs(parentPage, fullPage)
+        .. '<div class="gb-game-content">'
+        .. '<div class="gb-game-main">\n'
+        .. body
+        .. '\n</div>'
+        .. '<div class="gb-game-sidebar"><div class="gb-releases-toc">__TOC__</div></div>'
+        .. '</div></div>'
+end
+
+return p

@@ -983,3 +983,55 @@ body
 body .mw-debug-pane {
   background-color: #333;
 }
+
+/* PageForms multi-instance editor (Form:Releases etc) */
+#pfForm fieldset {
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+#pfForm legend {
+  color: #fff;
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+.mw-body-content .multipleTemplateInstance {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.mw-body-content .multipleTemplateInstanceTable {
+  width: 100%;
+}
+.mw-body-content td.instanceMain {
+  padding: 0.5rem 1rem;
+}
+.mw-body-content .instanceMain table.formtable {
+  width: 100%;
+  table-layout: fixed;
+}
+.mw-body-content .instanceMain table.formtable th {
+  width: 200px;
+  color: #e0e0e0;
+  font-weight: 500;
+  text-align: left;
+  padding: 0.35rem 1rem 0.35rem 0;
+}
+.mw-body-content .instanceMain table.formtable td {
+  padding: 0.35rem 0;
+}
+.mw-body-content .instanceMain input.createboxInput,
+.mw-body-content .instanceMain select,
+.mw-body-content .instanceMain .select2-container {
+  box-sizing: border-box;
+  max-width: 100% !important;
+}
+.mw-body-content .formtable th {
+  color: #e0e0e0;
+}
+.mw-body-content .multipleTemplateAdder {
+  margin-top: 0.5rem;
+}

@@ -182,11 +182,12 @@ class PdoDbWrapper implements DbInterface
 
     public function getDLCFromDB(int $id)
     {
+        // was joining the release dev/pub tables on dlc id -> garbage matches
         $sql = "SELECT o.id, o.image_id, o.release_date, o.release_date_type, o.name, o.description, o.launch_price, o.deck, a2.mw_page_name AS developer, a4.mw_page_name AS publisher, a5.mw_page_name AS platform, a7.name AS dlc_type
                   FROM wiki_game_dlc AS o
-             LEFT JOIN wiki_game_release_to_developer AS a1 ON o.id = a1.release_id
+             LEFT JOIN wiki_game_dlc_to_developer AS a1 ON o.id = a1.dlc_id
              LEFT JOIN wiki_company AS a2 ON a1.company_id = a2.id
-             LEFT JOIN wiki_game_release_to_publisher AS a3 ON o.id = a3.release_id
+             LEFT JOIN wiki_game_dlc_to_publisher AS a3 ON o.id = a3.dlc_id
              LEFT JOIN wiki_company AS a4 ON a3.company_id = a4.id
              LEFT JOIN wiki_platform AS a5 ON o.platform_id = a5.id
              LEFT JOIN wiki_game_dlc_to_type AS a6 ON o.id = a6.dlc_id

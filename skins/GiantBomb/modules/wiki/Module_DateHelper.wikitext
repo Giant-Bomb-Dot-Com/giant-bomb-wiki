@@ -123,30 +123,36 @@ end
 -- Returns ISO formatted date using smw date parts
 function p.getISODateFromParts(frame)
     local args = getArgs(frame)
-    
+
     local dateType = args.ReleaseDateType or ""
-    
+
     if dateType == "Full" then
-        return args.releaseDate or ""
-        
+        -- was args.releaseDate (typo) -> form-saved Full dates stored as ""
+        return args.ReleaseDate or ""
+
     elseif dateType == "Month" then
         local mMap = {
             January="01", February="02", March="03", April="04", May="05", June="06",
             July="07", August="08", September="09", October="10", November="11", December="12"
         }
         local year = args.MonthYearPart or ""
+        -- no parts -> fall back to the iso date rather than emitting "-01"
+        if year == "" then return args.ReleaseDate or "" end
         local month = mMap[args.MonthPart] or "01"
         return year .. "-" .. month
-        
+
     elseif dateType == "Quarter" then
         local qMap = { Q1="01", Q2="04", Q3="07", Q4="10" }
         local year = args.QuarterYearPart or ""
+        if year == "" then return args.ReleaseDate or "" end
         local month = qMap[args.QuarterPart] or "01"
         return year .. "-" .. month
-        
+
     elseif dateType == "Year" then
-        return args.YearPart or ""
-        
+        local year = args.YearPart or ""
+        if year == "" then return args.ReleaseDate or "" end
+        return year
+
     else
         return args.ReleaseDate or ""
     end
