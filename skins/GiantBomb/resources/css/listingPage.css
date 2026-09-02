@@ -389,6 +389,32 @@
   color: #ccc;
 }
 
+.platform-badge a {
+  display: block;
+  margin: -4px -8px;   /* matches .platform-badge's padding: 4px 8px */
+  padding: 4px 8px;    /* re-applies it on the link itself */
+  text-decoration: none;
+}
+
+.platform-badge a:link,
+.platform-badge a:visited {
+  color: inherit;
+}
+
+.gb-game-hero-platform a {
+  display: block;
+  margin: -0.25rem -0.6rem;   /* matches .gb-game-hero-platform's padding */
+  padding: 0.25rem 0.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gb-game-hero-platform a:link,
+.gb-game-hero-platform a:visited {
+  color: inherit;
+}
+
+
 .platform-badge-more {
   background: #1a1a1a;
   color: #999;
