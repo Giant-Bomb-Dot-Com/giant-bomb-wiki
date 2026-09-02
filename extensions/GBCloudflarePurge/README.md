@@ -44,7 +44,11 @@ anonymous cached pages.
        `$wgCookiePrefix = ""`)
    - Then: Bypass cache
    - Expression form:
-     `starts_with(http.request.uri.path, "/wiki/") and (http.cookie contains "mwSession" or http.cookie contains "gb_wiki" or http.cookie contains "UserID" or http.cookie contains "Token")`
+     `starts_with(http.request.uri.path, "/wiki/") and not starts_with(http.request.uri.path, "/wiki/load.php") and (http.cookie contains "mwSession" or http.cookie contains "gb_wiki" or http.cookie contains "UserID" or http.cookie contains "Token")`
+   - The `load.php` carve-out keeps ResourceLoader CSS/JS edge-cached for
+     logged-in users too: RL responses are keyed entirely by URL, and
+     user-private module requests come back `Cache-Control: private`, which
+     "Respect origin" refuses to store.
 
    Missing any of these means a logged-in user can be served the anonymous
    cached copy of a page (Cloudflare ignores `Vary: Cookie`).

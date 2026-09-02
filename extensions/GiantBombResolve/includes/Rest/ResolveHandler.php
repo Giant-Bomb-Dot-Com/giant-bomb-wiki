@@ -6,6 +6,7 @@ use ApiMain;
 use FauxRequest;
 use MediaWiki\Config\Config;
 use MediaWiki\Extension\AlgoliaSearch\LegacyImageHelper;
+use MediaWiki\Extension\AlgoliaSearch\RecordMapper;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Rest\Handler;
@@ -447,6 +448,22 @@ class ResolveHandler extends SimpleHandler
             }
         }
 
+        // last resort: assume a legacy cdn path, same guess the algolia push makes
+        if (
+            in_array("image", $fields, true) &&
+            (!isset($data["image"]) || $data["image"] === null)
+        ) {
+            $rawImage = $this->extractFileTitleFromPrintout(
+                $first["printouts"]["Primary image"][0] ?? null,
+            );
+            $url = $rawImage
+                ? RecordMapper::resolveImageReference($rawImage, 640)
+                : null;
+            if ($url !== null) {
+                $data["image"] = $this->makeDegradedImage($url);
+            }
+        }
+
         return $data;
     }
 
@@ -829,20 +846,29 @@ class ResolveHandler extends SimpleHandler
             if ($entry === null) {
                 continue;
             }
-            $titleText = $this->extractFileTitleFromPrintout($entry);
-            if (!$titleText) {
+            $rawValue = $this->extractFileTitleFromPrintout($entry);
+            if (!$rawValue) {
                 continue;
             }
+            // smw stores spaces as '+' -> undo for the local file lookup
+            $titleText = str_replace("+", " ", $rawValue);
             if (stripos($titleText, "File:") !== 0) {
                 $titleText = "File:" . $titleText;
             }
             $title = Title::newFromText($titleText);
-            if (!$title) {
-                continue;
-            }
             $services = MediaWikiServices::getInstance();
-            $file = $services->getRepoGroup()->findFile($title);
+            $file = $title
+                ? $services->getRepoGroup()->findFile($title)
+                : null;
             if (!$file) {
+                // plain urls pass through; anything else falls through so
+                // the imageData div gets first shot
+                if (stripos(ltrim($rawValue), "http") === 0) {
+                    $url = RecordMapper::resolveImageReference($rawValue, 640);
+                    if ($url !== null) {
+                        return $this->makeDegradedImage($url);
+                    }
+                }
                 continue;
             }
             $thumbOutput = $file->transform(["width" => 640]);
@@ -881,6 +907,21 @@ class ResolveHandler extends SimpleHandler
             ];
         }
         return null;
+    }
+
+    // url-only record, same null-dims shape as the imageData-div fallback
+    private function makeDegradedImage(string $url): array
+    {
+        return [
+            "title" => null,
+            "descriptionUrl" => null,
+            "url" => $url,
+            "width" => null,
+            "height" => null,
+            "thumbUrl" => $url,
+            "thumbWidth" => null,
+            "thumbHeight" => null,
+        ];
     }
 
     /**

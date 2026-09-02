@@ -249,7 +249,8 @@ class RecordMapper
 
     // resolves a raw Has image / Image= value to a public url.
     // http(s) -> as-is; mw File: -> 640px thumb; else assume legacy gb cdn path.
-    private static function resolveImageReference(
+    // public: shared with GiantBombResolve
+    public static function resolveImageReference(
         string $value,
         int $width,
     ): ?string {

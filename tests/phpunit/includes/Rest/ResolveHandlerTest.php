@@ -118,6 +118,74 @@ class ResolveHandlerTest extends MediaWikiIntegrationTestCase
         $handler->execute();
     }
 
+    public function testImageResolvesUrlValuedHasImage(): void
+    {
+        // migrated pages: plain url in Has image, no local file, no imageData div
+        $url =
+            "https://www.giantbomb.com/a/uploads/scale_medium/0/1234/cover.jpg";
+        $handler = $this->newHandlerWithAskResults([
+            "Games/Grand Theft Auto IV" => [
+                "fulltext" => "Games/Grand Theft Auto IV",
+                "fullurl" =>
+                    "https://example.org/wiki/Games/Grand_Theft_Auto_IV",
+                "namespace" => 0,
+                "pageid" => 123,
+                "displaytitle" => "Grand Theft Auto IV (Game)",
+                "printouts" => [
+                    "Name" => ["Grand Theft Auto IV"],
+                    "Primary image" => [$url],
+                ],
+            ],
+        ]);
+        $request = new FauxRequest([
+            "guids" => "3030-3221",
+            "fields" => "image",
+        ]);
+        $handler->setRequest($request);
+
+        $result = $handler->execute();
+        $data = json_decode($result->getBody()->getContents(), true);
+        $record = $data["guids"][0];
+        $this->assertSame("ok", $record["status"]);
+        $this->assertSame($url, $record["data"]["image"]["url"]);
+        $this->assertSame($url, $record["data"]["image"]["thumbUrl"]);
+        // degraded contract: url-only, everything else null
+        $this->assertNull($record["data"]["image"]["title"]);
+        $this->assertNull($record["data"]["image"]["width"]);
+        $this->assertNull($record["data"]["image"]["height"]);
+    }
+
+    public function testImageFabricatesCdnUrlAsLastResort(): void
+    {
+        // bare cdn path, nothing else resolves -> fabricated guess fills in
+        $handler = $this->newHandlerWithAskResults([
+            "Games/Some Game" => [
+                "fulltext" => "Games/Some Game",
+                "fullurl" => "https://example.org/wiki/Games/Some_Game",
+                "namespace" => 0,
+                "pageid" => 124,
+                "printouts" => [
+                    "Name" => ["Some Game"],
+                    "Primary image" => ["9/93770/cover.jpg"],
+                ],
+            ],
+        ]);
+        $request = new FauxRequest([
+            "guids" => "3030-9999",
+            "fields" => "image",
+        ]);
+        $handler->setRequest($request);
+
+        $result = $handler->execute();
+        $data = json_decode($result->getBody()->getContents(), true);
+        $record = $data["guids"][0];
+        $this->assertSame("ok", $record["status"]);
+        $this->assertSame(
+            "https://www.giantbomb.com/a/uploads/9/93770/cover.jpg",
+            $record["data"]["image"]["url"],
+        );
+    }
+
     public function testParseGuidsAcceptsUuid(): void
     {
         $handler = new ResolveHandler();
