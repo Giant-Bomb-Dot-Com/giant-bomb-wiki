@@ -197,17 +197,17 @@ div.mw-body-content
 .oo-ui-dropdownWidget.oo-ui-widget-enabled .oo-ui-dropdownWidget-handle,
 .oo-ui-dropdownWidget.oo-ui-widget-enabled.oo-ui-dropdownWidget-open
   .oo-ui-dropdownWidget-handle {
-  background-color:#FF0000;
-  color:#00FF00;
+  background-color: #2a2a2a;
+  color: #ccc;
 }
 
 /* Dropdown Selected Option */
 .select2-container
   .select2-dropdown
   .select2-results
-  .select2-results__option[aria-selected=true] {
-  background-color:#00FF00;
-  color:#0000FF;
+  .select2-results__option[aria-selected="true"] {
+  background-color: #ccc;
+  color: #2a2a2a;
 }
 
 /* Dropdown MouseOver Option */
@@ -216,8 +216,8 @@ div.mw-body-content
   .select2-results
   .select2-results__options
   .select2-results__option--highlighted {
-  background-color:#0000FF;
-  color:#FF0000;
+  background-color: #2a2acc;
+  color: #ccc;
 }
 
 /* OO-UI-Modal */
