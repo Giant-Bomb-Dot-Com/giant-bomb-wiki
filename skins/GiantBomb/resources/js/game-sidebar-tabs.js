@@ -313,17 +313,43 @@
       const header = accordion.querySelector(".gb-accordion-header");
       if (!header) continue;
 
-      // On mobile, close all by default (remove --open, don't add --active)
-      if (isMobile && accordion.classList.contains("gb-accordion--open")) {
-        // Keep --open class for CSS but don't activate
-      }
+      const content = accordion.querySelector(".gb-accordion-content");
+      if (!content) continue;
 
-      header.addEventListener("click", () => {
-        accordion.classList.toggle("gb-accordion--active");
-        // On desktop, also toggle --open for non-JS styling
-        if (!isMobile) {
+      // On mobile, close all by default (remove --open and --active)
+      if (isMobile) {
+        if (accordion.classList.contains("gb-accordion--open")) {
           accordion.classList.toggle("gb-accordion--open");
         }
+        if (accordion.classList.contains("gb-accordion--active")) {
+          accordion.classList.toggle("gb-accordion--active");
+        }
+      }
+      // Otherwise, open all by default (add --open and --active
+      else {
+        if (!accordion.classList.contains("gb-accordion--open")) {
+          accordion.classList.toggle("gb-accordion--open");
+        }
+        if (!accordion.classList.contains("gb-accordion--active")) {
+          accordion.classList.toggle("gb-accordion--active");
+        }
+
+        // And close if it does not have content
+        if (content.querySelector('span[class*="smw-value"]') == null)
+        {
+          if (accordion.classList.contains("gb-accordion--open")) {
+            accordion.classList.toggle("gb-accordion--open");
+          }
+          if (accordion.classList.contains("gb-accordion--active")) {
+            accordion.classList.toggle("gb-accordion--active");
+          }
+        }
+      }
+
+      // Lastly, add a listener to toggle active/open when clicked
+      header.addEventListener("click", () => {
+        accordion.classList.toggle("gb-accordion--active");
+        accordion.classList.toggle("gb-accordion--open");
       });
     }
   };
