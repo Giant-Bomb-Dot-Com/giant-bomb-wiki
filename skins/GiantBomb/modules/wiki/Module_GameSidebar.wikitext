@@ -171,7 +171,10 @@ function p.details(frame)
     row('Genre', joinLinks(data.genres, '<br/>'))
     row('Theme', joinLinks(data.themes, '<br/>'))
     row('Franchise', joinLinks(data.franchises))
-    row('Aliases', joinLinks(data.aliases))
+    
+    local aliases = joinLinks(data.aliases)
+    local displayPart = aliases:match("|([^%]]+)") or aliases
+    row('Aliases', displayPart:gsub(",%s*", "<br/>"))
 
     return '<dl class="gb-game-details">' .. table.concat(html) .. '</dl>'
 end
