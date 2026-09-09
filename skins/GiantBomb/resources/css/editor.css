@@ -190,7 +190,7 @@ div.mw-body-content
   opacity: 0.3;
 }
 
-/* Dropdown background */
+/* Dropdown */
 .select2-container .select2-dropdown,
 .oo-ui-dropdownInputWidget,
 .oo-ui-dropdownInputWidget.oo-ui-widget-enabled,
@@ -198,14 +198,26 @@ div.mw-body-content
 .oo-ui-dropdownWidget.oo-ui-widget-enabled.oo-ui-dropdownWidget-open
   .oo-ui-dropdownWidget-handle {
   background-color: #2a2a2a;
+  color: #ccc;
 }
 
-/* Selected option background */
+/* Dropdown Selected Option */
 .select2-container
   .select2-dropdown
   .select2-results
-  ul.select2-results__options[aria-selected="true"] {
-  background-color: #666;
+  .select2-results__option[aria-selected="true"] {
+  background-color: #ccc;
+  color: #2a2a2a;
+}
+
+/* Dropdown MouseOver Option */
+.select2-container
+  .select2-dropdown
+  .select2-results
+  .select2-results__options
+  .select2-results__option--highlighted {
+  background-color: #2a2acc;
+  color: #ccc;
 }
 
 /* OO-UI-Modal */
