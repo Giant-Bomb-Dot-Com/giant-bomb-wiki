@@ -7,7 +7,8 @@ moved, or undeleted, so the site's catalog row appears/refreshes within seconds.
 - `guid` comes from the page's `| Guid=` template param (legacy `3030-<id>` or
   UUID). Pages without one are skipped.
 - `title` is a seed only (`| Name=` param, else the title leaf); the receiver
-  re-hydrates the real title shortly after.
+  re-hydrates the real title shortly after. Moves send `action: move` with
+  the new title plus `oldTitle`, so renames are greppable receiver-side.
 - Delivery is fire-and-forget: queued post-send, one retry on 5xx/transport
   failure. The receiver is idempotent (60s per-key cooldown) and a reconcile
   job on the site backstops anything missed here.

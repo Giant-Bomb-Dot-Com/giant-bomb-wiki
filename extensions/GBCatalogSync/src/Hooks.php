@@ -32,9 +32,8 @@ class Hooks
         RevisionRecord $revisionRecord,
         EditResult $editResult,
     ): void {
-        if ($editResult->isNullEdit()) {
-            return;
-        }
+        // null edits push on purpose: touching a page is the re-sync lever;
+        // the receiver's cooldown absorbs the noise
         $action = $flags & EDIT_NEW ? "create" : "edit";
         self::pushForRevision($wikiPage->getTitle(), $revisionRecord, $action);
     }
@@ -75,7 +74,13 @@ class Hooks
     ): void {
         $newTitle = Title::newFromLinkTarget($new);
         if ($newTitle && self::isGameTitle($newTitle)) {
-            self::pushForRevision($newTitle, $revision, "edit");
+            $movedFrom = Title::newFromLinkTarget($old);
+            self::pushForRevision(
+                $newTitle,
+                $revision,
+                "move",
+                $movedFrom ? self::extractSeedTitle("", $movedFrom) : null,
+            );
             return;
         }
         $oldTitle = Title::newFromLinkTarget($old);
@@ -219,6 +224,7 @@ class Hooks
         ?Title $title,
         ?RevisionRecord $revision,
         string $action,
+        ?string $oldTitle = null,
     ): void {
         if (!$title || !self::isGameTitle($title)) {
             return;
@@ -254,6 +260,10 @@ class Hooks
             "title" => self::extractSeedTitle($text, $title),
             "action" => $action,
         ];
+        if ($oldTitle !== null) {
+            // moves only: makes renames greppable on the receiver
+            $payload["oldTitle"] = $oldTitle;
+        }
 
         // post-send so the save path never waits on the site
         DeferredUpdates::addCallableUpdate(static function () use (
