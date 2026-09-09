@@ -35,7 +35,6 @@ This template is called automatically by <code><nowiki>{{GenreEnd}}</nowiki></co
 <div class="gb-accordion-header">Recent Games</div>
 <ul class="gb-accordion-content">
 {{#ask: [[Has genres::{{FULLPAGENAME}}]] [[Category:Games]]
-  |?Has name
   |format=list
   |link=all
   |limit=20
