@@ -325,7 +325,7 @@
           accordion.classList.toggle("gb-accordion--active");
         }
       }
-      // Otherwise, open all by default (add --open and --active
+      // Otherwise, open all by default (add --open and --active)
       else {
         if (!accordion.classList.contains("gb-accordion--open")) {
           accordion.classList.toggle("gb-accordion--open");
@@ -334,8 +334,10 @@
           accordion.classList.toggle("gb-accordion--active");
         }
 
-        // And close if it does not have content
-        if (content.querySelector('span[class*="smw-value"]') == null)
+        // And close if it does not have content.  
+        // Making the assumption that all Accordions that are not empty will contain links to other 
+        // Wiki Pages.  Therefore, if it has a link, it is not empty.
+        if (content.querySelector("a[href]") == null)
         {
           if (accordion.classList.contains("gb-accordion--open")) {
             accordion.classList.toggle("gb-accordion--open");
