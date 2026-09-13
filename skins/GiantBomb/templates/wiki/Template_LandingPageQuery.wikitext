@@ -4,9 +4,7 @@ __NOTOC__
   name (name of the landing page, used to call other templates)
   filterTitle (The header to show on the top of the filter)
 }}
-</noinclude>
-<includeonly>
-<div class="listing-content">
+</noinclude><includeonly><div class="listing-content">
     <div class="listing-sidebar">
       <div class="filter-container game-filter">
           <h3 class="filter-title">{{{filterTitle}}}</h3>

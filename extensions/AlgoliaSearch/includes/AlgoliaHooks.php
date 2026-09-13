@@ -27,17 +27,22 @@ class AlgoliaHooks
     ): void {
         $config = MediaWikiServices::getInstance()->getMainConfig();
 
-        if (!(bool) $config->get("AlgoliaSearchEnabled")) {
+        if (!self::syncEnabled($config)) {
             return;
         }
 
-        // use the WikiPage's redirect state; Title::isRedirect() can be
-        // stale right after the save
-        self::reindexTitle(
-            $wikiPage->getTitle(),
+        // grab the redirect state now; Title::isRedirect() can be stale right
+        // after the save and the WikiPage may be gone by the deferred run
+        $title = $wikiPage->getTitle();
+        $isRedirect = $wikiPage->isRedirect();
+
+        DeferredUpdates::addCallableUpdate(static function () use (
+            $title,
             $config,
-            $wikiPage->isRedirect(),
-        );
+            $isRedirect,
+        ) {
+            self::reindexTitle($title, $config, $isRedirect);
+        });
     }
 
     /**
@@ -52,7 +57,7 @@ class AlgoliaHooks
     ): void {
         $config = MediaWikiServices::getInstance()->getMainConfig();
 
-        if (!(bool) $config->get("AlgoliaSearchEnabled")) {
+        if (!self::syncEnabled($config)) {
             return;
         }
 
@@ -61,7 +66,7 @@ class AlgoliaHooks
             return;
         }
 
-        // defer — don't block the upload response on SMW reads + Algolia calls
+        // defer - don't block the upload response on SMW reads + Algolia calls
         DeferredUpdates::addCallableUpdate(static function () use (
             $fileTitle,
             $config,
@@ -89,25 +94,31 @@ class AlgoliaHooks
     ): void {
         $config = MediaWikiServices::getInstance()->getMainConfig();
 
-        if (!(bool) $config->get("AlgoliaSearchEnabled")) {
+        if (!self::syncEnabled($config)) {
             return;
         }
 
         $newTitle = Title::newFromLinkTarget($new);
-        if (
+        $indexable =
             $newTitle &&
             $newTitle->getNamespace() === NS_MAIN &&
             self::getTypeFromTitle($newTitle, $config) !== null &&
-            !$newTitle->isRedirect()
-        ) {
-            self::reindexTitle($newTitle, $config);
-            return;
-        }
+            !$newTitle->isRedirect();
+        $pageId = (int) $pageid;
 
-        // Moved out of indexable scope (or into a redirect) -> drop the record.
-        if ((int) $pageid > 0) {
-            self::deleteObjectByPageId((int) $pageid, $config);
-        }
+        DeferredUpdates::addCallableUpdate(static function () use (
+            $indexable,
+            $newTitle,
+            $pageId,
+            $config,
+        ) {
+            if ($indexable) {
+                self::reindexTitle($newTitle, $config);
+            } elseif ($pageId > 0) {
+                // moved out of indexable scope (or into a redirect) -> drop it
+                self::deleteObjectByPageId($pageId, $config);
+            }
+        });
     }
 
     /**
@@ -126,14 +137,21 @@ class AlgoliaHooks
     ): void {
         $config = MediaWikiServices::getInstance()->getMainConfig();
 
-        if (!(bool) $config->get("AlgoliaSearchEnabled")) {
+        if (!self::syncEnabled($config)) {
             return;
         }
 
         $title = Title::newFromPageIdentity($page);
-        if ($title) {
-            self::reindexTitle($title, $config);
+        if (!$title) {
+            return;
         }
+
+        DeferredUpdates::addCallableUpdate(static function () use (
+            $title,
+            $config,
+        ) {
+            self::reindexTitle($title, $config);
+        });
     }
 
     /**
@@ -315,7 +333,7 @@ class AlgoliaHooks
     ): void {
         $config = MediaWikiServices::getInstance()->getMainConfig();
 
-        if (!(bool) $config->get("AlgoliaSearchEnabled")) {
+        if (!self::syncEnabled($config)) {
             return;
         }
 
@@ -328,22 +346,20 @@ class AlgoliaHooks
             return;
         }
 
-        try {
-            $index = AlgoliaClientFactory::getIndexFromConfig($config);
-            if (!$index) {
-                return;
-            }
+        DeferredUpdates::addCallableUpdate(static function () use (
+            $effectivePageId,
+            $config,
+        ) {
+            self::deleteObjectByPageId($effectivePageId, $config);
+        });
+    }
 
-            $objectId = "wiki:" . $effectivePageId;
-            $index->deleteObjects([$objectId]);
-        } catch (\Throwable $e) {
-            wfLogWarning(
-                "AlgoliaSearch: Failed to delete object wiki:" .
-                    $effectivePageId .
-                    ": " .
-                    $e->getMessage(),
-            );
+    private static function syncEnabled($config): bool
+    {
+        if (defined("MW_ENTRY_POINT") && MW_ENTRY_POINT === "cli") {
+            return false;
         }
+        return (bool) $config->get("AlgoliaSearchEnabled");
     }
 
     public static function getTypeFromTitle(Title $title, $config): ?string

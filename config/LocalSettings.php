@@ -409,6 +409,7 @@ wfLoadExtension("ExternalData");
 $wgExternalDataSources["*"]["allowed urls"] = [
     "https://giantbomb.com/api/",
 ];
+$wgExternalDataSources["*"]["min cache seconds"] = 300;
 wfLoadExtension("GBEnvLuaBridge");
 wfLoadExtension("GBRelated");
 wfLoadExtension("GBVirtualReviewPages");

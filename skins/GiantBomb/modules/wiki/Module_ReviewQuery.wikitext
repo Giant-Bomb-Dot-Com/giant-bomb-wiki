@@ -2,6 +2,8 @@ local p = {}
 
 local cachedStaffReviews = nil
 local cachedUserReviews = nil
+local cachedSummary = nil
+local cachedSummaryGuid = nil
 
 -- API score is 0-100; clamp for aggregation (prevents outliers from skewing averages).
 local function clampScore(score)
@@ -90,11 +92,26 @@ function p.fetchStaffReviews(guid)
 end
 
 function p.fetchUserReviews(guid)
-    if cachedUserReviews then 
-        return cachedUserReviews 
+    if cachedUserReviews then
+        return cachedUserReviews
     end
     cachedUserReviews = p.fetchReviews(guid,"USERS")
     return cachedUserReviews
+end
+
+function p.fetchSummary(guid)
+    if not guid or guid == '' then return nil end
+    if cachedSummaryGuid == guid then
+        return cachedSummary
+    end
+    local url = string.format(
+        "https://giantbomb.com/api/public/review-summary?game_guid=%s&api_key=%s&format=json",
+        guid, mw.ext.gbenv.getApiKey()
+    )
+    local values = mw.ext.externalData.getExternalData({ url = url, format = 'json' })
+    cachedSummaryGuid = guid
+    cachedSummary = (values and values.__json) or nil
+    return cachedSummary
 end
 
 local function newUserReviewUrl(guid)
@@ -157,25 +174,39 @@ function p._renderSidebar(guid, hideReadButton)
         staffSection = tostring(staffHeader) .. tostring(staffContainer)
     end
 
-    -- USERS
-    local userReviews = p.fetchUserReviews(guid)
+    -- USERS: numbers come from the review-summary aggregate so tracker ratings
+    -- (no body text, hidden by the listing) are counted; fall back to the
+    -- listed reviews if the summary is unavailable
     local counts = { [5]=0, [4]=0, [3]=0, [2]=0, [1]=0 }
-    local rawSum = 0
     local scoredCount = 0
-    local reviewCount = #userReviews
+    local avgOutOfFive = 0
+    local reviewCount = 0
 
-    for _, review in ipairs(userReviews) do
-        local s = clampScore(review.score)
-        if s then
-            local bucket = histogramStarBucket(review.score)
-            counts[bucket] = counts[bucket] + 1
-            rawSum = rawSum + s
-            scoredCount = scoredCount + 1
+    local summary = p.fetchSummary(guid)
+    if summary and summary.user and summary.user.histogram then
+        for i = 1, 5 do
+            local n = tonumber(summary.user.histogram[i]) or 0
+            counts[i] = n
+            scoredCount = scoredCount + n
         end
+        reviewCount = tonumber(summary.user.count) or scoredCount
+        local avg = tonumber(summary.user.avg)
+        avgOutOfFive = avg and (avg / 20) or 0
+    else
+        local userReviews = p.fetchUserReviews(guid)
+        local rawSum = 0
+        reviewCount = #userReviews
+        for _, review in ipairs(userReviews) do
+            local s = clampScore(review.score)
+            if s then
+                local bucket = histogramStarBucket(review.score)
+                counts[bucket] = counts[bucket] + 1
+                rawSum = rawSum + s
+                scoredCount = scoredCount + 1
+            end
+        end
+        avgOutOfFive = scoredCount > 0 and (rawSum / scoredCount / 20) or 0
     end
-
-    -- average / 5 where API score equals percent of 100
-    local avgOutOfFive = scoredCount > 0 and (rawSum / scoredCount / 20) or 0
 
     local currentPage = mw.title.getCurrentTitle().prefixedText
     local reviewsPage = currentPage:match('/Reviews$') and currentPage or (currentPage .. '/Reviews')
@@ -262,10 +293,17 @@ function p.renderReviewContent(frame)
 
     if not userReviews or #userReviews == 0 then
         local sidebarHtml = p._renderSidebar(guid, true)
+        local summary = p.fetchSummary(guid)
+        local ratingCount = summary and summary.user and tonumber(summary.user.count) or 0
+        local emptyMsg = 'No reviews found.'
+        if ratingCount > 0 then
+            local noun = ratingCount == 1 and 'user rating' or 'user ratings'
+            emptyMsg = 'No written reviews yet - ' .. ratingCount .. ' ' .. noun .. ' so far.'
+        end
         return table.concat({
             sidebarHtml,
             "__NOTOC__",
-            '<p class="gb-reviews-empty">No reviews found.</p>',
+            '<p class="gb-reviews-empty">' .. emptyMsg .. '</p>',
         }, "\n")
     end
     

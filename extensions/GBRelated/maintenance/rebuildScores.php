@@ -187,33 +187,22 @@ class RebuildScores extends Maintenance
         );
     }
 
-    // null on request failure so a flaky call never zeroes a stored count
+    // null on request failure so a flaky call never zeroes a stored count.
+    // counts all ratings (summary user.count), matching the sidebar number
     private function fetchReviewCount($http, string $guid, string $key): ?int
     {
-        $total = 0;
-        for ($offset = 0; $offset < 500; $offset += 100) {
-            $url =
-                "https://giantbomb.com/api/public/user-reviews" .
-                "?limit=100&offset=$offset&game_guid=$guid" .
-                "&api_key=$key&format=json";
-            $req = $http->create($url, ["timeout" => 5], __METHOD__);
-            if (!$req->execute()->isOK()) {
-                return null;
-            }
-            $data = json_decode($req->getContent(), true);
-            if (!is_array($data)) {
-                return null;
-            }
-            // trust the reported total when present, else count pages
-            if (isset($data["number_of_total_results"])) {
-                return (int) $data["number_of_total_results"];
-            }
-            $total += count($data["results"] ?? []);
-            if (empty($data["pagination"]["has_next"])) {
-                break;
-            }
+        $url =
+            "https://giantbomb.com/api/public/review-summary" .
+            "?game_guid=$guid&api_key=$key&format=json";
+        $req = $http->create($url, ["timeout" => 5], __METHOD__);
+        if (!$req->execute()->isOK()) {
+            return null;
         }
-        return $total;
+        $data = json_decode($req->getContent(), true);
+        if (!is_array($data) || !is_array($data["user"] ?? null)) {
+            return null;
+        }
+        return (int) ($data["user"]["count"] ?? 0);
     }
 
     private function propId(string $property): int

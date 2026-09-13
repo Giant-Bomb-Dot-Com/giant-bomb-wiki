@@ -1,96 +1,267 @@
-/**
- * Wiki Navigation Styles
- */
+/* wiki nav: grouped category dropdowns; collapses to an accordion under 900px */
 
 .wiki-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   width: 100%;
-  padding: 1.5rem 0;
-  margin-bottom: 1rem;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #2a2a2a;
+  border: 0;
+  border-radius: 0.5rem;
+  overflow: visible;
+}
+
+/* parser wraps loose inline bits in a <p> -> dissolve it */
+.wiki-nav p {
+  display: contents;
+  margin: 0;
+}
+
+.wiki-nav__header {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: default;
+}
+
+.wiki-nav__header::after {
+  content: none;
+}
+
+.wiki-nav__sep {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: default;
+  user-select: none;
 }
 
 .wiki-nav__list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
   list-style: none;
+  max-height: none;
+  overflow: visible;
+}
+
+.wiki-nav.gb-accordion--open .wiki-nav__list {
+  display: flex;
+}
+
+/* zero the shared gb-accordion li border/padding */
+.wiki-nav__list li {
+  border: 0;
   margin: 0;
   padding: 0;
 }
 
-.wiki-nav__item {
-  margin: 0;
+.wiki-nav__group {
+  position: relative;
+  flex-shrink: 0;
 }
 
-.wiki-nav__item > a,
-.wiki-nav__link {
-  display: flex;
+.wiki-nav__brand,
+.wiki-nav__trigger {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: #2a2a2a;
-  border: 1px solid #4a4a4a;
-  border-radius: 6px;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.wiki-nav__item > a:hover,
-.wiki-nav__link:hover {
-  background: #333;
-  border-color: #b05f1c;
-  text-decoration: none;
-}
-
-.wiki-nav__item > a:active,
-.wiki-nav__link:active {
-  background: #2a2a2a;
-}
-
-.wiki-nav__item > a {
-  color: #6ba4d9;
-}
-
-.wiki-nav__link--active,
-.wiki-nav__item .selflink {
-  background: #b05f1c;
-  border-color: #b05f1c;
-  color: #fff;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  font-family: "GeistSans", "GeistSans Fallback", "Geist", Arial, Helvetica,
+    sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .wiki-nav {
-    padding: 1rem 0;
-  }
+/* skin underlines a:hover -> pin every state */
+.wiki-nav__brand a,
+.wiki-nav__brand a:link,
+.wiki-nav__brand a:visited,
+.wiki-nav__brand a:hover,
+.wiki-nav__brand a:active,
+.wiki-nav__brand a:focus,
+.wiki-nav__trigger a,
+.wiki-nav__trigger a:link,
+.wiki-nav__trigger a:visited,
+.wiki-nav__trigger a:hover,
+.wiki-nav__trigger a:active,
+.wiki-nav__trigger a:focus {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-  .wiki-nav__list {
-    gap: 0.5rem;
-  }
+.wiki-nav__trigger::after {
+  content: "";
+  display: inline-block;
+  margin-left: 0.4em;
+  border-left: 0.28em solid transparent;
+  border-right: 0.28em solid transparent;
+  border-top: 0.3em solid currentColor;
+  opacity: 0.55;
+}
 
-  .wiki-nav__item > a .wiki-nav__link {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
+.wiki-nav__brand:hover,
+.wiki-nav__trigger:hover,
+.wiki-nav__group:hover .wiki-nav__trigger {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
 
-  .wiki-nav__icon {
-    font-size: 1rem;
+.wiki-nav__trigger--active,
+.wiki-nav__group:hover .wiki-nav__trigger--active {
+  background: #000;
+  color: #fff;
+}
+
+.wiki-nav__menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1001;
+  min-width: 10rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.wiki-nav__group:hover .wiki-nav__menu,
+.wiki-nav__group:focus-within .wiki-nav__menu {
+  display: block;
+}
+
+.wiki-nav__menu a,
+.wiki-nav__menu a:link,
+.wiki-nav__menu a:visited,
+.wiki-nav__menu a:hover,
+.wiki-nav__menu a:active,
+.wiki-nav__menu a:focus {
+  display: block;
+  padding: 10px 0.75rem;
+  border-left: 3px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.85);
+  background: none;
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.wiki-nav__menu a:hover,
+.wiki-nav__menu a.selflink {
+  border-left-color: #fb923c;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  text-decoration: none;
+}
+
+.wiki-nav__brand a:focus-visible,
+.wiki-nav__trigger a:focus-visible,
+.wiki-nav__menu a:focus-visible {
+  outline: 2px solid #fb923c;
+  outline-offset: -2px;
+}
+
+/* desktop: no accordion +/- indicator */
+@media (min-width: 901px) {
+  .wiki-nav__header::after,
+  .wiki-nav.gb-accordion--open .wiki-nav__header::after {
+    content: none;
   }
 }
 
-@media (max-width: 480px) {
-  .wiki-nav__list {
-    gap: 0.375rem;
+/* under 900px: collapse to the gb-accordion, groups as sections */
+@media (max-width: 900px) {
+  .wiki-nav {
+    display: block;
+    padding: 0;
+    overflow: hidden;
   }
 
-  .wiki-nav__item > a .wiki-nav__link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
+  .wiki-nav__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+  }
+
+  .wiki-nav__header::after {
+    content: "+";
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+
+  .wiki-nav.gb-accordion--active .wiki-nav__header::after {
+    content: "\2212";
+  }
+
+  .wiki-nav__sep {
+    display: none;
+  }
+
+  .wiki-nav__list,
+  .wiki-nav.gb-accordion--open .wiki-nav__list {
+    display: none;
+  }
+
+  .wiki-nav.gb-accordion--active .wiki-nav__list {
+    display: block;
+    padding: 0.25rem 0 0.5rem;
+    border-top: 1px solid #3a3a3a;
+  }
+
+  .wiki-nav__group {
+    display: block;
+  }
+
+  /* flattened list: drop the group labels */
+  .wiki-nav__trigger {
+    display: none;
+  }
+
+  .wiki-nav__menu {
+    display: block;
+    position: static;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .wiki-nav__menu a {
+    padding: 0.5rem 1rem;
   }
 }

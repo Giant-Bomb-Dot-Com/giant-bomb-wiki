@@ -821,28 +821,17 @@ class SkinGiantBomb extends SkinTemplate
 
                 $parts = [];
 
-                // user scores are 0-100 -> shown /5
-                $sum = 0;
-                $count = 0;
-                for ($offset = 0; $offset < 500; $offset += 100) {
-                    $data = $get(
-                        "https://giantbomb.com/api/public/user-reviews?limit=100&offset=$offset&game_guid=$guid&api_key=$key&format=json",
-                    );
-                    foreach ($data["results"] ?? [] as $r) {
-                        $s = (float) ($r["score"] ?? -1);
-                        if ($s >= 0 && $s <= 100) {
-                            $sum += $s;
-                            $count++;
-                        }
-                    }
-                    if (empty($data["pagination"]["has_next"])) {
-                        break;
-                    }
-                }
-                if ($count > 0) {
+                // user rating aggregate (0-100 avg -> /5); counts all ratings,
+                // not just reviews with body text
+                $summary = $get(
+                    "https://giantbomb.com/api/public/review-summary?game_guid=$guid&api_key=$key&format=json",
+                );
+                $u = $summary["user"] ?? null;
+                $count = (int) ($u["count"] ?? 0);
+                if ($count > 0 && isset($u["avg"])) {
                     $parts[] = sprintf(
                         "User rating %.1f/5 from %d review%s",
-                        $sum / $count / 20,
+                        (float) $u["avg"] / 20,
                         $count,
                         $count === 1 ? "" : "s",
                     );
