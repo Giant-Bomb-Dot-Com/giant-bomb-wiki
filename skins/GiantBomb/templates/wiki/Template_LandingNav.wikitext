@@ -4,7 +4,7 @@ title
   title
 }}
 ==Documentation==
-This template creates the horizontal menu bar on the landing pages and the grid / lines option.
+This template creates the listing-page header (title + grid/list toggle). The category subnav is rendered by the skin on every page.
 
 ===Parameters===
 {| class="wikitable"
@@ -14,36 +14,7 @@ This template creates the horizontal menu bar on the landing pages and the grid 
 || title || The header of the page
 |}
 </noinclude><!--
---><div class="landing-nav">
-<div class="wiki-nav gb-accordion">
-<div class="wiki-nav__header gb-accordion-header"><span class="wiki-nav__brand">[[Main Page|Wiki]]</span></div><span class="wiki-nav__sep" aria-hidden="true">&rsaquo;</span>
-<ul class="wiki-nav__list gb-accordion-content">
-<li class="wiki-nav__group"><span class="wiki-nav__trigger {{#switch:{{FULLPAGENAME}}|Games|Franchises|Characters|Locations|Concepts|Objects|Main Page=wiki-nav__trigger--active|#default=}}">[[Games|Games]]</span>
-<ul class="wiki-nav__menu">
-<li>[[Games|All Games]]</li>
-<li>[[Franchises|Franchises]]</li>
-<li>[[Characters|Characters]]</li>
-<li>[[Locations|Locations]]</li>
-<li>[[Concepts|Concepts]]</li>
-<li>[[Objects|Objects]]</li>
-</ul>
-</li>
-<li class="wiki-nav__group"><span class="wiki-nav__trigger {{#switch:{{FULLPAGENAME}}|Platforms|Accessories=wiki-nav__trigger--active|#default=}}">Hardware</span>
-<ul class="wiki-nav__menu">
-<li>[[Platforms|Platforms]]</li>
-<li>[[Accessories|Accessories]]</li>
-</ul>
-</li>
-<li class="wiki-nav__group"><span class="wiki-nav__trigger {{#switch:{{FULLPAGENAME}}|Companies|People=wiki-nav__trigger--active|#default=}}">[[Companies|Companies]]</span>
-<ul class="wiki-nav__menu">
-<li>[[Companies|Companies]]</li>
-<li>[[People|People]]</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="listing-page games-page view-grid"><!--
+--><div class="listing-page games-page view-grid"><!--
 --><div class="listing-header"><!--
 --><h1>{{{title}}}</h1><!--
 --><div data-vue-component="ViewToggle" data-target-container=".games-page" data-storage-key="gamesViewPreference" data-v-app=""><!--

@@ -56,6 +56,105 @@ class SkinGiantBomb extends SkinTemplate
         return true;
     }
 
+    // category subnav injected into #gb-header on every content page
+    public static function buildWikiSubnav(?\Title $title): string
+    {
+        $skipNs = [NS_MEDIAWIKI, NS_TEMPLATE, 106, 828]; // 106 form, 828 module
+        if (
+            !$title ||
+            $title->getNamespace() < 0 ||
+            $title->isSpecialPage() ||
+            in_array($title->getNamespace(), $skipNs, true)
+        ) {
+            return "";
+        }
+
+        $groups = [
+            "Games" => [
+                "target" => "Games",
+                "items" => [
+                    "All Games" => "Games",
+                    "Franchises" => "Franchises",
+                    "Characters" => "Characters",
+                    "Locations" => "Locations",
+                    "Concepts" => "Concepts",
+                    "Objects" => "Objects",
+                ],
+            ],
+            "Hardware" => [
+                "target" => null,
+                "items" => [
+                    "Platforms" => "Platforms",
+                    "Accessories" => "Accessories",
+                ],
+            ],
+            "Companies" => [
+                "target" => "Companies",
+                "items" => ["Companies" => "Companies", "People" => "People"],
+            ],
+        ];
+
+        // active group from the page's first path segment (Games/EverQuest -> Games)
+        $sectionToGroup = [
+            "Games" => "Games",
+            "Franchises" => "Games",
+            "Characters" => "Games",
+            "Locations" => "Games",
+            "Concepts" => "Games",
+            "Objects" => "Games",
+            "Platforms" => "Hardware",
+            "Accessories" => "Hardware",
+            "Companies" => "Companies",
+            "People" => "Companies",
+        ];
+        $section = strtok($title->getText(), "/");
+        $activeGroup = $title->isMainPage()
+            ? "Games"
+            : ($sectionToGroup[$section] ?? null);
+
+        $prefixed = $title->getPrefixedText();
+        $link = static function (string $label, ?string $target) use (
+            $prefixed,
+        ): string {
+            $labelHtml = htmlspecialchars($label);
+            if ($target === null) {
+                return $labelHtml;
+            }
+            $t = \Title::newFromText($target);
+            if ($t && $t->getPrefixedText() === $prefixed) {
+                return "<a class=\"selflink\">{$labelHtml}</a>";
+            }
+            $url = $t ? htmlspecialchars($t->getLocalURL()) : "#";
+            return "<a href=\"{$url}\">{$labelHtml}</a>";
+        };
+
+        $groupsHtml = "";
+        foreach ($groups as $label => $group) {
+            $activeCls =
+                $label === $activeGroup ? " wiki-nav__trigger--active" : "";
+            $itemsHtml = "";
+            foreach ($group["items"] as $itemLabel => $itemTarget) {
+                $itemsHtml .= "<li>" . $link($itemLabel, $itemTarget) . "</li>";
+            }
+            $groupsHtml .=
+                "<li class=\"wiki-nav__group\">" .
+                "<span class=\"wiki-nav__trigger{$activeCls}\">" .
+                $link($label, $group["target"]) .
+                "</span>" .
+                "<ul class=\"wiki-nav__menu\">{$itemsHtml}</ul>" .
+                "</li>";
+        }
+
+        $mainUrl = htmlspecialchars(\Title::newMainPage()->getLocalURL());
+        return "<div class=\"wiki-nav gb-accordion\">" .
+            "<div class=\"wiki-nav__header gb-accordion-header\">" .
+            "<span class=\"wiki-nav__brand\"><a href=\"{$mainUrl}\">Wiki</a></span>" .
+            "</div>" .
+            "<span class=\"wiki-nav__sep\" aria-hidden=\"true\">&rsaquo;</span>" .
+            "<ul class=\"wiki-nav__list gb-accordion-content\">{$groupsHtml}</ul>" .
+            "</div>";
+    }
+
     /**
      * Add SEO meta tags for template-rendered game pages.
      * Reads SMW properties to populate OpenGraph, Twitter cards, and meta description.

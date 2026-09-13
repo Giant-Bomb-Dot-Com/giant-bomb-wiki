@@ -1,8 +1,6 @@
 <?php
-/**
- * Header partial for the GiantBomb skin
- * This creates the header container that gets populated by JavaScript
- */
+// universal category subnav
 ?>
-<div id="gb-header" class="gb-header"></div>
-
+<div id="gb-header" class="gb-header"><?php echo SkinGiantBomb::buildWikiSubnav(
+    $this->getSkin()->getTitle(),
+); ?></div>
