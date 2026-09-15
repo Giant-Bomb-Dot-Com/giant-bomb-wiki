@@ -1,0 +1,221 @@
+openapi: 3.1.0
+
+info:
+  title: Giant Bomb Wiki API
+  version: 0.1.0
+  description: |
+    Draft spec for the wiki-backed API (issue #239). This revision defines
+    shared structure only: identifiers, auth, errors, pagination, and field
+    selection. Endpoint groups are added in follow-up revisions so each can
+    be reviewed on its own.
+
+    Conventions follow the existing GiantBombResolve endpoint: routes live
+    under `/gb/v1`, GUIDs are the canonical identifiers, response keys are
+    camelCase, and `fields` selects which data comes back.
+
+    There is intentionally no `license` field yet; data-use terms are an
+    open question (issue #238).
+
+servers:
+  - url: "{baseUrl}/rest.php/gb/v1"
+    description: |
+      MediaWiki REST base. `baseUrl` may include a path prefix, e.g.
+      `https://example.com/wiki` when the wiki is served under a subpath.
+    variables:
+      baseUrl:
+        default: http://localhost:8080
+
+security:
+  - ApiKeyAuth: []
+
+paths: {}
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-GB-API-Key
+      description: |
+        Key issued by the main site (giantbomb.com account), per the
+        requirement in issue #238. Open questions in issue #239: the header
+        name, whether a legacy-style `api_key` query parameter is also
+        accepted, and how this relates to the existing resolve endpoint's
+        `X-GB-Internal-Key` shared secret and its `AllowPublic` toggle
+        (coexist or replace).
+
+  schemas:
+    LegacyGuid:
+      type: string
+      pattern: '^\d{3,4}-\d{1,12}$'
+      description: |
+        Legacy API GUID: `<typeId>-<id>`. Known type ids: 3000 accessory,
+        3005 character, 3010 company, 3015 concept, 3020 dlc,
+        3025 franchise, 3030 game, 3032 theme, 3035 location, 3040 person,
+        3045 platform, 3050 release, 3055 object, 3060 genre. The pattern
+        is intentionally permissive, matching the server's validation: an
+        unknown type id resolves to a miss, not a 400.
+      examples: ["3030-4725", "3040-1537"]
+
+    UuidGuid:
+      type: string
+      pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+      description: |
+        UUID for entities created after the legacy API era. Case-insensitive.
+        The pattern is authoritative: versions 1-5, RFC 4122 variant only.
+      examples: ["a5e9a081-2049-41f8-8fbd-59d5b1e0b2c5"]
+
+    Guid:
+      type: string
+      description: Canonical entity identifier, in either legacy or UUID form.
+      oneOf:
+        - $ref: "#/components/schemas/LegacyGuid"
+        - $ref: "#/components/schemas/UuidGuid"
+
+    Error:
+      type: object
+      description: |
+        MediaWiki REST error rendering, as the existing resolve endpoint
+        returns it. The stable machine-readable code is in `message`
+        (e.g. `resolve-batch-limit`); extra context fields are merged into
+        the top level (e.g. `limit`).
+      required: [message, httpCode]
+      properties:
+        message:
+          type: string
+          description: Stable machine-readable code. Match on this.
+        httpCode:
+          type: integer
+        httpReason:
+          type: string
+      additionalProperties: true
+
+    Image:
+      type: object
+      description: |
+        Image shape used by GiantBombResolve. Dimensions are null unless
+        the image resolved to a local wiki file. `title`/`descriptionUrl`
+        are null for URL-only fallbacks; for legacy-image fallbacks `title`
+        carries a caption or filename and `descriptionUrl` the image URL
+        itself.
+      required: [url, thumbUrl]
+      properties:
+        title:
+          type: [string, "null"]
+        descriptionUrl:
+          type: [string, "null"]
+          format: uri
+        url:
+          type: string
+          format: uri
+        width:
+          type: [integer, "null"]
+        height:
+          type: [integer, "null"]
+        thumbUrl:
+          type: string
+          format: uri
+        thumbWidth:
+          type: [integer, "null"]
+        thumbHeight:
+          type: [integer, "null"]
+
+    PageInfo:
+      type: object
+      description: |
+        Proposed pagination block for list responses; the envelope shape is
+        settled with the first list endpoint. `total` may be omitted where
+        an exact count is too expensive to compute.
+      required: [limit, offset]
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+          description: Total matches before limit/offset, when available.
+
+  parameters:
+    Fields:
+      name: fields
+      in: query
+      required: false
+      schema:
+        type: string
+      description: |
+        Comma-separated field selection. Unknown names are ignored; if
+        nothing valid remains, the endpoint's default set is returned.
+        Requestable names are lowercase/snake_case; response keys are
+        camelCase. Selection is not a strict 1:1 projection: some names
+        expand to several keys (`original_release_date` also returns
+        `releaseDateType`), some keys are always present (`title`,
+        `prefixedTitle`), and scalar fields with no value are omitted
+        while list fields return `[]`.
+
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 20
+      description: Page size. Each list endpoint sets its own ceiling.
+
+    Offset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: |
+        Zero-based result offset. Deep offsets are expensive for the
+        backing store; endpoints may cap this or add cursor pagination
+        later.
+
+    GuidPath:
+      name: guid
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Guid"
+
+  responses:
+    BadRequest:
+      description: Malformed or out-of-range request parameter.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: No entity with the given identifier.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    TooManyRequests:
+      description: Returned if per-key rate limiting is enabled.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
