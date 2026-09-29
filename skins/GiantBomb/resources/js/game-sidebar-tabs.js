@@ -232,7 +232,6 @@
       text = text.replace(/\s*\(Has\s+\w+:\s*[^)]+\)/g, "");
       link.textContent = text.replace(/_/g, " ");
     }
-
   };
 
   const initSidebarTabs = () => {
@@ -334,11 +333,10 @@
           accordion.classList.toggle("gb-accordion--active");
         }
 
-        // And close if it does not have content.  
-        // Making the assumption that all Accordions that are not empty will contain links to other 
+        // And close if it does not have content.
+        // Making the assumption that all Accordions that are not empty will contain links to other
         // Wiki Pages.  Therefore, if it has a link, it is not empty.
-        if (content.querySelector("a[href]") == null)
-        {
+        if (content.querySelector("a[href]") == null) {
           if (accordion.classList.contains("gb-accordion--open")) {
             accordion.classList.toggle("gb-accordion--open");
           }

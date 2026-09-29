@@ -1419,7 +1419,10 @@ body.skin-giantbomb .wiki-game-page .mw-parser-output .tmbox {
 }
 
 .gb-sidebar-section-content:has(.gb-sidebar-section-review) img,
-.wiki-game-page .mw-parser-output .gb-sidebar-section-content:has(.gb-sidebar-section-review) img {
+.wiki-game-page
+  .mw-parser-output
+  .gb-sidebar-section-content:has(.gb-sidebar-section-review)
+  img {
   position: absolute;
   top: 0;
   left: 0;
