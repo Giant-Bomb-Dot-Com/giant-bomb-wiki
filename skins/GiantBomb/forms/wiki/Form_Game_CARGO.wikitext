@@ -1,0 +1,113 @@
+<noinclude>
+This is the "Game" form.
+To create a page with this form, enter the page name below;
+if a page with that name already exists, you will be sent to a form to edit that page.
+
+{{#forminput:form=Game|super_page=Games}}
+
+</noinclude><includeonly>
+<div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
+{{{for template|Game}}}
+{| class="formtable"
+|-
+! GUID:
+| {{{field|Guid|cargo table=GB_Cargo_Game|cargo field=Guid|default=uuid|restricted=nobody}}}
+|-
+! Name: 
+| {{{field|Name|mandatory|cargo table=GB_Cargo_Game|cargo field=Name}}}
+|-
+! Aliases: 
+| {{{field|Aliases|cargo table=GB_Cargo_Game|cargo field=Aliases}}}
+|-
+! Image: 
+| {{{field|Image|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Image}}}
+|-
+! BackgroundImage: 
+| {{{field|BackgroundImage|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=BackgroundImage}}}
+|-
+! Caption: 
+| {{{field|Caption|cargo table=GB_Cargo_Game|cargo field=Caption}}}
+|-
+! Deck: 
+| {{{field|Deck|cargo table=GB_Cargo_Game|cargo field=Deck}}}
+|}
+{{#if: {{#invoke:DateHelper|displayLegacyWarning}} |
+<div id="legacy-warning" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+  '''Legacy Release Date Detected:''' This page uses an old date setting (current value: {{#invoke:DateHelper|getExistingValue|ReleaseDate}}).<br/>
+  Please select a release date type and fill in the fields below.<br/>
+  ''Note: Saving this form without making a change will delete the release date.''
+</div>
+}}
+{| class="formtable"
+! style="width: 150px;" | Release Date Type: 
+| {{{field|ReleaseDateType|cargo table=GB_Cargo_Game|cargo field=ReleaseDateType|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=None}}}
+|}
+<div id="default">
+</div>
+<div id="full_date">
+{| class="formtable"
+! style="width: 150px;" | Release Date: 
+| {{{field|ReleaseDate|input type=datepicker}}}
+|}
+</div>
+<div id="month_year">
+{| class="formtable"
+! style="width: 150px;" | Release Month: 
+| {{{field|MonthPart|input type=dropdown|values=January,February,March,April,May,June,July,August,September,October,November,December}}} {{{field|MonthYearPart|input type=year}}}
+|}
+</div>
+<div id="quarter_year">
+{| class="formtable"
+! style="width: 150px;" | Release Quarter: 
+| {{{field|QuarterPart|input type=dropdown|values=Q1,Q2,Q3,Q4}}} {{{field|QuarterYearPart|input type=year}}}
+|}
+</div>
+<div id="only_year">
+{| class="formtable"
+! style="width: 150px;" | Release Year:
+| {{{field|YearPart|input type=year}}}
+|}
+</div>
+{| class="formtable"
+! Characters:
+| {{{field|Characters|cargo table=GB_Cargo_Game|cargo field=Characters|input type=tokens|values from category=Characters|existing values only|list|delimiter=,}}}
+|-
+! Concepts:
+| {{{field|Concepts|cargo table=GB_Cargo_Game|cargo field=Concepts|input type=tokens|values from category=Concepts|existing values only|list|delimiter=,}}}
+|-
+! Developers:
+| {{{field|Developers|cargo table=GB_Cargo_Game|cargo field=Developers|input type=tokens|values from category=Companies|existing values only|list|delimiter=,}}}
+|-
+! Franchises:
+| {{{field|Franchises|cargo table=GB_Cargo_Game|cargo field=Franchises|input type=tokens|values from category=Franchises|existing values only|list|delimiter=,}}}
+|-
+! Genres:
+| {{{field|Genres|cargo table=GB_Cargo_Game|cargo field=Genres|input type=tokens|values from category=Genres|existing values only|list|delimiter=,}}}
+|-
+! Locations:
+| {{{field|Locations|cargo table=GB_Cargo_Game|cargo field=Locations|input type=tokens|values from category=Locations|existing values only|list|delimiter=,}}}
+|-
+! Objects:
+| {{{field|Objects|cargo table=GB_Cargo_Game|cargo field=Objects|input type=tokens|values from category=Objects|existing values only|list|delimiter=,}}}
+|-
+! Platforms:
+| {{{field|Platforms|cargo table=GB_Cargo_Game|cargo field=Platforms|input type=tokens|values from category=Platforms|existing values only|list|delimiter=,}}}
+|-
+! Publishers:
+| {{{field|Publishers|cargo table=GB_Cargo_Game|cargo field=Publishers|input type=tokens|values from category=Companies|existing values only|list|delimiter=,}}}
+|-
+! Games:
+| {{{field|Games|cargo table=GB_Cargo_Game|cargo field=SimilarGames|input type=tokens|values from category=Games|existing values only|list|delimiter=,}}}
+|-
+! Themes:
+| {{{field|Themes|cargo table=GB_Cargo_Game|cargo field=Themes|input type=tokens|values from category=Themes|existing values only|list|delimiter=,}}}
+|}
+{{{end template}}}
+
+'''Description:'''
+{{{standard input|free text|editor=visualeditor|rows=30|class=toolbarOnTop}}}
+{{{standard input|summary}}}
+{{{standard input|save}}}
+{{{standard input|preview}}}
+{{{standard input|cancel}}}
+</includeonly>

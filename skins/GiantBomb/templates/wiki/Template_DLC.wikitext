@@ -17,6 +17,20 @@
 ||||| YearPart
 ||||| LaunchPrice (property=Has launch price)
 }}
+==Cargo==
+{{#cargo_declare:_table=GB_Cargo_Dlc
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Game=Page
+|Platform=Page
+|Release_date_type=Text
+|Release_date=Date
+|Launch_price=Number
+}}
 ==Documentation==
 This template creates a full DLC page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -104,6 +118,19 @@ SMW Property Storage
 }}{{#if:{{{ReleaseDateType|}}}|{{#set:Has release date type={{{ReleaseDateType|}}}}}
 }}{{#set:Has release date={{#invoke:DateHelper|getISO}}
 }}{{#if:{{{LaunchPrice|}}}|{{#set:Has launch price={{{LaunchPrice}}}}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Dlc
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Game={{{Game|}}}
+|Platform={{{Platform|}}}
+|Release_date_type={{{ReleaseDateType|}}}
+|Release_date={{#invoke:DateHelper|getISO}}
+|Launch_price={{{LaunchPrice|}}}
 }}<!--
 
 Page Setup

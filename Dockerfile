@@ -64,6 +64,7 @@ RUN cd /var/www/html \
  && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll \
  && git -C VEForAll checkout 636a718f0cbd70e25d5d2700d78dad204e1be5ee \
  && git clone -b 'REL1_43' --single-branch --depth 1 https://gerrit.wikimedia.org/r/mediawiki/extensions/ExternalData \
+ && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Cargo \
  && wget https://github.com/octfx/mediawiki-extensions-TemplateStylesExtender/archive/refs/tags/v2.0.0.zip \
  && unzip v2.0.0.zip && rm v2.0.0.zip && mv mediawiki-extensions-TemplateStylesExtender-2.0.0 TemplateStylesExtender \
  # GTag has no release tags -> pin to a known-good master commit (requires MW 1.43+)

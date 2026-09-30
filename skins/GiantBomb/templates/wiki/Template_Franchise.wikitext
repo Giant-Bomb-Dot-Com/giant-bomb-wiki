@@ -13,6 +13,21 @@
 |||| Objects (property=Has objects)
 |||| People (property=Has people)
 }}
+==Cargo==
+{{#cargo_declare:_table=GB_Cargo_Franchise
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Characters=List (,) of Page
+|Concepts=List (,) of Page
+|Games=List (,) of Page
+|Locations=List (,) of Page
+|Objects=List (,) of Page
+|People=List (,) of Page
+}}
 ==Documentation==
 This template creates a full franchise page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -67,7 +82,10 @@ Your wiki content here...
 
 {{FranchiseEnd}}
 </pre>
-</noinclude><includeonly>{{#set:Has name={{{Name|}}}
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
@@ -79,7 +97,27 @@ Your wiki content here...
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
-}}{{DISPLAYTITLE:{{{Name|}}} (Franchise)}}[[Category:Franchises|{{SUBPAGENAME}}]]<div class="gb-franchise-page" itemscope itemtype="https://schema.org/CreativeWorkSeries">
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Franchise
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Characters={{{Characters|}}}
+|Concepts={{{Concepts|}}}
+|Games={{{Games|}}}
+|Locations={{{Locations|}}}
+|Objects={{{Objects|}}}
+|People={{{People|}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Franchise)}}[[Category:Franchises|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-franchise-page" itemscope itemtype="https://schema.org/CreativeWorkSeries">
 <meta itemprop="name" content="{{{Name|}}} (Video Game Franchise)" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What is the {{{Name|}}} franchise?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game franchise. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games are in the {{{Name|}}} series?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="The {{{Name|}}} franchise includes multiple video game titles." /></div></div></div><!--
