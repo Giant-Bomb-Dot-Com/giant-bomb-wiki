@@ -9,13 +9,11 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Install pnpm explicitly
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/setup@v3
         with:
-          version: 10
-      - name: Install pnpm and dependencies
-        run: pnpm install
-      - run: pnpm prettier --check --config .prettierrc 'README.md|*.json|*.yaml|*.yml|(skins|cypress|.github|extensions)/**/*.{css,js,json,ts,vue,yaml,yml}|extensions/GbSessionProvider/**/*.php'
+          version: next-12
+      - name: Run prettier
+        run: pnpm prettier --check --config .prettierrc 'README.md|*.json|*.yaml|*.yml|(skins|cypress|.github|extensions)/**/*.{css,js,json,ts,vue,yaml,yml}|extensions/GbSessionProvider/**/*.php'
