@@ -16,22 +16,8 @@
 ||||| Website (property=Has website)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Company
-|Name=Text
-|Guid=Text
-|Aliases=List (,) of Text
-|Image=File
-|Background_image=File
-|Deck=Wikitext
-|Abbreviation=Text
-|Founded_date=Date
-|Address=Text
-|City=Text
-|State=Text
-|Country=Text
-|Phone=Text
-|Website=Text
-}}
+{{#cargo_attach:_table=GB_Cargo_Company}}
+
 ==Documentation==
 This template creates a full company page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.

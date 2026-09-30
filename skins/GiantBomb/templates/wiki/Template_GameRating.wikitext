@@ -7,13 +7,8 @@
 ||||| Deck (property=Has deck)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Game_Rating
-|Name=Text
-|Guid=Text
-|Rating_board=Page
-|Image=File
-|Deck=Wikitext
-}}
+{{#cargo_attach:_table=GB_Cargo_Game_Rating}}
+
 ==Documentation==
 This template creates a game rating page layout.
 Uses Semantic MediaWiki for structured data storage and display.

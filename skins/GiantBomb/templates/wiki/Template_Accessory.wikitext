@@ -8,14 +8,8 @@
 ||||| Deck (property=Has deck)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Accessory
-|Name=Text
-|Guid=Text
-|Aliases=List (,) of Text
-|Image=File
-|Background_image=File
-|Deck=Wikitext
-}}
+{{#cargo_attach:_table=GB_Cargo_Accessory}}
+
 ==Documentation==
 This template creates a full accessory page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.

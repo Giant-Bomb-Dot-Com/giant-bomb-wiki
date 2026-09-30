@@ -1,0 +1,7 @@
+{{#cargo_declare:_table=GB_Cargo_Game_Rating
+|Name=Text
+|Guid=Text
+|Rating_board=Page
+|Image=File
+|Deck=Wikitext
+}}

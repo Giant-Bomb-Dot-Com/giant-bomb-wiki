@@ -1,0 +1,16 @@
+{{#cargo_declare:_table=GB_Cargo_Company
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Abbreviation=Text
+|Founded_date=Date
+|Address=Text
+|City=Text
+|State=Text
+|Country=Text
+|Phone=Text
+|Website=Text
+}}

@@ -1,0 +1,13 @@
+{{#cargo_declare:_table=GB_Cargo_Dlc
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Game=Page
+|Platform=Page
+|Release_date_type=Text
+|Release_date=Date
+|Launch_price=Number
+}}

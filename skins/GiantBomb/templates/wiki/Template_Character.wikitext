@@ -21,27 +21,8 @@
 |||| People (property=Has people)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Character
-|Name=Text
-|Guid=Text
-|Aliases=List (,) of Text
-|Image=File
-|Background_image=File
-|Caption=Wikitext
-|Deck=Wikitext
-|Real_name=Text
-|Gender=Text
-|Birthday=Date
-|Death=Date
-|Concepts=List (,) of Page
-|Enemies=List (,) of Page
-|Franchises=List (,) of Page
-|Friends=List (,) of Page
-|Games=List (,) of Page
-|Locations=List (,) of Page
-|Objects=List (,) of Page
-|People=List (,) of Page
-}}
+{{#cargo_attach:_table=GB_Cargo_Character}}
+
 ==Documentation==
 This template creates a full character page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.

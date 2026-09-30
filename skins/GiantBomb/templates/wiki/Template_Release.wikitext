@@ -26,27 +26,8 @@
 ||||| WidescreenSupport (property=Has widescreen support)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Release
-|Name=Text
-|Guid=Text
-|Aliases=List (,) of Text
-|Image=File
-|Background_image=File
-|Deck=Wikitext
-|Game=Page
-|Platform=Page
-|Region=Page
-|Release_date_type=Text
-|Release_date=Date
-|Rating=Page
-|Developers=List (,) of Page
-|Publishers=List (,) of Page
-|Minimum_players=Number
-|Maximum_players=Number
-|Product_code=Text
-|Product_code_type=Text
-|Widescreen_support=Text
-}}
+{{#cargo_attach:_table=GB_Cargo_Release}}
+
 ==Documentation==
 This template creates a full release page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.

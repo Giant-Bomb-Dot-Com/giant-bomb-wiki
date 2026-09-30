@@ -22,28 +22,8 @@
 ||||| People (property=Has related people)
 }}
 ==Cargo==
-{{#cargo_declare:_table=GB_Cargo_Person
-|Name=Text
-|Guid=Text
-|Aliases=List (,) of Text
-|Image=File
-|Background_image=File
-|Deck=Wikitext
-|Characters=List (,) of Page
-|Concepts=List (,) of Page
-|Franchises=List (,) of Page
-|Gender=Text
-|Birthday=Date
-|Death=Date
-|Country=Text
-|Hometown=Text
-|Website=Text
-|Twitter=Text
-|Games=List (,) of Page
-|Locations=List (,) of Page
-|Objects=List (,) of Page
-|People=List (,) of Page
-}}
+{{#cargo_attach:_table=GB_Cargo_Person}}
+
 ==Documentation==
 This template creates a full person page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
