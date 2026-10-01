@@ -28,7 +28,149 @@ servers:
 security:
   - ApiKeyAuth: []
 
-paths: {}
+tags:
+  - name: resolve
+    description: Batch GUID resolution (the existing GiantBombResolve endpoint).
+
+paths:
+  /resolve:
+    get:
+      operationId: resolveGuids
+      tags: [resolve]
+      summary: Resolve wiki GUIDs to entity data in batch.
+      description: |
+        Documents the endpoint the GiantBombResolve extension serves today,
+        as built. Each GUID is looked up by its `Has guid` property; the
+        response carries one record per GUID, so unknown GUIDs are reported
+        per record rather than failing the request. Requires the internal
+        key below unless `GiantBombResolveAllowPublic` is enabled, which
+        waives auth entirely.
+      security:
+        - InternalKeyAuth: []
+      parameters:
+        - name: guids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: |
+            GUIDs to resolve, comma- or whitespace-separated. PHP array
+            syntax (`guids[]=a&guids[]=b`) also works; a plain repeated
+            `guids=a&guids=b` does not — only the last value is seen.
+            Duplicates are dropped. Any value that is not a valid legacy or
+            UUID GUID fails the whole request with `resolve-invalid-guid`;
+            an empty list fails with `resolve-missing-guids`. At most
+            `GiantBombResolveBatchLimit` distinct GUIDs per request (25 by
+            default; the limit is applied after de-duplication).
+        - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Comma- or whitespace-separated selection from
+            `GiantBombResolveFields`: `displaytitle`, `fullurl`, `fulltext`,
+            `pageid`, `namespace`, `image`, `deck`, `original_release_date`,
+            `platforms`, `developers`, `publishers`, `genres`. Matched
+            case-sensitively; unknown names are dropped, and if nothing
+            valid remains the full set is returned.
+      responses:
+        "200":
+          description: |
+            One record per distinct requested GUID, in first-occurrence
+            request order. (The example shows a
+            `fields=displaytitle,fullurl,pageid` projection.)
+          headers:
+            Cache-Control:
+              description: |
+                Configurable; defaults to `public, max-age=900,
+                stale-while-revalidate=300, stale-if-error=86400`.
+              schema:
+                type: string
+            Vary:
+              description: Always `Accept-Encoding`.
+              schema:
+                type: string
+            X-GB-Resolve-Version:
+              description: Response format version; fixed at `1`.
+              schema:
+                type: string
+                const: "1"
+            X-GB-Resolve-Count:
+              description: Number of records in the response.
+              schema:
+                type: integer
+            Surrogate-Key:
+              description: |
+                Space-separated `<GiantBombResolveSurrogatePrefix><guid>`
+                keys for CDN purge by GUID (prefix defaults to
+                `wiki-guid:`); emitted for every record including missing
+                and errored ones, and omitted entirely when the prefix is
+                configured empty.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [guids, cache]
+                properties:
+                  guids:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ResolveRecord"
+                  cache:
+                    type: object
+                    required: [ttl, staleIfError]
+                    properties:
+                      ttl:
+                        type: integer
+                        description: |
+                          Advisory body TTL in seconds. Currently a fixed
+                          3600, independent of the `Cache-Control` max-age
+                          (900 by default) — the two are not derived from
+                          each other.
+                      staleIfError:
+                        type: integer
+                        description: Fixed 86400 seconds.
+              example:
+                guids:
+                  - guid: "3030-12345"
+                    assocTypeId: 3030
+                    assocId: 12345
+                    status: ok
+                    data:
+                      title: Example Game
+                      prefixedTitle: Games/Example Game
+                      displayTitle: Example Game
+                      fullUrl: https://example.com/wiki/Games/Example_Game
+                      pageId: 4242
+                  - guid: "3040-999999"
+                    assocTypeId: 3040
+                    assocId: 999999
+                    status: missing
+                cache:
+                  ttl: 3600
+                  staleIfError: 86400
+        "400":
+          description: |
+            `resolve-missing-guids` (no usable values),
+            `resolve-invalid-guid` (a malformed value, echoed in `guid`), or
+            `resolve-batch-limit` (too many values; the cap is echoed in
+            `limit`). An invalid value is reported before the batch limit
+            is evaluated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: |
+            `resolve-auth-required`: public access is disabled and no valid
+            internal key was sent.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   securitySchemes:
@@ -43,6 +185,18 @@ components:
         accepted, and how this relates to the existing resolve endpoint's
         `X-GB-Internal-Key` shared secret and its `AllowPublic` toggle
         (coexist or replace).
+
+    InternalKeyAuth:
+      type: apiKey
+      in: header
+      name: X-GB-Internal-Key
+      description: |
+        Shared-secret header the resolve endpoint uses today
+        (`GiantBombResolveInternalToken`). When `GiantBombResolveAllowPublic`
+        is enabled the endpoint is open and no header is required. The
+        default configuration is closed: with no token configured and the
+        public toggle off, every request gets a 401. Expected to be
+        superseded by main-site keys (issue #239).
 
   schemas:
     LegacyGuid:
@@ -136,6 +290,140 @@ components:
           type: integer
           description: Total matches before limit/offset, when available.
 
+    ResolveRecord:
+      description: |
+        Outcome for one requested GUID. `status` discriminates the shape:
+        `ok` carries `data`; `missing` keeps the parsed legacy type/id
+        (zeros for UUID GUIDs); `invalid` and `error` carry a `reason` code.
+      oneOf:
+        - $ref: "#/components/schemas/ResolvedRecord"
+        - $ref: "#/components/schemas/MissingRecord"
+        - $ref: "#/components/schemas/InvalidRecord"
+        - $ref: "#/components/schemas/ErrorRecord"
+
+    ResolvedRecord:
+      type: object
+      required: [guid, assocTypeId, assocId, status, data]
+      properties:
+        guid:
+          $ref: "#/components/schemas/Guid"
+        assocTypeId:
+          type: integer
+          description: |
+            Legacy type id. For UUID GUIDs it is inferred from the page's
+            title prefix; when inference fails the record comes back with
+            `status: invalid` instead.
+        assocId:
+          type: integer
+          description: Legacy numeric id; 0 for UUID GUIDs.
+        status:
+          const: ok
+        data:
+          $ref: "#/components/schemas/ResolveData"
+
+    MissingRecord:
+      type: object
+      required: [guid, assocTypeId, assocId, status]
+      properties:
+        guid:
+          $ref: "#/components/schemas/Guid"
+        assocTypeId:
+          type: integer
+        assocId:
+          type: integer
+        status:
+          const: missing
+
+    InvalidRecord:
+      type: object
+      required: [guid, status, reason]
+      properties:
+        guid:
+          $ref: "#/components/schemas/Guid"
+        status:
+          const: invalid
+        reason:
+          const: unmapped-guid-type
+          description: |
+            A UUID GUID resolved to a page whose title prefix maps to no
+            legacy type id, so `assocTypeId` could not be inferred. (A
+            malformed GUID never reaches this shape — it fails the whole
+            request with 400 first.)
+
+    ErrorRecord:
+      type: object
+      required: [guid, status, reason]
+      properties:
+        guid:
+          $ref: "#/components/schemas/Guid"
+        status:
+          const: error
+        reason:
+          const: internal-error
+
+    ResolveData:
+      type: object
+      description: |
+        Projection of the resolved entity, selected by `fields` (camelCase
+        keys). Presence rules: `title` and `prefixedTitle` appear whenever
+        the page resolves, regardless of `fields`. `displayTitle`,
+        `fullUrl`, `fullText`, `pageId` and `namespace` appear whenever
+        requested but may be null. `image`, `deck`, `originalReleaseDate`
+        and `releaseDateType` are omitted when empty. List fields appear
+        whenever requested, possibly empty.
+      properties:
+        title:
+          type: string
+          description: |
+            Clean entity name — "Has name" when set, else the display title
+            minus its "(Type)" suffix, else derived from the page slug.
+        prefixedTitle:
+          type: string
+          description: Namespaced wiki title, e.g. `Games/Example Game`.
+        displayTitle:
+          type: [string, "null"]
+        fullUrl:
+          type: [string, "null"]
+          format: uri
+        fullText:
+          type: [string, "null"]
+        pageId:
+          type: [integer, "null"]
+        namespace:
+          type: [integer, "null"]
+        image:
+          $ref: "#/components/schemas/Image"
+        deck:
+          type: string
+        originalReleaseDate:
+          type: string
+          description: |
+            Precision-preserving date — `1998`, `1998-11`, or `1998-11-21`;
+            a year-only source never gains a fabricated month or day.
+            Malformed source dates pass through verbatim, so the format is
+            typical, not guaranteed.
+        releaseDateType:
+          type: string
+          description: |
+            Emitted alongside `original_release_date`; not independently
+            requestable.
+        platforms:
+          type: array
+          items:
+            type: string
+        developers:
+          type: array
+          items:
+            type: string
+        publishers:
+          type: array
+          items:
+            type: string
+        genres:
+          type: array
+          items:
+            type: string
+
   parameters:
     Fields:
       name: fields
@@ -144,14 +432,13 @@ components:
       schema:
         type: string
       description: |
-        Comma-separated field selection. Unknown names are ignored; if
-        nothing valid remains, the endpoint's default set is returned.
-        Requestable names are lowercase/snake_case; response keys are
-        camelCase. Selection is not a strict 1:1 projection: some names
-        expand to several keys (`original_release_date` also returns
-        `releaseDateType`), some keys are always present (`title`,
-        `prefixedTitle`), and scalar fields with no value are omitted
-        while list fields return `[]`.
+        Comma- or whitespace-separated field selection, matched
+        case-sensitively. Unknown names are ignored; if nothing valid
+        remains, the endpoint's default set is returned. Response keys are
+        camelCase; each endpoint lists its requestable names and the
+        presence rules for what comes back (selection is not a strict 1:1
+        projection — some names expand to several keys, and some keys are
+        always present).
 
     Limit:
       name: limit
