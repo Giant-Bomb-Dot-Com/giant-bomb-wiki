@@ -1,0 +1,238 @@
+local p = {}
+local cargo = mw.ext.cargo
+
+local RELEVANCE_CAP = 500
+
+local function getSafe(result, field, isList)
+    local value = result[field] or ""
+    if type(value) == "table" then
+        local values = {}
+        for _, item in ipairs(value) do
+            table.insert(values, tostring(item))
+        end
+        value = table.concat(values, ", ")
+    end
+    value = tostring(value):match("^%s*(.-)%s*$")
+    return isList and value or value
+end
+
+local function fallbackDisplayTitle(rawTitle)
+    local withoutPrefix = rawTitle:gsub("^[Gg][Aa][Mm][Ee][Ss]/", "")
+    local withSpaces = withoutPrefix:gsub("_", " ")
+    local trimmed = withSpaces:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+    local noIdSuffix = trimmed:gsub("%s+%d+$", "")
+    return noIdSuffix ~= "" and noIdSuffix or trimmed
+end
+
+local function displayName(result)
+    local name = getSafe(result, "Name", false)
+    return name ~= "" and name or fallbackDisplayTitle(result.PageName or "")
+end
+
+local function sqlLike(value)
+    return tostring(value):gsub("\\", "\\\\"):gsub("([%%_])", "\\%1"):gsub("'", "\\'")
+end
+
+local function sqlQuote(value)
+    return "'" .. tostring(value):gsub("\\", "\\\\"):gsub("'", "\\'") .. "'"
+end
+
+local function cargoQuery(fields, where, orderBy, limit, offset)
+    return cargo.query("GB_Cargo_Game", fields, {
+        where = where,
+        orderBy = orderBy,
+        limit = limit,
+        offset = offset,
+    })
+end
+
+local function cargoCount(where)
+    local rows = cargoQuery("COUNT(*)=count", where, nil, 1, 0)
+    return rows and rows[1] and tonumber(rows[1].count) or 0
+end
+
+function p.render(frame)
+    local args = frame.args
+    local parentArgs = frame:getParent() and frame:getParent().args or {}
+    local platform = mw.uri.decode(args.chosen_platform or "All", "WIKI")
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "", "QUERY")
+    local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "", "WIKI"):lower()
+    local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
+    local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
+    local relevanceMode = false
+    local popularMode = false
+    local defaultMode = false
+    local sortField = "Name"
+    local sortOrder = "ASC"
+
+    platform = platform:gsub("%+", " ")
+    if platform:find("{{#urlget") then
+        platform = "All"
+    end
+
+    if sortFilter == "newest" or sortFilter == "latest" then
+        sortField = "_pageID"
+        sortOrder = "DESC"
+    elseif sortFilter == "name" then
+        sortField = "Name"
+    elseif sortFilter == "popular" and searchFilter == "" then
+        popularMode = true
+    elseif searchFilter ~= "" then
+        relevanceMode = true
+    else
+        defaultMode = true
+        sortField = "_pageID"
+        sortOrder = "DESC"
+    end
+
+    local function noResultsDiv()
+        local what = searchFilter ~= "" and ('"' .. searchFilter .. '"') or platform
+        return '<div class="no-results">No games found for ' .. what .. '</div>'
+    end
+
+    local conditions = {}
+    if platform ~= "All" then
+        local platformTitle = platform:match("^[^/]+/(.*)$") or platform
+        table.insert(conditions, "Platforms HOLDS LIKE '%/" .. sqlLike(platformTitle) .. "'")
+    end
+
+    local term = ""
+    if searchFilter ~= "" then
+        local clean = searchFilter:gsub("[%[%]|<>{}]", ""):gsub('["%+%-%(%)~@%*:]', " ")
+        if clean:find("%S") then
+            local words = {}
+            for word in clean:gmatch("%S+") do
+                table.insert(words, word)
+            end
+            term = table.concat(words, " "):lower()
+            local searchConditions = {}
+            for _, word in ipairs(words) do
+                    local like = "'%" .. sqlLike(word) .. "%'"
+                table.insert(searchConditions, "(Name LIKE " .. like
+                    .. " OR Aliases HOLDS LIKE " .. like
+                    .. " OR _pageName LIKE " .. like .. ")")
+            end
+            table.insert(conditions, "(" .. table.concat(searchConditions, " AND ") .. ")")
+        end
+    end
+    if defaultMode then
+        table.insert(conditions, "Image IS NOT NULL AND Image != ''")
+    end
+    local where = #conditions > 0 and table.concat(conditions, " AND ") or nil
+    local cardFields = "Name, Image, Platforms, Release_date, Deck, _pageName=PageName, _pageID=PageID"
+
+    local function fetchCards(titles)
+        local rank = {}
+        local pageNames = {}
+        for index, title in ipairs(titles) do
+            rank[title] = index
+            table.insert(pageNames, sqlQuote(title))
+        end
+        local ok, rows = pcall(cargoQuery, cardFields,
+            "_pageName IN (" .. table.concat(pageNames, ",") .. ")", nil, #titles, 0)
+        if not ok or not rows then
+            return nil
+        end
+        table.sort(rows, function(a, b)
+            return (rank[a.PageName or ""] or 999) < (rank[b.PageName or ""] or 999)
+        end)
+        return rows
+    end
+
+    local queryData = {}
+    local results
+    if popularMode then
+        local platformArg = platform ~= "All" and platform:gsub("_", " ") or nil
+        local ok, popular = pcall(mw.ext.gbrelated.popular, limit, offset, platformArg)
+        local rows = ok and popular and popular.rows or {}
+        if #rows == 0 then
+            return noResultsDiv()
+        end
+        local titles = {}
+        for _, row in ipairs(rows) do
+            table.insert(titles, row.title)
+        end
+        results = fetchCards(titles)
+        if not results or #results == 0 then
+            return noResultsDiv()
+        end
+        queryData.count = popular.total or #rows
+    elseif relevanceMode then
+        local ok, matches = pcall(cargoQuery, "Name, _pageName=PageName", where, "Name ASC", RELEVANCE_CAP, 0)
+        if not ok or not matches or #matches == 0 then
+            return noResultsDiv()
+        end
+        local scores, names = {}, {}
+        local function relevance(name)
+            if name == term then return 0 end
+            local start = name:find(term, 1, true)
+            if start == 1 then return 1 end
+            if start and name:sub(start - 1, start - 1):match("[%s%-/(:.]" ) then return 2 end
+            return start and 3 or 4
+        end
+        for _, row in ipairs(matches) do
+            local name = displayName(row):lower()
+            names[row] = name
+            scores[row] = relevance(name)
+        end
+        table.sort(matches, function(a, b)
+            if scores[a] ~= scores[b] then return scores[a] < scores[b] end
+            if #names[a] ~= #names[b] then return #names[a] < #names[b] end
+            return names[a] < names[b]
+        end)
+        local titles = {}
+        for index = offset + 1, math.min(offset + limit, #matches) do
+            table.insert(titles, matches[index].PageName or "")
+        end
+        if #titles == 0 then
+            return noResultsDiv()
+        end
+        results = fetchCards(titles)
+        if not results then
+            return noResultsDiv()
+        end
+        queryData.count = cargoCount(where)
+    else
+        local ok, rows = pcall(cargoQuery, cardFields, where,
+            sortField .. " " .. sortOrder, limit, offset)
+        if not ok or not rows or #rows == 0 then
+            return noResultsDiv()
+        end
+        results = rows
+        queryData.count = cargoCount(where)
+    end
+    queryData.results = results
+
+    local html = mw.html.create("div"):addClass("listing-grid")
+    for _, result in ipairs(results) do
+        local imageData = getSafe(result, "Image", false):gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+        local cleanDate = ""
+        if result.Release_date and result.Release_date ~= "" then
+            cleanDate = mw.language.getContentLanguage():formatDate("Y F j", tostring(result.Release_date))
+        end
+        html:wikitext(frame:expandTemplate{title = "GameCard", args = {
+            url_title = result.PageName or "",
+            title = displayName(result),
+            platforms = getSafe(result, "Platforms", true),
+            release_date = cleanDate,
+            deck = getSafe(result, "Deck", true),
+            image = imageData,
+        }})
+    end
+
+    local totalResults = queryData.count or 0
+    if totalResults > 0 then
+        local paginationHtml = tostring(mw.html.create("div")
+            :addClass("pagination-wrapper")
+            :attr("data-total", totalResults)
+            :attr("data-limit", limit)
+            :attr("data-offset", offset)
+            :attr("data-platform", platform)
+            :attr("data-search", searchFilter)
+            :attr("data-sort", sortFilter))
+        return tostring(html) .. paginationHtml
+    end
+    return tostring(html)
+end
+
+return p

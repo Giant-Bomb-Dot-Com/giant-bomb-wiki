@@ -14,6 +14,9 @@
 ||||| Objects (property=Has objects)
 ||||| People (property=Has people)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Concept}}
+
 ==Documentation==
 This template creates a full concept page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -95,6 +98,21 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Concept
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Characters={{{Characters|}}}
+|Concepts={{{Concepts|}}}
+|Franchises={{{Franchises|}}}
+|Games={{{Games|}}}
+|Locations={{{Locations|}}}
+|Objects={{{Objects|}}}
+|People={{{People|}}}
 }}<!--
 
 Page Setup

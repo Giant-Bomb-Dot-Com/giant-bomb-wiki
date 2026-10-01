@@ -1,0 +1,8 @@
+{{#cargo_declare:_table=GB_Cargo_Theme
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+}}

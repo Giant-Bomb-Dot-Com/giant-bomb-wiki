@@ -6,6 +6,9 @@
 ||||| Image (property=Has image)
 ||||| Deck (property=Has deck)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Game_Rating}}
+
 ==Documentation==
 This template creates a game rating page layout.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -50,6 +53,13 @@ SMW Property Storage
 }}{{#if:{{{RatingBoard|}}}|{{#set:Has rating board={{{RatingBoard}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Game_Rating
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Rating_board={{{RatingBoard|}}}
+|Image={{{Image|}}}
+|Deck={{{Deck|}}}
 }}<!--
 
 Page Setup

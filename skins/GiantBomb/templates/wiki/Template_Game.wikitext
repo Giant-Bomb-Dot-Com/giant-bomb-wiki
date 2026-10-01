@@ -26,6 +26,9 @@
 ||| Publishers (property=Has publishers)
 ||| Themes (property=Has themes)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Game}}
+
 ==Documentation==
 This template creates a full game page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -145,6 +148,28 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#arraymap:{{{Platforms|}}}|,|@@|{{#set:Has platforms=@@}}
 }}{{#arraymap:{{{Publishers|}}}|,|@@|{{#set:Has publishers=@@}}
 }}{{#arraymap:{{{Themes|}}}|,|@@|{{#set:Has themes=@@}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Game
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Caption={{{Caption|}}}
+|Deck={{{Deck|}}}
+|Release_date_type={{{ReleaseDateType|}}}
+|Release_date={{#invoke:DateHelper|getISO}}
+|Characters={{{Characters|}}}
+|Concepts={{{Concepts|}}}
+|Developers={{{Developers|}}}
+|Franchises={{{Franchises|}}}
+|Games={{{Games|}}}
+|Genres={{{Genres|}}}
+|Locations={{{Locations|}}}
+|Objects={{{Objects|}}}
+|Platforms={{{Platforms|}}}
+|Publishers={{{Publishers|}}}
+|Themes={{{Themes|}}}
 }}<!--
 
 Page Setup

@@ -14,14 +14,10 @@
 ||||| State (property=Has state)
 ||||| Phone (property=Has phone)
 ||||| Website (property=Has website)
-||||| Characters (property=Has characters)
-||||| Concepts (property=Has concepts)
-||||| DevelopedGames (property=Has developed games)
-||||| Locations (property=Has locations)
-||||| Objects (property=Has objects)
-||||| People (property=Has people)
-||||| PublishedGames (property=Has published games)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Company}}
+
 ==Documentation==
 This template creates a full company page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -63,20 +59,6 @@ The page structure follows the classic Giant Bomb wiki design:
 || Phone || Contact phone number
 |-
 || Website || Official website URL
-|-
-|| DevelopedGames || Games developed by this company (comma-separated)
-|-
-|| PublishedGames || Games published by this company (comma-separated)
-|-
-|| Characters || Characters associated with this company (comma-separated)
-|-
-|| Concepts || Concepts related to this company (comma-separated)
-|-
-|| Locations || Locations associated with this company (comma-separated)
-|-
-|| Objects || Objects associated with this company (comma-separated)
-|-
-|| People || People who work/worked at this company (comma-separated)
 |}
 
 ===Usage===
@@ -90,9 +72,6 @@ The page structure follows the classic Giant Bomb wiki design:
 | City = Kyoto
 | Country = Japan
 | Website = https://www.nintendo.com
-| DevelopedGames = Games/Super_Mario_Bros, Games/The_Legend_of_Zelda
-| PublishedGames = Games/Pokemon_Red_and_Blue
-| People = People/Shigeru_Miyamoto
 }}
 
 == Overview ==
@@ -122,6 +101,22 @@ Multi-value properties (comma-separated) use #arraymap.
 }}{{#if:{{{Country|}}}|{{#set:Has country={{{Country}}}}}
 }}{{#if:{{{Phone|}}}|{{#set:Has phone={{{Phone}}}}}
 }}{{#if:{{{Website|}}}|{{#set:Has website={{{Website}}}}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Company
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Abbreviation={{{Abbreviation|}}}
+|Founded_date={{{FoundedDate|}}}
+|Address={{{Address|}}}
+|City={{{City|}}}
+|State={{{State|}}}
+|Country={{{Country|}}}
+|Phone={{{Phone|}}}
+|Website={{{Website|}}}
 }}<!--
 
 Page Setup

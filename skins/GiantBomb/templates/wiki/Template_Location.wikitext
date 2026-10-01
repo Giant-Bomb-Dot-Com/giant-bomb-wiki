@@ -12,6 +12,9 @@
 ||||| Locations (property=Has related locations)
 ||||| Objects (property=Has objects)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Location}}
+
 ==Documentation==
 This template creates a full location page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -76,6 +79,19 @@ SMW Property Storage
 }}{{#arraymap:{{{Games|}}}|,|@@|{{#set:Has games=@@}}
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has related locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Location
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Characters={{{Characters|}}}
+|Concepts={{{Concepts|}}}
+|Games={{{Games|}}}
+|Locations={{{Locations|}}}
+|Objects={{{Objects|}}}
 }}<!--
 
 Page Setup

@@ -413,6 +413,7 @@ $wgExternalDataSources["*"]["min cache seconds"] = 300;
 wfLoadExtension("GBEnvLuaBridge");
 wfLoadExtension("GBRelated");
 wfLoadExtension("GBVirtualReviewPages");
+wfLoadExtension("Cargo"); #replacing smw, will need both for now
 
 # =============================================================================
 # Editor

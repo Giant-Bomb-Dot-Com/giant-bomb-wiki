@@ -1,0 +1,7 @@
+{{#cargo_declare:_table=GB_Cargo_Rating_Board
+|Name=Text
+|Guid=Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+}}

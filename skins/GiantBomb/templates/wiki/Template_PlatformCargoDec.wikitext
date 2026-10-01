@@ -1,0 +1,15 @@
+{{#cargo_declare:_table=GB_Cargo_Platform
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Short_name=Text
+|Release_date_type=Text
+|Release_date=Date
+|Install_base=Integer
+|Online_support=Text
+|Original_price=Number
+|Manufacturer=List (,) of Page
+}}
