@@ -101,7 +101,7 @@ class HtmlToMediaWikiConverter
             return null;
         }
         $base = basename((string) parse_url($url, PHP_URL_PATH));
-        if (!preg_match('/^(\d+)-/', $base, $m)) {
+        if (!preg_match("/^(\d+)-/", $base, $m)) {
             return false;
         }
         $row = ($this->imageLookup)((int) $m[1]);
@@ -250,8 +250,7 @@ class HtmlToMediaWikiConverter
             // figures found inside list items float beside the list on the old
             // site; a block template inside a "#" line splits the list instead
             if ($this->hoistedFigures) {
-                $mwList =
-                    implode("\n", $this->hoistedFigures) . "\n" . $mwList;
+                $mwList = implode("\n", $this->hoistedFigures) . "\n" . $mwList;
             }
             $textNode = $this->dom->createTextNode($mwList);
             if ($list->parentNode) {
@@ -343,7 +342,10 @@ class HtmlToMediaWikiConverter
         // replace h2-h5 with ==..== markup. strip <br> and collapse whitespace
         // inside the heading -- a <br> in there becomes a newline later and
         // splits the heading across lines, which mw renders as literal ='s
-        foreach ([2 => "==", 3 => "===", 4 => "====", 5 => "====="] as $level => $marks) {
+        foreach (
+            [2 => "==", 3 => "===", 4 => "====", 5 => "====="]
+            as $level => $marks
+        ) {
             $description = preg_replace_callback(
                 "/<h{$level}.*?>(.*?)<\/h{$level}>/s",
                 function ($m) use ($marks) {
@@ -401,11 +403,14 @@ class HtmlToMediaWikiConverter
             );
         }
 
-        // replace the ampersand with and for page links
+        // replace the ampersand with and for page links. target only -- doing
+        // the label too turned "Good &amp; Evil" into "Good andamp;amp; Evil"
         $description = preg_replace_callback(
             "/\[\[([^\]]+)\]\]/",
             function ($matches) {
-                return "[[" . str_replace("&", "and", $matches[1]) . "]]";
+                $parts = explode("|", $matches[1], 2);
+                $parts[0] = str_replace("&", "and", $parts[0]);
+                return "[[" . implode("|", $parts) . "]]";
             },
             $description,
         );
@@ -469,12 +474,22 @@ class HtmlToMediaWikiConverter
                 }
             }
             if (!empty($cells)) {
+                // a heading only parses at the start of a line, so a row with
+                // one gets a cell per line instead of the inline || form
+                if (preg_grep('/^={2,6}[^=].*={2,6}\s*$/m', $cells)) {
+                    foreach ($cells as $c) {
+                        $out .= rtrim($cellType) . "\n" . $c . "\n";
+                    }
+                    return $out;
+                }
                 $separator = strpos($cells[0], "!") === 0 ? "!!" : "||";
                 $out .= $cellType . implode($separator, $cells) . "\n";
             }
             return $out;
         };
-        $processRows = function (DOMElement $parent) use ($processOneRow): string {
+        $processRows = function (DOMElement $parent) use (
+            $processOneRow,
+        ): string {
             $sectionContent = "";
             foreach ($parent->getElementsByTagName("tr") as $tr) {
                 $sectionContent .= $processOneRow($tr);
@@ -837,12 +852,13 @@ class HtmlToMediaWikiConverter
                 ) {
                     $row = ($this->imageLookup)((int) $m[1]);
                 }
-                $src = $row && empty($row["deleted"])
-                    ? $this->buildUploadUrl(
-                        $this->chooseRendition($row, $size),
-                        $row,
-                    )
-                    : $this->buildScaledUrl($full, $size);
+                $src =
+                    $row && empty($row["deleted"])
+                        ? $this->buildUploadUrl(
+                            $this->chooseRendition($row, $size),
+                            $row,
+                        )
+                        : $this->buildScaledUrl($full, $size);
             }
         }
 
@@ -854,11 +870,13 @@ class HtmlToMediaWikiConverter
 
         // inner text is the caption; runs before the link pass so textContent is
         // complete. bare urls in a caption would render as a second image -> strip
-        $caption = trim(preg_replace(
-            ["#https?://\S+#", "/\s+/"],
-            ["", " "],
-            $image->textContent,
-        ));
+        $caption = trim(
+            preg_replace(
+                ["#https?://\S+#", "/\s+/"],
+                ["", " "],
+                $image->textContent,
+            ),
+        );
 
         return $this->buildFigureTemplate(
             $src,
@@ -900,11 +918,13 @@ class HtmlToMediaWikiConverter
                     )
                 ) {
                     array_push($this->hoistedFigures, ...$figs[0]);
-                    $listContent = trim(preg_replace(
-                        ["/\{\{GBFigure\|[^}]*\}\}/", "/\s+/"],
-                        ["", " "],
-                        $listContent,
-                    ));
+                    $listContent = trim(
+                        preg_replace(
+                            ["/\{\{GBFigure\|[^}]*\}\}/", "/\s+/"],
+                            ["", " "],
+                            $listContent,
+                        ),
+                    );
                 }
 
                 // append the list item text (figure-only items have none, but

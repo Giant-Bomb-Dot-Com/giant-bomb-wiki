@@ -41,8 +41,10 @@ class SkinGiantBomb extends SkinTemplate
 
     public static function onParserAfterTidy(Parser &$parser, &$text)
     {
+        // close the imageData div, but only when the source didn't already
+        // close it -- a double </div> here collapses the game layout
         $text = preg_replace(
-            '/(<div\s+id=["\']imageData["\'][^>]*>)/',
+            '/(<div\s+id=["\']imageData["\'][^>]*>)(?!\s*<\/div>)/',
             '$1</div>',
             $text,
         );
@@ -110,7 +112,7 @@ class SkinGiantBomb extends SkinTemplate
         $section = strtok($title->getText(), "/");
         $activeGroup = $title->isMainPage()
             ? "Games"
-            : ($sectionToGroup[$section] ?? null);
+            : $sectionToGroup[$section] ?? null;
 
         $prefixed = $title->getPrefixedText();
         $link = static function (string $label, ?string $target) use (
@@ -166,26 +168,15 @@ class SkinGiantBomb extends SkinTemplate
             return;
         }
 
-        $request = $out->getRequest();
-        $action = $request->getText("action", "view");
-        $isViewAction =
-            $action === "view" || $action === "purge" || $action === "";
-        $isFrontFacing =
-            $isViewAction &&
-            !$title->isSpecialPage() &&
-            $title->getNamespace() >= 0 &&
-            $title->getNamespace() % 2 === 0;
-
-        if ($isFrontFacing) {
-            $out->addHeadItem(
-                "pubnation",
-                '<script src="//scripts.pubnation.com/tags/4812f039-a343-4e18-89f9-d9461276ff90.js" async="" data-noptimize="1" data-cfasync="false"></script>',
-            );
-        }
-
         $pageTitle = $title->getText();
 
-        if (preg_match('#^([A-Za-z]+/[^/]+)/(Images|Reviews|Releases|DLC)$#', $pageTitle, $sub)) {
+        if (
+            preg_match(
+                '#^([A-Za-z]+/[^/]+)/(Images|Reviews|Releases|DLC)$#',
+                $pageTitle,
+                $sub,
+            )
+        ) {
             self::addSubpageSeoTags($out, $sub[1], $sub[2]);
             return;
         }
@@ -714,10 +705,14 @@ class SkinGiantBomb extends SkinTemplate
             }
         } else {
             $htmlTitle = "$name Reviews - " . $GLOBALS["wgSitename"];
-            $guid = self::getSMWPropertyValue($store, $subject, "Has guid") ?: "";
+            $guid =
+                self::getSMWPropertyValue($store, $subject, "Has guid") ?: "";
             $desc = self::buildReviewsDescription($name, $guid);
             if ($desc === "") {
-                $desc = "Reviews and user ratings for $name on " . $GLOBALS["wgSitename"] . ".";
+                $desc =
+                    "Reviews and user ratings for $name on " .
+                    $GLOBALS["wgSitename"] .
+                    ".";
             }
         }
 
@@ -745,7 +740,9 @@ class SkinGiantBomb extends SkinTemplate
         PageHelper::addTwitterTags(
             $out,
             [
-                "twitter:card" => $metaImage ? "summary_large_image" : "summary",
+                "twitter:card" => $metaImage
+                    ? "summary_large_image"
+                    : "summary",
                 "twitter:title" => $htmlTitle,
                 "twitter:description" => PageHelper::sanitizeMetaText($desc),
                 "twitter:site" => "@giantbomb",
@@ -787,10 +784,7 @@ class SkinGiantBomb extends SkinTemplate
         }
         $cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
         return $cache->getWithSetCallback(
-            $cache->makeKey(
-                "gb-release-jsonld",
-                $subpage->getLatestRevID(),
-            ),
+            $cache->makeKey("gb-release-jsonld", $subpage->getLatestRevID()),
             86400,
             function () use ($subpage) {
                 return self::releaseJsonLdFields(
@@ -945,7 +939,10 @@ class SkinGiantBomb extends SkinTemplate
                     $by = $sr["reviewer"]["name"] ?? "";
                     $parts[] = sprintf(
                         "Giant Bomb review: %s/5%s",
-                        rtrim(rtrim(number_format((float) $sr["score"], 1), "0"), "."),
+                        rtrim(
+                            rtrim(number_format((float) $sr["score"], 1), "0"),
+                            ".",
+                        ),
                         $by !== "" ? " by $by" : "",
                     );
                 }
@@ -960,10 +957,13 @@ class SkinGiantBomb extends SkinTemplate
         );
     }
 
-    private static function cleanSlugFallback( string $pageTitle, string $prefix ): string {
-        $slug = str_replace( $prefix, '', $pageTitle );
-        $slug = str_replace( '_', ' ', $slug );
-        return rtrim( preg_replace( '/[ _]\d{5,}$/', '', $slug ) );
+    private static function cleanSlugFallback(
+        string $pageTitle,
+        string $prefix,
+    ): string {
+        $slug = str_replace($prefix, "", $pageTitle);
+        $slug = str_replace("_", " ", $slug);
+        return rtrim(preg_replace('/[ _]\d{5,}$/', "", $slug));
     }
 
     /**
