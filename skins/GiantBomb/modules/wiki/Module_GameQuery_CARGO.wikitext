@@ -93,7 +93,13 @@ function p.render(frame)
     local conditions = {}
     if platform ~= "All" then
         local platformTitle = platform:match("^[^/]+/(.*)$") or platform
-        table.insert(conditions, "Platforms HOLDS LIKE '%/" .. sqlLike(platformTitle) .. "'")
+        local platformCondition = "Platforms HOLDS LIKE '%/" .. sqlLike(platformTitle) .. "'"
+        local underscoredTitle = platformTitle:gsub(" ", "_")
+        if underscoredTitle ~= platformTitle then
+            platformCondition = "(" .. platformCondition
+                .. " OR Platforms HOLDS LIKE '%/" .. sqlLike(underscoredTitle) .. "')"
+        end
+        table.insert(conditions, platformCondition)
     end
 
     local term = ""
@@ -158,7 +164,7 @@ function p.render(frame)
         end
         queryData.count = popular.total or #rows
     elseif relevanceMode then
-        local ok, matches = pcall(cargoQuery, "Name, _pageName=PageName", where, "Name ASC", RELEVANCE_CAP, 0)
+        local ok, matches = pcall(cargoQuery, cardFields, where, "Name ASC", RELEVANCE_CAP, 0)
         if not ok or not matches or #matches == 0 then
             return noResultsDiv()
         end
@@ -180,15 +186,11 @@ function p.render(frame)
             if #names[a] ~= #names[b] then return #names[a] < #names[b] end
             return names[a] < names[b]
         end)
-        local titles = {}
+        results = {}
         for index = offset + 1, math.min(offset + limit, #matches) do
-            table.insert(titles, matches[index].PageName or "")
+            table.insert(results, matches[index])
         end
-        if #titles == 0 then
-            return noResultsDiv()
-        end
-        results = fetchCards(titles)
-        if not results then
+        if #results == 0 then
             return noResultsDiv()
         end
         queryData.count = cargoCount(where)
