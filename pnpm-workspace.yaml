@@ -1,10 +1,8 @@
 allowBuilds:
-  cypress: set this to true or false
-  unrs-resolver: set this to true or false
+  cypress: true
+  unrs-resolver: false
 
-onlyBuiltDependencies:
-  - cypress
-
-# allow cypress run its postinstall script so it can install into its binary cache
+# disable pnpm side effects cache to allow cypress to run its postinstall script
+# so it can install into its binary cache
 # https://docs.cypress.io/app/get-started/install-cypress#pnpm-configuration
 sideEffectsCache: false
