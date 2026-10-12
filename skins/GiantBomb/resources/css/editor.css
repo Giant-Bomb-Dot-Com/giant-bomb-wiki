@@ -748,12 +748,18 @@ body .ve-ui-mwLinkAnnotationInspector .oo-ui-inputWidget-input {
 }
 
 /* dark theme hid core's .new redlink styling -> nonexistent pages looked real */
-body .ve-ui-mwLinkAnnotationInspector .mw-widget-titleOptionWidget .oo-ui-labelElement-label.new {
+body
+  .ve-ui-mwLinkAnnotationInspector
+  .mw-widget-titleOptionWidget
+  .oo-ui-labelElement-label.new {
   color: #e0655f;
   font-style: italic;
 }
 
-body .ve-ui-mwLinkAnnotationInspector .mw-widget-titleOptionWidget .oo-ui-labelElement-label.new::after {
+body
+  .ve-ui-mwLinkAnnotationInspector
+  .mw-widget-titleOptionWidget
+  .oo-ui-labelElement-label.new::after {
   content: " — page doesn't exist yet";
   font-size: 0.85em;
   color: #999;
