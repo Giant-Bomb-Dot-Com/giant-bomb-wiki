@@ -1,6 +1,6 @@
 # The Giant Bomb Wiki
 
-A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.6.
+A MediaWiki-based wiki for Giant Bomb game data, powered by Semantic MediaWiki. The current LTS version of MediaWiki is 1.43.11.
 
 ## Quick Start (Recommended)
 

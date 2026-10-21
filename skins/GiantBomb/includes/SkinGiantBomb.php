@@ -10,6 +10,9 @@ class SkinGiantBomb extends SkinTemplate
     public $template = "GiantBombTemplate";
     public $useHeadElement = true;
 
+    // 106 form 828 module
+    public const NON_CONTENT_NS = [NS_MEDIAWIKI, NS_TEMPLATE, 106, 828];
+
     public function initPage(OutputPage $out)
     {
         parent::initPage($out);
@@ -61,12 +64,11 @@ class SkinGiantBomb extends SkinTemplate
     // category subnav injected into #gb-header on every content page
     public static function buildWikiSubnav(?\Title $title): string
     {
-        $skipNs = [NS_MEDIAWIKI, NS_TEMPLATE, 106, 828]; // 106 form, 828 module
         if (
             !$title ||
             $title->getNamespace() < 0 ||
             $title->isSpecialPage() ||
-            in_array($title->getNamespace(), $skipNs, true)
+            in_array($title->getNamespace(), self::NON_CONTENT_NS, true)
         ) {
             return "";
         }

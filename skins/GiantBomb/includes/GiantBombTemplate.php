@@ -107,6 +107,40 @@ class GiantBombTemplate extends BaseTemplate
         if ($isAdEligible) {
             $contentClasses[] = "gb-wiki-content";
         }
+
+        $jwSiteId = getenv("JW_SITE_ID");
+        $jwPlacementId = getenv("JW_PLACEMENT_ID");
+        // isknown so virtual reviews pages count
+        $showJwPlacement =
+            $isAdEligible &&
+            $jwSiteId &&
+            $jwPlacementId &&
+            $title->isKnown() &&
+            !in_array(
+                $title->getNamespace(),
+                [...SkinGiantBomb::NON_CONTENT_NS, SMW_NS_PROPERTY],
+                true,
+            ) &&
+            !$request->getCheck("veaction") &&
+            !$request->getCheck("diff") &&
+            $request->getVal("printable") !== "yes" &&
+            !$this->getSkin()
+                ->getUser()
+                ->isAllowed("gb-premium");
+        if ($showJwPlacement && getenv("JW_PLACEMENT_PAGES")) {
+            $jwPages = [];
+            foreach (explode(",", getenv("JW_PLACEMENT_PAGES")) as $jwPage) {
+                $jwPageTitle = Title::newFromText(trim($jwPage));
+                if ($jwPageTitle) {
+                    $jwPages[] = $jwPageTitle->getPrefixedText();
+                }
+            }
+            $showJwPlacement = in_array(
+                $title->getPrefixedText(),
+                $jwPages,
+                true,
+            );
+        }
         ?>
         <div class="page-wrapper">
             <?php include __DIR__ . "/partials/header.php"; ?>
@@ -158,6 +192,13 @@ class GiantBombTemplate extends BaseTemplate
                 </div>
             </div>
         </div>
+        <?php if ($showJwPlacement) { ?>
+        <div id="gb-jw-outstream"><script src="https://cdn.jwplayer.com/v2/sites/<?php echo htmlspecialchars(
+            $jwSiteId,
+        ); ?>/placements/<?php echo htmlspecialchars(
+            $jwPlacementId,
+        ); ?>/embed.js"></script></div>
+        <?php } ?>
 <?php
     }
 }
