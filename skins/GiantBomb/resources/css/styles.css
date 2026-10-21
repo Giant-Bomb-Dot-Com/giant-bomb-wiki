@@ -860,8 +860,12 @@ td.diff-marker {
 }
 
 /* GB body figures ({{GBFigure}} - floated/captioned legacy CDN images) */
+/* min size -> VE hides any template node smaller than 10x4, which is every
+   figure until its image loads */
 .gb-figure {
   max-width: 100%;
+  min-width: 10px;
+  min-height: 4px;
   margin: 0.5em 0 1em;
 }
 
@@ -882,16 +886,78 @@ td.diff-marker {
   margin: 0;
 }
 
-.gb-figure-left {
-  float: left;
-  clear: left;
-  margin: 0.5em 1.5rem 1rem 0;
+.gb-figure-left,
+.gb-figure-right {
+  clear: both;
+  margin: 1em auto;
 }
 
-.gb-figure-right {
-  float: right;
-  clear: right;
-  margin: 0.5em 0 1rem 1.5rem;
+@media (min-width: 769px) {
+  .gb-figure-left {
+    float: left;
+    clear: left;
+    margin: 0.5em 1.5rem 1rem 0;
+  }
+
+  .gb-figure-right {
+    float: right;
+    clear: right;
+    margin: 0.5em 0 1rem 1.5rem;
+  }
+
+  /* sized figures outside tables: the box stays in flow as a thin cleared
+     anchor and its children float instead, so a figure can't slide down past
+     its own text when the one above it is taller than its section */
+  :is(.gb-figure-left, .gb-figure-right)[style*="px"]:not(td *, th *) {
+    float: none;
+    clear: both;
+    height: 4px;
+    margin: 0 0 -4px;
+  }
+
+  .gb-figure-right[style*="px"]:not(td *, th *) {
+    margin-left: auto;
+  }
+
+  /* back to back figures stack beside the same text */
+  .gb-figure + .gb-figure[style*="px"]:not(td *, th *),
+  .gb-figure
+    + .ve-ce-branchNode-slug
+    + .gb-figure[style*="px"]:not(td *, th *) {
+    clear: none;
+  }
+
+  :is(h2, h3, h4, h5, h6):has(
+    + .gb-figure-left[style*="px"],
+    + .gb-figure-right[style*="px"]
+  ) {
+    clear: both;
+  }
+
+  .gb-figure-left[style*="px"]:not(td *, th *) > :is(p, .gb-figure-caption) {
+    float: left;
+    clear: left;
+    width: 100%;
+    box-sizing: content-box;
+    padding-right: 1.5rem;
+  }
+
+  .gb-figure-right[style*="px"]:not(td *, th *) > :is(p, .gb-figure-caption) {
+    float: right;
+    clear: right;
+    width: 100%;
+    box-sizing: content-box;
+    padding-left: 1.5rem;
+  }
+
+  :is(.gb-figure-left, .gb-figure-right)[style*="px"]:not(td *, th *) > p {
+    margin-top: 0.5em;
+  }
+
+  :is(.gb-figure-left, .gb-figure-right)[style*="px"]:not(td *, th *)
+    > :last-child {
+    margin-bottom: 1rem;
+  }
 }
 
 .gb-figure-center {
@@ -912,15 +978,6 @@ td.diff-marker {
 /* lighter than body links -> readable at caption size */
 .gb-figure-caption a {
   color: #8ec2ec;
-}
-
-@media (max-width: 768px) {
-  .gb-figure-left,
-  .gb-figure-right {
-    float: none;
-    clear: both;
-    margin: 1em auto;
-  }
 }
 
 /* natural-width tables from the re-migration (no data-max-width in legacy html).

@@ -595,13 +595,55 @@
    CONTENT AREA IMAGES
    ============================================ */
 .gb-concept-main img {
-  float: left;
-  margin: 0 1.5rem 1rem 0;
   max-width: 350px;
   max-height: 350px;
   height: auto;
   width: auto;
+}
+
+.gb-concept-main img:not(.mw-file-element) {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  clear: right;
+}
+
+.gb-concept-main figure[typeof~="mw:File/Thumb"],
+.gb-concept-main figure[typeof~="mw:File/Frame"] {
+  float: right;
+  clear: right;
+  margin: 0 0 1rem 1.5rem;
+}
+
+.gb-concept-main figure.mw-halign-left {
+  float: left;
   clear: left;
+  margin: 0 1.5rem 1rem 0;
+}
+
+.gb-concept-main figure.mw-halign-right {
+  float: right;
+  clear: right;
+  margin: 0 0 1rem 1.5rem;
+}
+
+.gb-concept-main figure.mw-halign-none {
+  float: none;
+  clear: none;
+  margin: 1rem 0;
+}
+
+.gb-concept-main figure.mw-halign-center {
+  float: none;
+  clear: both;
+  margin: 1rem auto;
+}
+
+.gb-concept-main figure figcaption {
+  padding-top: 0.5rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  color: #999;
 }
 
 .gb-concept-main h2,

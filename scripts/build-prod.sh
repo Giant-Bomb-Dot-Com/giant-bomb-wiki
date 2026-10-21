@@ -76,6 +76,7 @@ echo
 
 if [[ "${PUSH}" == "true" ]]; then
   docker buildx build \
+    --pull \
     --platform "${PLATFORMS}" \
     -f Dockerfile.prod \
     -t "${TAG}" \
@@ -85,6 +86,7 @@ if [[ "${PUSH}" == "true" ]]; then
 else
   # --load only supports a single platform; default to linux/amd64 for local
   docker buildx build \
+    --pull \
     --platform "${PLATFORMS}" \
     -f Dockerfile.prod \
     -t "${TAG}" \
