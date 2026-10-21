@@ -55,5 +55,9 @@ gb_api_scripts/import_xml/*.xml
 /import_templates/apply_body_repairs.php
 /import_templates/rebody_repaired_pages.php
 /import_templates/revert_duplicate_repairs.php
+/gb_api_scripts/apply_image_figures_remote.php
+/gb_api_scripts/apply_image_url_edits_remote.php
+/gb_api_scripts/apply_text_patches_remote.php
+/gb_api_scripts/generate_section_repairs.php
 .env.me
 
