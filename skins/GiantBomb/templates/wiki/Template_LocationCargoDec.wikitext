@@ -1,0 +1,13 @@
+{{#cargo_declare:_table=GB_Cargo_Location
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=File
+|Background_image=File
+|Deck=Wikitext
+|Characters=List (,) of Page
+|Concepts=List (,) of Page
+|Games=List (,) of Page
+|Locations=List (,) of Page
+|Objects=List (,) of Page
+}}

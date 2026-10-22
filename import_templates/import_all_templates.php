@@ -48,8 +48,7 @@ class ImportWikiTemplates extends Maintenance
         $sharedTemplates = [
             "Module:Related" => "$moduleDir/Module_Related.wikitext",
             "Template:GBFigure" => "$templateDir/Template_GBFigure.wikitext",
-            "Property:Has_body_image" =>
-                "$pagesDir/Property_Hasbodyimage.wikitext",
+            "Property:Has_body_image" => "$pagesDir/Property_Hasbodyimage.wikitext",
             "Template:StripPrefix" => "$templateDir/Template_StripPrefix.wikitext",
             "Template:SidebarListItem" => "$templateDir/Template_SidebarListItem.wikitext",
             "Template:SidebarRelatedItem" => "$templateDir/Template_SidebarRelatedItem.wikitext",
@@ -62,6 +61,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Game" => "$templateDir/Template_Game.wikitext",
             "Template:GameEnd" => "$templateDir/Template_GameEnd.wikitext",
             "Template:GameSidebar" => "$templateDir/Template_GameSidebar.wikitext",
+            "Template:Game/CargoDec" => "$templateDir/Template_GameCargoDec.wikitext",
         ];
 
         // Character page templates
@@ -69,6 +69,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Character" => "$templateDir/Template_Character.wikitext",
             "Template:CharacterEnd" => "$templateDir/Template_CharacterEnd.wikitext",
             "Template:CharacterSidebar" => "$templateDir/Template_CharacterSidebar.wikitext",
+            "Template:Character/CargoDec" => "$templateDir/Template_CharacterCargoDec.wikitext",
         ];
 
         // Franchise page templates
@@ -78,6 +79,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:FranchiseSidebar" => "$templateDir/Template_FranchiseSidebar.wikitext",
             "Template:FranchiseGameItem" => "$templateDir/Template_FranchiseGameItem.wikitext",
             "Template:FranchiseFirstGame" => "$templateDir/Template_FranchiseFirstGame.wikitext",
+            "Template:Franchise/CargoDec" => "$templateDir/Template_FranchiseCargoDec.wikitext",
         ];
 
         // Company page templates
@@ -87,6 +89,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Company" => "$templateDir/Template_Company.wikitext",
             "Template:CompanyEnd" => "$templateDir/Template_CompanyEnd.wikitext",
             "Template:CompanySidebar" => "$templateDir/Template_CompanySidebar.wikitext",
+            "Template:Company/CargoDec" => "$templateDir/Template_CompanyCargoDec.wikitext",
         ];
 
         // Concept page templates
@@ -94,6 +97,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Concept" => "$templateDir/Template_Concept.wikitext",
             "Template:ConceptEnd" => "$templateDir/Template_ConceptEnd.wikitext",
             "Template:ConceptSidebar" => "$templateDir/Template_ConceptSidebar.wikitext",
+            "Template:Concept/CargoDec" => "$templateDir/Template_ConceptCargoDec.wikitext",
         ];
 
         // Location page templates
@@ -101,6 +105,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Location" => "$templateDir/Template_Location.wikitext",
             "Template:LocationEnd" => "$templateDir/Template_LocationEnd.wikitext",
             "Template:LocationSidebar" => "$templateDir/Template_LocationSidebar.wikitext",
+            "Template:Location/CargoDec" => "$templateDir/Template_LocationCargoDec.wikitext",
         ];
 
         // Person page templates
@@ -108,6 +113,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Person" => "$templateDir/Template_Person.wikitext",
             "Template:PersonEnd" => "$templateDir/Template_PersonEnd.wikitext",
             "Template:PersonSidebar" => "$templateDir/Template_PersonSidebar.wikitext",
+            "Template:Person/CargoDec" => "$templateDir/Template_PersonCargoDec.wikitext",
         ];
 
         // Platform page templates
@@ -115,6 +121,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Platform" => "$templateDir/Template_Platform.wikitext",
             "Template:PlatformEnd" => "$templateDir/Template_PlatformEnd.wikitext",
             "Template:PlatformSidebar" => "$templateDir/Template_PlatformSidebar.wikitext",
+            "Template:Platform/CargoDec" => "$templateDir/Template_PlatformCargoDec.wikitext",
         ];
 
         // Object page templates
@@ -122,6 +129,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Object" => "$templateDir/Template_Object.wikitext",
             "Template:ObjectEnd" => "$templateDir/Template_ObjectEnd.wikitext",
             "Template:ObjectSidebar" => "$templateDir/Template_ObjectSidebar.wikitext",
+            "Template:Object/CargoDec" => "$templateDir/Template_ObjectCargoDec.wikitext",
         ];
 
         // Genre page templates
@@ -129,6 +137,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Genre" => "$templateDir/Template_Genre.wikitext",
             "Template:GenreEnd" => "$templateDir/Template_GenreEnd.wikitext",
             "Template:GenreSidebar" => "$templateDir/Template_GenreSidebar.wikitext",
+            "Template:Genre/CargoDec" => "$templateDir/Template_GenreCargoDec.wikitext",
         ];
 
         // Theme page templates
@@ -136,6 +145,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Theme" => "$templateDir/Template_Theme.wikitext",
             "Template:ThemeEnd" => "$templateDir/Template_ThemeEnd.wikitext",
             "Template:ThemeSidebar" => "$templateDir/Template_ThemeSidebar.wikitext",
+            "Template:Theme/CargoDec" => "$templateDir/Template_ThemeCargoDec.wikitext",
         ];
 
         // Accessory page templates
@@ -143,6 +153,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Accessory" => "$templateDir/Template_Accessory.wikitext",
             "Template:AccessoryEnd" => "$templateDir/Template_AccessoryEnd.wikitext",
             "Template:AccessorySidebar" => "$templateDir/Template_AccessorySidebar.wikitext",
+            "Template:Accessory/CargoDec" => "$templateDir/Template_AccessoryCargoDec.wikitext",
         ];
 
         // DLC page templates
@@ -150,6 +161,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:DLC" => "$templateDir/Template_DLC.wikitext",
             "Template:DLCEnd" => "$templateDir/Template_DLCEnd.wikitext",
             "Template:DLCSidebar" => "$templateDir/Template_DLCSidebar.wikitext",
+            "Template:DLC/CargoDec" => "$templateDir/Template_DLCCargoDec.wikitext",
         ];
 
         // Release page templates
@@ -157,6 +169,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Release" => "$templateDir/Template_Release.wikitext",
             "Template:ReleaseEnd" => "$templateDir/Template_ReleaseEnd.wikitext",
             "Template:ReleaseSidebar" => "$templateDir/Template_ReleaseSidebar.wikitext",
+            "Template:Release/CargoDec" => "$templateDir/Template_ReleaseCargoDec.wikitext",
         ];
 
         // /Releases + /DLC subpage data templates (vendored from prod)
@@ -165,10 +178,8 @@ class ImportWikiTemplates extends Maintenance
             "Module:Identifiers" => "$moduleDir/Module_Identifiers.wikitext",
             "Module:GameReleases" => "$moduleDir/Module_GameReleases.wikitext",
             "Template:Releases" => "$templateDir/Template_Releases.wikitext",
-            "Template:ReleaseSubobject" =>
-                "$templateDir/Template_ReleaseSubobject.wikitext",
-            "Template:DlcSubobject" =>
-                "$templateDir/Template_DlcSubobject.wikitext",
+            "Template:ReleaseSubobject" => "$templateDir/Template_ReleaseSubobject.wikitext",
+            "Template:DlcSubobject" => "$templateDir/Template_DlcSubobject.wikitext",
         ];
 
         // Rating Board page templates
@@ -176,6 +187,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:RatingBoard" => "$templateDir/Template_RatingBoard.wikitext",
             "Template:RatingBoardEnd" => "$templateDir/Template_RatingBoardEnd.wikitext",
             "Template:RatingBoardSidebar" => "$templateDir/Template_RatingBoardSidebar.wikitext",
+            "Template:RatingBoard/CargoDec" => "$templateDir/Template_RatingBoardCargoDec.wikitext",
         ];
 
         // Region page templates
@@ -183,6 +195,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:Region" => "$templateDir/Template_Region.wikitext",
             "Template:RegionEnd" => "$templateDir/Template_RegionEnd.wikitext",
             "Template:RegionSidebar" => "$templateDir/Template_RegionSidebar.wikitext",
+            "Template:Region/CargoDec" => "$templateDir/Template_RegionCargoDec.wikitext",
         ];
 
         // Game Rating page templates
@@ -190,8 +203,9 @@ class ImportWikiTemplates extends Maintenance
             "Template:GameRating" => "$templateDir/Template_GameRating.wikitext",
             "Template:GameRatingEnd" => "$templateDir/Template_GameRatingEnd.wikitext",
             "Template:GameRatingSidebar" => "$templateDir/Template_GameRatingSidebar.wikitext",
+            "Template:GameRating/CargoDec" => "$templateDir/Template_GameRatingCargoDec.wikitext",
         ];
-        
+
         //Forms
         $formTemplates = [
             "Form:Accessory" => "$formDir/Form_Accessory.wikitext",
@@ -403,9 +417,7 @@ class ImportWikiTemplates extends Maintenance
             } else {
                 $this->output(
                     "FAILED: $titleStr -- " .
-                        $updater
-                            ->getStatus()
-                            ->getWikiText(false, false, "en") .
+                        $updater->getStatus()->getWikiText(false, false, "en") .
                         "\n",
                 );
                 $skipped++;

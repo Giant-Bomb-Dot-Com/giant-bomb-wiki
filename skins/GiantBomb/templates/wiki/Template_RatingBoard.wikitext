@@ -6,6 +6,9 @@
 ||||| BackgroundImage (property=Has background image)
 ||||| Deck (property=Has deck)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Rating_Board}}
+
 ==Documentation==
 This template creates a rating board page layout.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -49,6 +52,13 @@ SMW Property Storage
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
 }}{{#if:{{{BackgroundImage|}}}|{{#set:Has background image={{#replace:{{{BackgroundImage}}}| |+}}}}
 }}{{#if:{{{Deck|}}}|{{#set:Has deck={{{Deck}}}}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Rating_Board
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
 }}<!--
 
 Page Setup

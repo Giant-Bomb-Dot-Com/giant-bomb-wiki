@@ -187,6 +187,25 @@ local function constructDates(frame)
         display = p.getDisplayDateFromISO(frame)
     end
 
+    -----------------------------------------------------------------
+    -- NEW SANITIZATION LAYER FOR CARGO MIGRATION
+    -----------------------------------------------------------------
+    if iso and iso ~= "" then
+        -- 1. Catch the exact broken string causing your SQL crash
+        if iso:find("-0001") then
+            iso = "" -- Drops it completely so Cargo registers a NULL value instead of crashing
+        
+        -- 2. If it's a bare 4-digit year (e.g., "1986"), pad it so Cargo's Date type accepts it
+        elseif iso:match("^%d%d%d%d$") then
+            iso = iso .. "-01-01"
+            
+        -- 3. If it's a 4-digit year with a hyphen but missing parts (e.g., "1986-00-00")
+        elseif iso:match("^%d%d%d%d%-00%-00$") then
+            iso = iso:sub(1, 4) .. "-01-01"
+        end
+    end
+    -----------------------------------------------------------------
+
     pageCache.iso = iso
     pageCache.display = display
 end

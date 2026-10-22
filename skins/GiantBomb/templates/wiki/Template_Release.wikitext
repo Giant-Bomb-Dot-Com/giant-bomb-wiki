@@ -25,6 +25,9 @@
 ||||| ProductCodeType (property=Has product code type)
 ||||| WidescreenSupport (property=Has widescreen support)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Release}}
+
 ==Documentation==
 This template creates a full release page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -134,6 +137,27 @@ SMW Property Storage
 }}{{#if:{{{ProductCode|}}}|{{#set:Has product code={{{ProductCode}}}}}
 }}{{#if:{{{ProductCodeType|}}}|{{#set:Has product code type={{{ProductCodeType}}}}}
 }}{{#if:{{{WidescreenSupport|}}}|{{#set:Has widescreen support={{{WidescreenSupport}}}}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Release
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Game={{{Game|}}}
+|Platform={{{Platform|}}}
+|Region={{{Region|}}}
+|Release_date_type={{{ReleaseDateType|}}}
+|Release_date={{#invoke:DateHelper|getISO}}
+|Rating={{{Rating|}}}
+|Developers={{{Developers|}}}
+|Publishers={{{Publishers|}}}
+|Minimum_players={{{MinPlayers|}}}
+|Maximum_players={{{MaxPlayers|}}}
+|Product_code={{{ProductCode|}}}
+|Product_code_type={{{ProductCodeType|}}}
+|Widescreen_support={{{WidescreenSupport|}}}
 }}<!--
 
 Page Setup

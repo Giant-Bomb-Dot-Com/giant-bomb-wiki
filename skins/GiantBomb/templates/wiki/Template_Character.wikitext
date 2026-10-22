@@ -20,6 +20,9 @@
 |||| Objects (property=Has objects)
 |||| People (property=Has people)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Character}}
+
 ==Documentation==
 This template creates a full character page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -85,7 +88,10 @@ Your wiki content here...
 
 {{CharacterEnd}}
 </pre>
-</noinclude><includeonly>{{#set:Has name={{{Name|}}}
+</noinclude><includeonly><!--
+
+SMW Property Storage
+-->{{#set:Has name={{{Name|}}}
 }}{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid}}}}}
 }}{{#if:{{{Aliases|}}}|{{#set:Has aliases={{{Aliases}}}}}
 }}{{#if:{{{Image|}}}|{{#set:Has image={{#replace:{{{Image}}}| |+}}}}
@@ -104,7 +110,34 @@ Your wiki content here...
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has objects=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
-}}{{DISPLAYTITLE:{{{Name|}}} (Character)}}[[Category:Characters|{{SUBPAGENAME}}]]<div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Character
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Caption={{{Caption|}}}
+|Deck={{{Deck|}}}
+|Real_name={{{RealName|}}}
+|Gender={{{Gender|}}}
+|Birthday={{{Birthday|}}}
+|Death={{{Death|}}}
+|Concepts={{{Concepts|}}}
+|Enemies={{{Enemies|}}}
+|Franchises={{{Franchises|}}}
+|Friends={{{Friends|}}}
+|Games={{{Games|}}}
+|Locations={{{Locations|}}}
+|Objects={{{Objects|}}}
+|People={{{People|}}}
+}}<!--
+
+Page Setup
+-->{{DISPLAYTITLE:{{{Name|}}} (Character)}}[[Category:Characters|{{SUBPAGENAME}}]]<!--
+
+HTML Structure
+--><div class="gb-character-page" itemscope itemtype="https://schema.org/Article">
 <meta itemprop="name" content="{{{Name|}}} - Video Game Character" />
 <meta itemprop="description" content="{{{Deck|}}}" />
 <div class="gb-seo-faq" itemscope itemtype="https://schema.org/FAQPage" style="position:absolute;left:-9999px;"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="Who is {{{Name|}}}?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} is a video game character. {{{Deck|}}}" /></div></div><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><meta itemprop="name" content="What games is {{{Name|}}} in?" /><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="text" content="{{{Name|}}} appears in various video games including titles from {{{Franchises|}}}." /></div></div></div><!--
