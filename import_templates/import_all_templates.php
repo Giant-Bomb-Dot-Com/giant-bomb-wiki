@@ -161,7 +161,6 @@ class ImportWikiTemplates extends Maintenance
             "Template:DLC" => "$templateDir/Template_DLC.wikitext",
             "Template:DLCEnd" => "$templateDir/Template_DLCEnd.wikitext",
             "Template:DLCSidebar" => "$templateDir/Template_DLCSidebar.wikitext",
-            "Template:DLC/CargoDec" => "$templateDir/Template_DLCCargoDec.wikitext",
         ];
 
         // Release page templates
@@ -169,7 +168,6 @@ class ImportWikiTemplates extends Maintenance
             "Template:Release" => "$templateDir/Template_Release.wikitext",
             "Template:ReleaseEnd" => "$templateDir/Template_ReleaseEnd.wikitext",
             "Template:ReleaseSidebar" => "$templateDir/Template_ReleaseSidebar.wikitext",
-            "Template:Release/CargoDec" => "$templateDir/Template_ReleaseCargoDec.wikitext",
         ];
 
         // /Releases + /DLC subpage data templates (vendored from prod)
@@ -180,6 +178,8 @@ class ImportWikiTemplates extends Maintenance
             "Template:Releases" => "$templateDir/Template_Releases.wikitext",
             "Template:ReleaseSubobject" => "$templateDir/Template_ReleaseSubobject.wikitext",
             "Template:DlcSubobject" => "$templateDir/Template_DlcSubobject.wikitext",
+            "Template:ReleaseSubobject/CargoDec" => "$templateDir/Template_ReleaseSubobjectCargoDec.wikitext",
+            "Template:DlcSubobject/CargoDec" => "$templateDir/Template_DlcSubobjectCargoDec.wikitext",
         ];
 
         // Rating Board page templates
@@ -187,7 +187,6 @@ class ImportWikiTemplates extends Maintenance
             "Template:RatingBoard" => "$templateDir/Template_RatingBoard.wikitext",
             "Template:RatingBoardEnd" => "$templateDir/Template_RatingBoardEnd.wikitext",
             "Template:RatingBoardSidebar" => "$templateDir/Template_RatingBoardSidebar.wikitext",
-            "Template:RatingBoard/CargoDec" => "$templateDir/Template_RatingBoardCargoDec.wikitext",
         ];
 
         // Region page templates
@@ -195,7 +194,6 @@ class ImportWikiTemplates extends Maintenance
             "Template:Region" => "$templateDir/Template_Region.wikitext",
             "Template:RegionEnd" => "$templateDir/Template_RegionEnd.wikitext",
             "Template:RegionSidebar" => "$templateDir/Template_RegionSidebar.wikitext",
-            "Template:Region/CargoDec" => "$templateDir/Template_RegionCargoDec.wikitext",
         ];
 
         // Game Rating page templates
@@ -203,7 +201,9 @@ class ImportWikiTemplates extends Maintenance
             "Template:GameRating" => "$templateDir/Template_GameRating.wikitext",
             "Template:GameRatingEnd" => "$templateDir/Template_GameRatingEnd.wikitext",
             "Template:GameRatingSidebar" => "$templateDir/Template_GameRatingSidebar.wikitext",
-            "Template:GameRating/CargoDec" => "$templateDir/Template_GameRatingCargoDec.wikitext",
+            // Ratings/ pages use Template:Rating which used to only live on the wiki
+            "Template:Rating" => "$templateDir/Template_Rating.wikitext",
+            "Template:Rating/CargoDec" => "$templateDir/Template_RatingCargoDec.wikitext",
         ];
 
         //Forms
@@ -216,6 +216,7 @@ class ImportWikiTemplates extends Maintenance
             "Form:DLC" => "$formDir/Form_DLC.wikitext",
             "Form:Franchise" => "$formDir/Form_Franchise.wikitext",
             "Form:Game" => "$formDir/Form_Game.wikitext",
+            "Form:Game_CARGO" => "$formDir/Form_Game_CARGO.wikitext",
             "Form:Genre" => "$formDir/Form_Genre.wikitext",
             "Form:Location" => "$formDir/Form_Location.wikitext",
             "Form:MultiplayerFeature" => "$formDir/Form_MultiplayerFeature.wikitext",
@@ -246,6 +247,7 @@ class ImportWikiTemplates extends Maintenance
             "Template:LandingPageQuery" => "$templateDir/Template_LandingPageQuery.wikitext",
 
             "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
+            "Module:PriceHelper" => "$moduleDir/Module_PriceHelper.wikitext",
             "Module:ImageUrl" => "$moduleDir/Module_ImageUrl.wikitext",
             "Module:PlainTitle" => "$moduleDir/Module_PlainTitle.wikitext",
             "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
@@ -265,6 +267,8 @@ class ImportWikiTemplates extends Maintenance
             "Module:BadgeList" => "$moduleDir/Module_BadgeList.wikitext",
             "Module:GameFilters" => "$moduleDir/Module_GameFilters.wikitext",
             "Module:GameQuery" => "$moduleDir/Module_GameQuery.wikitext",
+            "Module:GameFilters_CARGO" => "$moduleDir/Module_GameFilters_CARGO.wikitext",
+            "Module:GameQuery_CARGO" => "$moduleDir/Module_GameQuery_CARGO.wikitext",
             "Template:GameCard" => "$templateDir/Template_GameCard.wikitext",
 
             //characters
