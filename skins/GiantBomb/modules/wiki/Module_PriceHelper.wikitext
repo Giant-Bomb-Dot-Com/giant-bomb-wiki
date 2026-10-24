@@ -17,6 +17,9 @@ local function toNumber(s)
 end
 
 local function fmt(n)
+    if not n then
+        return nil
+    end
     if n == math.floor(n) then
         return tostring(math.floor(n))
     end
@@ -36,8 +39,8 @@ function p.usdAmount(raw)
         return nil
     end
 
-    -- 9.99 / $9.99 / 1,295.99 / .99
-    local plain = s:match("^%$?(%d[%d,]*%.?%d*)$") or s:match("^%$?(%.%d+)$")
+    -- 9.99 / $9.99 / 1,295.99 / .99 / 4,99$
+    local plain = s:match("^%$?(%d[%d,]*%.?%d*)%$?$") or s:match("^%$?(%.%d+)%$?$")
     if plain then
         return fmt(toNumber(plain))
     end
@@ -71,8 +74,9 @@ function p.usdAmount(raw)
 
     -- 15 or 1200 points / 5.00/400 MSP: trust the dollar figure only when the points agree
     local dollars, points = s:match("^(%d+%.?%d*)%s*[/%-]?%s*o?r?%s*%(?%s*([%d,]+)")
-    if dollars and points and math.abs(toNumber(dollars) * POINTS_PER_USD - toNumber(points)) < 1 then
-        return fmt(toNumber(dollars))
+    local d, pts = toNumber(dollars), toNumber(points)
+    if d and pts and math.abs(d * POINTS_PER_USD - pts) < 1 then
+        return fmt(d)
     end
 
     -- leading decimal like 0.00 (Free) or 14.99 (Free W/ preorder)
@@ -83,8 +87,9 @@ function p.usdAmount(raw)
 
     -- bare points like 800 MSP or 1,040 Microsoft Points
     local bare, rest = s:match("^([%d,]+)%s*(.*)$")
-    if bare and isPoints(rest) then
-        return fmt(toNumber(bare) / POINTS_PER_USD)
+    local b = toNumber(bare)
+    if b and isPoints(rest) then
+        return fmt(b / POINTS_PER_USD)
     end
 
     return nil

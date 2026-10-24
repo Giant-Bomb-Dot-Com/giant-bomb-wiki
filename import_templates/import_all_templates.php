@@ -46,6 +46,9 @@ class ImportWikiTemplates extends Maintenance
 
         // Shared templates used by multiple page types
         $sharedTemplates = [
+            // helpers first: entity and subobject templates #invoke them
+            "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
+            "Module:PriceHelper" => "$moduleDir/Module_PriceHelper.wikitext",
             "Module:Related" => "$moduleDir/Module_Related.wikitext",
             "Template:GBFigure" => "$templateDir/Template_GBFigure.wikitext",
             "Property:Has_body_image" => "$pagesDir/Property_Hasbodyimage.wikitext",
@@ -246,8 +249,6 @@ class ImportWikiTemplates extends Maintenance
             "Template:LandingNav" => "$templateDir/Template_LandingNav.wikitext",
             "Template:LandingPageQuery" => "$templateDir/Template_LandingPageQuery.wikitext",
 
-            "Module:DateHelper" => "$moduleDir/Module_DateHelper.wikitext",
-            "Module:PriceHelper" => "$moduleDir/Module_PriceHelper.wikitext",
             "Module:ImageUrl" => "$moduleDir/Module_ImageUrl.wikitext",
             "Module:PlainTitle" => "$moduleDir/Module_PlainTitle.wikitext",
             "Template:DateDisplay" => "$templateDir/Template_DateDisplay.wikitext",
