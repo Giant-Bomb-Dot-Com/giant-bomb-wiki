@@ -233,7 +233,8 @@ if ($wikiEnv === "dev") {
 }
 
 $wgUseETag = true;
-$wgInvalidateCacheOnLocalSettingsChange = true;
+# off so editing this file does not flush the parser cache
+$wgInvalidateCacheOnLocalSettingsChange = false;
 
 # prod drains jobs via docker/jobs-cron, not web workers (in-request job work
 # was OOMing the vm); dev has no cron so keep some on-request
@@ -356,6 +357,7 @@ $wgCookiePath = $cookiePath;
 $wgCookiePrefix = "";
 $wgCookieHttpOnly = true;
 $wgSessionName = "mwSession";
+$wgCacheVaryCookies[] = "gb_wiki";
 if ($wikiEnv === "prod") {
     $wgCookieSecure = true;
 }

@@ -57,7 +57,7 @@ services:
       - ./docker:/docker:cached
     environment:
       - MV_ENV=dev
-      - COMPOSER_ROOT_VERSION=1.43.6
+      - COMPOSER_ROOT_VERSION=1.43.11
       - REDIS_HOST=redis
     restart: unless-stopped
 

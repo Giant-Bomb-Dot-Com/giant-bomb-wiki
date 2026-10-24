@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.6
+FROM mediawiki:1.43.11
 
 ARG INSTALL_API="false"
 
@@ -12,7 +12,13 @@ RUN set -x; \
 
 # INSTALL DB EXTENSIONS AND REDIS
 RUN docker-php-ext-install pdo pdo_mysql
-RUN pecl install redis && docker-php-ext-enable redis
+# github not pecl since pecl is flaky
+ARG PHPREDIS_VERSION=6.3.0
+RUN curl -fsSL "https://github.com/phpredis/phpredis/archive/refs/tags/${PHPREDIS_VERSION}.tar.gz" -o /tmp/phpredis.tgz \
+ && mkdir -p /usr/src/php/ext/redis \
+ && tar xzf /tmp/phpredis.tgz -C /usr/src/php/ext/redis --strip-components=1 \
+ && docker-php-ext-install redis \
+ && rm /tmp/phpredis.tgz
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
