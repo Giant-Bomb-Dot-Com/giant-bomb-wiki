@@ -2,7 +2,7 @@
 |Name=Text
 |Guid=Text
 |Aliases=List (,) of Text
-|Image=File
-|Background_image=File
+|Image=Text
+|Background_image=Text
 |Deck=Wikitext
 }}

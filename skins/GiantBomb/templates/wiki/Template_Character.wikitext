@@ -121,16 +121,16 @@ SMW Property Storage
 |Deck={{{Deck|}}}
 |Real_name={{{RealName|}}}
 |Gender={{{Gender|}}}
-|Birthday={{{Birthday|}}}
-|Death={{{Death|}}}
-|Concepts={{{Concepts|}}}
+|Birthday={{#invoke:DateHelper|cargoDate|{{{Birthday|}}}}}
+|Death={{#invoke:DateHelper|cargoDate|{{{Death|}}}}}
+|Has_concepts={{{Concepts|}}}
 |Enemies={{{Enemies|}}}
-|Franchises={{{Franchises|}}}
+|Has_franchises={{{Franchises|}}}
 |Friends={{{Friends|}}}
-|Games={{{Games|}}}
-|Locations={{{Locations|}}}
-|Objects={{{Objects|}}}
-|People={{{People|}}}
+|Has_games={{{Games|}}}
+|Has_locations={{{Locations|}}}
+|Has_objects={{{Objects|}}}
+|Has_people={{{People|}}}
 }}<!--
 
 Page Setup

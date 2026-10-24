@@ -158,18 +158,18 @@ Multi-value properties (comma-separated) use #arraymap.
 |Caption={{{Caption|}}}
 |Deck={{{Deck|}}}
 |Release_date_type={{{ReleaseDateType|}}}
-|Release_date={{#invoke:DateHelper|getISO}}
-|Characters={{{Characters|}}}
-|Concepts={{{Concepts|}}}
+|Release_date={{#invoke:DateHelper|getCargoISO}}
+|Has_characters={{{Characters|}}}
+|Has_concepts={{{Concepts|}}}
 |Developers={{{Developers|}}}
-|Franchises={{{Franchises|}}}
-|Games={{{Games|}}}
-|Genres={{{Genres|}}}
-|Locations={{{Locations|}}}
-|Objects={{{Objects|}}}
-|Platforms={{{Platforms|}}}
+|Has_franchises={{{Franchises|}}}
+|Has_similar_games={{{Games|}}}
+|Has_genres={{{Genres|}}}
+|Has_locations={{{Locations|}}}
+|Has_objects={{{Objects|}}}
+|Has_platforms={{{Platforms|}}}
 |Publishers={{{Publishers|}}}
-|Themes={{{Themes|}}}
+|Has_themes={{{Themes|}}}
 }}<!--
 
 Page Setup

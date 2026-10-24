@@ -110,7 +110,7 @@ Multi-value properties (comma-separated) use #arraymap.
 |Background_image={{{BackgroundImage|}}}
 |Deck={{{Deck|}}}
 |Abbreviation={{{Abbreviation|}}}
-|Founded_date={{{FoundedDate|}}}
+|Founded_date={{#invoke:DateHelper|cargoDate|{{{FoundedDate|}}}}}
 |Address={{{Address|}}}
 |City={{{City|}}}
 |State={{{State|}}}

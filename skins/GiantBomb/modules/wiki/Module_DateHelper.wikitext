@@ -187,25 +187,6 @@ local function constructDates(frame)
         display = p.getDisplayDateFromISO(frame)
     end
 
-    -----------------------------------------------------------------
-    -- NEW SANITIZATION LAYER FOR CARGO MIGRATION
-    -----------------------------------------------------------------
-    if iso and iso ~= "" then
-        -- 1. Catch the exact broken string causing your SQL crash
-        if iso:find("-0001") then
-            iso = "" -- Drops it completely so Cargo registers a NULL value instead of crashing
-        
-        -- 2. If it's a bare 4-digit year (e.g., "1986"), pad it so Cargo's Date type accepts it
-        elseif iso:match("^%d%d%d%d$") then
-            iso = iso .. "-01-01"
-            
-        -- 3. If it's a 4-digit year with a hyphen but missing parts (e.g., "1986-00-00")
-        elseif iso:match("^%d%d%d%d%-00%-00$") then
-            iso = iso:sub(1, 4) .. "-01-01"
-        end
-    end
-    -----------------------------------------------------------------
-
     pageCache.iso = iso
     pageCache.display = display
 end
@@ -218,6 +199,42 @@ end
 function p.getISO(frame)
     if not pageCache.iso or pageCache.iso == "" then constructDates(frame) end
     return pageCache.iso or ""
+end
+
+-- cargo Date sql errors on negative or zero years
+-- trim zeroed parts so cargo keeps year or month precision
+local function cleanCargoDate(value)
+    value = mw.text.trim(value or "")
+    if value:find("^%-") or value:find("^0000") then
+        return ""
+    end
+    local year, month, day = value:match("^(%d%d%d%d)%-(%d%d)%-?(%d?%d?)")
+    if year then
+        if month == "00" then return year end
+        if day == "00" then return year .. "-" .. month end
+    end
+    return value
+end
+
+-- cargo_store only so smw keeps the raw date
+-- legacy fuzzy dates come in as a full date so trim to the type's precision
+function p.getCargoISO(frame)
+    local iso = cleanCargoDate(p.getISO(frame))
+    local dateType = getArgs(frame).ReleaseDateType or ""
+    if dateType == "Year" then
+        return iso:match("^%d%d%d%d") or iso
+    elseif dateType == "Month" or dateType == "Quarter" then
+        return iso:match("^%d%d%d%d%-%d%d") or iso
+    end
+    return iso
+end
+
+function p.getCargoISODateFromParts(frame)
+    return cleanCargoDate(p.getISODateFromParts(frame))
+end
+
+function p.cargoDate(frame)
+    return cleanCargoDate(frame.args[1])
 end
 
 function p.getDisplay(frame)

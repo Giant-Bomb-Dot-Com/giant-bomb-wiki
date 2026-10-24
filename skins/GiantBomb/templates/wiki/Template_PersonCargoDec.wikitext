@@ -2,12 +2,12 @@
 |Name=Text
 |Guid=Text
 |Aliases=List (,) of Text
-|Image=File
-|Background_image=File
+|Image=Text
+|Background_image=Text
 |Deck=Wikitext
-|Characters=List (,) of Page
-|Concepts=List (,) of Page
-|Franchises=List (,) of Page
+|Has_characters=List (,) of Page
+|Has_concepts=List (,) of Page
+|Has_franchises=List (,) of Page
 |Gender=Text
 |Birthday=Date
 |Death=Date
@@ -15,8 +15,8 @@
 |Hometown=Text
 |Website=Text
 |Twitter=Text
-|Games=List (,) of Page
-|Locations=List (,) of Page
-|Objects=List (,) of Page
-|People=List (,) of Page
+|Has_games=List (,) of Page
+|Has_locations=List (,) of Page
+|Has_objects=List (,) of Page
+|Has_related_people=List (,) of Page
 }}

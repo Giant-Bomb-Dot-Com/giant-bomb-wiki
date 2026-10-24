@@ -37,9 +37,18 @@ local function sqlQuote(value)
     return "'" .. tostring(value):gsub("\\", "\\\\"):gsub("'", "\\'") .. "'"
 end
 
-local function cargoQuery(fields, where, orderBy, limit, offset)
-    return cargo.query("GB_Cargo_Game", fields, {
+local GAME = "GB_Cargo_Game"
+
+-- byEdit joins cargo _pageData to sort by edit date
+local function cargoQuery(fields, where, orderBy, limit, offset, byEdit)
+    local tables, join = GAME, nil
+    if byEdit then
+        tables = GAME .. ",_pageData"
+        join = GAME .. "._pageID=_pageData._pageID"
+    end
+    return cargo.query(tables, fields, {
         where = where,
+        join = join,
         orderBy = orderBy,
         limit = limit,
         offset = offset,
@@ -62,27 +71,30 @@ function p.render(frame)
     local relevanceMode = false
     local popularMode = false
     local defaultMode = false
-    local sortField = "Name"
-    local sortOrder = "ASC"
+    local orderBy = "Name ASC"
+    local byEdit = false
 
     platform = platform:gsub("%+", " ")
     if platform:find("{{#urlget") then
         platform = "All"
     end
 
-    if sortFilter == "newest" or sortFilter == "latest" then
-        sortField = "_pageID"
-        sortOrder = "DESC"
+    if sortFilter == "newest" then
+        orderBy = GAME .. "._pageID DESC"
+    elseif sortFilter == "latest" then
+        byEdit = true
     elseif sortFilter == "name" then
-        sortField = "Name"
+        orderBy = "Name ASC"
     elseif sortFilter == "popular" and searchFilter == "" then
         popularMode = true
     elseif searchFilter ~= "" then
         relevanceMode = true
     else
         defaultMode = true
-        sortField = "_pageID"
-        sortOrder = "DESC"
+        byEdit = true
+    end
+    if byEdit then
+        orderBy = "_pageData._modificationDate DESC, " .. GAME .. "._pageID DESC"
     end
 
     local function noResultsDiv()
@@ -93,18 +105,19 @@ function p.render(frame)
     local conditions = {}
     if platform ~= "All" then
         local platformTitle = platform:match("^[^/]+/(.*)$") or platform
-        local platformCondition = "Platforms HOLDS LIKE '%/" .. sqlLike(platformTitle) .. "'"
+        local platformCondition = "Has_platforms HOLDS LIKE '%/" .. sqlLike(platformTitle) .. "'"
         local underscoredTitle = platformTitle:gsub(" ", "_")
         if underscoredTitle ~= platformTitle then
             platformCondition = "(" .. platformCondition
-                .. " OR Platforms HOLDS LIKE '%/" .. sqlLike(underscoredTitle) .. "')"
+                .. " OR Has_platforms HOLDS LIKE '%/" .. sqlLike(underscoredTitle) .. "')"
         end
         table.insert(conditions, platformCondition)
     end
 
     local term = ""
     if searchFilter ~= "" then
-        local clean = searchFilter:gsub("[%[%]|<>{}]", ""):gsub('["%+%-%(%)~@%*:]', " ")
+        -- cargo rejects # and -- anywhere in where, even quoted
+        local clean = searchFilter:gsub("[%[%]|<>{}]", ""):gsub('["%+%-%(%)~@%*:#]', " ")
         if clean:find("%S") then
             local words = {}
             for word in clean:gmatch("%S+") do
@@ -116,7 +129,7 @@ function p.render(frame)
                     local like = "'%" .. sqlLike(word) .. "%'"
                 table.insert(searchConditions, "(Name LIKE " .. like
                     .. " OR Aliases HOLDS LIKE " .. like
-                    .. " OR _pageName LIKE " .. like .. ")")
+                    .. " OR " .. GAME .. "._pageName LIKE " .. like .. ")")
             end
             table.insert(conditions, "(" .. table.concat(searchConditions, " AND ") .. ")")
         end
@@ -125,17 +138,27 @@ function p.render(frame)
         table.insert(conditions, "Image IS NOT NULL AND Image != ''")
     end
     local where = #conditions > 0 and table.concat(conditions, " AND ") or nil
-    local cardFields = "Name, Image, Platforms, Release_date, Deck, _pageName=PageName, _pageID=PageID"
+    local cardFields = "Name, Image, Has_platforms, Release_date, Release_date__precision, Deck, "
+        .. GAME .. "._pageName=PageName, " .. GAME .. "._pageID=PageID"
 
     local function fetchCards(titles)
         local rank = {}
         local pageNames = {}
+        local clauses = {}
         for index, title in ipairs(titles) do
             rank[title] = index
-            table.insert(pageNames, sqlQuote(title))
+            if title:find("--", 1, true) then
+                -- cargo rejects -- anywhere in where so match it with a wildcard
+                local like = sqlLike(title):gsub("%-%-", "-_")
+                table.insert(clauses, GAME .. "._pageName LIKE '" .. like .. "'")
+            else
+                table.insert(pageNames, sqlQuote(title))
+            end
         end
-        local ok, rows = pcall(cargoQuery, cardFields,
-            "_pageName IN (" .. table.concat(pageNames, ",") .. ")", nil, #titles, 0)
+        if #pageNames > 0 then
+            table.insert(clauses, GAME .. "._pageName IN (" .. table.concat(pageNames, ",") .. ")")
+        end
+        local ok, rows = pcall(cargoQuery, cardFields, table.concat(clauses, " OR "), nil, #titles, 0)
         if not ok or not rows then
             return nil
         end
@@ -164,7 +187,9 @@ function p.render(frame)
         end
         queryData.count = popular.total or #rows
     elseif relevanceMode then
-        local ok, matches = pcall(cargoQuery, cardFields, where, "Name ASC", RELEVANCE_CAP, 0)
+        -- names only since full cards across the whole pool is slow
+        local ok, matches = pcall(cargoQuery, "Name, " .. GAME .. "._pageName=PageName",
+            where, "Name ASC", RELEVANCE_CAP, 0)
         if not ok or not matches or #matches == 0 then
             return noResultsDiv()
         end
@@ -186,17 +211,25 @@ function p.render(frame)
             if #names[a] ~= #names[b] then return #names[a] < #names[b] end
             return names[a] < names[b]
         end)
-        results = {}
+        local titles = {}
         for index = offset + 1, math.min(offset + limit, #matches) do
-            table.insert(results, matches[index])
+            table.insert(titles, matches[index].PageName)
         end
-        if #results == 0 then
+        if #titles == 0 then
             return noResultsDiv()
         end
-        queryData.count = cargoCount(where)
+        results = fetchCards(titles)
+        if not results or #results == 0 then
+            return noResultsDiv()
+        end
+        -- already capped so pagination stops at the cap
+        queryData.count = #matches
     else
-        local ok, rows = pcall(cargoQuery, cardFields, where,
-            sortField .. " " .. sortOrder, limit, offset)
+        local ok, rows = pcall(cargoQuery, cardFields, where, orderBy, limit, offset, byEdit)
+        if byEdit and not ok then
+            -- _pageData not set up yet so fall back to page id
+            ok, rows = pcall(cargoQuery, cardFields, where, GAME .. "._pageID DESC", limit, offset)
+        end
         if not ok or not rows or #rows == 0 then
             return noResultsDiv()
         end
@@ -210,12 +243,15 @@ function p.render(frame)
         local imageData = getSafe(result, "Image", false):gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
         local cleanDate = ""
         if result.Release_date and result.Release_date ~= "" then
-            cleanDate = mw.language.getContentLanguage():formatDate("Y F j", tostring(result.Release_date))
+            -- cargo precision 3 is year only and 2 is month only
+            local precision = tonumber(result.Release_date__precision)
+            local format = precision == 3 and "Y" or precision == 2 and "Y F" or "Y F j"
+            cleanDate = mw.language.getContentLanguage():formatDate(format, tostring(result.Release_date))
         end
         html:wikitext(frame:expandTemplate{title = "GameCard", args = {
             url_title = result.PageName or "",
             title = displayName(result),
-            platforms = getSafe(result, "Platforms", true),
+            platforms = getSafe(result, "Has_platforms", true),
             release_date = cleanDate,
             deck = getSafe(result, "Deck", true),
             image = imageData,

@@ -129,19 +129,19 @@ SMW Property Storage
 |Background_image={{{BackgroundImage|}}}
 |Deck={{{Deck|}}}
 |Gender={{{Gender|}}}
-|Birthday={{{Birthday|}}}
-|Death={{{Death|}}}
+|Birthday={{#invoke:DateHelper|cargoDate|{{{Birthday|}}}}}
+|Death={{#invoke:DateHelper|cargoDate|{{{Death|}}}}}
 |Country={{{Country|}}}
 |Hometown={{{Hometown|}}}
 |Website={{{Website|}}}
 |Twitter={{{Twitter|}}}
-|Characters={{{Characters|}}}
-|Concepts={{{Concepts|}}}
-|Franchises={{{Franchises|}}}
-|Games={{{Games|}}}
-|Locations={{{Locations|}}}
-|Objects={{{Objects|}}}
-|People={{{People|}}}
+|Has_characters={{{Characters|}}}
+|Has_concepts={{{Concepts|}}}
+|Has_franchises={{{Franchises|}}}
+|Has_games={{{Games|}}}
+|Has_locations={{{Locations|}}}
+|Has_objects={{{Objects|}}}
+|Has_related_people={{{People|}}}
 }}<!--
 
 Page Setup

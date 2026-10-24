@@ -3,7 +3,7 @@ This is the "Game" form.
 To create a page with this form, enter the page name below;
 if a page with that name already exists, you will be sent to a form to edit that page.
 
-{{#forminput:form=Game|super_page=Games}}
+{{#forminput:form=Game_CARGO|super_page=Games}}
 
 </noinclude><includeonly>
 <div id="wikiPreview" style="display: none; padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #AAAAAA;"></div>
@@ -23,7 +23,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Image|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Image}}}
 |-
 ! BackgroundImage: 
-| {{{field|BackgroundImage|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=BackgroundImage}}}
+| {{{field|BackgroundImage|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Background_image}}}
 |-
 ! Caption: 
 | {{{field|Caption|cargo table=GB_Cargo_Game|cargo field=Caption}}}
@@ -40,7 +40,7 @@ if a page with that name already exists, you will be sent to a form to edit that
 }}
 {| class="formtable"
 ! style="width: 150px;" | Release Date Type: 
-| {{{field|ReleaseDateType|cargo table=GB_Cargo_Game|cargo field=ReleaseDateType|input type=dropdown|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=None}}}
+| {{{field|ReleaseDateType|cargo table=GB_Cargo_Game|cargo field=Release_date_type|input type=dropdown|values=None,Full,Month,Quarter,Year|mandatory|show on select=None=>default;Full=>full_date;Month=>month_year;Quarter=>quarter_year;Year=>only_year|default=None}}}
 |}
 <div id="default">
 </div>
@@ -70,37 +70,37 @@ if a page with that name already exists, you will be sent to a form to edit that
 </div>
 {| class="formtable"
 ! Characters:
-| {{{field|Characters|cargo table=GB_Cargo_Game|cargo field=Characters|input type=tokens|values from category=Characters|existing values only|list|delimiter=,}}}
+| {{{field|Characters|cargo table=GB_Cargo_Game|cargo field=Has_characters|input type=tokens|values from category=Characters|existing values only|list|delimiter=,}}}
 |-
 ! Concepts:
-| {{{field|Concepts|cargo table=GB_Cargo_Game|cargo field=Concepts|input type=tokens|values from category=Concepts|existing values only|list|delimiter=,}}}
+| {{{field|Concepts|cargo table=GB_Cargo_Game|cargo field=Has_concepts|input type=tokens|values from category=Concepts|existing values only|list|delimiter=,}}}
 |-
 ! Developers:
 | {{{field|Developers|cargo table=GB_Cargo_Game|cargo field=Developers|input type=tokens|values from category=Companies|existing values only|list|delimiter=,}}}
 |-
 ! Franchises:
-| {{{field|Franchises|cargo table=GB_Cargo_Game|cargo field=Franchises|input type=tokens|values from category=Franchises|existing values only|list|delimiter=,}}}
+| {{{field|Franchises|cargo table=GB_Cargo_Game|cargo field=Has_franchises|input type=tokens|values from category=Franchises|existing values only|list|delimiter=,}}}
 |-
 ! Genres:
-| {{{field|Genres|cargo table=GB_Cargo_Game|cargo field=Genres|input type=tokens|values from category=Genres|existing values only|list|delimiter=,}}}
+| {{{field|Genres|cargo table=GB_Cargo_Game|cargo field=Has_genres|input type=tokens|values from category=Genres|existing values only|list|delimiter=,}}}
 |-
 ! Locations:
-| {{{field|Locations|cargo table=GB_Cargo_Game|cargo field=Locations|input type=tokens|values from category=Locations|existing values only|list|delimiter=,}}}
+| {{{field|Locations|cargo table=GB_Cargo_Game|cargo field=Has_locations|input type=tokens|values from category=Locations|existing values only|list|delimiter=,}}}
 |-
 ! Objects:
-| {{{field|Objects|cargo table=GB_Cargo_Game|cargo field=Objects|input type=tokens|values from category=Objects|existing values only|list|delimiter=,}}}
+| {{{field|Objects|cargo table=GB_Cargo_Game|cargo field=Has_objects|input type=tokens|values from category=Objects|existing values only|list|delimiter=,}}}
 |-
 ! Platforms:
-| {{{field|Platforms|cargo table=GB_Cargo_Game|cargo field=Platforms|input type=tokens|values from category=Platforms|existing values only|list|delimiter=,}}}
+| {{{field|Platforms|cargo table=GB_Cargo_Game|cargo field=Has_platforms|input type=tokens|values from category=Platforms|existing values only|list|delimiter=,}}}
 |-
 ! Publishers:
 | {{{field|Publishers|cargo table=GB_Cargo_Game|cargo field=Publishers|input type=tokens|values from category=Companies|existing values only|list|delimiter=,}}}
 |-
 ! Games:
-| {{{field|Games|cargo table=GB_Cargo_Game|cargo field=SimilarGames|input type=tokens|values from category=Games|existing values only|list|delimiter=,}}}
+| {{{field|Games|cargo table=GB_Cargo_Game|cargo field=Has_similar_games|input type=tokens|values from category=Games|existing values only|list|delimiter=,}}}
 |-
 ! Themes:
-| {{{field|Themes|cargo table=GB_Cargo_Game|cargo field=Themes|input type=tokens|values from category=Themes|existing values only|list|delimiter=,}}}
+| {{{field|Themes|cargo table=GB_Cargo_Game|cargo field=Has_themes|input type=tokens|values from category=Themes|existing values only|list|delimiter=,}}}
 |}
 {{{end template}}}
 

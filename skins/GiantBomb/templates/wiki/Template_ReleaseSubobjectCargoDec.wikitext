@@ -1,0 +1,24 @@
+{{#cargo_declare:_table=GB_Cargo_Release
+|Name=Text
+|Guid=Text
+|Game=Page
+|Image=Text
+|Region=Text
+|Platform=List (,) of Page
+|Rating=Page
+|Developers=List (,) of Page
+|Publishers=List (,) of Page
+|Release_date_type=Text
+|Release_date=Date
+|Product_code=Text
+|Product_code_type=Text
+|Company_code=Text
+|Company_code_type=Text
+|Widescreen_support=Text
+|Has_resolutions=List (,) of Page
+|Has_sound_systems=List (,) of Page
+|Has_single_player_features=List (,) of Page
+|Has_multiplayer_features=List (,) of Page
+|Minimum_players=Integer
+|Maximum_players=Integer
+}}

@@ -1,0 +1,50 @@
+<noinclude>{{#template_params:
+  Name (property=Has name)
+| Guid (property=Has guid)
+| Explanation (property=Stands for)
+| Image (property=Has image)
+| Caption (property=Has caption)
+}}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Rating}}
+
+==Documentation==
+This template is used to create rating pages, sets its display title and infobox.
+{| class="wikitable"
+|-
+! Field Name !! Description
+|-
+| Name || The display name of the rating.
+|-
+| Guid || The identifier from Giant Bomb. 
+|-
+| Explanation || The short phrase explaining of the rating.
+|-
+| Image || The image filename of the rating. Image appears in the infobox.
+|-
+| Caption || The caption for the above image.
+|}
+</noinclude><includeonly
+>{{#set:Has name={{{Name|}}}}}<!--
+-->{{#if:{{{Guid|}}}|{{#set:Has guid={{{Guid|}}}}}}}<!--
+-->{{#if:{{{Explanation|}}}|{{#set:Stands for={{{Explanation|}}}}}}}<!--
+-->{{#if:{{{Image|}}}|{{#set:Has image={{{Image|}}}}}}}<!--
+-->{{#if:{{{Caption|}}}|{{#set:Has caption={{{Caption|}}}}}}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Rating
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Rating_board={{#explode:{{{Name|}}}|:|0}}
+|Explanation={{{Explanation|}}}
+|Image={{{Image|}}}
+|Caption={{{Caption|}}}
+}}<!--
+-->{{Infobox
+| title={{{Name|}}}
+| italic title=no
+| image={{{Image|}}}
+| image size=40
+| caption={{{Caption|}}}
+| stands for={{{Explanation|}}}
+}}<!--
+-->{{DISPLAYTITLE:{{{Name|}}}}}[[Category:Ratings|{{SUBPAGENAME}}]]
+</includeonly>

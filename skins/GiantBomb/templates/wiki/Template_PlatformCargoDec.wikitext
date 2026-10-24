@@ -2,14 +2,15 @@
 |Name=Text
 |Guid=Text
 |Aliases=List (,) of Text
-|Image=File
-|Background_image=File
+|Image=Text
+|Background_image=Text
 |Deck=Wikitext
 |Short_name=Text
 |Release_date_type=Text
 |Release_date=Date
 |Install_base=Integer
 |Online_support=Text
-|Original_price=Number
+|Original_price=Text
+|Original_price_usd=Float
 |Manufacturer=List (,) of Page
 }}

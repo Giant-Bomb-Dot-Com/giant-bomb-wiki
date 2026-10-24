@@ -95,13 +95,13 @@ SMW Property Storage
 |Image={{{Image|}}}
 |Background_image={{{BackgroundImage|}}}
 |Deck={{{Deck|}}}
-|Characters={{{Characters|}}}
-|Concepts={{{Concepts|}}}
-|Franchises={{{Franchises|}}}
-|Games={{{Games|}}}
-|Locations={{{Locations|}}}
-|People={{{People|}}}
-|Objects={{{Objects|}}}
+|Has_characters={{{Characters|}}}
+|Has_concepts={{{Concepts|}}}
+|Has_franchises={{{Franchises|}}}
+|Has_games={{{Games|}}}
+|Has_locations={{{Locations|}}}
+|Has_people={{{People|}}}
+|Has_related_objects={{{Objects|}}}
 }}<!--
 
 Page Setup

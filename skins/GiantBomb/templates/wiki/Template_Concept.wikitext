@@ -106,13 +106,13 @@ Multi-value properties (comma-separated) use #arraymap.
 |Image={{{Image|}}}
 |Background_image={{{BackgroundImage|}}}
 |Deck={{{Deck|}}}
-|Characters={{{Characters|}}}
-|Concepts={{{Concepts|}}}
-|Franchises={{{Franchises|}}}
-|Games={{{Games|}}}
-|Locations={{{Locations|}}}
-|Objects={{{Objects|}}}
-|People={{{People|}}}
+|Has_characters={{{Characters|}}}
+|Has_related_concepts={{{Concepts|}}}
+|Has_franchises={{{Franchises|}}}
+|Has_games={{{Games|}}}
+|Has_locations={{{Locations|}}}
+|Has_objects={{{Objects|}}}
+|Has_people={{{People|}}}
 }}<!--
 
 Page Setup

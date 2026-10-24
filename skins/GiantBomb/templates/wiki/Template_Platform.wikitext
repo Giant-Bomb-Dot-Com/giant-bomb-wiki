@@ -127,10 +127,11 @@ SMW Property Storage
 |Deck={{{Deck|}}}
 |Short_name={{{ShortName|}}}
 |Release_date_type={{{ReleaseDateType|}}}
-|Release_date={{#invoke:DateHelper|getISO}}
+|Release_date={{#invoke:DateHelper|getCargoISO}}
 |Install_base={{{InstallBase|}}}
 |Online_support={{{OnlineSupport|}}}
 |Original_price={{{OriginalPrice|}}}
+|Original_price_usd={{#invoke:PriceHelper|usd|1={{{OriginalPrice|}}}}}
 |Manufacturer={{{Manufacturer|}}}
 }}<!--
 
