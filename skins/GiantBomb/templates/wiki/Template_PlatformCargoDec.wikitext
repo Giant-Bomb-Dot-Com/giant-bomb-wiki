@@ -8,7 +8,7 @@
 |Short_name=Text
 |Release_date_type=Text
 |Release_date=Date
-|Install_base=Integer
+|Install_base=Float
 |Online_support=Text
 |Original_price=Text
 |Original_price_usd=Float

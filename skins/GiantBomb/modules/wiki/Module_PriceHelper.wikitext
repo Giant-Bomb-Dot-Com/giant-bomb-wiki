@@ -26,9 +26,10 @@ local function fmt(n)
     return string.format("%.2f", n)
 end
 
+-- handle edge cases like microsoft, bioware points
 local function isPoints(rest)
     local r = mw.ustring.lower(rest or "")
-    return r:find("^msp") or r:find("^ms") or r:find("^mic") or r:find("^bioware")
+    return r:find("^msp") or r:find("^ms%s") or r:find("^ms$") or r:find("^mic") or r:find("^bioware")
 end
 
 -- best effort usd amount from a free text price or nil when there's no honest usd figure

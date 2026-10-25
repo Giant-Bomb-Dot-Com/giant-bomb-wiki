@@ -123,13 +123,15 @@ function p.render(frame)
             for word in clean:gmatch("%S+") do
                 table.insert(words, word)
             end
-            term = table.concat(words, " "):lower()
+            -- ustring so accented input folds the same way sql LOWER() does
+            term = mw.ustring.lower(table.concat(words, " "))
             local searchConditions = {}
             for _, word in ipairs(words) do
-                    local like = "'%" .. sqlLike(word) .. "%'"
-                table.insert(searchConditions, "(Name LIKE " .. like
-                    .. " OR Aliases HOLDS LIKE " .. like
-                    .. " OR " .. GAME .. "._pageName LIKE " .. like .. ")")
+                -- tables are case sensitive (utf8mb4_0900_as_cs) so lower both sides
+                local like = "'%" .. sqlLike(mw.ustring.lower(word)) .. "%'"
+                table.insert(searchConditions, "(LOWER(Name) LIKE " .. like
+                    .. " OR LOWER(Aliases__full) LIKE " .. like
+                    .. " OR LOWER(" .. GAME .. "._pageName) LIKE " .. like .. ")")
             end
             table.insert(conditions, "(" .. table.concat(searchConditions, " AND ") .. ")")
         end
@@ -138,7 +140,7 @@ function p.render(frame)
         table.insert(conditions, "Image IS NOT NULL AND Image != ''")
     end
     local where = #conditions > 0 and table.concat(conditions, " AND ") or nil
-    local cardFields = "Name, Image, Has_platforms, Release_date, Release_date__precision, Deck, "
+    local cardFields = "Name, Image, Has_platforms, Release_date, Release_date__precision, Release_date_type, Deck, "
         .. GAME .. "._pageName=PageName, " .. GAME .. "._pageID=PageID"
 
     local function fetchCards(titles)
@@ -202,7 +204,7 @@ function p.render(frame)
             return start and 3 or 4
         end
         for _, row in ipairs(matches) do
-            local name = displayName(row):lower()
+            local name = mw.ustring.lower(displayName(row))
             names[row] = name
             scores[row] = relevance(name)
         end
@@ -243,10 +245,18 @@ function p.render(frame)
         local imageData = getSafe(result, "Image", false):gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
         local cleanDate = ""
         if result.Release_date and result.Release_date ~= "" then
+            local lang = mw.language.getContentLanguage()
+            local date = tostring(result.Release_date)
             -- cargo precision 3 is year only and 2 is month only
             local precision = tonumber(result.Release_date__precision)
-            local format = precision == 3 and "Y" or precision == 2 and "Y F" or "Y F j"
-            cleanDate = mw.language.getContentLanguage():formatDate(format, tostring(result.Release_date))
+            if result.Release_date_type == "Quarter" then
+                -- quarter rows hold some month in the quarter so show the Q form
+                local month = tonumber(date:match("^%d%d%d%d%-(%d%d)")) or 1
+                cleanDate = "Q" .. math.ceil(month / 3) .. " " .. lang:formatDate("Y", date)
+            else
+                local format = precision == 3 and "Y" or precision == 2 and "Y F" or "Y F j"
+                cleanDate = lang:formatDate(format, date)
+            end
         end
         html:wikitext(frame:expandTemplate{title = "GameCard", args = {
             url_title = result.PageName or "",
