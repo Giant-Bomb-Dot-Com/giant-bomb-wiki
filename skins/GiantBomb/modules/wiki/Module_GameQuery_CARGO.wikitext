@@ -261,7 +261,7 @@ function p.render(frame)
         html:wikitext(frame:expandTemplate{title = "GameCard", args = {
             url_title = result.PageName or "",
             title = displayName(result),
-            platforms = getSafe(result, "Has_platforms", true),
+            platforms = getSafe(result, "Has_platforms", true):gsub("_", " "),
             release_date = cleanDate,
             deck = getSafe(result, "Deck", true),
             image = imageData,
