@@ -949,3 +949,16 @@ if ($gaMeasurementId) {
     wfLoadExtension("GTag");
     $wgGTagAnalyticsId = $gaMeasurementId;
 }
+
+# =============================================================================
+# CARGO SETTINGS
+# =============================================================================
+wfLoadExtension("Cargo");
+$wgCargoDBTableOptions = "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs";
+$wgCargoPageDataColumns = ["creationDate", "modificationDate"];
+$wgGroupPermissions["*"]["runcargoqueries"] = false;
+$wgGroupPermissions["sysop"]["runcargoqueries"] = true;
+$wgGroupPermissions["sysop"]["recreatecargodata"] = false;
+$wgGroupPermissions["sysop"]["deletecargodata"] = false;
+$wgGroupPermissions["bureaucrat"]["recreatecargodata"] = true;
+$wgGroupPermissions["bureaucrat"]["deletecargodata"] = true;

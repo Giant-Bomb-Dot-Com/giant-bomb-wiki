@@ -1,0 +1,22 @@
+{{#cargo_declare:_table=GB_Cargo_Game
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=Text
+|Background_image=Text
+|Caption=Wikitext
+|Deck=Wikitext
+|Release_date_type=Text
+|Release_date=Date
+|Has_characters=List (,) of Page
+|Has_concepts=List (,) of Page
+|Developers=List (,) of Page
+|Has_franchises=List (,) of Page
+|Has_similar_games=List (,) of Page
+|Has_genres=List (,) of Page
+|Has_locations=List (,) of Page
+|Has_objects=List (,) of Page
+|Has_platforms=List (,) of Page
+|Publishers=List (,) of Page
+|Has_themes=List (,) of Page
+}}

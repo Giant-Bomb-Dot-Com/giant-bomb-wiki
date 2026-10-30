@@ -1,0 +1,22 @@
+{{#cargo_declare:_table=GB_Cargo_Person
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=Text
+|Background_image=Text
+|Deck=Wikitext
+|Has_characters=List (,) of Page
+|Has_concepts=List (,) of Page
+|Has_franchises=List (,) of Page
+|Gender=Text
+|Birthday=Date
+|Death=Date
+|Country=Text
+|Hometown=Text
+|Website=Text
+|Twitter=Text
+|Has_games=List (,) of Page
+|Has_locations=List (,) of Page
+|Has_objects=List (,) of Page
+|Has_related_people=List (,) of Page
+}}

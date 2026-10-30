@@ -15,4 +15,22 @@
 |Has publishers={{{Publishers|}}}|+sep=,
 |Has platforms={{{Platform|}}}
 |Has dlc types={{{DlcTypes|}}}|+sep=,
-}}
+}}<includeonly>{{#cargo_store:_table=GB_Cargo_Dlc
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Game={{{Game|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Caption={{{Caption|}}}
+|Deck={{{Deck|}}}
+|Platform={{{Platform|}}}
+|Release_date_type={{{ReleaseDateType|}}}
+|Release_date={{#invoke:DateHelper|getCargoISODateFromParts|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
+|Launch_price={{{LaunchPrice|}}}
+|Launch_price_usd={{#invoke:PriceHelper|usd|1={{{LaunchPrice|}}}}}
+|Developers={{{Developers|}}}
+|Publishers={{{Publishers|}}}
+|Dlc_types={{{DlcTypes|}}}
+}}</includeonly><noinclude>
+{{#cargo_attach:_table=GB_Cargo_Dlc}}
+</noinclude>

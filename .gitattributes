@@ -4,3 +4,5 @@
 # cron files baked into the image must be LF -- with CRLF cron execs "/bin/sh\r"
 # and every job fails silently (took down the prod job queue, Aug 2026)
 docker/* text eol=lf
+# docker/* doesn't reach subfolders, crlf patches fail git apply in the build
+docker/patches/* text eol=lf

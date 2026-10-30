@@ -1,0 +1,21 @@
+{{#cargo_declare:_table=GB_Cargo_Character
+|Name=Text
+|Guid=Text
+|Aliases=List (,) of Text
+|Image=Text
+|Background_image=Text
+|Caption=Wikitext
+|Deck=Wikitext
+|Real_name=Text
+|Gender=Text
+|Birthday=Date
+|Death=Date
+|Has_concepts=List (,) of Page
+|Enemies=List (,) of Page
+|Has_franchises=List (,) of Page
+|Friends=List (,) of Page
+|Has_games=List (,) of Page
+|Has_locations=List (,) of Page
+|Has_objects=List (,) of Page
+|Has_people=List (,) of Page
+}}

@@ -1,0 +1,13 @@
+diff --git a/includes/CargoUtils.php b/includes/CargoUtils.php
+index f2230d2..237dc3a 100644
+--- a/includes/CargoUtils.php
++++ b/includes/CargoUtils.php
+@@ -781,6 +781,8 @@ class CargoUtils {
+ 		} elseif ( $fieldType == 'Text' || $fieldType == 'Wikitext' ) {
+ 			switch ( $dbType ) {
+ 				case "mysql":
++					// mysql TEXT caps at 64KB and big concept game lists run past 390KB
++					return 'Mediumtext';
+ 				case "postgres":
+ 				case "sqlite":
+ 					return 'Text';

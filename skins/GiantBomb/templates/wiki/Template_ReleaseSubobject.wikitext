@@ -23,4 +23,29 @@
 |Has multiplayer features={{{MultiplayerFeatures|}}}|+sep=,
 |Has minimum players={{{MinimumPlayers|}}}
 |Has maximum players={{{MaximumPlayers|}}}
-}}
+}}<includeonly>{{#cargo_store:_table=GB_Cargo_Release
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Game={{{Game|}}}
+|Image={{{Image|}}}
+|Region={{{Region|}}}
+|Platform={{{Platform|}}}
+|Rating={{{Rating|}}}
+|Developers={{{Developers|}}}
+|Publishers={{{Publishers|}}}
+|Release_date_type={{{ReleaseDateType|}}}
+|Release_date={{#invoke:DateHelper|getCargoISODateFromParts|ReleaseDateType={{{ReleaseDateType|}}}|ReleaseDate={{{ReleaseDate|}}}|MonthPart={{{MonthPart|}}}|MonthYearPart={{{MonthYearPart|}}}|QuarterPart={{{QuarterPart|}}}|QuarterYearPart={{{QuarterYearPart|}}}|YearPart={{{YearPart|}}}}}
+|Product_code={{{ProductCode|}}}
+|Product_code_type={{{ProductCodeType|}}}
+|Company_code={{{CompanyCode|}}}
+|Company_code_type={{{CompanyCodeType|}}}
+|Widescreen_support={{{WidescreenSupport|}}}
+|Has_resolutions={{{Resolutions|}}}
+|Has_sound_systems={{{SoundSystems|}}}
+|Has_single_player_features={{{SinglePlayerFeatures|}}}
+|Has_multiplayer_features={{{MultiplayerFeatures|}}}
+|Minimum_players={{{MinimumPlayers|}}}
+|Maximum_players={{{MaximumPlayers|}}}
+}}</includeonly><noinclude>
+{{#cargo_attach:_table=GB_Cargo_Release}}
+</noinclude>

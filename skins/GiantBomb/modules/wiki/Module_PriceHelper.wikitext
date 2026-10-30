@@ -1,0 +1,103 @@
+local p = {}
+
+-- microsoft and bioware points were a fixed 80 per usd
+local POINTS_PER_USD = 80
+
+-- 1,295.99 -> 1295.99 but a european 5,50 -> 5.50
+local function toNumber(s)
+    if not s then
+        return nil
+    end
+    if s:match("^%d+,%d%d$") then
+        s = s:gsub(",", ".")
+    else
+        s = s:gsub(",", "")
+    end
+    return tonumber(s)
+end
+
+local function fmt(n)
+    if not n then
+        return nil
+    end
+    if n == math.floor(n) then
+        return tostring(math.floor(n))
+    end
+    return string.format("%.2f", n)
+end
+
+-- handle edge cases like microsoft, bioware points
+local function isPoints(rest)
+    local r = mw.ustring.lower(rest or "")
+    return r:find("^msp") or r:find("^ms%s") or r:find("^ms$") or r:find("^mic") or r:find("^bioware")
+end
+
+-- best effort usd amount from a free text price or nil when there's no honest usd figure
+-- the raw text is stored as is next to this so nothing gets lost
+function p.usdAmount(raw)
+    local s = mw.text.trim(raw or "")
+    if s == "" then
+        return nil
+    end
+
+    -- 9.99 / $9.99 / 1,295.99 / .99 / 4,99$
+    local plain = s:match("^%$?(%d[%d,]*%.?%d*)%$?$") or s:match("^%$?(%.%d+)%$?$")
+    if plain then
+        return fmt(toNumber(plain))
+    end
+
+    if mw.ustring.lower(s):find("^free") then
+        return "0"
+    end
+
+    -- first $ amount that's bare or US$, skipping CA$ AU$ NZ$
+    for prefix, amount in s:gmatch("(%a*)%$%s*([%d%.,]*%d)") do
+        if prefix == "" or prefix == "US" then
+            local n = toNumber(amount)
+            if n then
+                return fmt(n)
+            end
+        end
+    end
+
+    -- 3 USD
+    local spelled = s:match("^([%d%.,]*%d)%s*USD")
+    if spelled then
+        return fmt(toNumber(spelled))
+    end
+
+    -- only other currencies so no usd figure (plain finds since these are multibyte)
+    for _, symbol in ipairs({ "£", "€", "¥", "￥", "Yen" }) do
+        if s:find(symbol, 1, true) then
+            return nil
+        end
+    end
+
+    -- 15 or 1200 points / 5.00/400 MSP: trust the dollar figure only when the points agree
+    local dollars, points = s:match("^(%d+%.?%d*)%s*[/%-]?%s*o?r?%s*%(?%s*([%d,]+)")
+    local d, pts = toNumber(dollars), toNumber(points)
+    if d and pts and math.abs(d * POINTS_PER_USD - pts) < 1 then
+        return fmt(d)
+    end
+
+    -- leading decimal like 0.00 (Free) or 14.99 (Free W/ preorder)
+    local lead = s:match("^(%d+%.%d+)")
+    if lead then
+        return fmt(toNumber(lead))
+    end
+
+    -- bare points like 800 MSP or 1,040 Microsoft Points
+    local bare, rest = s:match("^([%d,]+)%s*(.*)$")
+    local b = toNumber(bare)
+    if b and isPoints(rest) then
+        return fmt(b / POINTS_PER_USD)
+    end
+
+    return nil
+end
+
+function p.usd(frame)
+    return p.usdAmount(frame.args[1]) or ""
+end
+
+return p

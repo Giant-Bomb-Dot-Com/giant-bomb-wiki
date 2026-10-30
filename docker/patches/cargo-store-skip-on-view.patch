@@ -1,0 +1,16 @@
+diff --git a/includes/parserfunctions/CargoStore.php b/includes/parserfunctions/CargoStore.php
+index 6aa77e5..7f0184e 100644
+--- a/includes/parserfunctions/CargoStore.php
++++ b/includes/parserfunctions/CargoStore.php
+@@ -28,6 +28,11 @@ class CargoStore {
+ 	 * @throws MWException
+ 	 */
+ 	public static function run( $parser, $frame, $args ) {
++		// only page saves and recreate jobs store, skip arg expansion + schema lookup on views
++		if ( !isset( self::$settings['origin'] ) ) {
++			return;
++		}
++
+ 		// Get page-related information early on, so we can exit
+ 		// quickly if there's a problem.
+ 		$params = [];

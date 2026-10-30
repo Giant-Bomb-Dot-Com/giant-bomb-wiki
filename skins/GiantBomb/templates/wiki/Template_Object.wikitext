@@ -14,6 +14,9 @@
 ||||| People (property=Has people)
 ||||| Objects (property=Has related objects)
 }}
+==Cargo==
+{{#cargo_attach:_table=GB_Cargo_Object}}
+
 ==Documentation==
 This template creates a full object page layout with hero section, tabs, wiki content, and sidebar.
 Uses Semantic MediaWiki for structured data storage and display.
@@ -84,6 +87,21 @@ SMW Property Storage
 }}{{#arraymap:{{{Locations|}}}|,|@@|{{#set:Has locations=@@}}
 }}{{#arraymap:{{{People|}}}|,|@@|{{#set:Has people=@@}}
 }}{{#arraymap:{{{Objects|}}}|,|@@|{{#set:Has related objects=@@}}
+}}<!--
+-->{{#cargo_store:_table=GB_Cargo_Object
+|Name={{{Name|}}}
+|Guid={{{Guid|}}}
+|Aliases={{{Aliases|}}}
+|Image={{{Image|}}}
+|Background_image={{{BackgroundImage|}}}
+|Deck={{{Deck|}}}
+|Has_characters={{{Characters|}}}
+|Has_concepts={{{Concepts|}}}
+|Has_franchises={{{Franchises|}}}
+|Has_games={{{Games|}}}
+|Has_locations={{{Locations|}}}
+|Has_people={{{People|}}}
+|Has_related_objects={{{Objects|}}}
 }}<!--
 
 Page Setup
