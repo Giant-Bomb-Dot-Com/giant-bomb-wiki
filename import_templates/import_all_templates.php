@@ -265,6 +265,7 @@ class ImportWikiTemplates extends Maintenance
 
             //games
             "Games" => "$pagesDir/Page_Games.wikitext",
+            "Module:PlatformShortNames" => "$moduleDir/Module_PlatformShortNames.wikitext",
             "Module:BadgeList" => "$moduleDir/Module_BadgeList.wikitext",
             "Module:GameFilters" => "$moduleDir/Module_GameFilters.wikitext",
             "Module:GameQuery" => "$moduleDir/Module_GameQuery.wikitext",

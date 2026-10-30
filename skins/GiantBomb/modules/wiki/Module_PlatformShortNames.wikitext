@@ -1,0 +1,13 @@
+-- mw.loadData target so badges share one query per render
+local names = {}
+local ok, rows = pcall(mw.ext.cargo.query, "GB_Cargo_Platform", "_pageName=PageName, Short_name=ShortName", {
+    limit = 1000,
+})
+if ok and rows then
+    for _, row in ipairs(rows) do
+        if row.ShortName and row.ShortName ~= "" then
+            names[row.PageName] = row.ShortName
+        end
+    end
+end
+return names
