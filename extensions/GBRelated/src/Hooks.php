@@ -25,8 +25,7 @@ class Hooks
                 $title,
             ) {
                 RelatedStore::rebuild($title);
-                // saved parse ran before the rebuild -> next view picks it up
-                $title->invalidateCache();
+                $title->invalidateCache(time() + 1);
             }, DeferredUpdates::POSTSEND);
         }
         if (ScoreStore::handles($title)) {

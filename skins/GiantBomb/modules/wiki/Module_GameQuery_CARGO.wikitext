@@ -39,6 +39,39 @@ end
 
 local GAME = "GB_Cargo_Game"
 
+function p.titleWhere(tableName, titles)
+    local pageNames = {}
+    local clauses = {}
+    for _, title in ipairs(titles) do
+        if title:find("--", 1, true) then
+            -- cargo rejects -- anywhere in where so match it with a wildcard
+            local like = sqlLike(title):gsub("%-%-", "-_")
+            table.insert(clauses, tableName .. "._pageName LIKE '" .. like .. "'")
+        else
+            table.insert(pageNames, sqlQuote(title))
+        end
+    end
+    if #pageNames > 0 then
+        table.insert(clauses, tableName .. "._pageName IN (" .. table.concat(pageNames, ",") .. ")")
+    end
+    return table.concat(clauses, " OR ")
+end
+
+function p.cardDate(result)
+    if not result.Release_date or result.Release_date == "" then
+        return ""
+    end
+    local lang = mw.language.getContentLanguage()
+    local date = tostring(result.Release_date)
+    local precision = tonumber(result.Release_date__precision)
+    if result.Release_date_type == "Quarter" then
+        local month = tonumber(date:match("^%d%d%d%d%-(%d%d)")) or 1
+        return "Q" .. math.ceil(month / 3) .. " " .. lang:formatDate("Y", date)
+    end
+    local format = precision == 3 and "Y" or precision == 2 and "Y F" or "Y F j"
+    return lang:formatDate(format, date)
+end
+
 -- byEdit joins cargo _pageData to sort by edit date
 local function cargoQuery(fields, where, orderBy, limit, offset, byEdit)
     local tables, join = GAME, nil
@@ -145,22 +178,10 @@ function p.render(frame)
 
     local function fetchCards(titles)
         local rank = {}
-        local pageNames = {}
-        local clauses = {}
         for index, title in ipairs(titles) do
             rank[title] = index
-            if title:find("--", 1, true) then
-                -- cargo rejects -- anywhere in where so match it with a wildcard
-                local like = sqlLike(title):gsub("%-%-", "-_")
-                table.insert(clauses, GAME .. "._pageName LIKE '" .. like .. "'")
-            else
-                table.insert(pageNames, sqlQuote(title))
-            end
         end
-        if #pageNames > 0 then
-            table.insert(clauses, GAME .. "._pageName IN (" .. table.concat(pageNames, ",") .. ")")
-        end
-        local ok, rows = pcall(cargoQuery, cardFields, table.concat(clauses, " OR "), nil, #titles, 0)
+        local ok, rows = pcall(cargoQuery, cardFields, p.titleWhere(GAME, titles), nil, #titles, 0)
         if not ok or not rows then
             return nil
         end
@@ -243,25 +264,11 @@ function p.render(frame)
     local html = mw.html.create("div"):addClass("listing-grid")
     for _, result in ipairs(results) do
         local imageData = getSafe(result, "Image", false):gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
-        local cleanDate = ""
-        if result.Release_date and result.Release_date ~= "" then
-            local lang = mw.language.getContentLanguage()
-            local date = tostring(result.Release_date)
-            -- cargo precision 3 is year only and 2 is month only
-            local precision = tonumber(result.Release_date__precision)
-            if result.Release_date_type == "Quarter" then
-                -- quarter rows hold some month in the quarter so show the Q form
-                local month = tonumber(date:match("^%d%d%d%d%-(%d%d)")) or 1
-                cleanDate = "Q" .. math.ceil(month / 3) .. " " .. lang:formatDate("Y", date)
-            else
-                local format = precision == 3 and "Y" or precision == 2 and "Y F" or "Y F j"
-                cleanDate = lang:formatDate(format, date)
-            end
-        end
+        local cleanDate = p.cardDate(result)
         html:wikitext(frame:expandTemplate{title = "GameCard", args = {
             url_title = result.PageName or "",
             title = displayName(result),
-            platforms = getSafe(result, "Has_platforms", true),
+            platforms = getSafe(result, "Has_platforms", true):gsub("_", " "),
             release_date = cleanDate,
             deck = getSafe(result, "Deck", true),
             image = imageData,

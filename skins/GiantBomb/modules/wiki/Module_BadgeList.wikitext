@@ -1,5 +1,6 @@
 local p = {}
 local plainTitle = require("Module:PlainTitle")
+local shortNames = mw.loadData("Module:PlatformShortNames")
 
 function p.format(frame)
     local input = frame.args[1] or ""
@@ -23,17 +24,9 @@ function p.format(frame)
         if i <= maxVisible then
             local displayText = cleanName
 
-            -- 2. Try to fetch the shortname via SMW
-            local platformData = mw.smw.ask({
-                "[[" .. name .. "]]",
-                "?Has short name=shortname",
-                "mainlabel=-"
-            })
-            
-            if platformData and platformData[1] and platformData[1].shortname then
-                local sn = platformData[1].shortname
-                -- If SMW returns a table (multiple shortnames), take the first one
-                displayText = plainTitle.plain(type(sn) == "table" and sn[1] or sn)
+            local sn = shortNames[name:gsub("_", " ")]
+            if sn then
+                displayText = plainTitle.plain(sn)
             end
 
             -- 3. resolve the page for the platform

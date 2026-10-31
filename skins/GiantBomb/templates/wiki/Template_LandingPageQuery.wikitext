@@ -3,6 +3,8 @@ __NOTOC__
 {{#template_params:
   name (name of the landing page, used to call other templates)
   filterTitle (The header to show on the top of the filter)
+  query (query module override, defaults to nameQuery)
+  filters (filters module override, defaults to nameFilters)
 }}
 </noinclude><includeonly><div class="listing-content">
     <div class="listing-sidebar">
@@ -10,7 +12,7 @@ __NOTOC__
           <h3 class="filter-title">{{{filterTitle}}}</h3>
           <!-- Invoke the Lua module to show the dropdown and button -->
           <!-- Pass the parameter to the sidebar module so the dropdown stays selected -->
-          {{#invoke:{{{name }}}Filters|renderSidebar
+          {{#invoke:{{{filters|{{{name}}}Filters}}}|renderSidebar
             |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
             |chosen_letter={{{chosen_letter|{{#urlget:chosen_letter|All}}}}}
             |search_filter={{{search_filter|{{#urlget:search_filter}}}}}
@@ -22,7 +24,7 @@ __NOTOC__
     <div class="listing-main">
        <!-- This remains your main display logic -->
        <!-- Pass the parameter to the query module to actually filter results -->
-        {{#invoke:{{{name }}}Query|render            
+        {{#invoke:{{{query|{{{name}}}Query}}}|render            
             |chosen_platform={{{chosen_platform|{{#urlget:chosen_platform|All}}}}}
             |chosen_letter={{{chosen_letter|{{#urlget:chosen_letter|All}}}}}
             |search_filter={{{search_filter|{{#urlget:search_filter}}}}}

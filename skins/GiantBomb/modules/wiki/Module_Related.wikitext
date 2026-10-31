@@ -1,6 +1,7 @@
 -- renders precomputed related content for the current page (gb_related via
 -- mw.ext.gbrelated); group names come from RelatedStore
 local p = {}
+local gameQuery = require("Module:GameQuery_CARGO")
 
 local cache
 
@@ -30,27 +31,6 @@ function p.related(frame)
     return table.concat(items)
 end
 
--- smw hands values back as wikitext links (with a leading colon) -> unwrap
-local function plain(v)
-    local inner = tostring(v):match('^%[%[(.-)%]%]$')
-    if inner then
-        inner = inner:match('^(.-)|') or inner
-        return inner:gsub('^:', '')
-    end
-    return tostring(v)
-end
-
-local function joinValues(v)
-    if type(v) ~= 'table' then
-        return v and plain(v) or ''
-    end
-    local out = {}
-    for _, item in ipairs(v) do
-        out[#out + 1] = plain(item)
-    end
-    return table.concat(out, ', ')
-end
-
 -- {{#invoke:Related|cards|developed|limit=12}}
 function p.cards(frame)
     local args = frame.args
@@ -61,27 +41,20 @@ function p.cards(frame)
     end
 
     local limit = math.min(tonumber(args.limit) or 12, #rows)
-    local titles, rank = {}, {}
+    local titles = {}
     for i = 1, limit do
-        titles[#titles + 1] = rows[i].title
-        rank[rows[i].title] = i
+        titles[i] = rows[i].title:gsub('_', ' ')
     end
 
-    -- links stay on: with link=none smw captions the mainlabel with the
-    -- display title, which breaks keying by page title
-    local results = mw.smw.ask{
-        '[[' .. table.concat(titles, '||') .. ']]',
-        '?Has deck=deck',
-        '?Has image=image',
-        '?Has platforms=platforms',
-        '?Has release date=released',
-        'mainlabel=page',
-        'limit=' .. limit,
-    } or {}
+    local ok, results = pcall(mw.ext.cargo.query, 'GB_Cargo_Game',
+        '_pageName=page,Image,Has_platforms,Deck,Release_date,Release_date__precision,Release_date_type', {
+            where = gameQuery.titleWhere('GB_Cargo_Game', titles),
+            limit = limit,
+        })
 
     local byTitle = {}
-    for _, r in ipairs(results) do
-        byTitle[plain(r.page)] = r
+    for _, r in ipairs(ok and results or {}) do
+        byTitle[r.page] = r
     end
 
     local html = mw.html.create('div'):addClass('listing-grid')
@@ -89,30 +62,18 @@ function p.cards(frame)
         local title = titles[i]
         local r = byTitle[title] or {}
 
-        local image = plain(r.image or '')
-        image = image:gsub('Http', 'http'):gsub('%+', ' '):gsub(' ', '%%20')
-
-        local released = r.released
-        if type(released) == 'table' then
-            released = released.raw or released[1] or ''
-        end
-        released = tostring(released or '')
-        local y, m, d = released:match('^1/(%d+)/(%d+)/(%d+)')
-        if y then
-            released = mw.language.getContentLanguage():formatDate(
-                'Y F j',
-                string.format('%04d-%02d-%02d', y, m, d)
-            )
-        end
+        local image = tostring(r.Image or '')
+            :gsub('Http', 'http'):gsub('%+', ' '):gsub(' ', '%%20')
+        local released = gameQuery.cardDate(r)
 
         html:wikitext(frame:expandTemplate{
             title = 'GameCard',
             args = {
                 url_title = title,
                 title = rows[i].display,
-                platforms = joinValues(r.platforms),
+                platforms = tostring(r.Has_platforms or ''):gsub('_', ' '),
                 release_date = released ~= '' and released or nil,
-                deck = joinValues(r.deck),
+                deck = r.Deck or '',
                 image = image,
             },
         })

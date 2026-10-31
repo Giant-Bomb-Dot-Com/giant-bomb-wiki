@@ -1,55 +1,70 @@
--- game page sidebar: one smw query replaces the per-property #show storm.
--- accordions come ranked from gb_related, own smw values fill in pre-backfill
+-- game page sidebar: one cargo row
+-- accordions ranked from gb_related, row fills in pre-backfill
 local p = {}
-local plainTitle = require("Module:PlainTitle")
+local gameQuery = require("Module:GameQuery_CARGO")
 
-local smwData, store
+local FIELDS = table.concat({
+    'Name=name',
+    'Release_date=released',
+    'Release_date_type=datetype',
+    'Has_platforms=platforms',
+    'Developers=developers',
+    'Publishers=publishers',
+    'Has_genres=genres',
+    'Has_themes=themes',
+    'Has_franchises=franchises',
+    'Aliases=aliases',
+    'Has_characters=characters',
+    'Has_locations=locations',
+    'Has_concepts=concepts',
+    'Has_objects=objects',
+    'Has_similar_games=similar',
+}, ',')
+
+local gameRow, store
 
 local function fetch()
-    if smwData == nil then
-        local page = mw.title.getCurrentTitle().prefixedText
-        local ok, res = pcall(mw.smw.ask, {
-            '[[' .. page .. ']]',
-            '?Has name=name',
-            '?Has release date#ISO=released',
-            '?Has release date type=datetype',
-            '?Has platforms=platforms',
-            '?Has developers=developers',
-            '?Has publishers=publishers',
-            '?Has genres=genres',
-            '?Has themes=themes',
-            '?Has franchises=franchises',
-            '?Has aliases=aliases',
-            '?Has characters=characters',
-            '?Has locations=locations',
-            '?Has concepts=concepts',
-            '?Has objects=objects',
-            '?Has similar games=similar',
-            'mainlabel=-',
-            'limit=1',
+    if gameRow == nil then
+        local id = mw.title.getCurrentTitle().id
+        local ok, res = pcall(mw.ext.cargo.query, 'GB_Cargo_Game', FIELDS, {
+            where = '_pageID=' .. id,
+            limit = 1,
         })
-        smwData = ok and type(res) == 'table' and res[1] or {}
+        gameRow = ok and type(res) == 'table' and res[1] or {}
         store = mw.ext.gbrelated.get() or {}
     end
-    return smwData, store
+    return gameRow, store
 end
 
--- single values arrive bare, multi values as a table -> always a table
+-- cargo lists come back as one comma string
 local function values(v)
-    if v == nil then
+    if v == nil or v == '' then
         return {}
     end
-    if type(v) ~= 'table' then
-        return { v }
+    local out = {}
+    for _, item in ipairs(mw.text.split(tostring(v), ',', true)) do
+        item = mw.text.trim(item)
+        if item ~= '' then
+            out[#out + 1] = item
+        end
     end
-    return v
+    return out
 end
 
--- page-type values are wikitext links already; just join them
+-- displaytitle's link hook skips cli parses so grab the label here
+local function pageLink(value)
+    local t = mw.title.new(value)
+    if not t then
+        return value
+    end
+    local title = t.prefixedText
+    return '[[:' .. title .. '|' .. mw.ext.displaytitle.get(title) .. ']]'
+end
+
 local function joinLinks(v, sep)
     local out = {}
     for _, item in ipairs(values(v)) do
-        out[#out + 1] = tostring(item)
+        out[#out + 1] = pageLink(item)
     end
     return table.concat(out, sep or ', ')
 end
@@ -73,9 +88,10 @@ end
 local function fetchCompanyLogos(...)
     local titles, seen = {}, {}
     for _, list in ipairs({ ... }) do
-        for _, link in ipairs(list) do
-            local t = plainTitle.plain(link)
-            if t ~= '' and not seen[t] then
+        for _, value in ipairs(list) do
+            local t = mw.title.new(value)
+            t = t and t.prefixedText
+            if t and not seen[t] then
                 seen[t] = true
                 titles[#titles + 1] = t
             end
@@ -84,22 +100,16 @@ local function fetchCompanyLogos(...)
     if #titles == 0 then
         return {}
     end
-    local ok, res = pcall(mw.smw.ask, {
-        '[[' .. table.concat(titles, '||') .. ']]',
-        '?Has image=image',
-        'mainlabel=page',
-        'limit=' .. #titles,
+    local ok, res = pcall(mw.ext.cargo.query, 'GB_Cargo_Company', '_pageName=page,Image=image', {
+        where = gameQuery.titleWhere('GB_Cargo_Company', titles),
+        limit = #titles,
     })
     local out = {}
     if ok and type(res) == 'table' then
         for _, r in ipairs(res) do
-            local img = r.image
-            if type(img) == 'table' then
-                img = img[1]
-            end
-            local url = img and logoUrl(img)
+            local url = r.image and logoUrl(r.image)
             if url then
-                out[plainTitle.plain(r.page)] = url
+                out[r.page] = url
             end
         end
     end
@@ -111,20 +121,19 @@ local FALLBACK_LOGO =
 
 local function companyList(v, logos)
     local out = {}
-    for _, link in ipairs(values(v)) do
-        local title = plainTitle.plain(link)
-        local url = logos[title] or FALLBACK_LOGO
+    for _, value in ipairs(values(v)) do
+        local t = mw.title.new(value)
+        local url = (t and logos[t.prefixedText]) or FALLBACK_LOGO
         -- [pageUrl imageUrl] -> the parser wraps the external image in the
         -- link, so the thumbnail itself is clickable
         local thumb = url
-        local t = mw.title.new(title)
         if t then
             thumb = '[' .. t:fullUrl() .. ' ' .. url .. ']'
         end
         out[#out + 1] = '<div class="gb-sidebar-company-tile">'
             .. '<span class="gb-sidebar-company-thumb">' .. thumb .. '</span>'
             .. '<span class="gb-sidebar-company-name">'
-            .. tostring(link) .. '</span>'
+            .. pageLink(value) .. '</span>'
             .. '</div>'
     end
     if #out == 0 then
@@ -143,19 +152,19 @@ function p.details(frame)
         end
     end
 
-    local name = joinLinks(data.name)
+    local name = tostring(data.name or '')
     if name == '' then
         name = mw.title.getCurrentTitle().subpageText
     end
     row('Name', name)
 
-    local released = tostring(values(data.released)[1] or '')
+    local released = tostring(data.released or '')
     if released ~= '' then
         row('Release Date', frame:expandTemplate{
             title = 'DateDisplay',
             args = {
                 released,
-                tostring(values(data.datetype)[1] or ''),
+                tostring(data.datetype or ''),
             },
         })
     end
@@ -171,7 +180,7 @@ function p.details(frame)
     row('Genre', joinLinks(data.genres, '<br/>'))
     row('Theme', joinLinks(data.themes, '<br/>'))
     row('Franchise', joinLinks(data.franchises))
-    row('Aliases', joinLinks(data.aliases, '<br/>'))
+    row('Aliases', table.concat(values(data.aliases), '<br/>'))
 
     return '<dl class="gb-game-details">' .. table.concat(html) .. '</dl>'
 end
@@ -197,7 +206,7 @@ local function listItems(rows, fallbackValues)
             if i > LIST_LIMIT then
                 break
             end
-            items[#items + 1] = '<li>' .. tostring(v) .. '</li>'
+            items[#items + 1] = '<li>' .. pageLink(v) .. '</li>'
         end
     end
     return items
