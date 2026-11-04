@@ -17,10 +17,10 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Explanation|property=Stands for}}}
 |-
 ! Image: 
-| {{{field|Image|uploadable|image preview|property=Has image}}}
+| {{{field|Image|input type=text|uploadable|image preview|property=Has image}}}
 |-
 ! BackgroundImage: 
-| {{{field|BackgroundImage|uploadable|image preview|property=Has background image}}}
+| {{{field|BackgroundImage|input type=text|uploadable|image preview|property=Has background image}}}
 |-
 ! Caption: 
 | {{{field|Caption|property=Has caption}}}

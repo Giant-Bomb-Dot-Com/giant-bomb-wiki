@@ -20,10 +20,10 @@ if a page with that name already exists, you will be sent to a form to edit that
 | {{{field|Aliases|cargo table=GB_Cargo_Game|cargo field=Aliases}}}
 |-
 ! Image: 
-| {{{field|Image|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Image}}}
+| {{{field|Image|input type=text|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Image}}}
 |-
 ! BackgroundImage: 
-| {{{field|BackgroundImage|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Background_image}}}
+| {{{field|BackgroundImage|input type=text|uploadable|image preview|cargo table=GB_Cargo_Game|cargo field=Background_image}}}
 |-
 ! Caption: 
 | {{{field|Caption|cargo table=GB_Cargo_Game|cargo field=Caption}}}
