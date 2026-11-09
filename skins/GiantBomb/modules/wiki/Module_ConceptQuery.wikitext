@@ -1,142 +1,127 @@
 local p = {}
+local cargo = mw.ext.cargo
+
+local function getSafe(result, field, isList)
+    local value = result[field] or ""
+    if type(value) == "table" then
+        local values = {}
+        for _, item in ipairs(value) do
+            table.insert(values, tostring(item))
+        end
+        value = table.concat(values, ", ")
+    end
+    value = tostring(value):match("^%s*(.-)%s*$")
+    return isList and value or value
+end
+
+local function fallbackDisplayTitle(rawTitle)
+    local withoutPrefix = rawTitle:gsub("^[Cc][Oo][Nn][Cc][Ee][Pp][Tt][Ss]/", "")
+    local withSpaces = withoutPrefix:gsub("_", " ")
+    local trimmed = withSpaces:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+    local noIdSuffix = trimmed:gsub("%s+%d+$", "")
+    return noIdSuffix ~= "" and noIdSuffix or trimmed
+end
+
+local function displayName(result)
+    local name = getSafe(result, "Name", false)
+    return name ~= "" and name or fallbackDisplayTitle(result.PageName or "")
+end
+
+local function sqlLike(value)
+    return tostring(value):gsub("\\", "\\\\"):gsub("([%%_])", "\\%1"):gsub("'", "\\'")
+end
+
+local function cargoQuery(tableName, fields, where, orderBy, limit, offset)
+    return cargo.query(tableName, fields, {
+        where = where,
+        orderBy = orderBy,
+        limit = limit,
+        offset = offset,
+    })
+end
+
+local function cargoCount(where)
+    local rows = cargoQuery("GB_Cargo_Concept", "COUNT(*)=count", where, nil, 1, 0)
+    return rows and rows[1] and tonumber(rows[1].count) or 0
+end
 
 function p.render(frame)
     local args = frame.args
     local parentArgs = frame:getParent() and frame:getParent().args or {}
     local rawLetter = args.chosen_letter or parentArgs.chosen_letter or "All"
     local currentLetter = mw.uri.decode(rawLetter, "WIKI")
-    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "","QUERY")
-    
+    local searchFilter = mw.uri.decode(args.search_filter or parentArgs.search_filter or "", "QUERY")
     local sortFilter = mw.uri.decode(args.sort_by or parentArgs.sort_by or "name", "WIKI"):lower()
-	local sortProp = "Creation date" -- Default
-    local sortOrder = "descending"
-
-    if sortFilter == "latest" then
-        sortProp = "Modification date"
-        sortOrder = "descending"
-    elseif sortFilter == "name" then
-        sortProp = "Has name"
-        sortOrder = "ascending"
-    end
-
-    -- Try to get 'limit' from invoke args, then parent args, then default to 48
     local limit = tonumber(args.limit) or tonumber(parentArgs.limit) or 48
     local offset = tonumber(args.offset) or tonumber(parentArgs.offset) or 0
-    
-    -- Cleanup: If #urlget failed and returned the literal string, default to All
-    if currentLetter:find('{{#urlget') then
+
+    currentLetter = currentLetter:gsub("%+", " ")
+    if currentLetter:find("{{#urlget") then
         currentLetter = "All"
     end
 
-    local query = "[[Category:Concepts]]"
-    
+    local sortField = sortFilter == "name" and "Name" or "_pageID"
+    local sortOrder = sortFilter == "name" and "ASC" or "DESC"
+    local conditions = {}
+
     if currentLetter ~= "All" then
         if currentLetter == "#" then
-            -- Query for names starting with any digit 0-9
-            query = query .. " [[Has name::~[0-9]*]]"
+            local digitConditions = {}
+            for digit = 0, 9 do
+                table.insert(digitConditions, "Name LIKE '" .. digit .. "%'")
+            end
+            table.insert(conditions, "(" .. table.concat(digitConditions, " OR ") .. ")")
         else
-            -- Query for names starting with the specific letter (e.g., "[[Name::~A*]]")
-            query = query .. " [[Has name::~" .. currentLetter .. "*]]"
+            table.insert(conditions, "Name LIKE '" .. sqlLike(currentLetter) .. "%'")
         end
     end
-	
-	-- Filter by Name (using SMW wildcard search)
-	if searchFilter ~= "" then
-	    local dbSearch = searchFilter:gsub(" ", "_")
-	    -- Step 1: Find the specific game's concepts directly
-	    local gameData = mw.smw.getQueryResult({
-	        "[[Category:Games]] [[~*" .. dbSearch .. "*]]",
-	        "?Has concepts",
-	        limit = 1
-	    })
-	
-	    if gameData and gameData.results and gameData.results[1] then
-	        local concepts = gameData.results[1].printouts["Has concepts"]
-	        local conceptList = {}
-	        for _, c in ipairs(concepts) do
-	            table.insert(conceptList, "[[" .. (c.fulltext or c) .. "]]")
-	        end
-	        -- Step 2: Add these specific pages to our main query
-	        if #conceptList > 0 then
-	            query = query .. " (" .. table.concat(conceptList, " OR ") .. ")"
-	        end
-	    end
-	end
 
-    -- 2. Execute Query
-    local queryData = mw.smw.getQueryResult({
-        query,
-        "?Has image",
-        "?Has deck",
-        limit = limit,
-        offset = offset,
-        ["count"] = true,
-        "?Modification date",
-    	"?Creation date",
-        sort = sortProp,
-        order = sortOrder
-    })
+    if searchFilter ~= "" then
+        local clean = searchFilter:gsub("[%[%]|<>{}]", ""):gsub('["%+%-%(%)~@%*:]', " ")
+        if clean:find("%S") then
+            local searchConditions = {}
+            for word in clean:gmatch("%S+") do
+                local like = "'%" .. sqlLike(word) .. "%'"
+                table.insert(searchConditions, "(Name LIKE " .. like
+                    .. " OR Aliases HOLDS LIKE " .. like
+                    .. " OR _pageName LIKE " .. like .. ")")
+            end
+            table.insert(conditions, "(" .. table.concat(searchConditions, " AND ") .. ")")
+        end
+    end
 
-    -- 3. Debugging / No Results
-    if not queryData or not queryData.results or #queryData.results == 0 then
+    local where = #conditions > 0 and table.concat(conditions, " AND ") or nil
+    local fields = "Name, Image, Deck, _pageName=PageName, _pageID=PageID"
+    local ok, results = pcall(cargoQuery, "GB_Cargo_Concept", fields,
+        where, sortField .. " " .. sortOrder, limit, offset)
+    if not ok or not results or #results == 0 then
         return '<div class="no-results">No concepts found for ' .. currentLetter .. '</div>'
     end
 
-    local html = mw.html.create('div'):addClass('listing-grid')
-    
-    for _, result in ipairs(queryData.results) do
-  	    local fullTitle = result.fulltext or ""
-    	-- This pattern matches "Concepts/" or "concepts/" at the start
-    	local cleanTitle = fullTitle:gsub("^[Cc][Oo][Nn][Cc][Ee][Pp][Tt][Ss]/", "")
-    	
-        -- Helper to extract strings from nested SMW tables
-        local function getSafe(field, isList)
-            local d = result.printouts[field] or {}
-            local vals = {}
-            for _, v in ipairs(d) do
-                local str = type(v) == "table" and (v.raw or v.fulltext or "") or tostring(v)
-                table.insert(vals, str)
-            end
-            return isList and table.concat(vals, ", ") or (vals[1] or "")
-        end
-        
-        -- 4. Process Image data from description
-        local imageData = getSafe('Has image', false)
-        imageData = imageData:gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
-        
-		html:wikitext(frame:expandTemplate{ 
-		    title = 'ConceptCard', 
-		    args = { 
-		        url_title    = fullTitle,
-		        title        = cleanTitle,
-		        deck         = getSafe('Has deck', true),
-		        image        = imageData
-		    } 
-		})
+    local html = mw.html.create("div"):addClass("listing-grid")
+    for _, result in ipairs(results) do
+        local imageData = getSafe(result, "Image", false)
+            :gsub("Http", "http"):gsub("+", " "):gsub(" ", "%%20")
+        html:wikitext(frame:expandTemplate{title = "ConceptCard", args = {
+            url_title = result.PageName or "",
+            title = displayName(result),
+            deck = getSafe(result, "Deck", true),
+            image = imageData,
+        }})
     end
 
-    -- 5. Build Pagination (using queryData.count)
-    local totalResults = queryData.count or 0
-    -- If count is 0 but we actually HAVE results, the API failed to provide the total.
-	-- We run a quick secondary query to get the total number.
-	if totalResults == 0 and #queryData.results > 0 then
-	    local countQuery = mw.smw.ask({ query, format = "count" })
-	    totalResults = tonumber(countQuery) or 0
-	end
-    
-	local paginationHtml = ""
-	if totalResults > 0 then
-	    paginationHtml = tostring(mw.html.create('div')
-	        :addClass('pagination-wrapper')
-	        :attr('data-total', totalResults)
-	        :attr('data-limit', limit)
-	        :attr('data-offset', offset)
-	        :attr('data-letter', currentLetter)
-	        :attr('data-search', searchFilter)
-   	        :attr('data-sort', sortFilter))
-	end
-	
-	return tostring(html) .. paginationHtml
+    local totalResults = cargoCount(where)
+    if totalResults > 0 then
+        return tostring(html) .. tostring(mw.html.create("div")
+            :addClass("pagination-wrapper")
+            :attr("data-total", totalResults)
+            :attr("data-limit", limit)
+            :attr("data-offset", offset)
+            :attr("data-letter", currentLetter)
+            :attr("data-search", searchFilter)
+            :attr("data-sort", sortFilter))
+    end
+    return tostring(html)
 end
 
 return p
