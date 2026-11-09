@@ -219,7 +219,6 @@ class ImportWikiTemplates extends Maintenance
             "Form:DLC" => "$formDir/Form_DLC.wikitext",
             "Form:Franchise" => "$formDir/Form_Franchise.wikitext",
             "Form:Game" => "$formDir/Form_Game.wikitext",
-            "Form:Game_CARGO" => "$formDir/Form_Game_CARGO.wikitext",
             "Form:Genre" => "$formDir/Form_Genre.wikitext",
             "Form:Location" => "$formDir/Form_Location.wikitext",
             "Form:MultiplayerFeature" => "$formDir/Form_MultiplayerFeature.wikitext",
@@ -269,8 +268,6 @@ class ImportWikiTemplates extends Maintenance
             "Module:BadgeList" => "$moduleDir/Module_BadgeList.wikitext",
             "Module:GameFilters" => "$moduleDir/Module_GameFilters.wikitext",
             "Module:GameQuery" => "$moduleDir/Module_GameQuery.wikitext",
-            "Module:GameFilters_CARGO" => "$moduleDir/Module_GameFilters_CARGO.wikitext",
-            "Module:GameQuery_CARGO" => "$moduleDir/Module_GameQuery_CARGO.wikitext",
             "Template:GameCard" => "$templateDir/Template_GameCard.wikitext",
 
             //characters
